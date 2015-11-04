@@ -1,0 +1,244 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80eeeeee"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/top_report_rl"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@color/white" >
+
+        <RelativeLayout
+            android:id="@+id/back_report_rl"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/kongjianruoqu_bg"
+            android:gravity="center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_title_dismiss" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/report_title"
+            android:textColor="#a0a0a0"
+            android:textSize="18sp" />
+
+        <RelativeLayout
+            android:id="@+id/define_report_rl"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/kongjianruoqu_bg"
+            android:gravity="center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_title_define" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#cccccc" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp" >
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/report_title_selector_report_reason"
+            android:textColor="#a0a0a0"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    
+    <RelativeLayout
+        android:id="@+id/porn_report_rl"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@drawable/item_system_settings_bg" >
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/report_title_porn"
+            android:textColor="#606366"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/porn_report_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/item_buytickets_icon__bg" 
+            android:layout_marginRight="11dp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#cccccc" />
+
+    <RelativeLayout
+        android:id="@+id/advertising_report_rl"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@drawable/item_system_settings_bg" >
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/report_title_Advertising"
+            android:textColor="#606366"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/advertising_report_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="11dp"
+            android:src="@drawable/item_buytickets_icon__bg" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#cccccc" />
+
+    <RelativeLayout
+        android:id="@+id/swearing_report_rl"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@drawable/item_system_settings_bg" >
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/report_title_Swearing"
+            android:textColor="#606366"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/swearing_report_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="11dp"
+            android:src="@drawable/item_buytickets_icon__bg" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#cccccc" />
+
+    <RelativeLayout
+        android:id="@+id/others_report_rl"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@drawable/item_system_settings_bg" >
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/report_title_others"
+            android:textColor="#606366"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/others_report_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="11dp"
+            android:src="@drawable/item_buytickets_icon__bg" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#cccccc" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp" >
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/report_title_fillInReason"
+            android:textColor="#a0a0a0"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:background="@color/white" >
+
+        <EditText
+            android:id="@+id/content_report_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="14dp"
+            android:background="@null"
+            android:hint="@string/report_title_Description"
+            android:textColor="#606366"
+            android:textColorHint="#bfbfbf"
+            android:textSize="14sp" />
+    </RelativeLayout>
+    
+    
+
+</LinearLayout>

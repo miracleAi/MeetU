@@ -1,0 +1,236 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80eeeeee" >
+
+    <RelativeLayout
+        android:id="@+id/top_systemSettings_rl"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@color/white" >
+
+        <RelativeLayout
+            android:id="@+id/back_systemSettings_rl"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/kongjianruoqu_bg"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/back_systemSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/mine_alter_btn_back" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/system_setting_title"
+            android:textColor="#a0a0a0"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/top_systemSettings_rl"
+        android:background="#cccccc" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_systemSettings_rl"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/share_system_settings_rl"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/item_system_settings_bg" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:text="@string/system_setting_share_meetu"
+                android:textColor="#606366"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:text="@string/system_setting_share_meetu_tip"
+                android:textColor="#bfbfbf"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#cccccc" />
+
+        <RelativeLayout
+            android:id="@+id/evaluation_system_settings_rl"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+           android:background="@drawable/item_system_settings_bg" >
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:text="@string/system_setting_evaluation_meetu"
+                android:textColor="#606366"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="@string/system_setting_evaluation_meetu_tip"
+                android:textColor="#bfbfbf"
+                android:layout_marginRight="10dp"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#cccccc" />
+
+        <RelativeLayout
+            android:id="@+id/clear_system_settings_rl"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@drawable/item_system_settings_bg" >
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:text="@string/system_setting_clear_meetu"
+                android:textColor="#606366"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="@string/system_setting_clear_meetu_tip"
+                android:layout_marginRight="10dp"
+                android:textColor="#bfbfbf"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#cccccc" />
+
+        <RelativeLayout
+            android:id="@+id/checkforupdates_system_settings_rl"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@drawable/item_system_settings_bg" >
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:text="@string/system_setting_Checkforupdates"
+                android:textColor="#606366"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="@string/system_setting_Checkforupdates_tip"
+                android:textColor="#bfbfbf"
+                android:layout_marginRight="10dp"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#cccccc" />
+
+        <RelativeLayout
+            android:id="@+id/sign_out_system_settings_rl"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@drawable/item_system_settings_bg" >
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:text="@string/system_setting_sign_out"
+                android:textColor="#606366"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="@string/system_setting_sign_out_tip"
+                android:textColor="#bfbfbf"
+                android:layout_marginRight="10dp"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#cccccc" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:textSize="14sp"
+        android:textColor="#d633c6e5"
+        android:text="@string/system_setting_hello" />
+
+</RelativeLayout>
