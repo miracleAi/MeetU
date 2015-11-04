@@ -68,6 +68,7 @@ public class ObjActivityOrderWrap {
 			}
 		});
 	}
+	//报名
 	public static void signUpActivity(ObjActivity activity,ObjUser user,ObjActivityTicket ticket,int status,String expect,final ObjFunBooleanCallback callback){
 		ObjActivityOrder order = new ObjActivityOrder();
 		order.setActivity(activity);
