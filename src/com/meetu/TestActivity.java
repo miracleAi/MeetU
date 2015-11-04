@@ -207,6 +207,7 @@ public class TestActivity extends Activity{
 						return ;
 					}
 					if(clickBtn.getText().toString().equals(LOAD_ACTIVITY)){
+						clickBtn.setText(LOADING);
 						getActivitys();
 						return ;
 					}
@@ -277,7 +278,8 @@ public class TestActivity extends Activity{
 				if(objects != null && objects.size()>0){
 					//测试去报名（获取活动成功后执行）
 					//clickBtn.setText(LOAD_SIGN_INFO);
-					
+					//测试活动图片（获取活动成功后运行）
+					clickBtn.setText(LOAD_ACTIVITY_PHOTO);
 					for(ObjActivity activity : objects){
 						ActivityBean bean1 = new ActivityBean();
 						bean1.setActivity(activity);
@@ -288,7 +290,7 @@ public class TestActivity extends Activity{
 						}
 					}
 					//查询是否点赞
-					bean.queryFavor(activityItem, handler);
+					//bean.queryFavor(activityItem, handler);
 					String imgUrl = activityItem.getActivityCover().getUrl();
 					int praiseCount = activityItem.getPraiseCount();
 					int boyAndGirl = activityItem.getOrderCountGirl();
