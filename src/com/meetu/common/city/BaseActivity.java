@@ -1,17 +1,25 @@
 package com.meetu.common.city;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
+import com.meetu.entity.City;
+import com.meetu.sqlite.CityDao;
+
+
+
 import android.app.Activity;
 import android.content.res.AssetManager;
 
 
 
 public class BaseActivity extends Activity {
+	private CityDao cityDao=new CityDao();
 	
 	/**
 	 * 所有省
@@ -112,5 +120,43 @@ public class BaseActivity extends Activity {
         	
         } 
 	}
-
+    
+    protected void initProvinceDatasNews(){
+		City city=new City();
+		List<City> provinceList = new ArrayList<City>();
+		List<City> cityList=new ArrayList<City>();
+		List<City> townList=new ArrayList<City>();
+		//*/ 初始化默认选中的省、市、区
+		provinceList=cityDao.getAllPrivance();
+		
+		mCurrentProviceName=provinceList.get(0).getPrivance();
+		
+		cityList=cityDao.getAllCity(mCurrentProviceName);
+		
+		mCurrentCityName=cityList.get(0).getCity();
+		
+		townList=cityDao.getAllTown(mCurrentProviceName, mCurrentCityName);
+		
+		mCurrentDistrictName=townList.get(0).getTown();
+		
+		mProvinceDatas = new String[provinceList.size()];
+		
+		for(int i=0;i<provinceList.size();i++){
+			mProvinceDatas[i]=provinceList.get(i).getPrivance();
+		}
+		
+		String[] cityNames = new String[cityList.size()];
+		for(int j=0;j<cityList.size();j++){
+			cityNames[j]=cityList.get(j).getCity();
+		}
+		String[] distrinctNameArray = new String[townList.size()];
+		for(int k=0;k<townList.size();k++){
+			distrinctNameArray[k]=townList.get(k).getTown();
+		}
+		
+		mCitisDatasMap.put(mCurrentProviceName, cityNames);
+		
+		// 市-区/县的数据，保存到mDistrictDatasMap
+		mDistrictDatasMap.put(mCurrentCityName, distrinctNameArray);
+	}
 }
