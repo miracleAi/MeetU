@@ -9,8 +9,12 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.cloud.callback.ObjActivityCallback;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunObjectsCallback;
+import com.meetu.cloud.callback.ObjTicketCallback;
 import com.meetu.cloud.object.ObjActivity;
+import com.meetu.cloud.object.ObjActivityOrder;
+import com.meetu.cloud.object.ObjActivityTicket;
 import com.meetu.cloud.object.ObjTableName;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.common.Constants;
@@ -44,6 +48,58 @@ public class ObjActivityWrap {
 				}
 				ObjActivity activity = list.get(0);
 				callback.callback(list, null);
+			}
+		});
+	}
+	/**
+	 * 检查用户是否参加过此活动
+	 * @param activity
+	 * @param user
+	 * @param callback
+	 */
+	public static void queryUserJoin(ObjActivity activity,ObjUser user,final ObjFunBooleanCallback callback){
+		AVQuery<AVObject> query = new AVQuery<AVObject>(ObjTableName.getActivitySignUpTb());
+		query.whereEqualTo("activity", activity);
+		query.whereEqualTo("user", user);
+		query.findInBackground(new FindCallback<AVObject>() {
+
+			@Override
+			public void done(List<AVObject> object, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					callback.callback(false, e);
+					return ;
+				}
+				if(object != null && object.size()>0){
+					callback.callback(true, null);
+				}else{
+					callback.callback(false, null);
+				}
+			}
+		});
+	}
+	/**
+	 * 获取活动票种信息
+	 * @param activity
+	 * @param callback
+	 */
+	public static void queryTicket(ObjActivity activity,final ObjTicketCallback callback){
+		AVQuery<ObjActivityTicket> query = AVObject.getQuery(ObjActivityTicket.class);
+		query.whereEqualTo("activity", activity);
+		query.findInBackground(new FindCallback<ObjActivityTicket>() {
+
+			@Override
+			public void done(List<ObjActivityTicket> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					callback.callback(null, e);
+					return ;
+				}
+				if(null != objects && objects.size()>0){
+					callback.callback(objects, null);
+				}else{
+					callback.callback(null, new AVException(0,"未获取票种信息"));
+				}
 			}
 		});
 	}

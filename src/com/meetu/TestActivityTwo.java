@@ -1,13 +1,345 @@
 package com.meetu;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.SaveCallback;
+import com.meetu.bean.ActivityBean;
+import com.meetu.cloud.callback.ObjActivityCallback;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjTicketCallback;
+import com.meetu.cloud.object.ObjActivity;
+import com.meetu.cloud.object.ObjActivityCover;
+import com.meetu.cloud.object.ObjActivityTicket;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjActivityOrderWrap;
+import com.meetu.cloud.wrap.ObjActivityWrap;
+import com.meetu.cloud.wrap.ObjUserWrap;
+import com.meetu.common.Constants;
+import com.meetu.tools.BitmapCut;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.CompressFormat;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.View;
+import android.view.Window;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class TestActivityTwo extends Activity{
+	private ImageView ivTouxiang;
+	private Button clickBtn;
+	private EditText ed;
+	String fPath = "";
+	String yPath = "";
+	boolean isSms = true;
+	//活动测试
+	private ImageView favorImg;
+	private TextView favrCout,followTv,joinTv,statusTv,titleTv,addressTv,timeTv,bigImg,contentTv,orderUserTv,actyCoverTv;
+	private TextView firstTv,secondTv;
+	//首页活动列表
+	ArrayList<ActivityBean> activitys = new ArrayList<ActivityBean>();
+	//首页某一项活动
+	ActivityBean bean = new ActivityBean();
+	ObjActivity  activityItem = new ObjActivity();
+	//活动封面图片
+	ArrayList<ObjActivityCover> coverList = new ArrayList<ObjActivityCover>();
+	//参加活动用户列表
+	ArrayList<ObjUser> userList = new ArrayList<ObjUser>();
+	//是否已参加活动
+	boolean isJoin = false;
+	//某项活动的票种列表
+	private ArrayList<ObjActivityTicket> tickets = new ArrayList<ObjActivityTicket>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		//去除title
+		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//全屏
+		super.getWindow(); 
+		setContentView(R.layout.test_layout);
+		initView();
+	}
+	private void initView(){
+		ivTouxiang=(ImageView)super.findViewById(R.id.selfinfo1_userhead_img);
+		clickBtn = (Button) findViewById(R.id.click);
+		ed = (EditText) findViewById(R.id.ed);
+		firstTv = (TextView) findViewById(R.id.first_tv);
+		secondTv = (TextView) findViewById(R.id.second_tv);
+		/*bigImg =  (TextView) findViewById(R.id.big_img);
+		favorImg = (ImageView) findViewById(R.id.favor_img);
+		favrCout = (TextView) findViewById(R.id.favor_count_tv);
+		followTv = (TextView) findViewById(R.id.follow_tv);
+		joinTv = (TextView) findViewById(R.id.join_tv);
+		statusTv = (TextView) findViewById(R.id.status_tv);
+		titleTv = (TextView) findViewById(R.id.title_tv);
+		addressTv = (TextView) findViewById(R.id.address_tv);
+		timeTv = (TextView) findViewById(R.id.time_tv);
+		contentTv = (TextView) findViewById(R.id.content_tv);
+		orderUserTv = (TextView) findViewById(R.id.user_order_tv);
+		actyCoverTv = (TextView) findViewById(R.id.acty_cover_tv);*/
+		Bitmap head=readHead();
+		if(head!=null){
+			fPath = Environment.getExternalStorageDirectory()+"/f_user_header.png";
+			yPath = Environment.getExternalStorageDirectory()+"/user_header.png";
+			ivTouxiang.setImageBitmap(head);
+		}
+		ivTouxiang.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				showDialog();
+			}
+		});
+		clickBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				AVUser currentUser = AVUser.getCurrentUser();
+				if (currentUser != null) {
+					//强制类型转换
+					ObjUser user = AVUser.cast(currentUser, ObjUser.class);
+					
+				}else{
+					Toast.makeText(getApplicationContext(), "not login", 1000).show();
+					return ;
+				}
+			}
+		});
+	}
+	boolean isFirstLoad = false;
+	boolean isSecondLoad = false;
+	ObjUser userSign = AVUser.cast(ObjUser.getCurrentUser(), ObjUser.class);
+	private void getInfo(ObjActivity activitySign) {
+		clickBtn.setText("loadng……");
+		ObjActivityWrap.queryUserJoin(activitySign, userSign, new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				isFirstLoad = true;
+				if(isFirstLoad && isSecondLoad){
+					clickBtn.setText("loaded");
+				}
+				if(e != null){
+					return ;
+				}
+				if(result){
+					firstTv.setText("已参加");
+					isJoin = true;
+				}else{
+					firstTv.setText("未参加");
+					isJoin = false;
+				}
+			}
+		});
+		ObjActivityWrap.queryTicket(activitySign, new ObjTicketCallback() {
+			
+			@Override
+			public void callback(List<ObjActivityTicket> objects, AVException e) {
+				// TODO Auto-generated method stub
+				isSecondLoad = true;
+				if(isFirstLoad && isSecondLoad){
+					clickBtn.setText("loaded");
+				}
+				if(e != null){
+					Toast.makeText(getApplicationContext(), e.getMessage(), 1000).show();
+					return ;
+				}
+				if(objects != null && objects.size()>0){
+					tickets.addAll(objects);
+					String ss = tickets.get(0).getTicketTitle();
+					secondTv.setText(ss);
+				}
+			}
+		});
+
+	}
+	
+	/**
+	 * 
+	 * 一下为测试界面相关部分
+	 */
+
+	private void showDialog(){
+		final  AlertDialog portraidlg=new AlertDialog.Builder(this).create();
+		portraidlg.show();
+		Window win=portraidlg.getWindow();
+		win.setContentView(R.layout.dialog_show_photo);
+		RadioButton portrait_native=(RadioButton)win.findViewById(R.id.Portrait_native);
+		portrait_native.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent1=new Intent(Intent.ACTION_PICK,null);
+				intent1.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+				startActivityForResult(intent1, 11);
+				portraidlg.dismiss();
+			}
+		});
+		RadioButton portrait_take=(RadioButton)win.findViewById(R.id.Portrait_take);
+		portrait_take.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				//调用摄像头
+				Intent intent2=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
+						"/user_header.png")));
+				startActivityForResult(intent2, 22);
+				portraidlg.dismiss();
+			}
+		});
+		View viewTop=win.findViewById(R.id.view_top_dialog_sethead);
+		View viewBottom=win.findViewById(R.id.view_bottom_dialog_sethead);
+		//点击dialog外部，关闭dialog
+		viewTop.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				portraidlg.dismiss();
+			}
+		});
+		viewBottom.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				portraidlg.dismiss();
+			}
+		});
+
+
+
+	}
+	private Bitmap headerPortait;
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		switch (requestCode) {
+		case 11:
+			if(resultCode==this.RESULT_OK){
+				cropPhoto(data.getData());//裁剪图片
+			}
+			break ;
+		case 22:
+			if(resultCode==this.RESULT_OK){
+				File temp=new File(Environment.getExternalStorageDirectory()
+						+ "/user_header.png");
+				cropPhoto(Uri.fromFile(temp));//裁剪图片
+
+			}
+
+			break;
+		case 33:
+			if(data!=null){
+				Bundle extras=data.getExtras();
+				//裁剪后图片
+				headerPortait=extras.getParcelable("data");
+				if(headerPortait!=null){
+					fPath = saveHeadImg(headerPortait,false);
+				}
+				//切圆图片
+				headerPortait=BitmapCut.toRoundBitmap(headerPortait);
+				if(headerPortait!=null){
+					yPath = saveHeadImg(headerPortait,true);
+					ivTouxiang.setImageBitmap(headerPortait);
+				}
+			}
+			break;
+
+		default:
+			break;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+	public String saveHeadImg(Bitmap head,boolean isY){
+		FileOutputStream fos=null;
+		String path = "";
+		if(isY){
+			path = Environment.getExternalStorageDirectory()+"/user_header.png";
+		}else{
+			path = Environment.getExternalStorageDirectory()+"/f_user_header.png";
+		}
+		try {
+			fos=new FileOutputStream(new File(path));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		head.compress(CompressFormat.PNG, 100, fos);
+		try {
+			fos.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			fos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return path;
+
+
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.shezhigerenxinxi, menu);
+		return true;
+	}
+
+
+	public Bitmap readHead(){
+		String file=Environment.getExternalStorageDirectory()+"/user_header.png";
+		return BitmapFactory.decodeFile(file);
+	}
+
+	/**
+	 * 调用拍照的裁剪功能
+	 * @param uri
+	 */
+
+	public void cropPhoto(Uri uri){
+		//调用拍照的裁剪功能
+		Intent intent=new Intent("com.android.camera.action.CROP");
+		intent.setDataAndType(uri, "image/*");
+		intent.putExtra("crop", "true");
+		//aspectX aspectY 是宽和搞的比例
+		intent.putExtra("aspectX", 1);
+		intent.putExtra("aspectY", 1);
+		// // outputX outputY 是裁剪图片宽高
+		intent.putExtra("outputX", 250);
+		intent.putExtra("outputY", 250);
+		intent.putExtra("return-data",true);
+		startActivityForResult(intent,33);
 	}
 
 }

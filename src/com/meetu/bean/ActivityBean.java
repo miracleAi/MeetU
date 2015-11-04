@@ -37,7 +37,7 @@ public class ActivityBean implements Serializable{
 	//活动封面
 	private ArrayList<ObjActivityCover> actyCovers;
 	//参加活动已完成支付的用户列表
-	private ArrayList<AVUser> orderUsers;
+	private ArrayList<ObjUser> orderUsers;
 
 	public void setActivity(ObjActivity activity) {
 		this.activity = activity;
@@ -55,7 +55,7 @@ public class ActivityBean implements Serializable{
 		this.actyCovers = actyCovers;
 	}
 
-	public void setOrderUsers(ArrayList<AVUser> orderUsers) {
+	public void setOrderUsers(ArrayList<ObjUser> orderUsers) {
 		this.orderUsers = orderUsers;
 	}
 
@@ -72,7 +72,7 @@ public class ActivityBean implements Serializable{
 		return actyCovers;
 	}
 
-	public ArrayList<AVUser> getOrderUsers() {
+	public ArrayList<ObjUser> getOrderUsers() {
 		return orderUsers;
 	}
 	AVUser user = ObjUser.getCurrentUser();
@@ -98,21 +98,27 @@ public class ActivityBean implements Serializable{
 	//查询参加活动列表  setOrderUsers
 	public void queryOrderUsers(final ObjActivity activity,final Handler handler){
 		ObjActivityOrderWrap.queryActivitySignUp(activity, new ObjUserCallback() {
-			
+
 			@Override
-			public void callback(List<AVUser> objects, AVException e) {
+			public void callback(List<ObjUser> objects, AVException e) {
 				// TODO Auto-generated method stub
-				ArrayList<AVUser> users = new ArrayList<AVUser>();
+				ArrayList<ObjUser> users = new ArrayList<ObjUser>();
 				if(e != null){
 					return ;
 				}
-				if(objects != null && objects.size()>0){
+				if(objects != null){
 					users.addAll(objects);
 					setOrderUsers(users);
-					queryFollowAndOrder(activity, handler);
+					if(getOrderUsers().size()>0){
+						queryFollowAndOrder(activity, handler);
+					}else{
+						setOrderAndFollow(0);
+						handler.sendEmptyMessage(Constants.QUER_ORDERFOLLOW_OK);
+					}
 				}
 			}
 		});
+
 	}
 	//获取参加活动并且我关注的人  setOrderAndFollow
 	public void queryFollowAndOrder(ObjActivity activity,final Handler handler){

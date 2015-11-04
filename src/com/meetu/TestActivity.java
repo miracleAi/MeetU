@@ -20,10 +20,13 @@ import com.meetu.bean.ActivityBean;
 import com.meetu.cloud.callback.ObjActivityCallback;
 import com.meetu.cloud.callback.ObjActivityCoverCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjTicketCallback;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityCover;
+import com.meetu.cloud.object.ObjActivityTicket;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjActivityCoverWrap;
+import com.meetu.cloud.wrap.ObjActivityOrderWrap;
 import com.meetu.cloud.wrap.ObjActivityWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.cloud.wrap.ObjWrap;
@@ -72,10 +75,20 @@ public class TestActivity extends Activity{
 	//活动测试
 	private ImageView favorImg;
 	private TextView favrCout,followTv,joinTv,statusTv,titleTv,addressTv,timeTv,bigImg,contentTv,orderUserTv,actyCoverTv;
+	private TextView firstTv,secondTv;
+	//首页活动列表
 	ArrayList<ActivityBean> activitys = new ArrayList<ActivityBean>();
+	//首页某一项活动
 	ActivityBean bean = new ActivityBean();
+	ObjActivity  activityItem = new ObjActivity();
+	//活动封面图片
 	ArrayList<ObjActivityCover> coverList = new ArrayList<ObjActivityCover>();
-	ArrayList<AVUser> userList = new ArrayList<AVUser>();
+	//参加活动用户列表
+	ArrayList<ObjUser> userList = new ArrayList<ObjUser>();
+	//是否已参加活动
+	boolean isJoin = false;
+	//某项活动的票种列表
+	private ArrayList<ObjActivityTicket> tickets = new ArrayList<ObjActivityTicket>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -87,7 +100,7 @@ public class TestActivity extends Activity{
 		initView();
 		initActivity();
 	}
-
+	//获取活动信息
 	private void initActivity() {
 		// TODO Auto-generated method stub
 		bigImg =  (TextView) findViewById(R.id.big_img);
@@ -102,7 +115,6 @@ public class TestActivity extends Activity{
 		contentTv = (TextView) findViewById(R.id.content_tv);
 		orderUserTv = (TextView) findViewById(R.id.user_order_tv);
 		actyCoverTv = (TextView) findViewById(R.id.acty_cover_tv);
-		getActivitys();
 	}
 	Handler handler = new Handler(){
 		public void handleMessage(android.os.Message msg) {
@@ -119,7 +131,11 @@ public class TestActivity extends Activity{
 				int followCount = bean.getOrderAndFollow();
 				followTv.setText("follow  "+String.valueOf(followCount));
 				userList = bean.getOrderUsers();
-				orderUserTv.setText("users"+userList.size());
+				if(userList.size()>0){
+					orderUserTv.setText("users"+userList.size()+userList.get(0).getProfileClip().getUrl());
+				}else{
+					orderUserTv.setText("users"+userList.size());
+				}
 				break;
 			case Constants.QUER_ACTIVITYCOVER_OK:
 				coverList = bean.getActyCovers();
@@ -142,29 +158,31 @@ public class TestActivity extends Activity{
 					return;
 				}
 				if(objects != null && objects.size()>0){
+					clickBtn.setText("next");
 					for(ObjActivity activity : objects){
 						ActivityBean bean1 = new ActivityBean();
 						bean1.setActivity(activity);
 						activitys.add(bean1);
-						if(activity.getObjectId().equals("55e2b25700b0ded317c48f3b")){
+						if(activity.getObjectId().equals("55e2b21f00b075a5f2917bc9")){
 							bean = bean1;
+							activityItem = bean.getActivity();
 						}
 					}
 					//查询是否点赞
-					bean.queryFavor(bean.getActivity(), handler);
-					String imgUrl = bean.getActivity().getActivityCover().getUrl();
-					int praiseCount = bean.getActivity().getPraiseCount();
-					int boyAndGirl = bean.getActivity().getOrderCountGirl();
-					String statusStr = ObjActivity.getStatusStr(bean.getActivity().getStatus());
-					String title = bean.getActivity().getTitle();
-					String lacationTitle = bean.getActivity().getLocationAddress();
-					String timeStart = bean.getActivity().getTimeStart()+"";
+					bean.queryFavor(activityItem, handler);
+					String imgUrl = activityItem.getActivityCover().getUrl();
+					int praiseCount = activityItem.getPraiseCount();
+					int boyAndGirl = activityItem.getOrderCountGirl();
+					String statusStr = ObjActivity.getStatusStr(activityItem.getStatus());
+					String title = activityItem.getTitle();
+					String lacationTitle = activityItem.getLocationAddress();
+					String timeStart = activityItem.getTimeStart()+"";
 					//活动详情内容网页
-					String actyContent = bean.getActivity().getActivityContent().getUrl();
+					String actyContent = activityItem.getActivityContent().getUrl();
 					//封面展示图片列表
-					bean.queryActyCovers(bean.getActivity(), handler);
+					bean.queryActyCovers(activityItem, handler);
 					//参与用户列表 参与并且我关注的人数
-					bean.queryOrderUsers(bean.getActivity(), handler);
+					bean.queryOrderUsers(activityItem, handler);
 
 					bigImg.setText(imgUrl);
 					favrCout.setText("favor  "+String.valueOf(praiseCount));
@@ -179,18 +197,12 @@ public class TestActivity extends Activity{
 			}
 		});
 	}
-	private void startTwo(){
-		ActivityBean bean = activitys.get(0);
-		Intent intent = new Intent(TestActivity.this,TestActivityTwo.class);
-		Bundle bundle = new Bundle();
-		bundle.putSerializable("activity", bean);
-		intent.putExtras(bundle);
-		startActivity(intent);
-	}
 	private void initView(){
 		ivTouxiang=(ImageView)super.findViewById(R.id.selfinfo1_userhead_img);
 		clickBtn = (Button) findViewById(R.id.click);
 		ed = (EditText) findViewById(R.id.ed);
+		firstTv = (TextView) findViewById(R.id.first_tv);
+		secondTv = (TextView) findViewById(R.id.second_tv);
 		Bitmap head=readHead();
 		if(head!=null){
 			fPath = Environment.getExternalStorageDirectory()+"/f_user_header.png";
@@ -212,16 +224,12 @@ public class TestActivity extends Activity{
 				// TODO Auto-generated method stub
 				AVUser currentUser = AVUser.getCurrentUser();
 				if (currentUser != null) {
-					try {
-						ObjUser user = AVObject.createWithoutData(ObjUser.class, currentUser.getObjectId());
-						//完善个人信息
-						/**
-						 * completeInfo(user);
-						 * */
-					} catch (AVException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					//强制类型转换
+					ObjUser user = AVUser.cast(currentUser, ObjUser.class);
+					//完善个人信息
+					/**
+					 * completeInfo(user);
+					 * */
 					//忘记密码，获取短信验证 & 重置密码
 					/**
 					 * if(isSms){
@@ -233,9 +241,88 @@ public class TestActivity extends Activity{
 						isSms = true;
 					}
 					 */
+					if(clickBtn.getText().toString().equals("next")){
+						//去报名
+						getInfo(activityItem);
+					}else if(clickBtn.getText().toString().equals("loaded")){
+						sinUp(activityItem);
+					}else{
+						//获取活动信息
+						clickBtn.setText("获取中，请稍后……");
+						getActivitys();
+					} 
 				}else{
 					Toast.makeText(getApplicationContext(), "not login", 1000).show();
 					return ;
+				}
+			}
+		});
+	}
+	boolean isFirstLoad = false;
+	boolean isSecondLoad = false;
+	ObjUser userSign = AVUser.cast(ObjUser.getCurrentUser(), ObjUser.class);
+	private void getInfo(ObjActivity activitySign) {
+		clickBtn.setText("loadng……");
+		ObjActivityWrap.queryUserJoin(activitySign, userSign, new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				isFirstLoad = true;
+				if(isFirstLoad && isSecondLoad){
+					clickBtn.setText("loaded");
+				}
+				if(e != null){
+					return ;
+				}
+				if(result){
+					firstTv.setText("已参加");
+					isJoin = true;
+				}else{
+					firstTv.setText("未参加");
+					isJoin = false;
+				}
+			}
+		});
+		ObjActivityWrap.queryTicket(activitySign, new ObjTicketCallback() {
+			
+			@Override
+			public void callback(List<ObjActivityTicket> objects, AVException e) {
+				// TODO Auto-generated method stub
+				isSecondLoad = true;
+				if(isFirstLoad && isSecondLoad){
+					clickBtn.setText("loaded");
+				}
+				if(e != null){
+					Toast.makeText(getApplicationContext(), e.getMessage(), 1000).show();
+					return ;
+				}
+				if(objects != null && objects.size()>0){
+					tickets.addAll(objects);
+					String ss = tickets.get(0).getTicketTitle();
+					secondTv.setText(ss);
+				}
+			}
+		});
+
+	}
+	protected void sinUp(ObjActivity activitySign) {
+		// TODO Auto-generated method stub
+		if(isJoin){
+			Toast.makeText(TestActivity.this, "您已参加此活动", 1000).show();
+			return ;
+		}
+		ObjActivityOrderWrap.signUpActivity(activitySign, userSign, tickets.get(0), Constants.OrderStatusPaySuccess, "hello", new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText("sign up fail");
+					Toast.makeText(TestActivity.this, "报名失败", 1000).show();
+					return;
+				}else{
+					clickBtn.setText("sign up suc");
 				}
 			}
 		});
@@ -335,12 +422,12 @@ public class TestActivity extends Activity{
 			e1.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 
 	 * 一下为测试界面相关部分
 	 */
-	
+
 	private void showDialog(){
 		final  AlertDialog portraidlg=new AlertDialog.Builder(this).create();
 		portraidlg.show();

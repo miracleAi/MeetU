@@ -1,5 +1,7 @@
 package com.meetu.cloud.object;
 
+import java.io.Serializable;
+
 import android.os.Parcelable.Creator;
 
 import com.avos.avoscloud.AVClassName;

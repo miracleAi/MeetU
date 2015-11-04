@@ -83,6 +83,10 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name="com.meetu.TestTwoActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name="com.meetu.activity.LoginActivity"
             android:label="@string/title_activity_denglu" >
         </activity>

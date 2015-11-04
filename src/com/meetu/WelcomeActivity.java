@@ -72,7 +72,7 @@ public class WelcomeActivity extends Activity {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_welcome);
 		//测试 直接进入
-		Intent intent = new Intent(WelcomeActivity.this,TestActivity.class);
+		Intent intent = new Intent(WelcomeActivity.this,TestActivityTwo.class);
 		startActivity(intent);
 		finish();
 		

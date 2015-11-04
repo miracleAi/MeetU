@@ -1,5 +1,7 @@
 package com.meetu.cloud.object;
 
+import java.io.Serializable;
+
 import android.os.Parcelable.Creator;
 
 import com.avos.avoscloud.AVClassName;
@@ -19,27 +21,27 @@ public class ObjActivityTicket extends AVObject{
 	/**
 	 *  票的标题（只读）
 	 */
-	public static final String TICKETTITLE= "activity";
+	public static final String TICKETTITLE= "ticketTitle";
 	/**
 	 *  票的基本描述（只读）
 	 */
-	public static final String TICKETDESCRIPTION= "activity";
+	public static final String TICKETDESCRIPTION= "ticketDescription";
 	/**
 	 *  标准价格（只读）
 	 */
-	public static final String PRICE= "activity";
+	public static final String PRICE= "price";
 	/**
 	 *  会员价格（只读）
 	 */
-	 public static final String PRICEVIP= "activity";
+	 public static final String PRICEVIP= "priceVip";
 	/**
 	 *  票的总张数（只读）
 	 */
-	public static final String TICKETCOUNT= "activity";
+	public static final String TICKETCOUNT= "ticketCount";
 	/**
 	 *  已售出总数量（只读）
 	 */
-	public static final String TICKETSALECOUNT= "activity";
+	public static final String TICKETSALECOUNT= "ticketSaleCount";
 
 	public ObjActivity getActivity() {
 		return this.getAVObject(ACTIVITY);
