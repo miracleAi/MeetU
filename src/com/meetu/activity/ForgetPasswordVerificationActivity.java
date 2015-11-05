@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -27,6 +28,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,28 +36,34 @@ public class ForgetPasswordVerificationActivity extends Activity implements OnCl
 	private TimerTask mTimerTask;
 	private Timer mTimer = new Timer(true);
 	private Button sent;
-	private int i=9;
+	private int i=59;
 	private Boolean running;
 	private EditText number1,number2,number3,number4,number5,number6;
 	private ImageView back;
 	private String uphone,upassward,number;
-	private TextView fasongphone;
+	private TextView fasongphone,userPhoneNumber;
+	private RelativeLayout quedingLayout;
 	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// 去除title
-				super.requestWindowFeature(Window.FEATURE_NO_TITLE);
-				// 全屏
-				super.getWindow();
+		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// 全屏
+		super.getWindow();
 		setContentView(R.layout.activity_forget_password__verification);
 		uphone=getIntent().getStringExtra("uphone");
 		upassward=getIntent().getStringExtra("upassward");
 		initView();
 		initLoad();
 	}
-	
+	/**
+	 * 向发送手机验证码
+	 *   
+	 * @author lucifer
+	 * @date 2015-11-5
+	 */
 	private void initLoad() {
 		ObjUserWrap.requestSmsCodeForResetPasswd(uphone, new ObjFunBooleanCallback() {
 			
@@ -106,6 +114,11 @@ public class ForgetPasswordVerificationActivity extends Activity implements OnCl
 		back=(ImageView) super.findViewById(R.id.activity_forgetPassword_back_img);
 		back.setOnClickListener(this);
 		
+		quedingLayout=(RelativeLayout) super.findViewById(R.id.activity_forgetPassword_to_forgetPasswordVerification_rl);
+		quedingLayout.setOnClickListener(this);
+		userPhoneNumber=(TextView) super.findViewById(R.id.toPhoneNumber_forgetPassword_verification_tv);
+		
+		userPhoneNumber.setText(uphone);
 	}
 	
 	 /**
@@ -217,14 +230,28 @@ if(number4.getText().length()==1){
 	public void onClick(View v) {
 		
 		switch (v.getId()) {
+		//从新发送验证码
 		case R.id.sent_forgetPassword_bt:
 //				Toast.makeText(ForgetPasswordVerificationActivity.this, "可点击测试", Toast.LENGTH_SHORT).show();
-			ObjUserWrap.resetPasswd(number, upassward, new ObjFunBooleanCallback() {
+			initLoad();
+			i=59;
+				
+			break;
+			/**
+			 * 进行提交修改密码
+			 */
+		case R.id.activity_forgetPassword_to_forgetPasswordVerification_rl:
+			
+	ObjUserWrap.resetPasswd(number, upassward, new ObjFunBooleanCallback() {
 				
 				@Override
 				public void callback(boolean result, AVException e) {
 					if(result==true){
 						Toast.makeText(ForgetPasswordVerificationActivity.this, "重置密码成功", Toast.LENGTH_SHORT).show();
+						
+						Intent intent=new Intent(ForgetPasswordVerificationActivity.this,LoginActivity.class);
+						startActivity(intent);
+						
 					}else{
 						log.e("forgetPassword", e);
 						Toast.makeText(ForgetPasswordVerificationActivity.this, "验证码不正确", Toast.LENGTH_SHORT).show();
@@ -232,8 +259,8 @@ if(number4.getText().length()==1){
 					
 				}
 			});
-				
 			break;
+		
 		case R.id.activity_forgetPassword_back_img:
 			finish();
 			

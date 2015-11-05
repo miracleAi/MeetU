@@ -87,7 +87,8 @@ public class ChangeCityActivity extends BaseActivity implements OnClickListener,
     }
 	
 	private void setUpData() {
-		initProvinceDatas();
+//		initProvinceDatas();
+		initProvinceDatasNews();
 		mViewProvince.setViewAdapter(new ArrayWheelAdapter<String>(ChangeCityActivity.this, mProvinceDatas));
 		
 		Log.e("lucifer", "mProvinceDatas.length=="+mProvinceDatas.length);

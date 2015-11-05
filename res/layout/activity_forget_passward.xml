@@ -99,6 +99,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="密码(6到16位数字、字母)" 
+            android:singleLine="true"
+            android:inputType="textPassword"
+            
             android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:layout_toRightOf="@id/img2"
             android:background="@drawable/register_password_f_720"
@@ -129,6 +132,7 @@
             android:hint="确认密码" 
             android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:layout_toRightOf="@id/img1"
+            android:inputType="textPassword"
             android:background="@drawable/register_password_f_720"
             />
         </RelativeLayout>

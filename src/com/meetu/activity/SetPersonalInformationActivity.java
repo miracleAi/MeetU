@@ -49,19 +49,18 @@ public class SetPersonalInformationActivity extends Activity implements OnClickL
 	private ImageView ivTouxiang,ivman_selector,ivwoman_selector,shangyiye,xiayiye;
 	private TextView sex,birthday;
 	private EditText username;
+	
+	public Boolean isUpUserPhoto=false;//是否上传过头像
 
+	protected	String fHeadPath = "";
+    protected   String yHeadPath = "";
+   
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//去除title
 		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		// 创建状态栏的管理实例  
-		//		SystemBarTintManager tintManager = new SystemBarTintManager(this);  
-		//	    // 激活状态栏设置  
-		//	    tintManager.setStatusBarTintEnabled(true);  
-		//	    // 激活导航栏设置  
-		//	    tintManager.setNavigationBarTintEnabled(true);  
 		//全屏
 		super.getWindow();
 		setContentView(R.layout.activity_shezhigerenxinxi);
@@ -74,6 +73,8 @@ public class SetPersonalInformationActivity extends Activity implements OnClickL
 		ivTouxiang=(ImageView)super.findViewById(R.id.selfinfo1_userhead_img);
 		Bitmap head=readHead();
 		if(head!=null){
+			fHeadPath = Environment.getExternalStorageDirectory()+"/f_user_header.png";
+			yHeadPath = Environment.getExternalStorageDirectory()+"/user_header.png";
 			ivTouxiang.setImageBitmap(head);
 		}
 		ivTouxiang.setOnClickListener(new OnClickListener() {
@@ -170,10 +171,14 @@ public class SetPersonalInformationActivity extends Activity implements OnClickL
 				Bundle extras=data.getExtras();
 				//裁剪后图片
 				headerPortait=extras.getParcelable("data");
+				if(headerPortait!=null){
+					fHeadPath = saveHeadImg(headerPortait,false);
+				}
 				//切圆图片
 				headerPortait=BitmapCut.toRoundBitmap(headerPortait);
 				if(headerPortait!=null){
-					saveHeadImg(headerPortait);
+					yHeadPath = saveHeadImg(headerPortait,true);
+					
 					ivTouxiang.setImageBitmap(headerPortait);
 				}
 			}
@@ -184,34 +189,59 @@ public class SetPersonalInformationActivity extends Activity implements OnClickL
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	public void saveHeadImg(Bitmap head){
+//	public void saveHeadImg(Bitmap head){
+//		FileOutputStream fos=null;
+//		try {
+//			fos=new FileOutputStream(new File(Environment.getExternalStorageDirectory()+"/user_header.png"));
+//			head.compress(CompressFormat.PNG, 100, fos);
+//
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}finally{
+//
+//			try {
+//				if(fos!=null)fos.close();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//
+//
+//	}
+	public String saveHeadImg(Bitmap head,boolean isY){
 		FileOutputStream fos=null;
+		String path = "";
+		if(isY){
+			path = Environment.getExternalStorageDirectory()+"/user_header.png";
+		}else{
+			path = Environment.getExternalStorageDirectory()+"/f_user_header.png";
+		}
 		try {
-			fos=new FileOutputStream(new File(Environment.getExternalStorageDirectory()+"/user_header.png"));
-			head.compress(CompressFormat.PNG, 100, fos);
-
+			fos=new FileOutputStream(new File(path));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally{
-
-			try {
-				if(fos!=null)fos.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
+		head.compress(CompressFormat.PNG, 100, fos);
+		try {
+			fos.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			fos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return path;
 
 
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.shezhigerenxinxi, menu);
-		return true;
-	}
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -237,11 +267,14 @@ public class SetPersonalInformationActivity extends Activity implements OnClickL
 			break;
 			//下一页
 		case R.id.activity_selfinfo1_to_selfinfo2_img:
-			String nickname = username.getText().toString().trim();
-			String xingbie = sex.getText().toString().trim();
-			String birth = birthday.getText().toString().trim();
+			String nickname = username.getText().toString();
+			String xingbie = sex.getText().toString();
+			String birth = birthday.getText().toString();
 			if (!sex.equals("") && !birth.equals("") && !nickname.equals("")) {
 				Intent intent=new Intent(SetPersonalInformationActivity.this,SetPersonalInformation2Activity.class);
+				intent.putExtra("name", nickname);
+				intent.putExtra("sex", xingbie);
+				intent.putExtra("birth", birth);
 				startActivity(intent);
 			}else{
 				Toast.makeText(SetPersonalInformationActivity.this, "信息填写不全",
@@ -270,13 +303,19 @@ public class SetPersonalInformationActivity extends Activity implements OnClickL
 			@Override
 			public void onDateSet(DatePicker arg0, int year, int month, int day) {
 				// TODO Auto-generated method stub
-				birthday.setText(year + "-" + (month + 1) + "-" + day);
+				birthday.setText(year +"-"+ (month + 1) + "-"+ day);
 			}
 		}, year, month,day);
 
 
 	}
 
+	/**
+	 * 读取 本地 圆形 头像
+	 * @return  
+	 * @author lucifer
+	 * @date 2015-11-5
+	 */
 	public Bitmap readHead(){
 		String file=Environment.getExternalStorageDirectory()+"/user_header.png";
 		return BitmapFactory.decodeFile(file);

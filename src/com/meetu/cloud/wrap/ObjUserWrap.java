@@ -153,13 +153,16 @@ public class ObjUserWrap {
      * @param callback 回调对象
      */
     public static void requestSmsCodeForResetPasswd(String phone, final ObjFunBooleanCallback callback){
+    	log.e("zcq", "phone"+phone);
         if (callback != null){
             ObjUser.requestPasswordResetBySmsCodeInBackground(phone, new RequestMobileCodeCallback() {
                 @Override
                 public void done(AVException e) {
                     if (e == null){
+                    	log.e("zcq", "e1="+e);
                         callback.callback(true, null);
                     }else {
+                    	log.e("zcq", "e2="+e);
                         callback.callback(false, e);
                     }
                 }

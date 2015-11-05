@@ -9,8 +9,10 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
+import com.meetu.cloud.callback.ObjFunEnumCallback;
 import com.meetu.cloud.callback.ObjFunObjectCallback;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjExecResult;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.cloud.wrap.ObjWrap;
 
@@ -21,6 +23,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,14 +32,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity implements OnClickListener{
+	//控件相关
 	private ImageView back;
 	private Button dengluButton;
 	private EditText uphone,upassward;
 	private TextView forgert;
+	private TextView forgetPassword;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// 去除title
+		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// 全屏
+		super.getWindow();
 		setContentView(R.layout.activity_login);
 		initView();
 	}
@@ -51,14 +60,9 @@ public class LoginActivity extends Activity implements OnClickListener{
 		dengluButton.setOnClickListener(this);
 		forgert=(TextView)super.findViewById(R.id.forget_to_torgetactivty_tv);
 		forgert.setOnClickListener(this);
+		
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.denglu, menu);
-		return true;
-	}
 	/**
 	 * Editview 输入框监听事件
 	 */
@@ -129,10 +133,43 @@ public class LoginActivity extends Activity implements OnClickListener{
 				
 			}
 			break;
+		//忘记密码 操作
 		case R.id.forget_to_torgetactivty_tv:
 			Intent intent=new Intent(LoginActivity.this,ForgetPasswardActivity.class);
 			intent.putExtra("userphone",uphone.getText());
 			startActivity(intent);
+			
+//			if(uphone.getText().length()!=11){
+//				Toast.makeText(LoginActivity.this, "手机号码格式错误", Toast.LENGTH_SHORT).show();			
+//			}
+//			else{
+//				String phoneString=uphone.getText().toString();
+//				ObjUserWrap.phoneIsAlreadyRegister(phoneString, new ObjFunEnumCallback() {
+//					
+//					@Override
+//					public void callback(ObjExecResult result, AVException e) {
+//						log.e("cunzai", "123");
+//						if(result==ObjExecResult.EXEC_TRUE){
+//							//表述此手机号注册过
+//							
+//							Intent intent=new Intent(LoginActivity.this,ForgetPasswardActivity.class);
+//							intent.putExtra("userphone",uphone.getText());
+//							startActivity(intent);
+//							
+//							//Toast.makeText(RegisterActivity.this, "此手机号 已经注册", Toast.LENGTH_SHORT).show();
+//						}else if(result==ObjExecResult.EXEC_FALSE){
+//	
+//							Toast.makeText(LoginActivity.this, "手机号未注册", Toast.LENGTH_SHORT);
+//						}else{
+//							log.e("register", e);
+//						}
+//						
+//					}
+//				});
+//
+//				
+//			}
+			
 			break;
 		default:
 			break;

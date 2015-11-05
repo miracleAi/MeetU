@@ -275,8 +275,10 @@ public class RegisterVerificationActivity extends Activity implements OnClickLis
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.register_sent_bt:
-			i=9;
-			Toast.makeText(RegisterVerificationActivity.this, "可点击测试", Toast.LENGTH_SHORT).show();
+			
+			initLoad();
+			i=59;
+//			Toast.makeText(RegisterVerificationActivity.this, "可点击测试", Toast.LENGTH_SHORT).show();
 			break;
 
 		case R.id.activity_register_to_yanzhengma_img:

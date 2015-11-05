@@ -4,7 +4,12 @@ package com.meetu.activity;
 
 
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjUserWrap;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -21,9 +26,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 public class ForgetPasswardActivity extends Activity implements OnClickListener {
+	//控件相关
 	private ImageView back;
 	private Button registerButton;
 	private EditText uphone,upassward,uupassward;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +54,10 @@ public class ForgetPasswardActivity extends Activity implements OnClickListener 
 		uupassward.addTextChangedListener(watcher);
 		registerButton=(Button) super.findViewById(R.id.next_bt_forgetpassward);
 		registerButton.setOnClickListener(this);
+		
 	};
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.forget_passward, menu);
-		return true;
-	}
+	
 	/**
 	 * Editview 输入框监听事件
 	 */
@@ -102,10 +105,10 @@ public class ForgetPasswardActivity extends Activity implements OnClickListener 
 			}
 			else{
 	//			Toast.makeText(ForgetPasswardActivity.this, "可以发送数据了", Toast.LENGTH_SHORT).show();
-				Intent intent=new Intent(this,ForgetPasswordVerificationActivity.class);
-				intent.putExtra("uphone", uphone.getText().toString());
-				intent.putExtra("upassward", upassward.getText().toString());
-				startActivity(intent);
+				
+				initRegist(uphone.getText().toString());
+				
+			
 			}
 			
 			break;
@@ -113,6 +116,36 @@ public class ForgetPasswardActivity extends Activity implements OnClickListener 
 		default:
 			break;
 		}
+	}
+	/**
+	 *  修改密码 验证手机号
+	 *   
+	 * @author lucifer
+	 * @date 2015-11-5
+	 */
+	private void initRegist(String phone) {
+		// TODO Auto-generated method stub
+		log.e("lucifer", "phone="+phone);
+		ObjUserWrap.requestSmsCodeForResetPasswd(phone, new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				
+				if(result==true){
+					Intent intent=new Intent(ForgetPasswardActivity.this,ForgetPasswordVerificationActivity.class);
+					intent.putExtra("uphone", uphone.getText().toString());
+					intent.putExtra("upassward", upassward.getText().toString());
+					startActivity(intent);
+				}else if(result==false){
+					log.e("lucifer", "充值密码异常=="+e);
+					Toast.makeText(ForgetPasswardActivity.this, "手机号不存在", Toast.LENGTH_SHORT).show();
+				}
+				
+				
+			}
+		});
+		
 	}
 
 }

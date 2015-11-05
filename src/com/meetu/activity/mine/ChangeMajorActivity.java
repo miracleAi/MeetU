@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
+import com.meetu.activity.SetPersonalInformation2Activity;
 import com.meetu.common.SchoolDao;
 import com.meetu.entity.Department;
 import com.meetu.entity.Schools;
@@ -129,6 +130,13 @@ public class ChangeMajorActivity extends Activity implements OnClickListener,OnI
 	public void onItemClick(AdapterView<?> arg0, View arg1, int positon, long arg3) {
 		// TODO text
 		log.e("lucifer", ""+mList.get(positon).getDepartmentName());
+		Intent intent=new Intent(ChangeMajorActivity.this,SetPersonalInformation2Activity.class);
+//		Bundle bundle=new Bundle();
+//		bundle.putSerializable("department", mList.get(positon));
+//		intent.putExtras(bundle);
+		intent.putExtra("school", schools.getUnivsId());
+		intent.putExtra("department", mList.get(positon).getId());
+		startActivityForResult(intent, 10);
 		
 	}
 }

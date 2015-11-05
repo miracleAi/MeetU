@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 public class LoginOrRegisterActivity extends Activity implements OnClickListener{
+	
 	private Button denglu,zhuce;
 
 	@Override
@@ -30,12 +31,7 @@ public class LoginOrRegisterActivity extends Activity implements OnClickListener
 		zhuce.setOnClickListener(this);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.denglu_or_zhuce, menu);
-		return true;
-	}
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
