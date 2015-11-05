@@ -2,16 +2,25 @@ package com.meetu.activity.mine;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 import com.meetu.common.city.ArrayWheelAdapter;
 import com.meetu.common.city.BaseActivity;
 import com.meetu.common.city.OnWheelChangedListener;
 import com.meetu.common.city.ShengshiquActivity;
 import com.meetu.common.city.WheelView;
+import com.meetu.entity.City;
+import com.meetu.sqlite.CityDao;
+
+
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -27,19 +36,32 @@ public class ChangeCityActivity extends BaseActivity implements OnClickListener,
 	private TextView mBtnConfirm;
 	private String city;
 	private RelativeLayout wanchLayout,backLayout;
+	
+	private CityDao cityDao=new CityDao();
+	
+	//控件相关
+	private TextView cityName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//去除title
-				super.requestWindowFeature(Window.FEATURE_NO_TITLE);
-				//全屏
-				super.getWindow();
+		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//全屏
+		super.getWindow();
 		setContentView(R.layout.activity_change_city);
+		initView();
 		city=super.getIntent().getStringExtra("hometown");
+		
 		setUpViews();
 		setUpListener();
 		setUpData();
+		cityName.setText(""+mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
+	}
+
+	private void initView() {
+		// TODO Auto-generated method stub
+		cityName=(TextView) super.findViewById(R.id.cityName_change_city_tv);
 	}
 
 	private void setUpViews() {
@@ -54,7 +76,7 @@ public class ChangeCityActivity extends BaseActivity implements OnClickListener,
 	}
 	
 	private void setUpListener() {
-    	// ���change�¼�
+		// 添加change事件
     	mViewProvince.addChangingListener(this);
     	// ���change�¼�
     	mViewCity.addChangingListener(this);
@@ -67,7 +89,9 @@ public class ChangeCityActivity extends BaseActivity implements OnClickListener,
 	private void setUpData() {
 		initProvinceDatas();
 		mViewProvince.setViewAdapter(new ArrayWheelAdapter<String>(ChangeCityActivity.this, mProvinceDatas));
-		// ���ÿɼ���Ŀ����
+		
+		Log.e("lucifer", "mProvinceDatas.length=="+mProvinceDatas.length);
+		// 设置可见条目数量
 		mViewProvince.setVisibleItems(7);
 		mViewCity.setVisibleItems(7);
 		mViewDistrict.setVisibleItems(7);
@@ -80,36 +104,83 @@ public class ChangeCityActivity extends BaseActivity implements OnClickListener,
 		// TODO Auto-generated method stub
 		if (wheel == mViewProvince) {
 			updateCities();
+			cityName.setText(""+mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
 		} else if (wheel == mViewCity) {
 			updateAreas();
+			cityName.setText(""+mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
 		} else if (wheel == mViewDistrict) {
-			mCurrentDistrictName = mDistrictDatasMap.get(mCurrentCityName)[newValue];
-			mCurrentZipCode = mZipcodeDatasMap.get(mCurrentDistrictName);
+//			mCurrentDistrictName = mDistrictDatasMap.get(mCurrentCityName)[newValue];
+//			mCurrentZipCode = mZipcodeDatasMap.get(mCurrentDistrictName);
+			int pCurrent = mViewDistrict.getCurrentItem();
+			List<City> townList=new ArrayList<City>();
+			townList=cityDao.getAllTown(mCurrentProviceName, mCurrentCityName);
+			String[] towns=new String[townList.size()];
+			for(int i=0;i<townList.size();i++){
+				towns[i]=townList.get(i).getTown();
+			}
+			mCurrentDistrictName=towns[pCurrent];
+			
+			cityName.setText(""+mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
 		}
 	}
-
 	/**
-	 * ��ݵ�ǰ���У�������WheelView����Ϣ
+	 * 根据当前的市，更新区WheelView的信息
 	 */
+	@SuppressWarnings("unused")
 	private void updateAreas() {
+		City city=new City();
+		List<City> provinceList = new ArrayList<City>();
+		List<City> cityList=new ArrayList<City>();
+		List<City> townList=new ArrayList<City>();
+		
 		int pCurrent = mViewCity.getCurrentItem();
-		mCurrentCityName = mCitisDatasMap.get(mCurrentProviceName)[pCurrent];
-		String[] areas = mDistrictDatasMap.get(mCurrentCityName);
+		cityList=cityDao.getAllCity(mCurrentProviceName);
+//		cityList=cityDao.getAllCity(mCurrentProviceName);
+		String[] citys = new String[cityList.size()];
+		
+		for(int i=0;i<cityList.size();i++){
+			citys[i]=cityList.get(i).getCity();
+		}
+		mCurrentCityName=cityList.get(pCurrent).getCity();
+//		mCurrentCityName = mCitisDatasMap.get(mCurrentProviceName)[pCurrent];
+		
+		townList=cityDao.getAllTown(mCurrentProviceName, mCurrentCityName);
+		Log.e("lucifer", "townList=="+townList.size());
+		String[] areas = new String[townList.size()];
+		
+		for(int i=0;i<townList.size();i++){
+			areas[i]=townList.get(i).getTown();
+		}
+		
+//		String[] areas = mDistrictDatasMap.get(mCurrentCityName);
 
 		if (areas == null) {
 			areas = new String[] { "" };
 		}
 		mViewDistrict.setViewAdapter(new ArrayWheelAdapter<String>(this, areas));
 		mViewDistrict.setCurrentItem(0);
+		mCurrentDistrictName=areas[0];
 	}
 
 	/**
-	 * ��ݵ�ǰ��ʡ��������WheelView����Ϣ
+	 * 根据当前的省，更新市WheelView的信息
 	 */
+	@SuppressWarnings("unused")
 	private void updateCities() {
+		City city=new City();
+		List<City> provinceList = new ArrayList<City>();
+		List<City> cityList=new ArrayList<City>();
+		List<City> townList=new ArrayList<City>();
+		
 		int pCurrent = mViewProvince.getCurrentItem();
 		mCurrentProviceName = mProvinceDatas[pCurrent];
-		String[] cities = mCitisDatasMap.get(mCurrentProviceName);
+		Log.e("lucifer", "mCurrentProviceName=="+mCurrentProviceName);
+
+		cityList=cityDao.getAllCity(mCurrentProviceName);
+		String[] cities = new String[cityList.size()];
+		for(int i=0;i<cityList.size();i++){
+			cities[i]=cityList.get(i).getCity();
+		}		
 		if (cities == null) {
 			cities = new String[] { "" };
 		}
@@ -117,15 +188,46 @@ public class ChangeCityActivity extends BaseActivity implements OnClickListener,
 		mViewCity.setCurrentItem(0);
 		updateAreas();
 	}
+//
+//	/**
+//	 * 根据当前的市，更新区WheelView的信息
+//	 */
+//	private void updateAreas() {
+//		int pCurrent = mViewCity.getCurrentItem();
+//		mCurrentCityName = mCitisDatasMap.get(mCurrentProviceName)[pCurrent];
+//		String[] areas = mDistrictDatasMap.get(mCurrentCityName);
+//
+//		if (areas == null) {
+//			areas = new String[] { "" };
+//		}
+//		mViewDistrict.setViewAdapter(new ArrayWheelAdapter<String>(this, areas));
+//		mViewDistrict.setCurrentItem(0);
+//	}
+//
+//	/**
+//	 * 根据当前的省，更新市WheelView的信息
+//	 */
+//	private void updateCities() {
+//		int pCurrent = mViewProvince.getCurrentItem();
+//		mCurrentProviceName = mProvinceDatas[pCurrent];
+//		String[] cities = mCitisDatasMap.get(mCurrentProviceName);
+//		if (cities == null) {
+//			cities = new String[] { "" };
+//		}
+//		mViewCity.setViewAdapter(new ArrayWheelAdapter<String>(this, cities));
+//		mViewCity.setCurrentItem(0);
+//		updateAreas();
+//	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.city_selector_shengshiqu_rl:
 			Intent intent=new Intent();
-			intent.putExtra("city", mCurrentProviceName+mCurrentCityName);
+			intent.putExtra("city", mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
 			setResult(4, intent);
 			finish();
+			log.e("lucifer", ""+mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
 	//		showSelectedResult();
 			break;
 		case R.id.back_changecity_mine_rl:

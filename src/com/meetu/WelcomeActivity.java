@@ -41,8 +41,10 @@ import com.meetu.activity.miliao.XmlEmojifPullHelper;
 import com.meetu.adapter.JoinUserAdapter;
 import com.meetu.adapter.MiLiaoUsersListAdapter;
 import com.meetu.baidumapdemo.BaiduMapMainActivity;
+import com.meetu.common.DBManager;
 import com.meetu.common.city.ShengshiquActivity;
 import com.meetu.entity.ChatEmoji;
+import com.meetu.sqlite.DBManagerCity;
 import com.meetu.sqlite.EmojisDao;
 
 import android.app.Activity;
@@ -59,6 +61,17 @@ import android.widget.Toast;
 
 
 public class WelcomeActivity extends Activity {
+
+	
+	//导入学校数据库到本地
+	private  DBManager dbHelper;
+	
+	//导入城市数据库到本地
+	private  DBManagerCity dbHelperCity;
+
+
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -67,8 +80,19 @@ public class WelcomeActivity extends Activity {
 		super.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_welcome);
+		
+		//导入数据库
+		dbHelper = new DBManager(this);
+        dbHelper.openDatabase();
+        dbHelper.closeDatabase();
+        
+        dbHelperCity=new DBManagerCity(this);
+        dbHelperCity.openDatabase();
+        dbHelperCity.closeDatabase();
+		
+		
 		//测试 直接进入
-		Intent intent = new Intent(WelcomeActivity.this,TestActivity.class);
+		Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
 		startActivity(intent);
 		finish();
 		
@@ -187,4 +211,3 @@ public class WelcomeActivity extends Activity {
 
 
 }
-

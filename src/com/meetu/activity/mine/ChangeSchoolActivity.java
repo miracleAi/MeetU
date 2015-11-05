@@ -66,6 +66,7 @@ public class ChangeSchoolActivity extends Activity implements OnClickListener {
 
 	private void loadData() {
 		// TODO Auto-generated method stub
+		
 		schoolsAlllList=schoolDao.getschoolAll();
 		log.e("lucifer", ""+schoolsAlllList.size());
 		
