@@ -37,7 +37,7 @@ public class ObjUserWrap {
 				@Override
 				public void done(AVUser user, AVException e) {
 
-					if(user != null){
+					if(user != null && !user.getObjectId().equals("")){
 						callback.callback(ObjExecResult.EXEC_TRUE, null);
 						return ;
 					}

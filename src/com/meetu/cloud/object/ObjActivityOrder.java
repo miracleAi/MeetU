@@ -1,5 +1,7 @@
 package com.meetu.cloud.object;
 
+import java.io.Serializable;
+
 import android.os.Parcelable.Creator;
 
 import com.avos.avoscloud.AVClassName;
@@ -62,5 +64,25 @@ public class ObjActivityOrder extends AVObject{
 	public int getUserNo() {
 		return this.getInt(USERNO);
 	}
-	
+	public void setUser(ObjUser user) {
+		this.put(USER, user);
+	}
+	public void setActivity(ObjActivity activity) {
+		this.put(ACTIVITY,activity);
+	}
+	public void setTicket(ObjActivityTicket ticket) {
+		this.put(TICKET,ticket);
+	}
+	public void setOrderStatus(int status) {
+		this.put(ORDERSTATUS,status);
+	}
+	public void setUserExpect(String expect) {
+		this.put(USEREXPECT,expect);
+	}
+	public void setUserGender(int gender) {
+		this.put(USERGENDER,gender);
+	}
+	public void setUserNo(int userNo) {
+		this.put(USERNO,userNo);
+	}
 }

@@ -8,5 +8,5 @@ import com.avos.avoscloud.AVUser;
 import com.meetu.cloud.object.ObjUser;
 
 public interface ObjUserCallback {
-	void callback(List<AVUser> objects, AVException e);
+	void callback(List<ObjUser> objects, AVException e);
 }

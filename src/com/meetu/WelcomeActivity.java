@@ -61,12 +61,14 @@ import android.widget.Toast;
 
 
 public class WelcomeActivity extends Activity {
+
 	
 	//导入学校数据库到本地
 	private  DBManager dbHelper;
 	
 	//导入城市数据库到本地
 	private  DBManagerCity dbHelperCity;
+
 
 
 

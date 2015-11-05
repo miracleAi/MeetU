@@ -16,6 +16,9 @@ import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityCover;
 import com.meetu.cloud.object.ObjActivityOrder;
+import com.meetu.cloud.object.ObjActivityPhoto;
+import com.meetu.cloud.object.ObjActivityPhotoPraise;
+import com.meetu.cloud.object.ObjActivityPraise;
 import com.meetu.cloud.object.ObjActivityTicket;
 
 import net.tsz.afinal.FinalBitmap;
@@ -39,6 +42,9 @@ public class MyApplication extends Application {
 
 		log.e("AVOSCloud", "3254");
 		AVObject.registerSubclass(ObjActivity.class);
+		AVObject.registerSubclass(ObjActivityPraise.class);
+		AVObject.registerSubclass(ObjActivityPhoto.class);
+		AVObject.registerSubclass(ObjActivityPhotoPraise.class);
 		AVObject.registerSubclass(ObjActivityCover.class);
 		AVObject.registerSubclass(ObjActivityOrder.class);
 		AVObject.registerSubclass(ObjActivityTicket.class);

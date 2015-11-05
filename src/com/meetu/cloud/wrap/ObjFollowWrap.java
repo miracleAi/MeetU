@@ -20,7 +20,7 @@ public class ObjFollowWrap {
 	 * 查询我关注的并且参加活动的人列表
 	 * @param callback
 	 */
-	public static void myFollow(final ArrayList<AVUser> orderUsers,AVUser user,final ObjFunObjectsCallback callback){
+	public static void myFollow(final ArrayList<ObjUser> orderUsers,AVUser user,final ObjFunObjectsCallback callback){
 		AVQuery<AVObject> query = new AVQuery<AVObject>(ObjTableName.getMyFollowTb());
 		query.include("followee");
 		query.whereEqualTo("user", user);

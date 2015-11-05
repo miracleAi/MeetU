@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/nornal_margin_left"
+        android:layout_marginRight="@dimen/nornal_margin_right"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/selfinfo1_userhead_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
+            android:src="@drawable/complete_add_720" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/ed"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/click"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:background="@color/buyticket_check"
+        android:text="click test" />
+
+    <TextView
+        android:id="@+id/join_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
+        android:text="参加"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/follow_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/join_tv"
+        android:layout_marginLeft="10dp"
+        android:text="关注"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/big_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="imgggg"/>
+
+    <ImageView
+        android:id="@+id/favor_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/acty_cardimg_btn_like_hl" />
+
+    <TextView
+        android:id="@+id/favor_count_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="50"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/status_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="活动进行中"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="这是用来测试的啊"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/address_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="地址:Meet U 单身社区"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="2015-08-10"
+        android:textSize="12sp" />
+    <TextView
+        android:id="@+id/content_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="2015-08-10"
+        android:textSize="12sp" />
+    <TextView  
+        android:id="@+id/user_order_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="2015-08-10"
+        android:textSize="12sp" />
+     <TextView  
+        android:id="@+id/acty_cover_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="2015-08-10"
+        android:textSize="12sp" />
+      <TextView  
+        android:id="@+id/first_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="2015-08-10"
+        android:textSize="12sp" />
+     <TextView  
+        android:id="@+id/second_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="2015-08-10"
+        android:textSize="12sp" />
+
+</LinearLayout>
