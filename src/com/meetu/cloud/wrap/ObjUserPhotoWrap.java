@@ -2,7 +2,10 @@ package com.meetu.cloud.wrap;
 
 import java.util.List;
 
+import android.graphics.Bitmap;
+
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.DeleteCallback;
@@ -26,6 +29,7 @@ public class ObjUserPhotoWrap {
 	public static void queryUserPhoto(ObjUser user,final ObjUserPhotoCallback callback){
 		AVQuery<ObjUserPhoto> query = AVObject.getQuery(ObjUserPhoto.class);
 		query.whereEqualTo("user", user);
+		query.orderByDescending("createdAt");
 		query.findInBackground(new FindCallback<ObjUserPhoto>() {
 
 			@Override
@@ -113,6 +117,77 @@ public class ObjUserPhotoWrap {
 					return ;
 				}else{
 					callback.callback(true, null);
+				}
+			}
+		});
+	}
+	/**
+	 * 上传用户照片
+	 * @param path
+	 */
+	public static void saveUserPhoto(AVFile userf,final ObjFunBooleanCallback callback){
+		userf.saveInBackground(new SaveCallback() {
+			
+			@Override
+			public void done(AVException e) {
+				// TODO Auto-generated method stub
+				if(e == null){
+					callback.callback(true, null);
+				}else{
+					callback.callback(false, e);
+				}
+			}
+		});
+	}
+	/**
+	 * 添加用户照片
+	 * @param user
+	 * @param userf
+	 * @param desc
+	 * @param browCount
+	 * @param photoH
+	 * @param photoW
+	 * @param callback
+	 */
+	public static void addUserPhoto(ObjUser user,Bitmap img,AVFile userf,String desc,int photoH,int photoW,final ObjFunBooleanCallback callback){
+		ObjUserPhoto photo = new ObjUserPhoto();
+		photo.setUser(user);
+		photo.setPhoto(userf);
+		photo.setPhotoDescription(desc);
+		photo.setImageWidth(img.getWidth());
+		photo.setImageHeight(img.getHeight());
+		
+		photo.saveInBackground(new SaveCallback() {
+			
+			@Override
+			public void done(AVException e) {
+				// TODO Auto-generated method stub
+				if(e == null){
+					callback.callback(true, null);
+				}else{
+					callback.callback(false, e);
+				}
+			}
+		});
+		
+	}
+	/**
+	 * 删除用户照片
+	 * @param photo
+	 * @param callback
+	 */
+	public static void deleteUserPhoto(ObjUserPhoto photo,final ObjFunBooleanCallback callback){
+		AVQuery<AVObject> query = new AVQuery<AVObject>(ObjTableName.getUserPhotoTb());
+		query.whereEqualTo("objectId", photo.getObjectId());
+		query.deleteAllInBackground(new DeleteCallback() {
+			
+			@Override
+			public void done(AVException e) {
+				// TODO Auto-generated method stub
+				if(e == null){
+					callback.callback(true, null);
+				}else{
+					callback.callback(false, e);
 				}
 			}
 		});

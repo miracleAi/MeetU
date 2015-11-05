@@ -10,7 +10,7 @@
         android:layout_marginLeft="@dimen/nornal_margin_left"
         android:layout_marginRight="@dimen/nornal_margin_right"
         android:orientation="vertical"
-        android:visibility="gone" >
+         >
 
         <ImageView
             android:id="@+id/selfinfo1_userhead_img"

@@ -58,6 +58,8 @@ public class TestActivityTwo extends Activity{
 	private static final String LOAD_SUC = "suc";
 	private static final String PRAISERUSERPHOTO = "praiseUserPhoto";
 	private static final String CANCELPRAISEUSERPHOTO = "cancelPraiseUserPhoto";
+	private static final String ADDUSERPHOTO = "addUserPhoto";
+	private static final String DELETEUSERPHOTO = "deleteUserPhoto";
 	
 	private ImageView ivTouxiang;
 	private Button clickBtn;
@@ -71,6 +73,8 @@ public class TestActivityTwo extends Activity{
 	private TextView firstTv,secondTv;
 	//当前用户
 	ObjUser user = new ObjUser();
+	//需上传的用户照片
+	Bitmap userphoto;
 	
 	ObjUserPhoto photoBean = new ObjUserPhoto();
 	@Override
@@ -103,8 +107,9 @@ public class TestActivityTwo extends Activity{
 		actyCoverTv = (TextView) findViewById(R.id.acty_cover_tv);*/
 		Bitmap head=readHead();
 		if(head!=null){
-			fPath = Environment.getExternalStorageDirectory()+"/f_user_header.png";
-			yPath = Environment.getExternalStorageDirectory()+"/user_header.png";
+			userphoto = head;
+			fPath = Environment.getExternalStorageDirectory()+"/f_user_photo.png";
+			yPath = Environment.getExternalStorageDirectory()+"/user_photo.png";
 			ivTouxiang.setImageBitmap(head);
 		}
 		ivTouxiang.setOnClickListener(new OnClickListener() {
@@ -116,6 +121,7 @@ public class TestActivityTwo extends Activity{
 			}
 		});
 		clickBtn.setText(LOADUSERPHOTO);
+		//clickBtn.setText(ADDUSERPHOTO);
 		clickBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -126,11 +132,8 @@ public class TestActivityTwo extends Activity{
 					//强制类型转换
 					user = AVUser.cast(currentUser, ObjUser.class);
 					if(clickBtn.getText().toString().equals(LOADUSERPHOTO)){
-						//有照片的用户
-						ObjUser phUser = new ObjUser();
-						phUser.setObjectId("562f37d560b2a6e74d2d08b8");
 						clickBtn.setText(LOADING);
-						getUserPhoto(phUser);
+						getUserPhoto(user);
 						return ;
 					}
 					if(clickBtn.getText().toString().equals(PRAISERUSERPHOTO)){
@@ -145,9 +148,66 @@ public class TestActivityTwo extends Activity{
 						cancelPraiseUserPhoto(photoBean, user);
 						return ;
 					}
+					if(clickBtn.getText().toString().equals(ADDUSERPHOTO)){
+						//上传用户照片
+						clickBtn.setText(LOADING);
+						upLoadUserPhoto(user);
+						return ;
+					}
+					if(clickBtn.getText().toString().equals(DELETEUSERPHOTO)){
+						//上传用户照片
+						clickBtn.setText(LOADING);
+						deleteUserPhoto(photoBean);
+						return ;
+					}
 				}else{
 					Toast.makeText(getApplicationContext(), "not login", 1000).show();
 					return ;
+				}
+			}
+		});
+	}
+	AVFile userf =null;
+	//上传用户照片
+	public void upLoadUserPhoto(final ObjUser user){
+		try {
+			userf = AVFile.withAbsoluteLocalPath("ObjUserPhoto"+user.getObjectId()+Constants.IMG_TYPE, fPath);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		ObjUserPhotoWrap.saveUserPhoto(userf, new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOAD_FAIL);
+				}
+				if(result){
+					int wedth = userphoto.getWidth();
+					int height = userphoto.getHeight();
+					
+					ObjUserPhotoWrap.addUserPhoto(user, userphoto, userf, "first", height, wedth, new ObjFunBooleanCallback() {
+						
+						@Override
+						public void callback(boolean result, AVException e) {
+							// TODO Auto-generated method stub
+							if(e != null){
+								clickBtn.setText(LOAD_FAIL);
+							}
+							if(result){
+								clickBtn.setText(LOAD_SUC);
+							}else{
+								clickBtn.setText(LOAD_FAIL);
+							}
+						}
+					});
+				}else{
+					clickBtn.setText(LOAD_FAIL);
 				}
 			}
 		});
@@ -165,7 +225,27 @@ public class TestActivityTwo extends Activity{
 				}
 				if(objects != null && objects.size()>0){
 					photoBean = objects.get(0);
-					queryIsPraiseUserPhoto(photoBean, user);
+					clickBtn.setText(DELETEUSERPHOTO);
+					//queryIsPraiseUserPhoto(photoBean, user);
+				}else{
+					clickBtn.setText(LOAD_FAIL);
+				}
+			}
+		});
+	}
+	//删除用户照片
+	public void deleteUserPhoto(ObjUserPhoto photo){
+		ObjUserPhotoWrap.deleteUserPhoto(photo, new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOAD_FAIL);
+					return ;
+				}
+				if(result){
+					clickBtn.setText(LOAD_SUC);
 				}else{
 					clickBtn.setText(LOAD_FAIL);
 				}
@@ -264,7 +344,7 @@ public class TestActivityTwo extends Activity{
 				//调用摄像头
 				Intent intent2=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 				intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
-						"/user_header.png")));
+						"/user_photo.png")));
 				startActivityForResult(intent2, 22);
 				portraidlg.dismiss();
 			}
@@ -303,7 +383,7 @@ public class TestActivityTwo extends Activity{
 		case 22:
 			if(resultCode==this.RESULT_OK){
 				File temp=new File(Environment.getExternalStorageDirectory()
-						+ "/user_header.png");
+						+ "/user_photo.png");
 				cropPhoto(Uri.fromFile(temp));//裁剪图片
 
 			}
@@ -314,6 +394,7 @@ public class TestActivityTwo extends Activity{
 				Bundle extras=data.getExtras();
 				//裁剪后图片
 				headerPortait=extras.getParcelable("data");
+				userphoto = headerPortait;
 				if(headerPortait!=null){
 					fPath = saveHeadImg(headerPortait,false);
 				}
@@ -335,9 +416,9 @@ public class TestActivityTwo extends Activity{
 		FileOutputStream fos=null;
 		String path = "";
 		if(isY){
-			path = Environment.getExternalStorageDirectory()+"/user_header.png";
+			path = Environment.getExternalStorageDirectory()+"/user_photo.png";
 		}else{
-			path = Environment.getExternalStorageDirectory()+"/f_user_header.png";
+			path = Environment.getExternalStorageDirectory()+"/f_user_photo.png";
 		}
 		try {
 			fos=new FileOutputStream(new File(path));
@@ -372,7 +453,7 @@ public class TestActivityTwo extends Activity{
 
 
 	public Bitmap readHead(){
-		String file=Environment.getExternalStorageDirectory()+"/user_header.png";
+		String file=Environment.getExternalStorageDirectory()+"/user_photo.png";
 		return BitmapFactory.decodeFile(file);
 	}
 

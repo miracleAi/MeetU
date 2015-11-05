@@ -29,8 +29,12 @@ public class ObjTableName {
 	public static String getPhotoPraiseTb(){
 		return "ObjActivityPhotoPraise";
 	}
-	//活动点赞
+	//用户照片点赞
 	public static String getUserPhotoPraiseTb(){
 		return "ObjUserPhotoPraise";
+	}
+	//用户照片
+	public static String getUserPhotoTb(){
+		return "ObjUserPhoto";
 	}
 }
