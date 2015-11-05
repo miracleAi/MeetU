@@ -38,20 +38,30 @@ public class ChangeCityActivity extends BaseActivity implements OnClickListener,
 	private RelativeLayout wanchLayout,backLayout;
 	
 	private CityDao cityDao=new CityDao();
+	
+	//控件相关
+	private TextView cityName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//去除title
-				super.requestWindowFeature(Window.FEATURE_NO_TITLE);
-				//全屏
-				super.getWindow();
+		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//全屏
+		super.getWindow();
 		setContentView(R.layout.activity_change_city);
+		initView();
 		city=super.getIntent().getStringExtra("hometown");
 		
 		setUpViews();
 		setUpListener();
 		setUpData();
+		cityName.setText(""+mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
+	}
+
+	private void initView() {
+		// TODO Auto-generated method stub
+		cityName=(TextView) super.findViewById(R.id.cityName_change_city_tv);
 	}
 
 	private void setUpViews() {
@@ -94,8 +104,10 @@ public class ChangeCityActivity extends BaseActivity implements OnClickListener,
 		// TODO Auto-generated method stub
 		if (wheel == mViewProvince) {
 			updateCities();
+			cityName.setText(""+mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
 		} else if (wheel == mViewCity) {
 			updateAreas();
+			cityName.setText(""+mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
 		} else if (wheel == mViewDistrict) {
 //			mCurrentDistrictName = mDistrictDatasMap.get(mCurrentCityName)[newValue];
 //			mCurrentZipCode = mZipcodeDatasMap.get(mCurrentDistrictName);
@@ -107,6 +119,8 @@ public class ChangeCityActivity extends BaseActivity implements OnClickListener,
 				towns[i]=townList.get(i).getTown();
 			}
 			mCurrentDistrictName=towns[pCurrent];
+			
+			cityName.setText(""+mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
 		}
 	}
 	/**
