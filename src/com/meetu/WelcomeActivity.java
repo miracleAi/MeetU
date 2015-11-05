@@ -92,7 +92,10 @@ public class WelcomeActivity extends Activity {
 		
 		
 		//测试 直接进入
+
 		Intent intent = new Intent(WelcomeActivity.this,LoginOrRegisterActivity.class);
+
+
 		startActivity(intent);
 		finish();
 		

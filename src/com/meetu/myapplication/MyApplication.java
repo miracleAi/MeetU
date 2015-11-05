@@ -15,11 +15,14 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityCover;
+import com.meetu.cloud.object.ObjActivityFeedback;
 import com.meetu.cloud.object.ObjActivityOrder;
 import com.meetu.cloud.object.ObjActivityPhoto;
 import com.meetu.cloud.object.ObjActivityPhotoPraise;
 import com.meetu.cloud.object.ObjActivityPraise;
 import com.meetu.cloud.object.ObjActivityTicket;
+import com.meetu.cloud.object.ObjUserPhoto;
+import com.meetu.cloud.object.ObjUserPhotoPraise;
 
 import net.tsz.afinal.FinalBitmap;
 import android.app.Application;
@@ -48,6 +51,9 @@ public class MyApplication extends Application {
 		AVObject.registerSubclass(ObjActivityCover.class);
 		AVObject.registerSubclass(ObjActivityOrder.class);
 		AVObject.registerSubclass(ObjActivityTicket.class);
+		AVObject.registerSubclass(ObjActivityFeedback.class);
+		AVObject.registerSubclass(ObjUserPhoto.class);
+		AVObject.registerSubclass(ObjUserPhotoPraise.class);
 		AVOSCloud.initialize(this,
 				"tcd4rj3s3c54bdlkv1vfu5puvu9c2k96ur9kge3qvptqxp8p",
 				"8fpp7j815746jg9x26f0d3c5p76xqkyqm586v2onvx3m2k7a");

@@ -22,7 +22,7 @@ public class ObjActivityPhotoWrap {
 	 * @param activity
 	 * @param callback
 	 */
-	public void queryActivityPhotos(ObjActivity activity,final ObjActivityPhotoCallback callback){
+	public static void queryActivityPhotos(ObjActivity activity,final ObjActivityPhotoCallback callback){
 		AVQuery<ObjActivityPhoto> query = AVObject.getQuery(ObjActivityPhoto.class);
 		query.whereEqualTo("activity", activity);
 		query.findInBackground(new FindCallback<ObjActivityPhoto>() {
@@ -35,6 +35,7 @@ public class ObjActivityPhotoWrap {
 					return ;
 				}
 				if(objects != null){
+					ObjActivityPhoto photo = objects.get(0);
 					callback.callback(objects, e);
 				}
 			}
@@ -46,7 +47,7 @@ public class ObjActivityPhotoWrap {
 	 * @param user
 	 * @param callback
 	 */
-	public void queryPhotoPraise(ObjActivityPhoto photo,ObjUser user,final ObjFunBooleanCallback callback){
+	public static void queryPhotoPraise(ObjActivityPhoto photo,ObjUser user,final ObjFunBooleanCallback callback){
 		AVQuery<AVObject> query = new AVQuery<AVObject>(ObjTableName.getPhotoPraiseTb());
 		query.whereEqualTo("activityPhoto", photo);
 		query.whereEqualTo("user", user);
@@ -73,7 +74,7 @@ public class ObjActivityPhotoWrap {
 	 * @param user
 	 * @param callback
 	 */
-	public void praiseActivityPhoto(ObjActivityPhoto photo,ObjUser user,final ObjFunBooleanCallback callback){
+	public static void praiseActivityPhoto(ObjActivityPhoto photo,ObjUser user,final ObjFunBooleanCallback callback){
 		ObjActivityPhotoPraise praise = new ObjActivityPhotoPraise();
 		praise.setActivityPhoto(photo);
 		praise.setUser(user);
@@ -97,10 +98,10 @@ public class ObjActivityPhotoWrap {
 	 * @param activity
 	 * @param callback
 	 */
-	public static void cancelPraiseActivityPhoto(ObjUser user,ObjActivityPhoto activity,final ObjFunBooleanCallback callback){
+	public static void cancelPraiseActivityPhoto(ObjUser user,ObjActivityPhoto photo,final ObjFunBooleanCallback callback){
 		AVQuery<AVObject> query = new AVQuery<AVObject>(ObjTableName.getPhotoPraiseTb());
 		query.whereEqualTo("user", user);
-		query.whereEqualTo("activity", activity);
+		query.whereEqualTo("activityPhoto", photo);
 		query.deleteAllInBackground(new DeleteCallback() {
 			
 			@Override

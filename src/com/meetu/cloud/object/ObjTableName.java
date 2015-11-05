@@ -25,8 +25,16 @@ public class ObjTableName {
 	public static String getActivityCoverTb(){
 		return "ObjActivityCover";
 	}
-	//活动封面
-		public static String getPhotoPraiseTb(){
-			return "ObjActivityPhotoPraise";
-		}
+	//活动点赞
+	public static String getPhotoPraiseTb(){
+		return "ObjActivityPhotoPraise";
+	}
+	//用户照片点赞
+	public static String getUserPhotoPraiseTb(){
+		return "ObjUserPhotoPraise";
+	}
+	//用户照片
+	public static String getUserPhotoTb(){
+		return "ObjUserPhoto";
+	}
 }
