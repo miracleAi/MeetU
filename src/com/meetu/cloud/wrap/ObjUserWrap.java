@@ -51,140 +51,168 @@ public class ObjUserWrap {
 		}
 	}
 
-    /**
-     * 用户登录
-     *
-     * @param phone 登录手机号
-     * @param passwd 登录密码
-     * @param callback 回调对象
-     */
-    public static void login(String phone, String passwd, final ObjFunObjectCallback callback){
-        if (callback != null){
-            ObjUser.loginByMobilePhoneNumberInBackground(phone, passwd, new LogInCallback<AVUser>() {
-                @Override
-                public void done(AVUser avUser, AVException e) {
-                    if (avUser != null){
-                        callback.callback(avUser, null);
-                    }else {
-                        if (e.getCode() == 210) {
-                            callback.callback(null, new AVException(1, "密码不正确"));
-                        }else {
-                            callback.callback(null, new AVException(2, "用户不存在"));
-                        }
-                    }
-                }
-            });
-        }
-    }
+	/**
+	 * 用户登录
+	 *
+	 * @param phone 登录手机号
+	 * @param passwd 登录密码
+	 * @param callback 回调对象
+	 */
+	public static void login(String phone, String passwd, final ObjFunObjectCallback callback){
+		if (callback != null){
+			ObjUser.loginByMobilePhoneNumberInBackground(phone, passwd, new LogInCallback<AVUser>() {
+				@Override
+				public void done(AVUser avUser, AVException e) {
+					if (avUser != null){
+						callback.callback(avUser, null);
+					}else {
+						if (e.getCode() == 210) {
+							callback.callback(null, new AVException(1, "密码不正确"));
+						}else {
+							callback.callback(null, new AVException(2, "用户不存在"));
+						}
+					}
+				}
+			});
+		}
+	}
 
-    /**
-     * 用户注册
-     * @param phone 手机号码
-     * @param passwd 初始密码
-     * @param smsCode 短信验证码
-     * @param callback 回调对象
-     *
-     *
-     */
-    public static void register(final String phone, final String passwd, String smsCode, final ObjFunBooleanCallback callback){
-        if (callback != null){
-            AVOSCloud.verifySMSCodeInBackground(smsCode, phone, new AVMobilePhoneVerifyCallback() {
-                @Override
-                public void done(AVException e) {
-                    if (e == null){
-                        ObjUser user = new ObjUser();
+	/**
+	 * 用户注册
+	 * @param phone 手机号码
+	 * @param passwd 初始密码
+	 * @param smsCode 短信验证码
+	 * @param callback 回调对象
+	 *
+	 *
+	 */
+	public static void register(final String phone, final String passwd, String smsCode, final ObjFunBooleanCallback callback){
+		if (callback != null){
+			AVOSCloud.verifySMSCodeInBackground(smsCode, phone, new AVMobilePhoneVerifyCallback() {
+				@Override
+				public void done(AVException e) {
+					if (e == null){
+						ObjUser user = new ObjUser();
 
-                        user.setUsername(ObjWrap.createId());
-                        user.setMobilePhoneNumber(phone);
-                        user.setPassword(passwd);
+						user.setUsername(ObjWrap.createId());
+						user.setMobilePhoneNumber(phone);
+						user.setPassword(passwd);
 
-                        user.setUserType(0);
-                        user.setIsVipUser(false);
-                        user.setIsVerifyUser(false);
-                        user.setIsCompleteUserInfo(false);
+						user.setUserType(0);
+						user.setIsVipUser(false);
+						user.setIsVerifyUser(false);
+						user.setIsCompleteUserInfo(false);
 
-                        user.setFetchWhenSave(true);
+						user.setFetchWhenSave(true);
 
-                        user.signUpInBackground(new SignUpCallback() {
-                            @Override
-                            public void done(AVException e) {
-                                if (e == null){
-                                    callback.callback(true, null);
-                                }else {
-                                	log.e("注册失败异常", e.toString() +" "+e.getCode());
-                                	
-                                    callback.callback(false, new AVException(1, "注册失败"));
-                                }
-                            }
-                        });
-                    }else {
-                        callback.callback(false, new AVException(0, "短信验证错误"));
-                    }
-                }
-            });
-        }
-    }
+						user.signUpInBackground(new SignUpCallback() {
+							@Override
+							public void done(AVException e) {
+								if (e == null){
+									callback.callback(true, null);
+								}else {
+									log.e("注册失败异常", e.toString() +" "+e.getCode());
 
+									callback.callback(false, new AVException(1, "注册失败"));
+								}
+							}
+						});
+					}else {
+						callback.callback(false, new AVException(0, "短信验证错误"));
+					}
+				}
+			});
+		}
+	}
+	/**
+	 * 查询是否完善信息
+	 * @param user
+	 * @param callback
+	 */
+	public static void isCompleteInfo(ObjUser user,final ObjFunEnumCallback callback){
+		AVQuery<AVUser> query = AVUser.getQuery();
+		query.whereEqualTo("objectId", user.getObjectId());
+		query.getFirstInBackground(new GetCallback<AVUser>() {
 
-    /**
-     * 完善个人信息
-     *
-     * @param user 用户对象
-     * @param callback 回调对象
-     */
-    public static void completeUserInfo(ObjUser user, final ObjFunBooleanCallback callback){
-        if (callback != null){
-            user.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(AVException e) {
-                    if (e == null){
-                        callback.callback(true, null);
-                    }else {
-                        callback.callback(false, null);
-                    }
-                }
-            });
-        }
-    }
+			@Override
+			public void done(AVUser user, AVException e) {
+				if(user != null && !user.getObjectId().equals("")){
+					ObjUser oUser = AVUser.cast(user, ObjUser.class);
+					if(oUser.isCompleteUserInfo()){
+						callback.callback(ObjExecResult.EXEC_TRUE, null);
+					}else{
+						callback.callback(ObjExecResult.EXEC_FALSE, null);
+					}
+					return ;
+				}
+				if(e == null){
+					callback.callback(ObjExecResult.EXEC_FALSE, null);
+				}else{
+					callback.callback(ObjExecResult.EXEC_EXCEPTION, e);
+				}
+			}
+		});
+	}
 
-    /**
-     * 获取重置密码短信
-     * @param phone 手机号码
-     * @param callback 回调对象
-     */
-    public static void requestSmsCodeForResetPasswd(String phone, final ObjFunBooleanCallback callback){
-        if (callback != null){
-            ObjUser.requestPasswordResetBySmsCodeInBackground(phone, new RequestMobileCodeCallback() {
-                @Override
-                public void done(AVException e) {
-                    if (e == null){
-                        callback.callback(true, null);
-                    }else {
-                        callback.callback(false, e);
-                    }
-                }
-            });
-        }
-    }
+	/**
+	 * 完善个人信息
+	 *
+	 * @param user 用户对象
+	 * @param callback 回调对象
+	 */
+	public static void completeUserInfo(ObjUser user, final ObjFunBooleanCallback callback){
+		if (callback != null){
+			user.saveInBackground(new SaveCallback() {
+				@Override
+				public void done(AVException e) {
+					if (e == null){
+						callback.callback(true, null);
+					}else {
+						callback.callback(false, null);
+					}
+				}
+			});
+		}
+	}
 
-    /**
-     *
-     * @param smsCode 短信验证码
-     * @param newPasswd 新密码
-     * @param callback 回调对象
-     */
-    public static void resetPasswd(String smsCode, String newPasswd, final ObjFunBooleanCallback callback){
-        if (callback != null){
-            ObjUser.resetPasswordBySmsCodeInBackground(smsCode, newPasswd, new UpdatePasswordCallback() {
-                @Override
-                public void done(AVException e) {
-                    if (e == null){
-                        callback.callback(true, null);
-                    }else {
-                        callback.callback(false, e);
-                    }
-                }
-            });
-        }
-    }
+	/**
+	 * 获取重置密码短信
+	 * @param phone 手机号码
+	 * @param callback 回调对象
+	 */
+	public static void requestSmsCodeForResetPasswd(String phone, final ObjFunBooleanCallback callback){
+		if (callback != null){
+			ObjUser.requestPasswordResetBySmsCodeInBackground(phone, new RequestMobileCodeCallback() {
+				@Override
+				public void done(AVException e) {
+					if (e == null){
+						callback.callback(true, null);
+					}else {
+						callback.callback(false, e);
+					}
+				}
+			});
+		}
+	}
+
+	/**
+	 *
+	 * @param smsCode 短信验证码
+	 * @param newPasswd 新密码
+	 * @param callback 回调对象
+	 */
+	public static void resetPasswd(String smsCode, String newPasswd, final ObjFunBooleanCallback callback){
+		if (callback != null){
+			ObjUser.resetPasswordBySmsCodeInBackground(smsCode, newPasswd, new UpdatePasswordCallback() {
+				@Override
+				public void done(AVException e) {
+					if (e == null){
+						callback.callback(true, null);
+					}else {
+						callback.callback(false, e);
+					}
+				}
+			});
+		}
+	}
 }

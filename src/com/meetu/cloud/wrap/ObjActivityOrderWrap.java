@@ -77,7 +77,7 @@ public class ObjActivityOrderWrap {
 		order.setTicket(ticket);
 		order.setUserExpect(expect);
 		order.setUserGender(user.getGender());
-
+		order.setFetchWhenSave(true);
 		order.saveInBackground(new SaveCallback() {
 
 			@Override
