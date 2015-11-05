@@ -9,15 +9,16 @@
         android:layout_height="40dp"
         android:orientation="horizontal" >
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center" >
             <ImageView
                 android:id="@+id/self2_back_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="12dp"
+                
                 android:src="@drawable/register_leftarrow_720" />
             <TextView
                 android:layout_width="wrap_content"
@@ -30,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="12dp"
+                
                 android:src="@drawable/register_rightarrow_720" />
         </RelativeLayout>
     </LinearLayout>
@@ -49,12 +50,22 @@
              android:scaleType="fitCenter"
             android:src="@drawable/complete_add_720" />
     </LinearLayout>
+    
     <LinearLayout
+        android:id="@+id/two_settingInfo_ll"
+         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:visibility="gone"
+        android:orientation="vertical">
+    <LinearLayout
+        
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/nornal_margin_left"
         android:layout_marginRight="@dimen/nornal_margin_right"
-        android:layout_marginTop="56dp"
+       
+        
         android:orientation="vertical" >
         <RelativeLayout 
             android:layout_width="wrap_content"
@@ -146,6 +157,115 @@
             android:background="@drawable/register_sent_dark_720"
             />
         </RelativeLayout>
+    </LinearLayout>
+    
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/one_settingInfo_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         android:layout_marginTop="56dp"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/nornal_margin_left"
+            android:layout_marginRight="@dimen/nornal_margin_right"
+           
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/img3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/complete_name_720" />
+
+                <EditText
+                    android:id="@+id/selfinfo1_nickname_et"
+                    android:layout_width="210dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_toRightOf="@id/img3"
+                    android:background="@drawable/register_sent_dark_720"
+                    android:gravity="center"
+                    android:hint="昵称"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#ffffff"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/nornal_margin_left"
+            android:layout_marginRight="@dimen/nornal_margin_right"
+            android:layout_marginTop="@dimen/small_margin_top"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/img2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/complete_gender_720" />
+
+                <TextView
+                    android:id="@+id/selfinfo1_sex_et"
+                    android:layout_width="94dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_toRightOf="@id/img2"
+                    android:background="@drawable/register_sent_dark_720"
+                    android:gravity="center"
+                    android:hint="性别"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#ffffff"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/nornal_margin_left"
+            android:layout_marginRight="@dimen/nornal_margin_right"
+            android:layout_marginTop="@dimen/small_margin_top"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/img1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/complete_birth_720" />
+
+                <TextView
+                    android:id="@+id/selfinfo_birth_et"
+                    android:layout_width="153dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_toRightOf="@id/img1"
+                    android:background="@drawable/register_sent_dark_720"
+                    android:gravity="center"
+                    android:hint="出生日期"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#ffffff"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
     
  

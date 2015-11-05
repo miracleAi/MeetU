@@ -15,6 +15,7 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.LogUtil.log;
+import com.meetu.MainActivity;
 import com.meetu.R;
 import com.meetu.activity.mine.ChangeSchoolActivity;
 import com.meetu.activity.mine.UpdatepictureActivity;
@@ -22,6 +23,7 @@ import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
+import com.meetu.common.SchoolDao;
 import com.meetu.common.city.ArrayWheelAdapter;
 import com.meetu.common.city.BaseActivity;
 import com.meetu.common.city.OnWheelChangedListener;
@@ -42,12 +44,16 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.ColorDrawable;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -56,17 +62,26 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.TwoLineListItem;
 
 public class SetPersonalInformation2Activity extends BaseActivity implements OnClickListener,OnWheelChangedListener{
+	//控件相关
 	private ImageView ivTouxiang,shangyiye,submit;
 	private TextView etSchool,tvHome;
 	private TextView major;
+	
+	
+	private ImageView ivman_selector,ivwoman_selector;
+	private TextView sex,birthday;
+	private EditText username;
 	//城市选择相关
 	private WheelView mViewProvince;
 	private WheelView mViewCity;
@@ -74,8 +89,9 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 	private TextView mBtnConfirm;
 
 	private CityDao cityDao=new CityDao();
+	private SchoolDao schoolDao=new SchoolDao();
 	
-	private String uName,uSex,uBrith;
+//	private String uName,uSex,uBrith;
 	
 	// 上传 信息   头像相关
 	private	String fHeadPath = "";
@@ -83,13 +99,17 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
     
     private String cityID;
     
-    private String schoolId,departmentId;
+    private String schoolId="",departmentId="";
+    private String schoolName,departmentName;
     //生日
     private long birthLong;
     private String birthString;//时间戳字符串
     
     //
     private Department department;
+    
+    private Boolean isShowTwo=false;//是否显示第二个view 学校家乡那个
+    private LinearLayout oneViewLayout,towViewLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,21 +121,35 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 		setContentView(R.layout.activity_shezhigerenxinxi2);
 		//取得前边传过来的数据
 		Intent intent = this.getIntent(); 
+//		
+//		uName=intent.getStringExtra("name");
+//		uSex=intent.getStringExtra("sex");
+//		uBrith=intent.getStringExtra("birth");
 		
-		uName=intent.getStringExtra("name");
-		uSex=intent.getStringExtra("sex");
-		uBrith=intent.getStringExtra("birth");
+		schoolId=intent.getStringExtra("school");
+		departmentId=intent.getStringExtra("department");
+		
+
+
+		log.e("lucifer", "schoolId=="+schoolId+"departmentId="+departmentId);
 		//TODO  YOUWENTI
 //		birthString=StringToDate.getTimea(uBrith);
 		log.e("lucifer", "birthString=="+birthString);
 		
-		log.e("lucifer", "取到数据=uName"+uName+"uSex"+uSex+"uBrith"+uBrith);
-		
-//		//接收传递过来的对象
-//				Intent intent2 = this.getIntent(); 
-//				department=(Department) intent.getSerializableExtra("department");
-		
 		initView();
+		if(schoolId==null){
+			oneViewLayout.setVisibility(View.VISIBLE);
+			towViewLayout.setVisibility(View.GONE);
+			isShowTwo=false;	
+		}else{
+			oneViewLayout.setVisibility(View.GONE);
+			towViewLayout.setVisibility(View.VISIBLE);
+			isShowTwo=true;
+			schoolName=schoolDao.getschoolName(schoolId).get(0).getUnivsNameString();
+			departmentName=schoolDao.getDepartmentsName(schoolId, departmentId).get(0).getDepartmentName();
+			etSchool.setText(schoolName);
+			major.setText(departmentName);
+		}
 	}
 	private void initView(){
 		ivTouxiang=(ImageView) super.findViewById(R.id.iv_touxiang_shezhigerenxinxi2);
@@ -146,6 +180,17 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 		submit.setOnClickListener(this);
 		major=(TextView) super.findViewById(R.id.self2_major_et);
 		major.setOnClickListener(this);
+		
+		//第二个
+		
+		username=(EditText) super.findViewById(R.id.selfinfo1_nickname_et);
+		sex=(TextView)super.findViewById(R.id.selfinfo1_sex_et);
+		sex.setOnClickListener(this);
+		birthday=(TextView) super.findViewById(R.id.selfinfo_birth_et);
+		birthday.setOnClickListener(this);
+		
+		oneViewLayout=(LinearLayout) super.findViewById(R.id.one_settingInfo_ll);
+		towViewLayout=(LinearLayout) super.findViewById(R.id.two_settingInfo_ll);
 		
 	}
 	
@@ -242,39 +287,14 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 			
 			break;
 			
-		//接收传递回来的学校和专业信息
-		case 10:
-			Intent intent=getIntent();
-			schoolId=intent.getStringExtra("school");
-			departmentId=intent.getStringExtra("department");
-			break;
+	
 
 		default:
 			break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-//	public void saveHeadImg(Bitmap head){
-//		FileOutputStream fos=null;
-//		try {
-//			fos=new FileOutputStream(new File(Environment.getExternalStorageDirectory()+"/user_header.png"));
-//			head.compress(CompressFormat.PNG, 100, fos);
-//			
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}finally{
-//			
-//				try {
-//					if(fos!=null)fos.close();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//		}
-//		
-//		
-//	}
+
 	public String saveHeadImg(Bitmap head,boolean isY){
 		FileOutputStream fos=null;
 		String path = "";
@@ -327,19 +347,19 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 		startActivityForResult(intent,33);
 	}
 	
-	private PopupWindow popupWindow;
-	private void initPopupWindow() {
-		if (popupWindow == null) {
+	private PopupWindow popupWindowCity;
+	private void initPopupWindowCity() {
+		if (popupWindowCity == null) {
 			View view = LayoutInflater.from(this).inflate(R.layout.shengshiqu,
 					null);		
-			popupWindow = new PopupWindow(view,
+			popupWindowCity = new PopupWindow(view,
 					ViewGroup.LayoutParams.MATCH_PARENT,
 					ViewGroup.LayoutParams.MATCH_PARENT);
 			// 设置外观
-			popupWindow.setFocusable(true);
-			popupWindow.setOutsideTouchable(true);
+			popupWindowCity.setFocusable(true);
+			popupWindowCity.setOutsideTouchable(true);
 			ColorDrawable colorDrawable = new ColorDrawable();
-			popupWindow.setBackgroundDrawable(colorDrawable);
+			popupWindowCity.setBackgroundDrawable(colorDrawable);
 		//	tvTitle=(TextView)view.findViewById(R.id.tvcolectList);
 			
 			
@@ -447,7 +467,15 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 			
 			break;
 		case R.id.self2_back_img:
-			finish();
+			if(isShowTwo==true){
+				towViewLayout.setVisibility(View.GONE);
+				oneViewLayout.setVisibility(View.VISIBLE);
+				isShowTwo=false;
+			}else{
+				//销毁
+				finish();
+			}
+			
 			break;
 		case R.id.self2_school_et:
 			
@@ -456,34 +484,68 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 			break;
 		//点击城市
 		case R.id.self2_home_et:
-			initPopupWindow();
-			popupWindow.showAsDropDown(tvHome, 0, 0);
+			initPopupWindowCity();
+			popupWindowCity.showAsDropDown(tvHome, 0, 0);
 			tvHome.setText(""+mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
 			
+			 break;
 			/**
-			 * 提交数据
+			 * 点击 下一页 右
 			 */
 		case R.id.self2_submit_img:
-			if(etSchool.getText().length()!=0&&tvHome.getText().length()!=0&&major.getText().length()!=0){
-				Toast.makeText(SetPersonalInformation2Activity.this, "可以提交传送数据了", Toast.LENGTH_SHORT).show();
+			if(isShowTwo==false){
+				oneViewLayout.setVisibility(View.GONE);
+				towViewLayout.setVisibility(View.VISIBLE);
+				isShowTwo=true;
+			}else{
 				
-				//拿本地的  user 
-				AVUser currentUser = AVUser.getCurrentUser();
-				if (currentUser != null) {
-					//强制类型转换
-					ObjUser user = AVUser.cast(currentUser, ObjUser.class);
-					completeInfo(user);
+
+				if(etSchool.getText().length()!=0&&tvHome.getText().length()!=0&&major.getText().length()!=0){
+					Toast.makeText(SetPersonalInformation2Activity.this, "可以提交传送数据了", Toast.LENGTH_SHORT).show();
+					
+					//拿本地的  user 
+					AVUser currentUser = AVUser.getCurrentUser();
+					if (currentUser != null) {
+						//强制类型转换
+						ObjUser user = AVUser.cast(currentUser, ObjUser.class);
+						completeInfo(user);
+					}
 				}
 			}
+			
+			
 			break;
 		case R.id.city_selector_shengshiqu_tv:
-			popupWindow.dismiss();
+			popupWindowCity.dismiss();
 			tvHome.setText(mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
+			
 			
 			cityID=cityDao.getID(mCurrentProviceName, mCurrentCityName, mCurrentDistrictName).get(0).getId();
 			
 			log.e("lucifer", "cityID=="+cityID);
 			
+			break;
+			
+			//点击事件搬迁
+			
+		case R.id.selfinfo1_sex_et:
+			initPopupWindowSex();
+			popupWindowSex.showAsDropDown(v, 72, 400);	
+			break;
+		case R.id.iv_man_sexselector:
+
+			//	ivman_selector.setImageResource(R.drawable.complete_gender_ms_720);
+			popupWindowSex.dismiss();
+			sex.setText("男生");
+			break;
+		case R.id.iv_woman_sexselector:
+			//	ivwoman_selector.setImageResource(R.drawable.complete_gender_fs_720);
+			popupWindowSex.dismiss();
+			sex.setText("女生");
+
+			break;
+		case R.id.selfinfo_birth_et:
+			showDialog(1);
 			break;
 		default:
 			break;
@@ -512,6 +574,52 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 			tvHome.setText(""+mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
 		}
 	}
+	private PopupWindow popupWindowSex;
+	private void initPopupWindowSex() {
+		if (popupWindowSex == null) {
+			View view = LayoutInflater.from(this).inflate(R.layout.dialog_sex_selector,
+					null);		
+			popupWindowSex = new PopupWindow(view,
+					ViewGroup.LayoutParams.MATCH_PARENT,
+					ViewGroup.LayoutParams.MATCH_PARENT);
+			// 设置外观
+			popupWindowSex.setFocusable(true);
+			popupWindowSex.setOutsideTouchable(true);
+			ColorDrawable colorDrawable = new ColorDrawable();
+			popupWindowSex.setBackgroundDrawable(colorDrawable);
+			//	tvTitle=(TextView)view.findViewById(R.id.tvcolectList);
+			ivman_selector=(ImageView)view.findViewById(R.id.iv_man_sexselector);
+			ivwoman_selector=(ImageView)view.findViewById(R.id.iv_woman_sexselector);
+			ivman_selector.setOnClickListener(this);
+			ivwoman_selector.setOnClickListener(this);
+		}
+
+	}
+	@Override
+	protected Dialog onCreateDialog(int id) {
+
+		Time time = new Time("GMT+8");       
+		time.setToNow();      
+		int year = time.year;      
+		int month = time.month;      
+		int day = time.monthDay;   
+		// TODO Auto-generated method stub
+
+		return new DatePickerDialog(this, new OnDateSetListener() {
+
+			@Override
+			public void onDateSet(DatePicker arg0, int year, int month, int day) {
+				// TODO Auto-generated method stub
+				birthday.setText(year +"-"+ (month + 1) + "-"+ day);
+			}
+		}, year, month,day);
+
+
+	}
+	
+	
+	
+	
 	
 	AVFile fFile = null;
 	AVFile yFile = null;
@@ -520,11 +628,14 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 		public void completeInfo(final ObjUser user){
 			File upF1 = new File(yHeadPath);
 			File upF2 = new File(fHeadPath);
+			
+			log.e("lucifer", "username=="+username.getText().toString()+" sex=="+sex+" birthday ="+birthday);
+			log.e("lucifer", "schoolID=="+schoolId+" departmentId== "+departmentId);
 			try {
-				user.setNameNick(uName);
-				if(uSex.equals("男生")){
+				user.setNameNick(username.getText().toString());
+				if(sex.equals("男生")){
 					user.setGender(1);
-				}else if(uSex.equals("女生")){
+				}else if(sex.equals("女生")){
 					user.setGender(2);
 				}else{
 					user.setGender(0);
@@ -570,7 +681,10 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 										// TODO Auto-generated method stub
 										if(result){
 								//			clickBtn.setText(LOAD_SUC);
+											
 											Toast.makeText(getApplicationContext(), "save suc", 1000).show();
+											Intent intent=new Intent(SetPersonalInformation2Activity.this,MainActivity.class);
+											startActivity(intent);
 										}else{
 								//			clickBtn.setText(LOAD_FAIL);
 											Toast.makeText(getApplicationContext(), "save fail", 1000).show();

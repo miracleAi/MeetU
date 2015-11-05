@@ -116,7 +116,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 						if(object!=null){
 							//登陆成功
 							log.e("object", object.getClassName());
-							Intent intent=new Intent(LoginActivity.this,SetPersonalInformationActivity.class);
+							Intent intent=new Intent(LoginActivity.this,SetPersonalInformation2Activity.class);
 							startActivity(intent);
 							
 						}else {
