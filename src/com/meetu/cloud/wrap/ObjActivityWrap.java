@@ -7,12 +7,14 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.cloud.callback.ObjActivityCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunObjectsCallback;
 import com.meetu.cloud.callback.ObjTicketCallback;
 import com.meetu.cloud.object.ObjActivity;
+import com.meetu.cloud.object.ObjActivityFeedback;
 import com.meetu.cloud.object.ObjActivityOrder;
 import com.meetu.cloud.object.ObjActivityTicket;
 import com.meetu.cloud.object.ObjTableName;
@@ -99,6 +101,30 @@ public class ObjActivityWrap {
 					callback.callback(objects, null);
 				}else{
 					callback.callback(null, new AVException(0,"未获取票种信息"));
+				}
+			}
+		});
+	}
+	/**
+	 * 活动反馈
+	 * @param activity
+	 * @param user
+	 * @param callback
+	 */
+	public static void activityFeedBack(ObjActivity activity,ObjUser user,String content,final ObjFunBooleanCallback callback){
+		ObjActivityFeedback feed = new ObjActivityFeedback();
+		feed.setActivity(activity);
+		feed.setUser(user);
+		feed.setContent(content);
+		feed.saveInBackground(new SaveCallback() {
+			
+			@Override
+			public void done(AVException e) {
+				// TODO Auto-generated method stub
+				if(e == null){
+					callback.callback(true, null);
+				}else{
+					callback.callback(false, e);
 				}
 			}
 		});

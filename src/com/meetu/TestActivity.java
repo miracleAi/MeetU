@@ -19,15 +19,18 @@ import com.meetu.activity.SetPersonalInformationActivity;
 import com.meetu.bean.ActivityBean;
 import com.meetu.cloud.callback.ObjActivityCallback;
 import com.meetu.cloud.callback.ObjActivityCoverCallback;
+import com.meetu.cloud.callback.ObjActivityPhotoCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjTicketCallback;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityCover;
+import com.meetu.cloud.object.ObjActivityPhoto;
 import com.meetu.cloud.object.ObjActivityPraise;
 import com.meetu.cloud.object.ObjActivityTicket;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjActivityCoverWrap;
 import com.meetu.cloud.wrap.ObjActivityOrderWrap;
+import com.meetu.cloud.wrap.ObjActivityPhotoWrap;
 import com.meetu.cloud.wrap.ObjActivityWrap;
 import com.meetu.cloud.wrap.ObjPraiseWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
@@ -81,6 +84,7 @@ public class TestActivity extends Activity{
 	private static final String LOAD_ACTIVITY_PHOTO = "loadActivityPhoto";
 	private static final String PRAISE_ACTY_PHOTO = "praiseactivityphoto";
 	private static final String CANCEL_PRAISE_ACTY_PHOTO = "cancelPraiseActyPhoto";
+	private static final String USER_FEEDBACK = "userFeedback";
 
 	private ImageView ivTouxiang;
 	private Button clickBtn;
@@ -92,8 +96,6 @@ public class TestActivity extends Activity{
 	private ImageView favorImg,photoFavor;
 	private TextView favrCout,followTv,joinTv,statusTv,titleTv,addressTv,timeTv,bigImg,contentTv,orderUserTv,actyCoverTv;
 	private TextView firstTv,secondTv;
-	//首页活动列表
-	ArrayList<ActivityBean> activitys = new ArrayList<ActivityBean>();
 	//首页某一项活动
 	ActivityBean bean = new ActivityBean();
 	ObjActivity  activityItem = new ObjActivity();
@@ -105,6 +107,8 @@ public class TestActivity extends Activity{
 	boolean isJoin = false;
 	//某项活动的票种列表
 	private ArrayList<ObjActivityTicket> tickets = new ArrayList<ObjActivityTicket>();
+	//活动某张照片
+	private ObjActivityPhoto photoBean = new ObjActivityPhoto();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -122,7 +126,7 @@ public class TestActivity extends Activity{
 		firstTv = (TextView) findViewById(R.id.first_tv);
 		secondTv = (TextView) findViewById(R.id.second_tv);
 		photoFavor = (ImageView) findViewById(R.id.photo_favor);
-		
+
 		bigImg =  (TextView) findViewById(R.id.big_img);
 		favorImg = (ImageView) findViewById(R.id.favor_img);
 		favrCout = (TextView) findViewById(R.id.favor_count_tv);
@@ -135,7 +139,7 @@ public class TestActivity extends Activity{
 		contentTv = (TextView) findViewById(R.id.content_tv);
 		orderUserTv = (TextView) findViewById(R.id.user_order_tv);
 		actyCoverTv = (TextView) findViewById(R.id.acty_cover_tv);
-		
+
 		Bitmap head=readHead();
 		if(head!=null){
 			fPath = Environment.getExternalStorageDirectory()+"/f_user_header.png";
@@ -198,29 +202,44 @@ public class TestActivity extends Activity{
 					}
 					if(clickBtn.getText().toString().equals(PRAISE_ACTIVITY)){
 						clickBtn.setText(LOADING);
+						//活动点赞
 						praiseActivity(activityItem);
 						return ;
 					}
 					if(clickBtn.getText().toString().equals(CANCEL_PRAISE_ACTY)){
 						clickBtn.setText(LOADING);
+						//活动取消赞
 						cancelPraiseActivity(activityItem);
 						return ;
 					}
 					if(clickBtn.getText().toString().equals(LOAD_ACTIVITY)){
 						clickBtn.setText(LOADING);
+						//获取活动
 						getActivitys();
 						return ;
 					}
 					if(clickBtn.getText().toString().equals(LOAD_ACTIVITY_PHOTO)){
-						
+						clickBtn.setText(LOADING);
+						//获取活动照片
+						loadActvityPhoto(activityItem);
 						return ;
 					}
 					if(clickBtn.getText().toString().equals(PRAISE_ACTY_PHOTO)){
-						
+						clickBtn.setText(LOADING);
+						//对活动照片点赞
+						praiseActivityPhoto(photoBean);
 						return ;
 					}
 					if(clickBtn.getText().toString().equals(CANCEL_PRAISE_ACTY_PHOTO)){
-						
+						clickBtn.setText(LOADING);
+						//对活动照片取消赞
+						cancelPraiseActtyPhoto(photoBean);
+						return ;
+					}
+					if(clickBtn.getText().toString().equals(USER_FEEDBACK)){
+						clickBtn.setText(LOADING);
+						//活动反馈
+						activityFeedback(activityItem);
 						return ;
 					}
 				}else{
@@ -279,17 +298,18 @@ public class TestActivity extends Activity{
 					//测试去报名（获取活动成功后执行）
 					//clickBtn.setText(LOAD_SIGN_INFO);
 					//测试活动图片（获取活动成功后运行）
-					clickBtn.setText(LOAD_ACTIVITY_PHOTO);
+					//clickBtn.setText(LOAD_ACTIVITY_PHOTO);
+					//测试活动反馈（获取活动成功后运行）
+					clickBtn.setText(USER_FEEDBACK);
 					for(ObjActivity activity : objects){
 						ActivityBean bean1 = new ActivityBean();
 						bean1.setActivity(activity);
-						activitys.add(bean1);
-						if(activity.getObjectId().equals("55e2b21f00b075a5f2917bc9")){
+						if(activity.getObjectId().equals("55e2b25f60b2719ea5e22c96")){
 							bean = bean1;
 							activityItem = bean.getActivity();
 						}
 					}
-					//查询是否点赞
+					//查询是否点赞（因测试活动照片，注释此行）
 					//bean.queryFavor(activityItem, handler);
 					String imgUrl = activityItem.getActivityCover().getUrl();
 					int praiseCount = activityItem.getPraiseCount();
@@ -323,6 +343,7 @@ public class TestActivity extends Activity{
 	boolean isSecondLoad = false;
 	ObjUser userSign = AVUser.cast(ObjUser.getCurrentUser(), ObjUser.class);
 	private void getInfo(ObjActivity activitySign) {
+		//查询是否报名
 		ObjActivityWrap.queryUserJoin(activitySign, userSign, new ObjFunBooleanCallback() {
 
 			@Override
@@ -344,6 +365,7 @@ public class TestActivity extends Activity{
 				}
 			}
 		});
+		//获取票种信息
 		ObjActivityWrap.queryTicket(activitySign, new ObjTicketCallback() {
 
 			@Override
@@ -391,7 +413,7 @@ public class TestActivity extends Activity{
 	//活动点赞
 	public void praiseActivity(ObjActivity acty){
 		ObjPraiseWrap.praiseActivity(userSign, acty, new ObjFunBooleanCallback() {
-			
+
 			@Override
 			public void callback(boolean result, AVException e) {
 				// TODO Auto-generated method stub
@@ -412,7 +434,7 @@ public class TestActivity extends Activity{
 	//活动取消点赞
 	public void cancelPraiseActivity(ObjActivity acty){
 		ObjPraiseWrap.cancelPraiseActivity(userSign, acty, new ObjFunBooleanCallback() {
-			
+
 			@Override
 			public void callback(boolean result, AVException e) {
 				// TODO Auto-generated method stub
@@ -426,6 +448,99 @@ public class TestActivity extends Activity{
 					clickBtn.setText(PRAISE_ACTIVITY);
 				}else{
 					clickBtn.setText(LOAD_FAIL);
+				}
+			}
+		});
+	}
+	//获取活动照片
+	public void loadActvityPhoto(ObjActivity acty){
+		ObjActivityPhotoWrap.queryActivityPhotos(acty, new ObjActivityPhotoCallback() {
+
+			@Override
+			public void callback(List<ObjActivityPhoto> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOAD_FAIL);
+					return ;
+				}
+				if(objects != null && objects.size()>0){
+					photoBean = objects.get(0);
+					firstTv.setText(photoBean.getPhoto().getUrl());
+					//查询是否对照片点赞
+					ObjActivityPhotoWrap.queryPhotoPraise(photoBean, userSign, new ObjFunBooleanCallback() {
+
+						@Override
+						public void callback(boolean result, AVException e) {
+							// TODO Auto-generated method stub
+							if(e != null){
+								clickBtn.setText(LOAD_FAIL);
+								return ;
+							}
+							if(result){
+								photoFavor.setVisibility(View.VISIBLE);
+								clickBtn.setText(CANCEL_PRAISE_ACTY_PHOTO);
+							}else{
+								photoFavor.setVisibility(View.GONE);
+								clickBtn.setText(PRAISE_ACTY_PHOTO);
+							}
+						}
+					});
+				}
+			}
+		});
+	}
+	//对活动照片点赞
+	public void praiseActivityPhoto(ObjActivityPhoto photo){
+		ObjActivityPhotoWrap.praiseActivityPhoto(photo, userSign, new ObjFunBooleanCallback() {
+
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOAD_FAIL);
+					return ;
+				}
+				if(result){
+					photoFavor.setVisibility(View.VISIBLE);
+					clickBtn.setText(CANCEL_PRAISE_ACTY_PHOTO);
+				}else{
+					clickBtn.setText(LOAD_FAIL);
+				}
+			}
+		});
+	}
+	//对活动照片取消赞
+	public void cancelPraiseActtyPhoto(ObjActivityPhoto photo){
+		ObjActivityPhotoWrap.cancelPraiseActivityPhoto(userSign, photo, new ObjFunBooleanCallback() {
+
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOAD_FAIL);
+					return ;
+				}
+				if(result){
+					photoFavor.setVisibility(View.GONE);
+					clickBtn.setText(PRAISE_ACTY_PHOTO);
+				}else{
+					clickBtn.setText(LOAD_FAIL);
+				}
+			}
+		});
+	}
+	//活动反馈
+	public void activityFeedback(ObjActivity acty){
+		ObjActivityWrap.activityFeedBack(acty, userSign, "hello error", new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOAD_FAIL);
+					return ;
+				}else{
+					clickBtn.setText(LOAD_SUC);
 				}
 			}
 		});

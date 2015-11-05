@@ -7,7 +7,7 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVObject.AVObjectCreator;
 
-@AVClassName("ObjActivityTicket")
+@AVClassName("ObjActivityPhoto")
 public class ObjActivityPhoto extends AVObject{
 	public static final Creator CREATOR = AVObjectCreator.instance;
 	/**
