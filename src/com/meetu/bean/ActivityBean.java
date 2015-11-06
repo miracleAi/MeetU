@@ -34,8 +34,6 @@ public class ActivityBean implements Serializable{
 	private boolean isFavor;
 	//我关注并且参加活动的人数
 	private int orderAndFollow;
-	//活动封面
-	private ArrayList<ObjActivityCover> actyCovers;
 	//参加活动已完成支付的用户列表
 	private ArrayList<ObjUser> orderUsers;
 
@@ -51,9 +49,6 @@ public class ActivityBean implements Serializable{
 		this.orderAndFollow = orderAndFollow;
 	}
 
-	public void setActyCovers(ArrayList<ObjActivityCover> actyCovers) {
-		this.actyCovers = actyCovers;
-	}
 
 	public void setOrderUsers(ArrayList<ObjUser> orderUsers) {
 		this.orderUsers = orderUsers;
@@ -67,9 +62,6 @@ public class ActivityBean implements Serializable{
 	}
 	public int getOrderAndFollow() {
 		return orderAndFollow;
-	}
-	public ArrayList<ObjActivityCover> getActyCovers() {
-		return actyCovers;
 	}
 
 	public ArrayList<ObjUser> getOrderUsers() {
@@ -141,25 +133,6 @@ public class ActivityBean implements Serializable{
 					setOrderAndFollow(objects.size());
 				}
 				handler.sendEmptyMessage(Constants.QUER_ORDERFOLLOW_OK);
-			}
-		});
-	}
-	//查询活动封面图列表 setActyCovers
-	public void queryActyCovers(ObjActivity activity,final Handler handler){
-		ObjActivityCoverWrap.queryActivityCover(activity, new ObjActivityCoverCallback() {
-
-			@Override
-			public void callback(List<ObjActivityCover> objects, AVException e) {
-				// TODO Auto-generated method stub
-				ArrayList<ObjActivityCover> list = new ArrayList<ObjActivityCover>();
-				if(e != null){
-					return ;
-				}
-				if(objects != null && objects.size()>0){
-					list.addAll(objects);
-					setActyCovers(list);
-					handler.sendEmptyMessage(Constants.QUER_ACTIVITYCOVER_OK);
-				}
 			}
 		});
 	}

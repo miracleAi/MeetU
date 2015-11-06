@@ -1,4 +1,4 @@
-package com.meetu;
+ package com.meetu;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -99,8 +99,6 @@ public class TestActivity extends Activity{
 	//首页某一项活动
 	ActivityBean bean = new ActivityBean();
 	ObjActivity  activityItem = new ObjActivity();
-	//活动封面图片
-	ArrayList<ObjActivityCover> coverList = new ArrayList<ObjActivityCover>();
 	//参加活动用户列表
 	ArrayList<ObjUser> userList = new ArrayList<ObjUser>();
 	//是否已参加活动
@@ -274,10 +272,6 @@ public class TestActivity extends Activity{
 					orderUserTv.setText("users"+userList.size());
 				}
 				break;
-			case Constants.QUER_ACTIVITYCOVER_OK:
-				coverList = bean.getActyCovers();
-				actyCoverTv.setText("cover:"+coverList.size());
-				break;
 			default:
 				break;
 			}
@@ -321,7 +315,7 @@ public class TestActivity extends Activity{
 					//活动详情内容网页
 					String actyContent = activityItem.getActivityContent().getUrl();
 					//封面展示图片列表
-					bean.queryActyCovers(activityItem, handler);
+					queryActyCovers(activityItem);
 					//参与用户列表 参与并且我关注的人数
 					bean.queryOrderUsers(activityItem, handler);
 
@@ -333,11 +327,28 @@ public class TestActivity extends Activity{
 					addressTv.setText("address  "+lacationTitle);
 					timeTv.setText("startTime  "+timeStart);
 					contentTv.setText("content  "+actyContent);
-					actyCoverTv.setText("cover  "+String.valueOf(coverList.size()));
 				}
 			}
 		});
 	}
+	//查询活动封面图列表 setActyCovers
+		public void queryActyCovers(ObjActivity activity){
+			ObjActivityCoverWrap.queryActivityCover(activity, new ObjActivityCoverCallback() {
+
+				@Override
+				public void callback(List<ObjActivityCover> objects, AVException e) {
+					// TODO Auto-generated method stub
+					ArrayList<ObjActivityCover> coverList = new ArrayList<ObjActivityCover>();
+					if(e != null){
+						return ;
+					}
+					if(objects != null && objects.size()>0){
+						coverList.addAll(objects);
+						actyCoverTv.setText("cover:"+String.valueOf(coverList.size()));
+					}
+				}
+			});
+		}
 	//获取活动报名信息
 	boolean isFirstLoad = false;
 	boolean isSecondLoad = false;
