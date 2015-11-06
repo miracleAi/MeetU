@@ -17,7 +17,7 @@ public class StringToDate {
 	 
 	 public static String getTimea(String user_time) {
 	  String re_time = null;
-	  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	  SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
 	  Date d;
 	  try {
 	   d = sdf.parse(user_time);

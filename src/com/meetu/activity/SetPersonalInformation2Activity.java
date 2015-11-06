@@ -35,6 +35,7 @@ import com.meetu.entity.Middle;
 import com.meetu.entity.Schools;
 import com.meetu.sqlite.CityDao;
 import com.meetu.tools.BitmapCut;
+import com.meetu.tools.DateUtils;
 import com.meetu.tools.StringToDate;
 
 import android.R.integer;
@@ -133,7 +134,9 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 
 		log.e("lucifer", "schoolId=="+schoolId+"departmentId="+departmentId);
 		//TODO  YOUWENTI
-//		birthString=StringToDate.getTimea(uBrith);
+		
+	
+
 		log.e("lucifer", "birthString=="+birthString);
 		
 		initView();
@@ -610,7 +613,13 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 			@Override
 			public void onDateSet(DatePicker arg0, int year, int month, int day) {
 				// TODO Auto-generated method stub
-				birthday.setText(year +"-"+ (month + 1) + "-"+ day);
+				log.e("lucifer", "DatePicker=="+arg0);
+				birthday.setText(year +"年"+ (month + 1) + "月"+ day+"日");
+				
+				//转成时间戳
+				
+				birthLong=DateUtils.getStringToDate(birthday.getText().toString());
+				log.e("lucifer", "birthLong=="+birthLong);
 			}
 		}, year, month,day);
 
@@ -624,7 +633,7 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 	AVFile fFile = null;
 	AVFile yFile = null;
 	
-	//完善个人信息
+	//完善个人信息  上传信息 和头像
 		public void completeInfo(final ObjUser user){
 			File upF1 = new File(yHeadPath);
 			File upF2 = new File(fHeadPath);
@@ -641,16 +650,17 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 					user.setGender(0);
 				}
 				//获取时间戳（单位毫秒）
-//				user.setBirthday(Long.valueOf(birthString));
+				user.setBirthday(birthLong);
+				log.e("lucifer", "birthLong==up=="+birthLong);
 				//根据生日计算
 				user.setConstellation("天枰座");
-				user.setSchool("university");
+				user.setSchool(schoolName);
 				//学校编码，查询数据库
 				user.setSchoolNum(1001);
 				//学校所在地编码，查数据库
 				user.setSchoolLocation(Long.valueOf(schoolId));
 				//此处为专业分类名称
-				user.setDepartment("computer");
+				user.setDepartment(departmentName);
 				//专业分类编码，数据库查询
 				user.setDepartmentId(Integer.valueOf(departmentId));
 				user.setHometown(cityID);
