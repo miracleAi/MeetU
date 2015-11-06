@@ -4,8 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import net.tsz.afinal.FinalBitmap;
 import android.R.string;
 import android.annotation.SuppressLint;
 import android.content.Context;

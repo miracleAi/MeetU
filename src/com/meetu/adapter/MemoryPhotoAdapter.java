@@ -2,8 +2,6 @@ package com.meetu.adapter;
 
 import java.util.List;
 
-import net.tsz.afinal.FinalBitmap;
-
 import com.meetu.R;
 import com.meetu.activity.mine.FavorListActivity;
 import com.meetu.activity.mine.MinephotoActivity;
@@ -22,7 +20,6 @@ import android.widget.RelativeLayout;
 
 public class MemoryPhotoAdapter extends PagerAdapter{
 	private Context  mContext;
-	FinalBitmap finalBitmap;
 	private List<PhotoWall> Newslist;
 	
 	public MemoryPhotoAdapter(Context context, List<PhotoWall> list) {

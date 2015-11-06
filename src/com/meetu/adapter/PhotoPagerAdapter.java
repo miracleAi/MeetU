@@ -13,10 +13,6 @@ import com.meetu.entity.PhotoWall;
 import com.meetu.entity.Photolunbo;
 import com.meetu.myapplication.MyApplication;
 
-
-
-
-import net.tsz.afinal.FinalBitmap;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
@@ -27,7 +23,6 @@ import android.widget.TextView;
 
 public class PhotoPagerAdapter extends PagerAdapter {
 	private Context  mContext;
-	FinalBitmap finalBitmap;
 	private List<Photolunbo> Newslist;
 	
 	

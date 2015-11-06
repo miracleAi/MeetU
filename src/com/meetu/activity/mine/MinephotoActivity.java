@@ -3,8 +3,6 @@ package com.meetu.activity.mine;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.tsz.afinal.FinalHttp;
-
 import com.meetu.R;
 import com.meetu.adapter.MinePhotoAdapter;
 import com.meetu.entity.PhotoWall;
@@ -33,7 +31,6 @@ public class MinephotoActivity extends Activity implements OnClickListener ,OnPa
 	private ViewPager viewPager;
 	private MinePhotoAdapter adapter;
 	int id;
-	private FinalHttp afinal;
 	private List<PhotoWall> photolist=new ArrayList<PhotoWall>();
 	private RelativeLayout backLayout,delectLayout;
 	@Override

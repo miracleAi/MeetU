@@ -7,19 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
-
-
-
-
-
-
-
-
-import net.tsz.afinal.FinalBitmap;
-
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 import com.meetu.activity.SystemSettingsActivity;

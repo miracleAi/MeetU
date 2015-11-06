@@ -24,25 +24,16 @@ import com.meetu.cloud.object.ObjActivityTicket;
 import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.cloud.object.ObjUserPhotoPraise;
 
-import net.tsz.afinal.FinalBitmap;
 import android.app.Application;
 import android.util.Log;
 
 public class MyApplication extends Application {
 
-	private FinalBitmap finalBitmap = null;
 
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-		finalBitmap = FinalBitmap.create(this);
-		finalBitmap.configBitmapLoadThreadSize(3);// 线程尺寸
-		finalBitmap.configDiskCachePath(getFilesDir().toString());//
-		finalBitmap.configDiskCacheSize(1024 * 1024 * 10);
-		int memory = (int) Runtime.getRuntime().maxMemory() / 8;
-		finalBitmap.configMemoryCacheSize(memory);
-
 		log.e("AVOSCloud", "3254");
 		AVObject.registerSubclass(ObjActivity.class);
 		AVObject.registerSubclass(ObjActivityPraise.class);
@@ -80,9 +71,6 @@ public class MyApplication extends Application {
 		// });
 	}
 
-	public FinalBitmap getFinalBitmap() {
-		return finalBitmap;
-	}
 
 	public static class CustomMessageHandler extends AVIMMessageHandler {
 		// 接收到消息后的处理逻辑

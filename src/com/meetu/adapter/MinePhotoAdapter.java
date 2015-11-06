@@ -9,7 +9,6 @@ import com.meetu.activity.mine.MinephotoActivity;
 import com.meetu.entity.PhotoWall;
 import com.meetu.myapplication.MyApplication;
 
-import net.tsz.afinal.FinalBitmap;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +26,6 @@ import android.widget.Toast;
 
 public class MinePhotoAdapter extends PagerAdapter{
 	private Context  mContext;
-	FinalBitmap finalBitmap;
 	private List<PhotoWall> Newslist;
 	
 	public MinePhotoAdapter(Context context, List<PhotoWall> list) {

@@ -6,7 +6,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import net.tsz.afinal.FinalHttp;
 
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
@@ -43,7 +42,6 @@ public class HomePageDetialActivity extends Activity
 		implements
 			OnPageChangeListener,
 			OnClickListener ,OnScrollListener{
-	private FinalHttp afinal;
 	private ViewPager viewPager;
 	private PhotoPagerAdapter adapter;
 	private List<Photolunbo> photolist = new ArrayList<Photolunbo>();
@@ -74,7 +72,6 @@ public class HomePageDetialActivity extends Activity
 		setContentView(R.layout.activity_home_page_detial);
 		style=getIntent().getStringExtra("style");
 		log.e("style","style="+style);
-		afinal = new FinalHttp();
 		initView();
 		startPlay();
 		initLoad();
