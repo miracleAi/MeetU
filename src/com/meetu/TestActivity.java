@@ -21,7 +21,9 @@ import com.meetu.cloud.callback.ObjActivityCallback;
 import com.meetu.cloud.callback.ObjActivityCoverCallback;
 import com.meetu.cloud.callback.ObjActivityPhotoCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjFunObjectsCallback;
 import com.meetu.cloud.callback.ObjTicketCallback;
+import com.meetu.cloud.callback.ObjUserCallback;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityCover;
 import com.meetu.cloud.object.ObjActivityPhoto;
@@ -32,6 +34,7 @@ import com.meetu.cloud.wrap.ObjActivityCoverWrap;
 import com.meetu.cloud.wrap.ObjActivityOrderWrap;
 import com.meetu.cloud.wrap.ObjActivityPhotoWrap;
 import com.meetu.cloud.wrap.ObjActivityWrap;
+import com.meetu.cloud.wrap.ObjFollowWrap;
 import com.meetu.cloud.wrap.ObjPraiseWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.cloud.wrap.ObjWrap;
@@ -262,16 +265,6 @@ public class TestActivity extends Activity{
 					clickBtn.setText(PRAISE_ACTIVITY);
 				}
 				break; 
-			case Constants.QUER_ORDERFOLLOW_OK:
-				int followCount = bean.getOrderAndFollow();
-				followTv.setText("follow  "+String.valueOf(followCount));
-				userList = bean.getOrderUsers();
-				if(userList.size()>0){
-					orderUserTv.setText("users"+userList.size()+userList.get(0).getProfileClip().getUrl());
-				}else{
-					orderUserTv.setText("users"+userList.size());
-				}
-				break;
 			default:
 				break;
 			}
@@ -317,7 +310,7 @@ public class TestActivity extends Activity{
 					//封面展示图片列表
 					queryActyCovers(activityItem);
 					//参与用户列表 参与并且我关注的人数
-					bean.queryOrderUsers(activityItem, handler);
+					queryOrderUsers(activityItem);
 
 					bigImg.setText(imgUrl);
 					favrCout.setText("favor  "+String.valueOf(praiseCount));
@@ -346,6 +339,57 @@ public class TestActivity extends Activity{
 						coverList.addAll(objects);
 						actyCoverTv.setText("cover:"+String.valueOf(coverList.size()));
 					}
+				}
+			});
+		}
+		//查询参加活动列表  setOrderUsers
+		public void queryOrderUsers(final ObjActivity activity){
+			ObjActivityOrderWrap.queryActivitySignUp(activity, new ObjUserCallback() {
+
+				@Override
+				public void callback(List<ObjUser> objects, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						return ;
+					}
+					if(objects != null){
+						userList.addAll(objects);
+						if(userList.size()>0){
+							queryFollowAndOrder(activity, handler);
+							if(userList.size()>0){
+								orderUserTv.setText("users"+userList.size()+userList.get(0).getProfileClip().getUrl());
+							}else{
+								orderUserTv.setText("users"+userList.size());
+							}
+						}else{
+							bean.setOrderAndFollow(0);
+							int followCount = bean.getOrderAndFollow();
+							followTv.setText("follow  "+String.valueOf(followCount));
+						}
+					}
+				}
+			});
+
+		}
+		//获取参加活动并且我关注的人  setOrderAndFollow
+		public void queryFollowAndOrder(ObjActivity activity,final Handler handler){
+			ArrayList<ObjUser> followUsers = new ArrayList<ObjUser>();
+			ObjFollowWrap.myFollow(userList, userSign, new ObjFunObjectsCallback() {
+				
+				@Override
+				public void callback(List<AVObject> objects, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						return ;
+					}
+					if(objects == null){
+						Log.d("mytest", "obj null");
+						bean.setOrderAndFollow(0);
+					}else{
+						bean.setOrderAndFollow(objects.size());
+					}
+					int followCount = bean.getOrderAndFollow();
+					followTv.setText("follow  "+String.valueOf(followCount));
 				}
 			});
 		}

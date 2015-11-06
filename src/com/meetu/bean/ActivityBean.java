@@ -28,8 +28,6 @@ public class ActivityBean implements Serializable{
 	private boolean isFavor;
 	//我关注并且参加活动的人数
 	private int orderAndFollow;
-	//参加活动已完成支付的用户列表
-	private ArrayList<ObjUser> orderUsers;
 
 	public void setActivity(ObjActivity activity) {
 		this.activity = activity;
@@ -44,9 +42,6 @@ public class ActivityBean implements Serializable{
 	}
 
 
-	public void setOrderUsers(ArrayList<ObjUser> orderUsers) {
-		this.orderUsers = orderUsers;
-	}
 
 	public ObjActivity getActivity() {
 		return activity;
@@ -58,9 +53,6 @@ public class ActivityBean implements Serializable{
 		return orderAndFollow;
 	}
 
-	public ArrayList<ObjUser> getOrderUsers() {
-		return orderUsers;
-	}
 	AVUser user = ObjUser.getCurrentUser();
 	//查询是否点赞  setFavor
 	public void queryFavor(ObjActivity activity,final Handler handler){
@@ -78,55 +70,6 @@ public class ActivityBean implements Serializable{
 					setFavor(false);
 				}
 				handler.sendEmptyMessage(Constants.QUER_FAVOR_OK);
-			}
-		});
-	}
-	//查询参加活动列表  setOrderUsers
-	public void queryOrderUsers(final ObjActivity activity,final Handler handler){
-		ObjActivityOrderWrap.queryActivitySignUp(activity, new ObjUserCallback() {
-
-			@Override
-			public void callback(List<ObjUser> objects, AVException e) {
-				// TODO Auto-generated method stub
-				ArrayList<ObjUser> users = new ArrayList<ObjUser>();
-				if(e != null){
-					return ;
-				}
-				if(objects != null){
-					users.addAll(objects);
-					setOrderUsers(users);
-					if(getOrderUsers().size()>0){
-						queryFollowAndOrder(activity, handler);
-					}else{
-						setOrderAndFollow(0);
-						handler.sendEmptyMessage(Constants.QUER_ORDERFOLLOW_OK);
-					}
-				}
-			}
-		});
-
-	}
-	//获取参加活动并且我关注的人  setOrderAndFollow
-	public void queryFollowAndOrder(ObjActivity activity,final Handler handler){
-		ArrayList<ObjUser> followUsers = new ArrayList<ObjUser>();
-		if(user == null){
-			return ;
-		}
-		ObjFollowWrap.myFollow(getOrderUsers(), user, new ObjFunObjectsCallback() {
-			
-			@Override
-			public void callback(List<AVObject> objects, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					return ;
-				}
-				if(objects == null){
-					Log.d("mytest", "obj null");
-					setOrderAndFollow(0);
-				}else{
-					setOrderAndFollow(objects.size());
-				}
-				handler.sendEmptyMessage(Constants.QUER_ORDERFOLLOW_OK);
 			}
 		});
 	}
