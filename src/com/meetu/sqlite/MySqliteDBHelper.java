@@ -1,6 +1,7 @@
 package com.meetu.sqlite;
 
 import com.avos.avoscloud.DeleteCallback;
+import com.meetu.common.Constants;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -168,7 +169,18 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 	
 		sb5.append(")");
 		db.execSQL(sb5.toString());
-		
+		/**
+		 * 首页活动缓存表
+		 * */
+		StringBuffer activitySb=new StringBuffer();
+		activitySb.append("create table if not exists ");
+		activitySb.append(Constants.ACTIVITY_CACHE_TB+"(");
+		activitySb.append("id integer primary key autoincrement ,");
+		activitySb.append(TBL_EMOJIS_ID+ " varchar(100) ,");
+		activitySb.append(TBL_EMOJIS_CHARACTER+ " varchar(100) ,");
+		activitySb.append(TBL_EMOJIS_FACE_NAME+ " varchar(100) ");
+		activitySb.append(")");
+		db.execSQL(activitySb.toString());
 		
 	}
 

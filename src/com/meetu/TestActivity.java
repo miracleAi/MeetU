@@ -101,7 +101,12 @@ public class TestActivity extends Activity{
 	private TextView firstTv,secondTv;
 	//首页某一项活动
 	ActivityBean bean = new ActivityBean();
+	//首页活动列表
+	ArrayList<ActivityBean> actyList = new ArrayList<ActivityBean>();
+	//网络活动表的一项
 	ObjActivity  activityItem = new ObjActivity();
+	//网络活动列表
+	ArrayList<ObjActivity> objactyList = new ArrayList<ObjActivity>();
 	//参加活动用户列表
 	ArrayList<ObjUser> userList = new ArrayList<ObjUser>();
 	//是否已参加活动
@@ -110,6 +115,8 @@ public class TestActivity extends Activity{
 	private ArrayList<ObjActivityTicket> tickets = new ArrayList<ObjActivityTicket>();
 	//活动某张照片
 	private ObjActivityPhoto photoBean = new ObjActivityPhoto();
+	//当前用户
+	ObjUser user = new ObjUser();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -169,7 +176,7 @@ public class TestActivity extends Activity{
 				AVUser currentUser = AVUser.getCurrentUser();
 				if (currentUser != null) {
 					//强制类型转换
-					ObjUser user = AVUser.cast(currentUser, ObjUser.class);
+					user = AVUser.cast(currentUser, ObjUser.class);
 					if(clickBtn.getText().toString().equals(SMS_PSD)){
 						clickBtn.setText(LOADING);
 						//忘记密码，获取短信验证 & 重置密码
@@ -250,26 +257,6 @@ public class TestActivity extends Activity{
 			}
 		});
 	}
-	//活动信息请求成功回调执行
-	Handler handler = new Handler(){
-		public void handleMessage(android.os.Message msg) {
-			switch (msg.what) {
-			case Constants.QUER_FAVOR_OK:
-				boolean isFavor = bean.isFavor();
-				//测试点赞 取消赞  获取点赞信息后执行
-				if(isFavor){
-					favorImg.setVisibility(View.VISIBLE);
-					clickBtn.setText(CANCEL_PRAISE_ACTY);
-				}else{
-					favorImg.setVisibility(View.GONE);
-					clickBtn.setText(PRAISE_ACTIVITY);
-				}
-				break; 
-			default:
-				break;
-			}
-		};
-	};
 	//获取活动信息
 	private void getActivitys() {
 		// TODO Auto-generated method stub
@@ -289,15 +276,33 @@ public class TestActivity extends Activity{
 					//测试活动反馈（获取活动成功后运行）
 					clickBtn.setText(USER_FEEDBACK);
 					for(ObjActivity activity : objects){
-						ActivityBean bean1 = new ActivityBean();
-						bean1.setActivity(activity);
 						if(activity.getObjectId().equals("55e2b25f60b2719ea5e22c96")){
-							bean = bean1;
-							activityItem = bean.getActivity();
+							activityItem = activity;
+							objactyList.add(activity);
+							bean.setActyId(activity.getObjectId());
+							bean.setUserId(user.getObjectId());
+							bean.setActivityContent(activity.getActivityContent().getUrl());
+							bean.setActivityCover(activity.getActivityCover().getUrl());
+							bean.setLocationAddress(activity.getLocationAddress());
+							bean.setLocationPlace(activity.getLocationPlace());
+							bean.setOrderCountBoy(activity.getOrderCountBoy());
+							bean.setOrderCountGirl(activity.getOrderCountGirl());
+							bean.setPraiseCount(activity.getPraiseCount());
+							bean.setStatus(activity.getStatus());
+							bean.setTimeStart(activity.getTimeStart());
+							bean.setTitle(activity.getTitle());
+							bean.setTitleSub(activity.getTitleSub());
+							bean.setTimeStop(activity.getTimeStop());
+							bean.setLocationGovernment(activity.getLocationGovernment());
+							bean.setConversationId(activity.getConversationId());
+							actyList.add(bean);
 						}
+						/**
+						 * 此处执行活动信息保存
+						 * */
 					}
 					//查询是否点赞（因测试活动照片，注释此行）
-					//bean.queryFavor(activityItem, handler);
+					queryFavor(activityItem);
 					String imgUrl = activityItem.getActivityCover().getUrl();
 					int praiseCount = activityItem.getPraiseCount();
 					int boyAndGirl = activityItem.getOrderCountGirl();
@@ -342,6 +347,32 @@ public class TestActivity extends Activity{
 				}
 			});
 		}
+		//查询是否点赞  setFavor
+		public void queryFavor(ObjActivity activity){
+			if(user == null){
+				return ;
+			}
+			ObjPraiseWrap.queryActivityFavor(user, activity, new ObjFunBooleanCallback() {
+
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					//测试点赞 取消赞  获取点赞信息后执行
+					if(result){
+						actyList.get(0).setFavor(true);
+						favorImg.setVisibility(View.VISIBLE);
+						clickBtn.setText(CANCEL_PRAISE_ACTY);
+					}else{
+						actyList.get(0).setFavor(false);
+						favorImg.setVisibility(View.GONE);
+						clickBtn.setText(PRAISE_ACTIVITY);
+					}
+					/**
+					 * 此处执行更新活动信息点赞字段
+					 * */
+				}
+			});
+		}
 		//查询参加活动列表  setOrderUsers
 		public void queryOrderUsers(final ObjActivity activity){
 			ObjActivityOrderWrap.queryActivitySignUp(activity, new ObjUserCallback() {
@@ -355,16 +386,19 @@ public class TestActivity extends Activity{
 					if(objects != null){
 						userList.addAll(objects);
 						if(userList.size()>0){
-							queryFollowAndOrder(activity, handler);
+							queryFollowAndOrder(activity);
 							if(userList.size()>0){
 								orderUserTv.setText("users"+userList.size()+userList.get(0).getProfileClip().getUrl());
 							}else{
 								orderUserTv.setText("users"+userList.size());
 							}
 						}else{
-							bean.setOrderAndFollow(0);
-							int followCount = bean.getOrderAndFollow();
+							actyList.get(0).setOrderAndFollow(0);
+							int followCount = actyList.get(0).getOrderAndFollow();
 							followTv.setText("follow  "+String.valueOf(followCount));
+							/**
+							 * 此处执行更新活动信息关注参加活动的人count字段
+							 * */
 						}
 					}
 				}
@@ -372,9 +406,9 @@ public class TestActivity extends Activity{
 
 		}
 		//获取参加活动并且我关注的人  setOrderAndFollow
-		public void queryFollowAndOrder(ObjActivity activity,final Handler handler){
+		public void queryFollowAndOrder(ObjActivity activity){
 			ArrayList<ObjUser> followUsers = new ArrayList<ObjUser>();
-			ObjFollowWrap.myFollow(userList, userSign, new ObjFunObjectsCallback() {
+			ObjFollowWrap.myFollow(userList, user, new ObjFunObjectsCallback() {
 				
 				@Override
 				public void callback(List<AVObject> objects, AVException e) {
@@ -384,22 +418,24 @@ public class TestActivity extends Activity{
 					}
 					if(objects == null){
 						Log.d("mytest", "obj null");
-						bean.setOrderAndFollow(0);
+						actyList.get(0).setOrderAndFollow(0);
 					}else{
-						bean.setOrderAndFollow(objects.size());
+						actyList.get(0).setOrderAndFollow(objects.size());
 					}
-					int followCount = bean.getOrderAndFollow();
+					int followCount = actyList.get(0).getOrderAndFollow();
 					followTv.setText("follow  "+String.valueOf(followCount));
+					/**
+					 * 此处执行更新活动信息关注参加活动的人count字段
+					 * */
 				}
 			});
 		}
 	//获取活动报名信息
 	boolean isFirstLoad = false;
 	boolean isSecondLoad = false;
-	ObjUser userSign = AVUser.cast(ObjUser.getCurrentUser(), ObjUser.class);
 	private void getInfo(ObjActivity activitySign) {
 		//查询是否报名
-		ObjActivityWrap.queryUserJoin(activitySign, userSign, new ObjFunBooleanCallback() {
+		ObjActivityWrap.queryUserJoin(activitySign, user, new ObjFunBooleanCallback() {
 
 			@Override
 			public void callback(boolean result, AVException e) {
@@ -450,7 +486,7 @@ public class TestActivity extends Activity{
 			Toast.makeText(TestActivity.this, "您已参加此活动", 1000).show();
 			return ;
 		}
-		ObjActivityOrderWrap.signUpActivity(activitySign, userSign, tickets.get(0), Constants.OrderStatusPaySuccess, "hello", new ObjFunBooleanCallback() {
+		ObjActivityOrderWrap.signUpActivity(activitySign, user, tickets.get(0), Constants.OrderStatusPaySuccess, "hello", new ObjFunBooleanCallback() {
 
 			@Override
 			public void callback(boolean result, AVException e) {
@@ -467,7 +503,7 @@ public class TestActivity extends Activity{
 	}
 	//活动点赞
 	public void praiseActivity(ObjActivity acty){
-		ObjPraiseWrap.praiseActivity(userSign, acty, new ObjFunBooleanCallback() {
+		ObjPraiseWrap.praiseActivity(user, acty, new ObjFunBooleanCallback() {
 
 			@Override
 			public void callback(boolean result, AVException e) {
@@ -488,7 +524,7 @@ public class TestActivity extends Activity{
 	}
 	//活动取消点赞
 	public void cancelPraiseActivity(ObjActivity acty){
-		ObjPraiseWrap.cancelPraiseActivity(userSign, acty, new ObjFunBooleanCallback() {
+		ObjPraiseWrap.cancelPraiseActivity(user, acty, new ObjFunBooleanCallback() {
 
 			@Override
 			public void callback(boolean result, AVException e) {
@@ -522,7 +558,7 @@ public class TestActivity extends Activity{
 					photoBean = objects.get(0);
 					firstTv.setText(photoBean.getPhoto().getUrl());
 					//查询是否对照片点赞
-					ObjActivityPhotoWrap.queryPhotoPraise(photoBean, userSign, new ObjFunBooleanCallback() {
+					ObjActivityPhotoWrap.queryPhotoPraise(photoBean, user, new ObjFunBooleanCallback() {
 
 						@Override
 						public void callback(boolean result, AVException e) {
@@ -546,7 +582,7 @@ public class TestActivity extends Activity{
 	}
 	//对活动照片点赞
 	public void praiseActivityPhoto(ObjActivityPhoto photo){
-		ObjActivityPhotoWrap.praiseActivityPhoto(photo, userSign, new ObjFunBooleanCallback() {
+		ObjActivityPhotoWrap.praiseActivityPhoto(photo, user, new ObjFunBooleanCallback() {
 
 			@Override
 			public void callback(boolean result, AVException e) {
@@ -566,7 +602,7 @@ public class TestActivity extends Activity{
 	}
 	//对活动照片取消赞
 	public void cancelPraiseActtyPhoto(ObjActivityPhoto photo){
-		ObjActivityPhotoWrap.cancelPraiseActivityPhoto(userSign, photo, new ObjFunBooleanCallback() {
+		ObjActivityPhotoWrap.cancelPraiseActivityPhoto(user, photo, new ObjFunBooleanCallback() {
 
 			@Override
 			public void callback(boolean result, AVException e) {
@@ -586,7 +622,7 @@ public class TestActivity extends Activity{
 	}
 	//活动反馈
 	public void activityFeedback(ObjActivity acty){
-		ObjActivityWrap.activityFeedBack(acty, userSign, "hello error", new ObjFunBooleanCallback() {
+		ObjActivityWrap.activityFeedBack(acty, user, "hello error", new ObjFunBooleanCallback() {
 			
 			@Override
 			public void callback(boolean result, AVException e) {

@@ -98,12 +98,12 @@ public class ObjActivity extends AVObject{
 	 *  活动结束时间（UNIX时间戳，毫秒）（只读）
 	 */
 	//long timeStop;
-	public static final String TIMESTOP = "orderCountBoy";
+	public static final String TIMESTOP = "timeStop";
 	/**
 	 *  活动群聊的对话ID（只读）
 	 */
 	//String conversationId;
-	public static final String CONVERSATIONID = "orderCountBoy";
+	public static final String CONVERSATIONID = "conversationId";
 
 	public ObjActivity() {
 		// TODO Auto-generated constructor stub
@@ -195,5 +195,17 @@ public class ObjActivity extends AVObject{
 			break;
 		}
 		return statusStr;
+	}
+	//获得AVFile的URL 缓存存储时需要
+	public static String getAVileUrl(AVFile f){
+		return f.getUrl();
+	}
+	//获取布尔类型对应的int值  数据缓存需要
+	public static int getBolIng(boolean isf){
+		if(isf){
+			return 1;
+		}else{
+			return 0;
+		}
 	}
 }

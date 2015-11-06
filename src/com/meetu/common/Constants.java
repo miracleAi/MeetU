@@ -48,8 +48,17 @@ public class Constants {
 	 */
 	//查询是否点赞
 	public static final int QUER_FAVOR_OK = 0;
-	//查询参加活动的人和参加活动并且我关注的人完成
-	public static final int QUER_ORDERFOLLOW_OK = 1;
-	//查询封面完成
-	public static final int QUER_ACTIVITYCOVER_OK = 2;
+	/**
+	 * 活动缓存表表名
+	 * */
+	public static final String ACTIVITY_CACHE_TB = "activity_cache_tb";
+	/**
+	 * 表字段常量名
+	 * */
+	//用户ID
+	public static final String USERID = "user_id";
+	//是否对活动点赞
+	public static final String ISACTIVITYPRAISE = "is_activity_praise";
+	//参加活动人中我关注的人
+	public static final String ACTIVITYFOLLOWCOUNT = "activity_follow_count";
 }
