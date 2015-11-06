@@ -27,7 +27,7 @@ public class ActivityBean {
 	//活动ID
 	private String actyId;
 	//是否点赞
-	private boolean isFavor;
+	private int isFavor;
 	//我关注并且参加活动的人数
 	private int orderAndFollow;
 	//  活动封面（图片）（只读）
@@ -58,7 +58,23 @@ public class ActivityBean {
 	private long timeStop;
 	//  活动群聊的对话ID（只读）
 	String conversationId;
-	public void setFavor(boolean isFavor) {
+	//index标记是插入的第几条活动
+	private int index;
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+
+	public int getIsFavor() {
+		return isFavor;
+	}
+
+	public void setIsFavor(int isFavor) {
 		this.isFavor = isFavor;
 	}
 
@@ -66,9 +82,6 @@ public class ActivityBean {
 		this.orderAndFollow = orderAndFollow;
 	}
 
-	public boolean isFavor() {
-		return isFavor;
-	}
 	public int getOrderAndFollow() {
 		return orderAndFollow;
 	}

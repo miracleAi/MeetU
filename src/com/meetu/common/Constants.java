@@ -44,10 +44,9 @@ public class Constants {
 	//  失效
 	public static final int OrderStatusLoseEfficacy = 0;
 	/**
-	 * 活动查询相关handler 标记
-	 */
-	//查询是否点赞
-	public static final int QUER_FAVOR_OK = 0;
+	 * 数据库名
+	 * */
+	public  static final String DBNAME="meetu.db";
 	/**
 	 * 活动缓存表表名
 	 * */
@@ -57,8 +56,40 @@ public class Constants {
 	 * */
 	//用户ID
 	public static final String USERID = "user_id";
+	//用户ID
+	public static final String ACTIVITYID = "activity_id";
 	//是否对活动点赞
 	public static final String ISACTIVITYPRAISE = "is_activity_praise";
 	//参加活动人中我关注的人
 	public static final String ACTIVITYFOLLOWCOUNT = "activity_follow_count";
+	//活动封面
+	public static final String ACTIVITYCOVER = "activity_cover";
+	//活动开始时间
+	public static final String TIMESTART = "time_start";
+	//活动内容网页
+	public static final String ACTIVITYCONTENT = "activity_content";
+	//活动点赞数
+	public static final String PRAISECOUNT = "praise_count";
+	//参加活动的女生
+	public static final String ORDERCOUNTGIRL = "order_count_girl";
+	//参加活动的男生
+	public static final String ORDERCOUNTBOY = "order_count_boy";
+	//活动标题
+	public static final String TITLE = "activity_title";
+	//活动子标题
+	public static final String TITLESUB = "title_sub";
+	//活动状态
+	public static final String STATUS = "activity_status";
+	//活动大概地址
+	public static final String LOCATIONADDRESS = "location_address";
+	//活动详细地址
+	public static final String LOCATIONPLACE = "location_place";
+	//活动行政地址
+	public static final String LOCATIONGOVERNMENT = "location_government";
+	//活动结束时间
+	public static final String TIMESTOP = "time_stop";
+	//活动群聊ID
+	public static final String CONVERSATIONID = "conversation_id";
+	//活动index
+	public static final String ACTIVITYINDEX = "activity_index";
 }

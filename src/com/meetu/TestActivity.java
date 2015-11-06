@@ -295,6 +295,9 @@ public class TestActivity extends Activity{
 							bean.setTimeStop(activity.getTimeStop());
 							bean.setLocationGovernment(activity.getLocationGovernment());
 							bean.setConversationId(activity.getConversationId());
+							bean.setIndex(0);
+							bean.setIsFavor(0);
+							bean.setOrderAndFollow(0);
 							actyList.add(bean);
 						}
 						/**
@@ -359,11 +362,11 @@ public class TestActivity extends Activity{
 					// TODO Auto-generated method stub
 					//测试点赞 取消赞  获取点赞信息后执行
 					if(result){
-						actyList.get(0).setFavor(true);
+						actyList.get(0).setIsFavor(1);
 						favorImg.setVisibility(View.VISIBLE);
 						clickBtn.setText(CANCEL_PRAISE_ACTY);
 					}else{
-						actyList.get(0).setFavor(false);
+						actyList.get(0).setIsFavor(0);
 						favorImg.setVisibility(View.GONE);
 						clickBtn.setText(PRAISE_ACTIVITY);
 					}

@@ -200,12 +200,4 @@ public class ObjActivity extends AVObject{
 	public static String getAVileUrl(AVFile f){
 		return f.getUrl();
 	}
-	//获取布尔类型对应的int值  数据缓存需要
-	public static int getBolIng(boolean isf){
-		if(isf){
-			return 1;
-		}else{
-			return 0;
-		}
-	}
 }

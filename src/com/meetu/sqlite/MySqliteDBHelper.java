@@ -1,16 +1,17 @@
 package com.meetu.sqlite;
 
 import com.avos.avoscloud.DeleteCallback;
+import com.meetu.cloud.object.ObjActivity;
 import com.meetu.common.Constants;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.StaticLayout;
 
 public class MySqliteDBHelper extends SQLiteOpenHelper {
 	
-	private static final String DBNAME="meetu.db";
 	private static final int VERSION=4;
 	
 	private static final String TBL_CHANNEL="channel";
@@ -72,13 +73,13 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 	private static final String TBL_EMOJIS_FACE_NAME="_face_name";//表情资源文件名
 	
 
-//	public MySqliteDBHelper(Context context, String name, CursorFactory factory,
-//			int version) {
-//		super(context, name, factory, version);
-//		// TODO Auto-generated constructor stub
-//	}
+	public MySqliteDBHelper(Context context, String name, CursorFactory factory,
+			int version) {
+		super(context, name, null, 1);
+		// TODO Auto-generated constructor stub
+		}
 	public MySqliteDBHelper (Context context){
-		super(context, DBNAME, null, VERSION);
+		super(context, Constants.DBNAME, null, VERSION);
 	}
 
 	@Override
@@ -176,12 +177,26 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		activitySb.append("create table if not exists ");
 		activitySb.append(Constants.ACTIVITY_CACHE_TB+"(");
 		activitySb.append("id integer primary key autoincrement ,");
-		activitySb.append(TBL_EMOJIS_ID+ " varchar(100) ,");
-		activitySb.append(TBL_EMOJIS_CHARACTER+ " varchar(100) ,");
-		activitySb.append(TBL_EMOJIS_FACE_NAME+ " varchar(100) ");
+		activitySb.append(Constants.USERID+ " varchar(100) ,");
+		activitySb.append(Constants.ACTIVITYID+ " varchar(100) ,");
+		activitySb.append(Constants.ISACTIVITYPRAISE+ " integer ,");
+		activitySb.append(Constants.ACTIVITYFOLLOWCOUNT+ " integer ,");
+		activitySb.append(Constants.ACTIVITYCOVER+ " varchar(100) ,");
+		activitySb.append(Constants.TIMESTART+ " integer ,");
+		activitySb.append(Constants.ACTIVITYCONTENT+ " varchar(100) ,");
+		activitySb.append(Constants.PRAISECOUNT+ " integer ,");
+		activitySb.append(Constants.ORDERCOUNTBOY+ " integer ,");
+		activitySb.append(Constants.ORDERCOUNTGIRL+ " integer ,");
+		activitySb.append(Constants.TIMESTART+ " varchar(100) ,");
+		activitySb.append(Constants.TITLESUB+ " varchar(100) ,");
+		activitySb.append(Constants.LOCATIONADDRESS+ " varchar(100) ,");
+		activitySb.append(Constants.LOCATIONPLACE+ " varchar(100) ,");
+		activitySb.append(Constants.LOCATIONGOVERNMENT+ " varchar(100) ,");
+		activitySb.append(Constants.TIMESTOP+ " integer ,");
+		activitySb.append(Constants.ACTIVITYINDEX+ " integer ,");
+		activitySb.append(Constants.CONVERSATIONID+ " varchar(100) ");
 		activitySb.append(")");
 		db.execSQL(activitySb.toString());
-		
 	}
 
 	@Override
