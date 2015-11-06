@@ -6,6 +6,7 @@ import com.meetu.R.menu;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -68,7 +69,11 @@ public class SystemSettingsActivity extends Activity implements OnClickListener{
 			
 			break;
 		case R.id.sign_out_system_settings_rl:
+			//TODO 清缓存 删除本地 信息
 			Toast.makeText(this, "退出", Toast.LENGTH_SHORT).show();
+			
+			Intent intent=new Intent(this,LoginActivity.class);
+			startActivity(intent);
 			
 			break;
 

@@ -30,14 +30,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
 
+                        <RelativeLayout 
+                            android:id="@+id/setting_mine_fragment_rl"
+                            android:layout_width="44dp" 
+                            android:layout_height="44dp"
+                             android:layout_alignParentRight="true"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="9dp"
+                            android:gravity="center">
                         <ImageView
                             android:id="@+id/mine_btn_setting_iv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="9dp"
+                           
                             android:src="@drawable/mine_btn_setting" />
+                        </RelativeLayout>
 
                         <ImageView
                             android:id="@+id/mine_btn_profile_iv"

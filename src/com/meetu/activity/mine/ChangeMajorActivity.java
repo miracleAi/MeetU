@@ -136,7 +136,8 @@ public class ChangeMajorActivity extends Activity implements OnClickListener,OnI
 //		intent.putExtras(bundle);
 		intent.putExtra("school", schools.getUnivsId());
 		intent.putExtra("department", mList.get(positon).getId());
-		startActivity(intent);
+		ChangeMajorActivity.this.setResult(RESULT_OK, intent);
+		finish();
 		
 	}
 }

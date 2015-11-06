@@ -22,6 +22,7 @@ import net.tsz.afinal.FinalBitmap;
 
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
+import com.meetu.activity.SystemSettingsActivity;
 import com.meetu.activity.mine.UpdatepictureActivity;
 import com.meetu.adapter.PhotoWallAdapter.GridViewHeightaListener;
 import com.meetu.adapter.ViewPagerAdapter;
@@ -91,6 +92,9 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 	private List<Fragment> list = new ArrayList<Fragment>();
 	private ViewPagerAdapter adapter=null;
 	
+	//控件相关
+	private RelativeLayout setting;
+	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -142,6 +146,9 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 			ll.setLayoutParams(params2);
 					
 			topHight=DensityUtil.dip2px(getActivity(), 285);
+			
+			setting=(RelativeLayout) view.findViewById(R.id.setting_mine_fragment_rl);
+			setting.setOnClickListener(this);
 			
 			
 	}
@@ -261,7 +268,12 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 			case R.id.mine_btn_profile_iv:
 					
 				break;
-
+				//点击设置
+			case R.id.setting_mine_fragment_rl:
+				
+				Intent intent2=new Intent(getActivity(),SystemSettingsActivity.class);
+				startActivity(intent2);
+				break;
 			default :
 				break;
 		}

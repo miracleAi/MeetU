@@ -102,7 +102,8 @@ public class ChangeSchoolActivity extends Activity implements OnClickListener {
 				Bundle bundle=new Bundle();
 				bundle.putSerializable("schools", schoolsAlllList.get(position-1));
 				intent.putExtras(bundle);
-				startActivity(intent);
+				
+				startActivityForResult(intent, 20);
 			}
 		});
 		
@@ -170,7 +171,7 @@ public class ChangeSchoolActivity extends Activity implements OnClickListener {
 					Bundle bundle=new Bundle();
 					bundle.putSerializable("schools", schoolsFindList.get(position-1));
 					intent.putExtras(bundle);
-					startActivity(intent);
+					startActivityForResult(intent, 20);
 				}
 			});
 			
@@ -196,6 +197,34 @@ public class ChangeSchoolActivity extends Activity implements OnClickListener {
 		
 	}
 	
+	//从专业传过来的值 再传到设置 专业的页面
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		switch (requestCode) {
+		case 20:			
+			if(resultCode==RESULT_OK){
+				String school=data.getStringExtra("school");
+				String major=data.getStringExtra("department");
+				
+				Intent intent=new Intent();
+				intent.putExtra("schools", school);
+				intent.putExtra("departments", major);
+				ChangeSchoolActivity.this.setResult(RESULT_OK, intent);
+				finish();
+			}
+			
+			break;
+
+		default:
+			break;
+		}
+		
+			
+		super.onActivityResult(requestCode, resultCode, data);
+		
+	}
+
 	/**
 	 * 设置点击返回键的状态
 	 */

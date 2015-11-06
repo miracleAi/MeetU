@@ -8,6 +8,7 @@ package com.meetu.activity;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.LogUtil.log;
+import com.meetu.MainActivity;
 import com.meetu.R;
 import com.meetu.cloud.callback.ObjFunEnumCallback;
 import com.meetu.cloud.callback.ObjFunObjectCallback;
@@ -116,7 +117,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 						if(object!=null){
 							//登陆成功
 							log.e("object", object.getClassName());
-							Intent intent=new Intent(LoginActivity.this,SetPersonalInformation2Activity.class);
+							Intent intent=new Intent(LoginActivity.this,MainActivity.class);
 							startActivity(intent);
 							
 						}else {
