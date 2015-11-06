@@ -5,23 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
-import com.meetu.cloud.callback.ObjActivityCoverCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunObjectsCallback;
 import com.meetu.cloud.callback.ObjUserCallback;
 import com.meetu.cloud.object.ObjActivity;
-import com.meetu.cloud.object.ObjActivityCover;
 import com.meetu.cloud.object.ObjUser;
-import com.meetu.cloud.wrap.ObjActivityCoverWrap;
 import com.meetu.cloud.wrap.ObjActivityOrderWrap;
-import com.meetu.cloud.wrap.ObjActivityWrap;
 import com.meetu.cloud.wrap.ObjFollowWrap;
 import com.meetu.cloud.wrap.ObjPraiseWrap;
 import com.meetu.common.Constants;
