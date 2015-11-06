@@ -5,31 +5,37 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.LogUtil.log;
+import com.lidroid.xutils.BitmapUtils;
+import com.meetu.MainActivity;
 import com.meetu.R;
+import com.meetu.activity.SetPersonalInformation2Activity;
 import com.meetu.activity.SystemSettingsActivity;
 import com.meetu.activity.mine.UpdatepictureActivity;
 import com.meetu.adapter.PhotoWallAdapter.GridViewHeightaListener;
 import com.meetu.adapter.ViewPagerAdapter;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjUserWrap;
+import com.meetu.common.Constants;
 import com.meetu.entity.Middle;
 import com.meetu.tools.BitmapCut;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
 import com.meetu.view.MyScrollView;
 import com.meetu.view.MyScrollView.OnScrollListener;
-
-
-
-
-
-
-
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -48,8 +54,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
-import android.view.ViewStub;
-import android.widget.DialerFilter;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ImageView;
@@ -60,6 +64,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class Minefragment extends Fragment implements OnPageChangeListener,OnCheckedChangeListener,OnClickListener,OnScrollListener{
+	
 	private RadioGroup group=null;
 	private ViewPager viewPager;
 	private View view;
@@ -81,7 +86,17 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 	
 	//控件相关
 	private RelativeLayout setting;
+	private boolean isMyserf=true;//是否是我自己进入这个页面  默认是我自己true
 	
+	//网络 数据相关
+	private BitmapUtils bitmapUtils; ;
+	private String headURl="";//头像的URL
+	//拿本地的  user 
+	private AVUser currentUser = AVUser.getCurrentUser();
+	
+	// 上传 信息   头像相关
+	private	String fHeadPath = "";
+	private String yHeadPath = "";
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -93,6 +108,17 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 			Bundle savedInstanceState) {
 		if(view==null){
 			view=inflater.inflate(R.layout.fragment_mine, null);
+			
+			bitmapUtils=new BitmapUtils(getActivity());
+			if(currentUser!=null){
+				//强制类型转换
+				ObjUser user = AVUser.cast(currentUser, ObjUser.class);
+				
+				headURl=user.getProfileClip().getUrl();
+				log.e("lucifer","url"+headURl);
+			}
+			
+			
 			group=(RadioGroup)view.findViewById(R.id.group_va_tab);			
 			group.setOnCheckedChangeListener(this);
 			viewPager=(ViewPager)view.findViewById(R.id.mine_viewpager_va);
@@ -112,9 +138,11 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 			mHightping=DisplayUtils.getWindowHeight(getActivity());
 			ivTouxiang=(ImageView) view.findViewById(R.id.mine_btn_profile_iv);
 			
-			Bitmap head=readHead();
-			if(head!=null){
-				ivTouxiang.setImageBitmap(head);
+//			Bitmap head=readHead();
+			if(headURl!=null){
+//				ivTouxiang.setImageBitmap(head);
+				// 加载网络图片
+				bitmapUtils.display(ivTouxiang, headURl);
 			}
 			ivTouxiang.setOnClickListener(new OnClickListener() {
 				
@@ -320,10 +348,25 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 			if(data!=null){
 				Bundle extras=data.getExtras();
 				headerPortait=extras.getParcelable("data");
-				headerPortait=BitmapCut.toRoundBitmap(headerPortait);
 				if(headerPortait!=null){
-					saveHeadImg(headerPortait);
-					ivTouxiang.setImageBitmap(headerPortait);
+					fHeadPath = saveHeadImg(headerPortait,false);
+				}
+				headerPortait=BitmapCut.toRoundBitmap(headerPortait);
+				
+				if(headerPortait!=null){
+					yHeadPath = saveHeadImg(headerPortait,true);
+			// 上传头像到服务器
+			if (currentUser != null) {
+						//强制类型转换
+						ObjUser user = AVUser.cast(currentUser, ObjUser.class);
+						completeInfo(user);
+						
+			
+					}
+			
+	
+//					ivTouxiang.setImageBitmap(headerPortait);
+					
 				}
 			}
 			break;
@@ -497,31 +540,100 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 		intent.putExtra("return-data",true);
 		startActivityForResult(intent,33);
 	}
-	public void saveHeadImg(Bitmap head){
+	
+	public String saveHeadImg(Bitmap head,boolean isY){
 		FileOutputStream fos=null;
+		String path = "";
+		if(isY){
+			path = Environment.getExternalStorageDirectory()+"/user_header.png";
+		}else{
+			path = Environment.getExternalStorageDirectory()+"/f_user_header.png";
+		}
 		try {
-			fos=new FileOutputStream(new File(Environment.getExternalStorageDirectory()+"/user_header.png"));
-			head.compress(CompressFormat.PNG, 100, fos);
-			
+			fos=new FileOutputStream(new File(path));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally{
-			
-				try {
-					if(fos!=null)fos.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 		}
-		
-		
+		head.compress(CompressFormat.PNG, 100, fos);
+		try {
+			fos.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			fos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return path;
 	}
 	
-	
+	/**
+	 * 完善个人信息  上传信息 和头像
+	 * @param user  
+	 * @author lucifer
+	 * @date 2015-11-6
+	 */
+	AVFile fFile = null; //切圆后的图
+	AVFile yFile = null;//原始图
+		public void completeInfo(final ObjUser user){
+			File upF1 = new File(yHeadPath);
+			File upF2 = new File(fHeadPath);		
+			try {				
+				 yFile = AVFile.withAbsoluteLocalPath(Constants.HEAD_FILE_RECT+user.getObjectId()+Constants.IMG_TYPE, fHeadPath);
+				 fFile = AVFile.withAbsoluteLocalPath(Constants.HEAD_FILE_CIRCLE+user.getObjectId()+Constants.IMG_TYPE, yHeadPath);
+			//上传头像  和  个人信息
+				fFile.saveInBackground(new SaveCallback() {
+					@Override
+					public void done(AVException e) {
+						// TODO Auto-generated method stub
+						if(e != null){
+							return ;
+						}
+						user.setProfileClip(fFile);
+						yFile.saveInBackground(new SaveCallback() {
+							@Override
+							public void done(AVException e) {
+								// TODO Auto-generated method stub
+								if(e != null){
+									return ;
+								}
+								user.setProfileOrign(yFile);
+								ObjUserWrap.completeUserInfo(user,new ObjFunBooleanCallback() {
 
-	
-	
+									@Override
+									public void callback(boolean result, AVException e) {
+										// TODO Auto-generated method stub
+										if(result){
+								//			clickBtn.setText(LOAD_SUC);											
+											Toast.makeText(getActivity(), "save 上传成功", 1000).show();
+											//更新头像			
+											headURl=user.getProfileClip().getUrl();
+											log.e("lucifer","url"+headURl);
+											bitmapUtils.display(ivTouxiang, headURl);
+											
+										}else{
+								//			clickBtn.setText(LOAD_FAIL);
+											Toast.makeText(getActivity(), "save 上传失败", 1000).show();
+										}
+									}
+								});
+							}
+						});
+					}
+				});
+				
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 
+		}	
+		
 }

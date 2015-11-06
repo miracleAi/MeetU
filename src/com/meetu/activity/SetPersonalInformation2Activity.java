@@ -15,6 +15,7 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.LogUtil.log;
+import com.baidu.platform.comapi.map.y;
 import com.meetu.MainActivity;
 import com.meetu.R;
 import com.meetu.activity.mine.ChangeSchoolActivity;
@@ -634,7 +635,7 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 			public void onDateSet(DatePicker arg0, int year, int month, int day) {
 				// TODO Auto-generated method stub
 				log.e("lucifer", "DatePicker=="+arg0);
-				birthday.setText(year +"年"+ (month + 1) + "月"+ day+"日");
+				birthday.setText(year +"-"+ (month + 1) + "-"+ day);
 				
 				//转成时间戳
 				
@@ -649,8 +650,8 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 	
 	
 	
-	AVFile fFile = null;
-	AVFile yFile = null;
+	AVFile fFile = null;//裁剪后图片
+	AVFile yFile = null;//原图
 	
 	/**
 	 * 完善个人信息  上传信息 和头像
@@ -689,8 +690,8 @@ public class SetPersonalInformation2Activity extends BaseActivity implements OnC
 				user.setDepartmentId(Integer.valueOf(departmentId));
 				user.setHometown(cityID);
 				user.setIsCompleteUserInfo(true);
-				fFile = AVFile.withAbsoluteLocalPath(Constants.HEAD_FILE_RECT+user.getObjectId()+Constants.IMG_TYPE, fHeadPath);
-				yFile = AVFile.withAbsoluteLocalPath(Constants.HEAD_FILE_CIRCLE+user.getObjectId()+Constants.IMG_TYPE, yHeadPath);
+				yFile = AVFile.withAbsoluteLocalPath(Constants.HEAD_FILE_RECT+user.getObjectId()+Constants.IMG_TYPE, fHeadPath);
+				fFile = AVFile.withAbsoluteLocalPath(Constants.HEAD_FILE_CIRCLE+user.getObjectId()+Constants.IMG_TYPE, yHeadPath);
 				
 		if(isUpHead==true){	
 			//上传头像  和  个人信息

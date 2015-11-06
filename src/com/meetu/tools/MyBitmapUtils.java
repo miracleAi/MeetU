@@ -4,7 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-public class BitmapUtils {
+public class MyBitmapUtils {
 	  /**
 	   * @description 计算图片的压缩比率
 	   *

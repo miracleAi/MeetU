@@ -30,4 +30,6 @@
     <color name="relativelayout_change">#d8ffffff</color>
     <color name="text_title_change">#c0ffffff</color>
     <color name="view_backgroud">#cccccc</color>
+    <color name="textColor_setting_Tip">#707070</color>
+    <color name="textColor_setting">#a0a0a0</color>
 </resources>

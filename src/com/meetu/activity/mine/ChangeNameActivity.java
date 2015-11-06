@@ -1,40 +1,60 @@
 package com.meetu.activity.mine;
 
-
-
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
+import com.meetu.MainActivity;
 import com.meetu.R;
-import com.meetu.fragment.MinePersonalInformation;
+import com.meetu.activity.SetPersonalInformation2Activity;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjUserWrap;
 
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.view.Menu;
+import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+
+
+
 public class ChangeNameActivity extends Activity implements OnClickListener{
+	//控件相关
 	private TextView queding;
 	private EditText nameEditText;
 	private String name;
 	private ImageView backImageView;
 	private RelativeLayout backLayout,quedingLayout;
+	
+	//网络数据 相关
+	//拿本地的  user 
+	private AVUser currentUser = AVUser.getCurrentUser();
+	private ObjUser user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//去除title
-				super.requestWindowFeature(Window.FEATURE_NO_TITLE);
-				//全屏
-				super.getWindow();
+		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//全屏
+		super.getWindow();
 		setContentView(R.layout.activity_change_name);
+		
+		//拿到本地的缓存对象  user
+				if(currentUser!=null){
+					//强制类型转换
+					user = AVUser.cast(currentUser, ObjUser.class);
+				}
+		
 		name=super.getIntent().getStringExtra("name");
+		
 		queding=(TextView) super.findViewById(R.id.mine_changename_wancheng_bt);
 		queding.setOnClickListener(this);
 		
@@ -49,29 +69,23 @@ public class ChangeNameActivity extends Activity implements OnClickListener{
 		quedingLayout.setOnClickListener(this);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.change_name, menu);
-		return true;
-	}
+
 	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
+		//点击确定
 			case R.id.mine_changename_wancheng_rl :
-
-				Intent intent=new Intent();				
-				intent.putExtra("name", nameEditText.getText().toString());
-				ChangeNameActivity.this.setResult(0,intent);				
-				finish();
+				
+				completeInfo(user);				
+				
 				
 				break;
 			case R.id.back_changename_mine_rl:
 				Intent intent2=new Intent();	
 				intent2.putExtra("name", name);
-				ChangeNameActivity.this.setResult(0,intent2);
+				ChangeNameActivity.this.setResult(RESULT_CANCELED,intent2);
 				finish();
 			default :
 				break;
@@ -85,8 +99,36 @@ public class ChangeNameActivity extends Activity implements OnClickListener{
 		// TODO Auto-generated method stub
 		Intent intent=new Intent();	
 		intent.putExtra("name", name);
-		ChangeNameActivity.this.setResult(0,intent);
+		ChangeNameActivity.this.setResult(RESULT_CANCELED,intent);
 		finish();
 	}
+	/**
+	 * 上传 修改信息 
+	 * @param user  
+	 * @author lucifer
+	 * @date 2015-11-6
+	 */
+	public void completeInfo(final ObjUser user){
+		
+		user.setNameNick(nameEditText.getText().toString());
+
+		//只上传信息
+		ObjUserWrap.completeUserInfo(user,new ObjFunBooleanCallback() {
+
+			@Override
+			public void callback(boolean result, AVException e) {			
+				if(result){					
+					Toast.makeText(getApplicationContext(), "save 名字修改成功", 1000).show();
+					Intent intent=new Intent();				
+					intent.putExtra("name", nameEditText.getText().toString());
+					ChangeNameActivity.this.setResult(RESULT_OK,intent);				
+					finish();				
+				}else{
+					Toast.makeText(getApplicationContext(), "save 名字修改失败", 1000).show();
+				}
+			}
+		});
+	}
+	
 
 }

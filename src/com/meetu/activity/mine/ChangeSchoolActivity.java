@@ -185,7 +185,7 @@ public class ChangeSchoolActivity extends Activity implements OnClickListener {
 			case R.id.back_changeschool_mine_rl:
 				Intent intent2=new Intent();	
 				intent2.putExtra("school", school);
-				ChangeSchoolActivity.this.setResult(1,intent2);
+				ChangeSchoolActivity.this.setResult(RESULT_CANCELED,intent2);
 				finish();
 				
 				break;
@@ -232,7 +232,7 @@ public class ChangeSchoolActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		Intent intent=new Intent();	
 		intent.putExtra("school", school);
-		ChangeSchoolActivity.this.setResult(1,intent);
+		ChangeSchoolActivity.this.setResult(RESULT_CANCELED,intent);
 		finish();
 	}
 

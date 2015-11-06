@@ -16,13 +16,13 @@ public class DateUtils {
 	    /*时间戳转换成字符窜*/
 	    public static String getDateToString(long time) {
 	        Date d = new Date(time);
-	        sf = new SimpleDateFormat("yyyy年MM月dd日");
+	        sf = new SimpleDateFormat("yyyy-MM-dd");
 	        return sf.format(d);
 	    }
 	                                      
 	    /*将字符串转为时间戳*/
 	    public static long getStringToDate(String time) {
-	    	sf = new SimpleDateFormat("yyyy年MM月dd日");
+	    	sf = new SimpleDateFormat("yyyy-MM-dd");
 	        Date date = new Date();
 	        try{
 	            date = sf.parse(time);

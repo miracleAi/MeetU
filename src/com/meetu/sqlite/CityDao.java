@@ -161,6 +161,37 @@ public class CityDao {
 		
 	}
 	
+	/**
+	 *  根据城市id 获取城市
+	 * @param cityID
+	 * @return  
+	 * @author lucifer
+	 * @date 2015-11-6
+	 */
+	public List<City> getCity(String cityID){
+		
+		database = SQLiteDatabase.openOrCreateDatabase(DBManagerCity.DB_PATH + "/" + DBManagerCity.DB_NAME, null);
+		String sql="select *from city where id=?";
+		List<City> list=new ArrayList<City>();
+		Cursor c=database.rawQuery(sql, new String[]{cityID});
+		while(c.moveToNext()){
+			City item=new City();
+			item.setId(c.getString(c.getColumnIndex("id")));
+			item.setPrivance(c.getString(c.getColumnIndex("province")));
+			item.setPrivance_num(c.getString(c.getColumnIndex("province_num")));
+			item.setCity(c.getString(c.getColumnIndex("city")));
+			item.setCity_num(c.getString(c.getColumnIndex("city_num")));
+			item.setTown(c.getString(c.getColumnIndex("town")));
+			item.setTown_num(c.getString(c.getColumnIndex("town_num")));
+			
+			System.out.println("id="+item.getId()+" 省= "+item.getPrivance()+" 市="+item.getCity()+"区="+item.getTown());
+
+			list.add(item);			
+		}
+		return list;
+		
+	}
+	
 
 	
 

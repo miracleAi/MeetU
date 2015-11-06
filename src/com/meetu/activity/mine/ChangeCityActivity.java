@@ -5,8 +5,14 @@ package com.meetu.activity.mine;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+import com.baidu.location.e.n;
 import com.meetu.R;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.city.ArrayWheelAdapter;
 import com.meetu.common.city.BaseActivity;
 import com.meetu.common.city.OnWheelChangedListener;
@@ -41,6 +47,11 @@ public class ChangeCityActivity extends BaseActivity implements OnClickListener,
 	
 	//控件相关
 	private TextView cityName;
+	
+	//网络数据 相关
+		//拿本地的  user 
+		private AVUser currentUser = AVUser.getCurrentUser();
+		private ObjUser user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +63,12 @@ public class ChangeCityActivity extends BaseActivity implements OnClickListener,
 		setContentView(R.layout.activity_change_city);
 		initView();
 		city=super.getIntent().getStringExtra("hometown");
+		
+		//拿到本地的缓存对象  user
+		if(currentUser!=null){
+			//强制类型转换
+			user = AVUser.cast(currentUser, ObjUser.class);
+		}
 		
 		setUpViews();
 		setUpListener();
@@ -189,52 +206,19 @@ public class ChangeCityActivity extends BaseActivity implements OnClickListener,
 		mViewCity.setCurrentItem(0);
 		updateAreas();
 	}
-//
-//	/**
-//	 * 根据当前的市，更新区WheelView的信息
-//	 */
-//	private void updateAreas() {
-//		int pCurrent = mViewCity.getCurrentItem();
-//		mCurrentCityName = mCitisDatasMap.get(mCurrentProviceName)[pCurrent];
-//		String[] areas = mDistrictDatasMap.get(mCurrentCityName);
-//
-//		if (areas == null) {
-//			areas = new String[] { "" };
-//		}
-//		mViewDistrict.setViewAdapter(new ArrayWheelAdapter<String>(this, areas));
-//		mViewDistrict.setCurrentItem(0);
-//	}
-//
-//	/**
-//	 * 根据当前的省，更新市WheelView的信息
-//	 */
-//	private void updateCities() {
-//		int pCurrent = mViewProvince.getCurrentItem();
-//		mCurrentProviceName = mProvinceDatas[pCurrent];
-//		String[] cities = mCitisDatasMap.get(mCurrentProviceName);
-//		if (cities == null) {
-//			cities = new String[] { "" };
-//		}
-//		mViewCity.setViewAdapter(new ArrayWheelAdapter<String>(this, cities));
-//		mViewCity.setCurrentItem(0);
-//		updateAreas();
-//	}
+
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.city_selector_shengshiqu_rl:
-			Intent intent=new Intent();
-			intent.putExtra("city", mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
-			setResult(4, intent);
-			finish();
-			log.e("lucifer", ""+mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
-	//		showSelectedResult();
+			completeInfo(user);
+
 			break;
 		case R.id.back_changecity_mine_rl:
 			Intent intent2=new Intent();	
 			intent2.putExtra("city", city);
-			ChangeCityActivity.this.setResult(4,intent2);
+			ChangeCityActivity.this.setResult(RESULT_CANCELED,intent2);
 			finish();
 				break;
 		default:
@@ -249,8 +233,44 @@ public class ChangeCityActivity extends BaseActivity implements OnClickListener,
 		// TODO Auto-generated method stub
 		Intent intent=new Intent();	
 		intent.putExtra("city", city);
-		ChangeCityActivity.this.setResult(4,intent);
+		ChangeCityActivity.this.setResult(RESULT_CANCELED,intent);
 		finish();
+	}
+	
+	/**
+	 * 上传 修改信息 
+	 * @param user  
+	 * @author lucifer
+	 * @date 2015-11-6
+	 */
+	public void completeInfo(final ObjUser user){
+		
+		String cityID=cityDao.getID(mCurrentProviceName, mCurrentCityName, mCurrentDistrictName).get(0).getId();
+		if(cityID!=null){
+			user.setHometown(cityID);
+
+			//只上传信息
+			ObjUserWrap.completeUserInfo(user,new ObjFunBooleanCallback() {
+
+				@Override
+				public void callback(boolean result, AVException e) {			
+					if(result){					
+						Toast.makeText(getApplicationContext(), "家乡修改成功", 1000).show();
+						Intent intent=new Intent();
+						intent.putExtra("city", mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
+						setResult(RESULT_OK, intent);
+						finish();
+						log.e("lucifer", ""+mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
+									
+					}else{
+						Toast.makeText(getApplicationContext(), "家乡修改失败", 1000).show();
+					}
+				}
+			});
+		}else{
+			Toast.makeText(getApplicationContext(), "修改不成功", 1000).show();
+		}
+	
 	}
 }
 

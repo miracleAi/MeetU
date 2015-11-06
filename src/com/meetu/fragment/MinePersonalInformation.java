@@ -2,6 +2,8 @@ package com.meetu.fragment;
 
 
 
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 import com.meetu.activity.ChooseSchoolActivity;
 import com.meetu.activity.mine.ChangeBirthdayActivity;
@@ -10,6 +12,11 @@ import com.meetu.activity.mine.ChangeMajorActivity;
 import com.meetu.activity.mine.ChangeNameActivity;
 import com.meetu.activity.mine.ChangeSchoolActivity;
 import com.meetu.activity.mine.ChangexingzuoActivity;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.common.SchoolDao;
+import com.meetu.entity.Schools;
+import com.meetu.sqlite.CityDao;
+import com.meetu.tools.DateUtils;
 
 import android.R.raw;
 import android.app.Activity;
@@ -33,23 +40,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MinePersonalInformation extends Fragment implements OnClickListener{
+	//控件相关
 	private View view;
 	private ImageView ivman_selector,ivwoman_selector;
 	private TextView username,usersex,userbirthday,userConstellation;
 	private TextView userschool,usergrade,usermajor,userhometown;
-//	private EditText username;
 	private LinearLayout nameLayout,sexlLayout,birthdayLayout,constellationLayout;
 	private LinearLayout schoolLayout,gradeLayout,majorLayout,hometownLayout;
-
+	
+	//网络数据相关
+		//拿本地的  user 
+	private AVUser currentUser = AVUser.getCurrentUser();
+	private ObjUser user;
+    private CityDao cityDao=new CityDao();
+    private SchoolDao schoolDao=new SchoolDao();
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
 	}
-//	@ViewInject(id=R.id.minesetting_birthday_tv,click="btnClick") TextView textView;
-//	public void btnClick(View v){
-//	       textView.setText("text set form button");
-//	    }
+
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +67,7 @@ public class MinePersonalInformation extends Fragment implements OnClickListener
 		// TODO Auto-generated method stub
 		if(view==null){
 			view=inflater.inflate(R.layout.fragment_mine_personal_information, null);
+			
 			initView();
 		}
 		ViewGroup parent=(ViewGroup)view.getParent();
@@ -66,6 +77,14 @@ public class MinePersonalInformation extends Fragment implements OnClickListener
 		return view;
 	}
 	private void initView(){
+		//拿到本地的缓存对象  user
+		if(currentUser!=null){
+			//强制类型转换
+			user = AVUser.cast(currentUser, ObjUser.class);
+			
+		
+		}
+		
 		username=(TextView) view.findViewById(R.id.minesetting_username_tv);
 		usersex=(TextView) view.findViewById(R.id.minesetting_sex_tv);
 		userbirthday=(TextView) view.findViewById(R.id.minesetting_birthday_tv);
@@ -99,6 +118,27 @@ public class MinePersonalInformation extends Fragment implements OnClickListener
 		
 		hometownLayout.setOnClickListener(this);
 		
+		//设置 属性数据
+		username.setText(user.getNameNick());
+		
+		if(user.getGender()==1){
+			usersex.setText("男生");
+		}else if(user.getGender()==2){
+			usersex.setText("女生");
+		}else{
+			usersex.setText("未知");
+		}
+		Long birthLong=user.getBirthday();
+		String birthString=DateUtils.getDateToString(birthLong);
+		log.e("zcq", "birthString"+birthString);
+		userbirthday.setText(birthString);
+		userConstellation.setText(user.getConstellation());
+		userschool.setText(user.getSchool());
+		usermajor.setText(user.getDepartment());
+		String homeString=""+cityDao.getCity(user.getHometown()).get(0).getPrivance()+
+				cityDao.getCity(user.getHometown()).get(0).getCity()+
+				cityDao.getCity(user.getHometown()).get(0).getTown();
+		userhometown.setText(homeString);
 	}
 
 	@Override
@@ -111,49 +151,26 @@ public class MinePersonalInformation extends Fragment implements OnClickListener
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
+			//修改名字
 			case R.id.minesetting_username_ll :
-//				Toast.makeText(getActivity(), username.getText(), Toast.LENGTH_SHORT).show();
+
 				Intent intent=new Intent(getActivity(),ChangeNameActivity.class);
 				intent.putExtra("name",username.getText().toString());
 				startActivityForResult(intent,0);
 				break;
+			//修改生日
 			case R.id.minesetting_birthday_ll:
-	//			Toast.makeText(getActivity(), userbirthday.getText(), Toast.LENGTH_SHORT).show();
-//				super.getActivity().showDialog(1);
-//				new DatePickerDialog(super.getActivity(), new OnDateSetListener() {
-//
-//					@Override
-//					public void onDateSet(DatePicker arg0, int year, int month, int day) {
-//						// TODO Auto-generated method stub
-//						userbirthday.setText(year + "-" + (month + 1) + "-" + day);
-//					}
-//				}, 2015, 7, 13).show();
 				Intent intent5=new Intent(getActivity(),ChangeBirthdayActivity.class);
 				intent5.putExtra("birthday",userbirthday.getText().toString());
 				startActivityForResult(intent5,5);
 				break;
-//		//性别的修改
-//			case R.id.minesetting_sex_tv:
-//				initPopupWindow();
-//				popupWindow.showAsDropDown(v, 72, 400);	
-//				break;
-//			case R.id.iv_man_sexselector:
-//				
-//				//	ivman_selector.setImageResource(R.drawable.complete_gender_ms_720);
-//					popupWindow.dismiss();
-//					usersex.setText("男生");
-//					break;
-//			case R.id.iv_woman_sexselector:
-//				//	ivwoman_selector.setImageResource(R.drawable.complete_gender_fs_720);
-//					popupWindow.dismiss();
-//					usersex.setText("女生");
-//					break;
+			//修改 学校
 			case R.id.minesetting_school_ll:
 				Intent intent1=new Intent(getActivity(),ChangeSchoolActivity.class);
 				intent1.putExtra("school",userschool.getText());
 				startActivityForResult(intent1, 1);	
 				break;
-		//星座的修改	
+			//星座的修改	
 			case R.id.minesetting_Constellation_ll:
 				Intent intent2=new Intent(getActivity(),ChangexingzuoActivity.class);
 				intent2.putExtra("Constellation", userConstellation.getText());
@@ -161,8 +178,14 @@ public class MinePersonalInformation extends Fragment implements OnClickListener
 				break;
 		//专业的修改
 			case R.id.minesetting_major_ll:
+				//传个学校对象过去 和 完善信息保持一致
+				Schools schools=new Schools();
+				schools.setUnivsId(""+user.getSchoolNum());
+				schools.setUnivsNameString(schoolDao.getschoolName(""+user.getSchoolNum()).get(0).getUnivsNameString());
 				Intent intent3=new Intent(getActivity(),ChangeMajorActivity.class);
-				intent3.putExtra("major", usermajor.getText());
+				Bundle bundle=new Bundle();
+				bundle.putSerializable("schools",schools);
+				intent3.putExtras(bundle);
 				startActivityForResult(intent3, 3);
 				break;
 		//家乡的修改
@@ -178,58 +201,65 @@ public class MinePersonalInformation extends Fragment implements OnClickListener
 	}
 	
 	
-//	private PopupWindow popupWindow;
-//	private void initPopupWindow() {
-//		if (popupWindow == null) {
-//			View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_sex_selector,
-//					null);		
-//			popupWindow = new PopupWindow(view,
-//					ViewGroup.LayoutParams.MATCH_PARENT,
-//					ViewGroup.LayoutParams.MATCH_PARENT);
-//			// 设置外观
-//			popupWindow.setFocusable(true);
-//			popupWindow.setOutsideTouchable(true);
-//			ColorDrawable colorDrawable = new ColorDrawable();
-//			popupWindow.setBackgroundDrawable(colorDrawable);
-//		//	tvTitle=(TextView)view.findViewById(R.id.tvcolectList);
-//			ivman_selector=(ImageView)view.findViewById(R.id.iv_man_sexselector);
-//			ivwoman_selector=(ImageView)view.findViewById(R.id.iv_woman_sexselector);
-//			ivman_selector.setOnClickListener(this);
-//			ivwoman_selector.setOnClickListener(this);
-//		}
-//		
-//	}
+
 	
 	@Override
 	public void onActivityResult(int requestCode,int resultCode,Intent data){
 	  
-	  switch(resultCode){
+	  switch(requestCode){
 	  case 0:
-	   /*取得来自SecondActivity页面的数据，并显示到画面*/	   
-	   /*获取Bundle中的数据，注意类型和key*/
-	         String name = data.getExtras().getString("name");
-	              
-	        // Toast.makeText(getActivity(), name, Toast.LENGTH_SHORT).show();
-	         username.setText(name);
+		  if(resultCode==getActivity().RESULT_OK){
+			  /*取得来自SecondActivity页面的数据，并显示到画面*/	   
+			   /*获取Bundle中的数据，注意类型和key*/
+			 String name = data.getExtras().getString("name");			              
+			 // Toast.makeText(getActivity(), name, Toast.LENGTH_SHORT).show();
+			 username.setText(name);			  
+		  }			  
 	         break;
+	  case 1:
+		  if(resultCode==getActivity().RESULT_OK){
+			  Toast.makeText(getActivity(), "学校 专业修改成功", Toast.LENGTH_SHORT).show();
+			  String schoolID=data.getExtras().getString("schools");
+			  String majorID=data.getExtras().getString("departments");
+			  String schoolName=schoolDao.getschoolName(schoolID).get(0).getUnivsNameString();
+			  String majorName=schoolDao.getDepartmentsName(schoolID, majorID).get(0).getDepartmentName();
+			  userschool.setText(schoolName);
+			  usermajor.setText(majorName);		  
+		  }
+		  break;
 	  case 2:
-		  String xingzuo=data.getExtras().getString("xingzuo");
-	//	  Toast.makeText(getActivity(), xingzuo, Toast.LENGTH_SHORT).show();
-		  userConstellation.setText(xingzuo);
+		  if(resultCode==getActivity().RESULT_OK){
+			  String xingzuo=data.getExtras().getString("xingzuo");
+				//	  Toast.makeText(getActivity(), xingzuo, Toast.LENGTH_SHORT).show();
+			  userConstellation.setText(xingzuo);
+		  }
+	
 		  break;
 	  case 3:
-		  String major=data.getExtras().getString("major");
-		  usermajor.setText(major);
+		  if(resultCode==getActivity().RESULT_OK){
+			  Toast.makeText(getActivity(), "专业修改成功", Toast.LENGTH_SHORT).show();
+			  String major=data.getExtras().getString("department");
+			  usermajor.setText(schoolDao.getDepartmentsName(""+user.getSchoolNum(), major).get(0).getDepartmentName());
+		  }
+		
 		  break;
 	  case 4:
-		  String hometown=data.getExtras().getString("city");
-		  userhometown.setText(hometown);
+		  if(resultCode==getActivity().RESULT_OK){
+			  Toast.makeText(getActivity(), "家乡修改成功", Toast.LENGTH_SHORT).show();
+			  String hometown=data.getExtras().getString("city");
+			  userhometown.setText(hometown);
+		  }
+		 
 		  break;
 	  case 5:
-		  String birthday=data.getExtras().getString("birthday");
-		  userbirthday.setText(birthday);
+		  if(resultCode==getActivity().RESULT_OK){
+			  String birthday=data.getExtras().getString("birthday");
+			  userbirthday.setText(birthday);
+		  }
+		 
 		  break;
 	  }
+	  
 	 }
 
 
