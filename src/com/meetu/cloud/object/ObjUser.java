@@ -42,11 +42,11 @@ public class ObjUser extends AVUser{
 	//专业编码
 	private int departmentId;
 	public int getDepartmentId() {
-		return departmentId;
+		return this.getInt("departmentId");
 	}
 
 	public void setDepartmentId(int departmentId) {
-		this.departmentId = departmentId;
+		this.put("departmentId", departmentId);;
 	}
 
 	//家乡
@@ -140,27 +140,27 @@ public class ObjUser extends AVUser{
 
 
 	public long getSchoolLocation() {
-		return schoolLocation;
+		return this.getLong("schoolLocation");
 	}
 
 	public void setSchoolLocation(long schoolLocation) {
-		this.schoolLocation = schoolLocation;
+		this.put("schoolLocation", schoolLocation);;
 	}
 
 	public int getSchoolNum() {
-		return schoolNum;
+		return this.getInt("schoolNum");
 	}
 
 	public void setSchoolNum(int schoolNum) {
-		this.schoolNum = schoolNum;
+		this.put("schoolNum", schoolNum);;
 	}
 
 	public String getDepartment() {
-		return department;
+		return this.getString("department");
 	}
 
 	public void setDepartment(String department) {
-		this.department = department;
+		this.put("department", department);;
 	}
 
 	public String getHometown() {
