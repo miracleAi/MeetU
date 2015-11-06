@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
@@ -21,6 +22,10 @@ public class LoginOrRegisterActivity extends Activity implements OnClickListener
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//去除title
+				super.requestWindowFeature(Window.FEATURE_NO_TITLE);
+				//全屏
+				super.getWindow();
 		setContentView(R.layout.activity_login_or_register);
 		initView();
 	}

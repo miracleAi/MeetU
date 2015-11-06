@@ -140,7 +140,7 @@ public class CityDao {
 	public List<City> getID(String provinceNum,String cityNum,String twonNum){
 		
 		database = SQLiteDatabase.openOrCreateDatabase(DBManagerCity.DB_PATH + "/" + DBManagerCity.DB_NAME, null);
-		String sql="select *from city where province_num=? and city_num=? and town_num=?";
+		String sql="select *from city where province=? and city=? and town=?";
 		List<City> list=new ArrayList<City>();
 		Cursor c=database.rawQuery(sql, new String[]{provinceNum,cityNum,twonNum});
 		while(c.moveToNext()){
