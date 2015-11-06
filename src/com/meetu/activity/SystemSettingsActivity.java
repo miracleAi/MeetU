@@ -3,6 +3,7 @@ package com.meetu.activity;
 import com.meetu.R;
 import com.meetu.R.layout;
 import com.meetu.R.menu;
+import com.meetu.cloud.wrap.ObjUserWrap;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -72,6 +73,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener{
 			//TODO 清缓存 删除本地 信息
 			Toast.makeText(this, "退出", Toast.LENGTH_SHORT).show();
 			
+			ObjUserWrap.logOut();
 			Intent intent=new Intent(this,LoginActivity.class);
 			startActivity(intent);
 			

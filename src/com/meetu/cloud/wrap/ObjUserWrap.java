@@ -194,7 +194,7 @@ public class ObjUserWrap {
 	/**
 	 * 退出登录，清除缓存用户对象
 	 */
-	public void logOut(){
+	public static void logOut(){
 		AVUser.logOut(); 
 	}
 
