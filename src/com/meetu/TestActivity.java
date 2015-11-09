@@ -268,8 +268,8 @@ public class TestActivity extends Activity{
 	}
 	//判断是否需要拉取数据
 	public boolean isNetLoad(){
-		SharedPreferences sp = getSharedPreferences("acty_cache",MODE_PRIVATE);
-		String timeStr = sp.getString("cache_time","");
+		SharedPreferences sp = getSharedPreferences(Constants.ACTIVITY_CACHE_SP,MODE_PRIVATE);
+		String timeStr = sp.getString(Constants.ACTIVITY_CACHE_TIME,"");
 		long time = System.currentTimeMillis() - Long.parseLong(timeStr);
 		if(time > 3600000){
 			return true;
@@ -326,9 +326,9 @@ public class TestActivity extends Activity{
 					 * */
 					actyDao.deleteByUser(user.getObjectId());
 					actyDao.saveActyList(actyList);
-					SharedPreferences sp = getSharedPreferences("acty_cache",MODE_PRIVATE);
+					SharedPreferences sp = getSharedPreferences(Constants.ACTIVITY_CACHE_SP,MODE_PRIVATE);
 					Editor editor = sp.edit();
-					editor.putString("cache_time", String.valueOf(System.currentTimeMillis()));
+					editor.putString(Constants.ACTIVITY_CACHE_TIME, String.valueOf(System.currentTimeMillis()));
 					editor.commit();
 					//查询是否点赞（因测试活动照片，注释此行）
 					queryFavor(activityItem);

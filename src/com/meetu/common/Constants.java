@@ -92,4 +92,11 @@ public class Constants {
 	public static final String CONVERSATIONID = "conversation_id";
 	//活动index
 	public static final String ACTIVITYINDEX = "activity_index";
+	/**
+	 * 活动信息缓存时间
+	 * */
+	//sharePrefence名
+	public static final String ACTIVITY_CACHE_SP = "activity_cache_sp";
+	//缓存时间标记
+	public static final String ACTIVITY_CACHE_TIME = "activity_cache_time";
 }
