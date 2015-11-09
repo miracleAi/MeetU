@@ -16,7 +16,7 @@ public class ActivityDao {
 	private MySqliteDBHelper dbHelper;
 	public ActivityDao(Context context) {
 		// TODO Auto-generated constructor stub
-		dbHelper = new MySqliteDBHelper(context, Constants.DBNAME, null, 1);
+		dbHelper = new MySqliteDBHelper(context);
 	}
 	//添加活动列表
 	public void saveActyList(ArrayList<ActivityBean> list){
@@ -53,7 +53,7 @@ public class ActivityDao {
 		ContentValues values = new ContentValues();
 		values.put(Constants.ISACTIVITYPRAISE, flag);
 		sdb.update(Constants.ACTIVITY_CACHE_TB, values,Constants.USERID+"=? and "+Constants.ACTIVITYINDEX+"=?"
-				,new String[]{userId,String.valueOf(index)});
+				,new String[]{userId,Integer.toString(index)});
 		sdb.close();
 	}
 	//修改活动列表关注人数项
@@ -68,7 +68,8 @@ public class ActivityDao {
 	//查询活动列表
 	public ArrayList<ActivityBean> queryActys(String userId){
 		SQLiteDatabase sdb=dbHelper.getWritableDatabase();
-		Cursor cursor=sdb.rawQuery("select * from "+ Constants.ACTIVITY_CACHE_TB+"where "+Constants.USERID +" =?",new  String[]{userId});
+		Cursor cursor=sdb.rawQuery("select * from "+ Constants.ACTIVITY_CACHE_TB+" where "+Constants.USERID +"=? order by "
+		+Constants.STATUS+","+Constants.TIMESTART+" desc",new  String[]{userId});
 		cursor.moveToFirst();
 		ArrayList<ActivityBean> list = new ArrayList<ActivityBean>();
 		while(!cursor.isAfterLast()){
@@ -92,6 +93,8 @@ public class ActivityDao {
 			bean.setIndex(cursor.getInt(cursor.getColumnIndex(Constants.ACTIVITYINDEX)));
 			bean.setIsFavor(cursor.getInt(cursor.getColumnIndex(Constants.ISACTIVITYPRAISE)));
 			bean.setOrderAndFollow(cursor.getInt(cursor.getColumnIndex(Constants.ACTIVITYFOLLOWCOUNT)));
+			list.add(bean);
+			cursor.moveToNext();
 		}
 		cursor.close();
 		sdb.close();

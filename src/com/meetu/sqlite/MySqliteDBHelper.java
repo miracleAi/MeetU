@@ -73,11 +73,6 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 	private static final String TBL_EMOJIS_FACE_NAME="_face_name";//表情资源文件名
 	
 
-	public MySqliteDBHelper(Context context, String name, CursorFactory factory,
-			int version) {
-		super(context, name, null, 1);
-		// TODO Auto-generated constructor stub
-		}
 	public MySqliteDBHelper (Context context){
 		super(context, Constants.DBNAME, null, VERSION);
 	}
@@ -183,11 +178,12 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		activitySb.append(Constants.ACTIVITYFOLLOWCOUNT+ " integer ,");
 		activitySb.append(Constants.ACTIVITYCOVER+ " varchar(100) ,");
 		activitySb.append(Constants.TIMESTART+ " integer ,");
+		activitySb.append(Constants.STATUS+ " integer ,");
 		activitySb.append(Constants.ACTIVITYCONTENT+ " varchar(100) ,");
 		activitySb.append(Constants.PRAISECOUNT+ " integer ,");
 		activitySb.append(Constants.ORDERCOUNTBOY+ " integer ,");
 		activitySb.append(Constants.ORDERCOUNTGIRL+ " integer ,");
-		activitySb.append(Constants.TIMESTART+ " varchar(100) ,");
+		activitySb.append(Constants.TITLE+ " varchar(100) ,");
 		activitySb.append(Constants.TITLESUB+ " varchar(100) ,");
 		activitySb.append(Constants.LOCATIONADDRESS+ " varchar(100) ,");
 		activitySb.append(Constants.LOCATIONPLACE+ " varchar(100) ,");

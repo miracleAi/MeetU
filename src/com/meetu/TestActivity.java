@@ -1,4 +1,4 @@
- package com.meetu;
+package com.meetu;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,6 +39,7 @@ import com.meetu.cloud.wrap.ObjPraiseWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.cloud.wrap.ObjWrap;
 import com.meetu.common.Constants;
+import com.meetu.sqlite.ActivityDao;
 import com.meetu.tools.BitmapCut;
 
 import android.app.Activity;
@@ -47,6 +48,8 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
@@ -117,6 +120,7 @@ public class TestActivity extends Activity{
 	private ObjActivityPhoto photoBean = new ObjActivityPhoto();
 	//当前用户
 	ObjUser user = new ObjUser();
+	ActivityDao actyDao;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -125,6 +129,7 @@ public class TestActivity extends Activity{
 		//全屏
 		super.getWindow(); 
 		setContentView(R.layout.test_layout);
+		actyDao = new ActivityDao(this);
 		initView();
 	}
 	private void initView(){
@@ -223,7 +228,11 @@ public class TestActivity extends Activity{
 					if(clickBtn.getText().toString().equals(LOAD_ACTIVITY)){
 						clickBtn.setText(LOADING);
 						//获取活动
-						getActivitys();
+						if(isNetLoad()){
+							getActivitys();
+						}else{
+							getLocal();
+						}
 						return ;
 					}
 					if(clickBtn.getText().toString().equals(LOAD_ACTIVITY_PHOTO)){
@@ -257,6 +266,17 @@ public class TestActivity extends Activity{
 			}
 		});
 	}
+	//判断是否需要拉取数据
+	public boolean isNetLoad(){
+		SharedPreferences sp = getSharedPreferences("acty_cache",MODE_PRIVATE);
+		String timeStr = sp.getString("cache_time","");
+		long time = System.currentTimeMillis() - Long.parseLong(timeStr);
+		if(time > 3600000){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	//获取活动信息
 	private void getActivitys() {
 		// TODO Auto-generated method stub
@@ -274,7 +294,7 @@ public class TestActivity extends Activity{
 					//测试活动图片（获取活动成功后运行）
 					//clickBtn.setText(LOAD_ACTIVITY_PHOTO);
 					//测试活动反馈（获取活动成功后运行）
-					clickBtn.setText(USER_FEEDBACK);
+					//clickBtn.setText(USER_FEEDBACK);
 					for(ObjActivity activity : objects){
 						if(activity.getObjectId().equals("55e2b25f60b2719ea5e22c96")){
 							activityItem = activity;
@@ -300,39 +320,63 @@ public class TestActivity extends Activity{
 							bean.setOrderAndFollow(0);
 							actyList.add(bean);
 						}
-						/**
-						 * 此处执行活动信息保存
-						 * */
 					}
+					/**
+					 * 此处执行活动信息保存
+					 * */
+					actyDao.deleteByUser(user.getObjectId());
+					actyDao.saveActyList(actyList);
+					SharedPreferences sp = getSharedPreferences("acty_cache",MODE_PRIVATE);
+					Editor editor = sp.edit();
+					editor.putString("cache_time", String.valueOf(System.currentTimeMillis()));
+					editor.commit();
 					//查询是否点赞（因测试活动照片，注释此行）
 					queryFavor(activityItem);
-					String imgUrl = activityItem.getActivityCover().getUrl();
-					int praiseCount = activityItem.getPraiseCount();
-					int boyAndGirl = activityItem.getOrderCountGirl();
-					String statusStr = ObjActivity.getStatusStr(activityItem.getStatus());
-					String title = activityItem.getTitle();
-					String lacationTitle = activityItem.getLocationAddress();
-					String timeStart = activityItem.getTimeStart()+"";
-					//活动详情内容网页
-					String actyContent = activityItem.getActivityContent().getUrl();
 					//封面展示图片列表
 					queryActyCovers(activityItem);
 					//参与用户列表 参与并且我关注的人数
 					queryOrderUsers(activityItem);
-
-					bigImg.setText(imgUrl);
-					favrCout.setText("favor  "+String.valueOf(praiseCount));
-					joinTv.setText("join  "+String.valueOf(boyAndGirl));
-					statusTv.setText("status  "+statusStr);
-					titleTv.setText("title  "+title);
-					addressTv.setText("address  "+lacationTitle);
-					timeTv.setText("startTime  "+timeStart);
-					contentTv.setText("content  "+actyContent);
+					initActuView(false);
 				}
 			}
 		});
 	}
-	//查询活动封面图列表 setActyCovers
+		public void getLocal(){
+			actyList = actyDao.queryActys(user.getObjectId());
+			initActuView(true);
+		}
+		public void initActuView(boolean isLocal){
+			ActivityBean bean = actyList.get(0);
+			String imgUrl = bean.getActivityCover();
+			int praiseCount = bean.getPraiseCount();
+			int boyAndGirl = bean.getOrderCountGirl();
+			String statusStr = ObjActivity.getStatusStr(bean.getStatus());
+			String title = bean.getTitle();
+			String lacationTitle = bean.getLocationAddress();
+			String timeStart = bean.getTimeStart()+"";
+			//活动详情内容网页
+			String actyContent = bean.getActivityContent();
+			bigImg.setText(imgUrl);
+			favrCout.setText("favor  "+String.valueOf(praiseCount));
+			joinTv.setText("join  "+String.valueOf(boyAndGirl));
+			statusTv.setText("status  "+statusStr);
+			titleTv.setText("title  "+title);
+			addressTv.setText("address  "+lacationTitle);
+			timeTv.setText("startTime  "+timeStart);
+			contentTv.setText("content  "+actyContent);
+			if(isLocal){
+				if(bean.getIsFavor() == 1){
+					favorImg.setVisibility(View.VISIBLE);
+					clickBtn.setText(CANCEL_PRAISE_ACTY);
+				}else{
+					favorImg.setVisibility(View.GONE);
+					clickBtn.setText(PRAISE_ACTIVITY);
+				}
+				followTv.setText("follow  "+String.valueOf(bean.getOrderAndFollow()));
+
+			}
+		}
+		//查询活动封面图列表 setActyCovers
 		public void queryActyCovers(ObjActivity activity){
 			ObjActivityCoverWrap.queryActivityCover(activity, new ObjActivityCoverCallback() {
 
@@ -373,6 +417,7 @@ public class TestActivity extends Activity{
 					/**
 					 * 此处执行更新活动信息点赞字段
 					 * */
+					actyDao.updateIsFavor(user.getObjectId(), 0, actyList.get(0).getIsFavor());
 				}
 			});
 		}
@@ -402,6 +447,7 @@ public class TestActivity extends Activity{
 							/**
 							 * 此处执行更新活动信息关注参加活动的人count字段
 							 * */
+							actyDao.updateOrderFollow(user.getObjectId(), 0,10);
 						}
 					}
 				}
@@ -412,7 +458,7 @@ public class TestActivity extends Activity{
 		public void queryFollowAndOrder(ObjActivity activity){
 			ArrayList<ObjUser> followUsers = new ArrayList<ObjUser>();
 			ObjFollowWrap.myFollow(userList, user, new ObjFunObjectsCallback() {
-				
+
 				@Override
 				public void callback(List<AVObject> objects, AVException e) {
 					// TODO Auto-generated method stub
@@ -430,476 +476,487 @@ public class TestActivity extends Activity{
 					/**
 					 * 此处执行更新活动信息关注参加活动的人count字段
 					 * */
+					actyDao.updateOrderFollow(user.getObjectId(), 0,10);
 				}
 			});
 		}
-	//获取活动报名信息
-	boolean isFirstLoad = false;
-	boolean isSecondLoad = false;
-	private void getInfo(ObjActivity activitySign) {
-		//查询是否报名
-		ObjActivityWrap.queryUserJoin(activitySign, user, new ObjFunBooleanCallback() {
-
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				isFirstLoad = true;
-				if(isFirstLoad && isSecondLoad){
-					clickBtn.setText(SIGN_UP);
-				}
-				if(e != null){
-					return ;
-				}
-				if(result){
-					firstTv.setText("已参加");
-					isJoin = true;
-				}else{
-					firstTv.setText("未参加");
-					isJoin = false;
-				}
-			}
-		});
-		//获取票种信息
-		ObjActivityWrap.queryTicket(activitySign, new ObjTicketCallback() {
-
-			@Override
-			public void callback(List<ObjActivityTicket> objects, AVException e) {
-				// TODO Auto-generated method stub
-				isSecondLoad = true;
-				if(isFirstLoad && isSecondLoad){
-					clickBtn.setText(SIGN_UP);
-				}
-				if(e != null){
-					Toast.makeText(getApplicationContext(), e.getMessage(), 1000).show();
-					return ;
-				}
-				if(objects != null && objects.size()>0){
-					tickets.addAll(objects);
-					String ss = tickets.get(0).getTicketTitle();
-					secondTv.setText(ss);
-				}
-			}
-		});
-
-	}
-	//活动报名
-	protected void sinUp(ObjActivity activitySign) {
-		// TODO Auto-generated method stub
-		if(isJoin){
-			Toast.makeText(TestActivity.this, "您已参加此活动", 1000).show();
-			return ;
-		}
-		ObjActivityOrderWrap.signUpActivity(activitySign, user, tickets.get(0), Constants.OrderStatusPaySuccess, "hello", new ObjFunBooleanCallback() {
-
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOAD_SUC);
-					Toast.makeText(TestActivity.this, "报名失败", 1000).show();
-					return;
-				}else{
-					clickBtn.setText(LOAD_FAIL);
-				}
-			}
-		});
-	}
-	//活动点赞
-	public void praiseActivity(ObjActivity acty){
-		ObjPraiseWrap.praiseActivity(user, acty, new ObjFunBooleanCallback() {
-
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOAD_FAIL);
-					return ;
-				}
-				if(result){
-					clickBtn.setText(LOAD_SUC);
-					favorImg.setVisibility(View.VISIBLE);
-					clickBtn.setText(CANCEL_PRAISE_ACTY);
-				}else{
-					clickBtn.setText(LOAD_FAIL);
-				}
-			}
-		});
-	}
-	//活动取消点赞
-	public void cancelPraiseActivity(ObjActivity acty){
-		ObjPraiseWrap.cancelPraiseActivity(user, acty, new ObjFunBooleanCallback() {
-
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOAD_FAIL);
-					return ;
-				}
-				if(result){
-					clickBtn.setText(LOAD_SUC);
-					favorImg.setVisibility(View.GONE);
-					clickBtn.setText(PRAISE_ACTIVITY);
-				}else{
-					clickBtn.setText(LOAD_FAIL);
-				}
-			}
-		});
-	}
-	//获取活动照片
-	public void loadActvityPhoto(ObjActivity acty){
-		ObjActivityPhotoWrap.queryActivityPhotos(acty, new ObjActivityPhotoCallback() {
-
-			@Override
-			public void callback(List<ObjActivityPhoto> objects, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOAD_FAIL);
-					return ;
-				}
-				if(objects != null && objects.size()>0){
-					photoBean = objects.get(0);
-					firstTv.setText(photoBean.getPhoto().getUrl());
-					//查询是否对照片点赞
-					ObjActivityPhotoWrap.queryPhotoPraise(photoBean, user, new ObjFunBooleanCallback() {
-
-						@Override
-						public void callback(boolean result, AVException e) {
-							// TODO Auto-generated method stub
-							if(e != null){
-								clickBtn.setText(LOAD_FAIL);
-								return ;
-							}
-							if(result){
-								photoFavor.setVisibility(View.VISIBLE);
-								clickBtn.setText(CANCEL_PRAISE_ACTY_PHOTO);
-							}else{
-								photoFavor.setVisibility(View.GONE);
-								clickBtn.setText(PRAISE_ACTY_PHOTO);
-							}
-						}
-					});
-				}
-			}
-		});
-	}
-	//对活动照片点赞
-	public void praiseActivityPhoto(ObjActivityPhoto photo){
-		ObjActivityPhotoWrap.praiseActivityPhoto(photo, user, new ObjFunBooleanCallback() {
-
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOAD_FAIL);
-					return ;
-				}
-				if(result){
-					photoFavor.setVisibility(View.VISIBLE);
-					clickBtn.setText(CANCEL_PRAISE_ACTY_PHOTO);
-				}else{
-					clickBtn.setText(LOAD_FAIL);
-				}
-			}
-		});
-	}
-	//对活动照片取消赞
-	public void cancelPraiseActtyPhoto(ObjActivityPhoto photo){
-		ObjActivityPhotoWrap.cancelPraiseActivityPhoto(user, photo, new ObjFunBooleanCallback() {
-
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOAD_FAIL);
-					return ;
-				}
-				if(result){
-					photoFavor.setVisibility(View.GONE);
-					clickBtn.setText(PRAISE_ACTY_PHOTO);
-				}else{
-					clickBtn.setText(LOAD_FAIL);
-				}
-			}
-		});
-	}
-	//活动反馈
-	public void activityFeedback(ObjActivity acty){
-		ObjActivityWrap.activityFeedBack(acty, user, "hello error", new ObjFunBooleanCallback() {
-			
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOAD_FAIL);
-					return ;
-				}else{
-					clickBtn.setText(LOAD_SUC);
-				}
-			}
-		});
-	}
-	//忘记密码短信验证
-	public void forgetPsdSms(String phoneNum){
-		ObjUserWrap.requestSmsCodeForResetPasswd(phoneNum, new ObjFunBooleanCallback() {
-
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(result){
-					clickBtn.setText(LOAD_SUC);
-					//发送成功
-				}
-			}
-		});
-	}
-	//重置密码
-	public void resetSmsPsd(String smsNum,String newPsd){
-		ObjUserWrap.resetPasswd(smsNum, newPsd, new ObjFunBooleanCallback() {
-
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(result){
-					clickBtn.setText(LOAD_SUC);
-					//修改成功
-					Toast.makeText(getApplicationContext(), "reset suc", 1000).show();
-				}
-			}
-		});
-	}
-	AVFile fFile = null;
-	AVFile yFile = null;
-	//完善个人信息
-	public void completeInfo(final ObjUser user){
-		File upF1 = new File(yPath);
-		File upF2 = new File(fPath);
-		try {
-			user.setNameNick("tom");
-			user.setGender(1);
-			//获取时间戳（单位毫秒）
-			user.setBirthday(36985214745L);
-			//根据生日计算
-			user.setConstellation("天枰座");
-			user.setSchool("university");
-			//学校编码，查询数据库
-			user.setSchoolNum(1001);
-			//学校所在地编码，查数据库
-			user.setSchoolLocation(1001);
-			//此处为专业分类名称
-			user.setDepartment("computer");
-			//专业分类编码，数据库查询
-			user.setDepartmentId(1);
-			user.setHometown("china");
-			fFile = AVFile.withAbsoluteLocalPath(Constants.HEAD_FILE_RECT+user.getObjectId()+Constants.IMG_TYPE, fPath);
-			yFile = AVFile.withAbsoluteLocalPath(Constants.HEAD_FILE_CIRCLE+user.getObjectId()+Constants.IMG_TYPE, yPath);
-			fFile.saveInBackground(new SaveCallback() {
+		//获取活动报名信息
+		boolean isFirstLoad = false;
+		boolean isSecondLoad = false;
+		private void getInfo(ObjActivity activitySign) {
+			//查询是否报名
+			ObjActivityWrap.queryUserJoin(activitySign, user, new ObjFunBooleanCallback() {
 
 				@Override
-				public void done(AVException e) {
+				public void callback(boolean result, AVException e) {
 					// TODO Auto-generated method stub
+					isFirstLoad = true;
+					if(isFirstLoad && isSecondLoad){
+						clickBtn.setText(SIGN_UP);
+					}
 					if(e != null){
 						return ;
 					}
-					user.setProfileClip(fFile);
-					yFile.saveInBackground(new SaveCallback() {
-
-						@Override
-						public void done(AVException e) {
-							// TODO Auto-generated method stub
-							if(e != null){
-								return ;
-							}
-							user.setProfileOrign(yFile);
-							ObjUserWrap.completeUserInfo(user,new ObjFunBooleanCallback() {
-
-								@Override
-								public void callback(boolean result, AVException e) {
-									// TODO Auto-generated method stub
-									if(result){
-										clickBtn.setText(LOAD_SUC);
-										Toast.makeText(getApplicationContext(), "save suc", 1000).show();
-									}else{
-										clickBtn.setText(LOAD_FAIL);
-										Toast.makeText(getApplicationContext(), "save fail", 1000).show();
-									}
-								}
-							});
-
-						}
-					});
+					if(result){
+						firstTv.setText("已参加");
+						isJoin = true;
+					}else{
+						firstTv.setText("未参加");
+						isJoin = false;
+					}
 				}
 			});
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}
+			//获取票种信息
+			ObjActivityWrap.queryTicket(activitySign, new ObjTicketCallback() {
 
-	/**
-	 * 
-	 * 一下为测试界面相关部分
-	 */
-
-	private void showDialog(){
-		final  AlertDialog portraidlg=new AlertDialog.Builder(this).create();
-		portraidlg.show();
-		Window win=portraidlg.getWindow();
-		win.setContentView(R.layout.dialog_show_photo);
-		RadioButton portrait_native=(RadioButton)win.findViewById(R.id.Portrait_native);
-		portrait_native.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				Intent intent1=new Intent(Intent.ACTION_PICK,null);
-				intent1.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-				startActivityForResult(intent1, 11);
-				portraidlg.dismiss();
-			}
-		});
-		RadioButton portrait_take=(RadioButton)win.findViewById(R.id.Portrait_take);
-		portrait_take.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				//调用摄像头
-				Intent intent2=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
-						"/user_header.png")));
-				startActivityForResult(intent2, 22);
-				portraidlg.dismiss();
-			}
-		});
-		View viewTop=win.findViewById(R.id.view_top_dialog_sethead);
-		View viewBottom=win.findViewById(R.id.view_bottom_dialog_sethead);
-		//点击dialog外部，关闭dialog
-		viewTop.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				portraidlg.dismiss();
-			}
-		});
-		viewBottom.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				portraidlg.dismiss();
-			}
-		});
-
-
-
-	}
-	private Bitmap headerPortait;
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		switch (requestCode) {
-		case 11:
-			if(resultCode==this.RESULT_OK){
-				cropPhoto(data.getData());//裁剪图片
-			}
-			break ;
-		case 22:
-			if(resultCode==this.RESULT_OK){
-				File temp=new File(Environment.getExternalStorageDirectory()
-						+ "/user_header.png");
-				cropPhoto(Uri.fromFile(temp));//裁剪图片
-
-			}
-
-			break;
-		case 33:
-			if(data!=null){
-				Bundle extras=data.getExtras();
-				//裁剪后图片
-				headerPortait=extras.getParcelable("data");
-				if(headerPortait!=null){
-					fPath = saveHeadImg(headerPortait,false);
+				@Override
+				public void callback(List<ObjActivityTicket> objects, AVException e) {
+					// TODO Auto-generated method stub
+					isSecondLoad = true;
+					if(isFirstLoad && isSecondLoad){
+						clickBtn.setText(SIGN_UP);
+					}
+					if(e != null){
+						Toast.makeText(getApplicationContext(), e.getMessage(), 1000).show();
+						return ;
+					}
+					if(objects != null && objects.size()>0){
+						tickets.addAll(objects);
+						String ss = tickets.get(0).getTicketTitle();
+						secondTv.setText(ss);
+					}
 				}
-				//切圆图片
-				headerPortait=BitmapCut.toRoundBitmap(headerPortait);
-				if(headerPortait!=null){
-					yPath = saveHeadImg(headerPortait,true);
-					ivTouxiang.setImageBitmap(headerPortait);
-				}
+			});
+
+		}
+		//活动报名
+		protected void sinUp(ObjActivity activitySign) {
+			// TODO Auto-generated method stub
+			if(isJoin){
+				Toast.makeText(TestActivity.this, "您已参加此活动", 1000).show();
+				return ;
 			}
-			break;
+			ObjActivityOrderWrap.signUpActivity(activitySign, user, tickets.get(0), Constants.OrderStatusPaySuccess, "hello", new ObjFunBooleanCallback() {
 
-		default:
-			break;
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						clickBtn.setText(LOAD_SUC);
+						Toast.makeText(TestActivity.this, "报名失败", 1000).show();
+						return;
+					}else{
+						clickBtn.setText(LOAD_FAIL);
+					}
+				}
+			});
 		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-	public String saveHeadImg(Bitmap head,boolean isY){
-		FileOutputStream fos=null;
-		String path = "";
-		if(isY){
-			path = Environment.getExternalStorageDirectory()+"/user_header.png";
-		}else{
-			path = Environment.getExternalStorageDirectory()+"/f_user_header.png";
+		//活动点赞
+		public void praiseActivity(ObjActivity acty){
+			ObjPraiseWrap.praiseActivity(user, acty, new ObjFunBooleanCallback() {
+
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						clickBtn.setText(LOAD_FAIL);
+						return ;
+					}
+					if(result){
+						actyList.get(0).setIsFavor(1);
+						clickBtn.setText(LOAD_SUC);
+						favorImg.setVisibility(View.VISIBLE);
+						clickBtn.setText(CANCEL_PRAISE_ACTY);
+					}else{
+						clickBtn.setText(LOAD_FAIL);
+					}
+					/**
+					 * 此处执行更新活动信息点赞字段
+					 * */
+					actyDao.updateIsFavor(user.getObjectId(), 0, actyList.get(0).getIsFavor());
+				}
+			});
 		}
-		try {
-			fos=new FileOutputStream(new File(path));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		//活动取消点赞
+		public void cancelPraiseActivity(ObjActivity acty){
+			ObjPraiseWrap.cancelPraiseActivity(user, acty, new ObjFunBooleanCallback() {
+
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						clickBtn.setText(LOAD_FAIL);
+						return ;
+					}
+					if(result){
+						actyList.get(0).setIsFavor(0);
+						clickBtn.setText(LOAD_SUC);
+						favorImg.setVisibility(View.GONE);
+						clickBtn.setText(PRAISE_ACTIVITY);
+					}else{
+						clickBtn.setText(LOAD_FAIL);
+					}
+					/**
+					 * 此处执行更新活动信息点赞字段
+					 * */
+					actyDao.updateIsFavor(user.getObjectId(), 0, actyList.get(0).getIsFavor());
+				}
+			});
 		}
-		head.compress(CompressFormat.PNG, 100, fos);
-		try {
-			fos.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		//获取活动照片
+		public void loadActvityPhoto(ObjActivity acty){
+			ObjActivityPhotoWrap.queryActivityPhotos(acty, new ObjActivityPhotoCallback() {
+
+				@Override
+				public void callback(List<ObjActivityPhoto> objects, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						clickBtn.setText(LOAD_FAIL);
+						return ;
+					}
+					if(objects != null && objects.size()>0){
+						photoBean = objects.get(0);
+						firstTv.setText(photoBean.getPhoto().getUrl());
+						//查询是否对照片点赞
+						ObjActivityPhotoWrap.queryPhotoPraise(photoBean, user, new ObjFunBooleanCallback() {
+
+							@Override
+							public void callback(boolean result, AVException e) {
+								// TODO Auto-generated method stub
+								if(e != null){
+									clickBtn.setText(LOAD_FAIL);
+									return ;
+								}
+								if(result){
+									photoFavor.setVisibility(View.VISIBLE);
+									clickBtn.setText(CANCEL_PRAISE_ACTY_PHOTO);
+								}else{
+									photoFavor.setVisibility(View.GONE);
+									clickBtn.setText(PRAISE_ACTY_PHOTO);
+								}
+							}
+						});
+					}
+				}
+			});
 		}
-		try {
-			fos.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		//对活动照片点赞
+		public void praiseActivityPhoto(ObjActivityPhoto photo){
+			ObjActivityPhotoWrap.praiseActivityPhoto(photo, user, new ObjFunBooleanCallback() {
+
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						clickBtn.setText(LOAD_FAIL);
+						return ;
+					}
+					if(result){
+						photoFavor.setVisibility(View.VISIBLE);
+						clickBtn.setText(CANCEL_PRAISE_ACTY_PHOTO);
+					}else{
+						clickBtn.setText(LOAD_FAIL);
+					}
+				}
+			});
 		}
-		return path;
+		//对活动照片取消赞
+		public void cancelPraiseActtyPhoto(ObjActivityPhoto photo){
+			ObjActivityPhotoWrap.cancelPraiseActivityPhoto(user, photo, new ObjFunBooleanCallback() {
 
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						clickBtn.setText(LOAD_FAIL);
+						return ;
+					}
+					if(result){
+						photoFavor.setVisibility(View.GONE);
+						clickBtn.setText(PRAISE_ACTY_PHOTO);
+					}else{
+						clickBtn.setText(LOAD_FAIL);
+					}
+				}
+			});
+		}
+		//活动反馈
+		public void activityFeedback(ObjActivity acty){
+			ObjActivityWrap.activityFeedBack(acty, user, "hello error", new ObjFunBooleanCallback() {
+
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						clickBtn.setText(LOAD_FAIL);
+						return ;
+					}else{
+						clickBtn.setText(LOAD_SUC);
+					}
+				}
+			});
+		}
+		//忘记密码短信验证
+		public void forgetPsdSms(String phoneNum){
+			ObjUserWrap.requestSmsCodeForResetPasswd(phoneNum, new ObjFunBooleanCallback() {
+
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(result){
+						clickBtn.setText(LOAD_SUC);
+						//发送成功
+					}
+				}
+			});
+		}
+		//重置密码
+		public void resetSmsPsd(String smsNum,String newPsd){
+			ObjUserWrap.resetPasswd(smsNum, newPsd, new ObjFunBooleanCallback() {
+
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(result){
+						clickBtn.setText(LOAD_SUC);
+						//修改成功
+						Toast.makeText(getApplicationContext(), "reset suc", 1000).show();
+					}
+				}
+			});
+		}
+		AVFile fFile = null;
+		AVFile yFile = null;
+		//完善个人信息
+		public void completeInfo(final ObjUser user){
+			File upF1 = new File(yPath);
+			File upF2 = new File(fPath);
+			try {
+				user.setNameNick("tom");
+				user.setGender(1);
+				//获取时间戳（单位毫秒）
+				user.setBirthday(36985214745L);
+				//根据生日计算
+				user.setConstellation("天枰座");
+				user.setSchool("university");
+				//学校编码，查询数据库
+				user.setSchoolNum(1001);
+				//学校所在地编码，查数据库
+				user.setSchoolLocation(1001);
+				//此处为专业分类名称
+				user.setDepartment("computer");
+				//专业分类编码，数据库查询
+				user.setDepartmentId(1);
+				user.setHometown("china");
+				fFile = AVFile.withAbsoluteLocalPath(Constants.HEAD_FILE_RECT+user.getObjectId()+Constants.IMG_TYPE, fPath);
+				yFile = AVFile.withAbsoluteLocalPath(Constants.HEAD_FILE_CIRCLE+user.getObjectId()+Constants.IMG_TYPE, yPath);
+				fFile.saveInBackground(new SaveCallback() {
+
+					@Override
+					public void done(AVException e) {
+						// TODO Auto-generated method stub
+						if(e != null){
+							return ;
+						}
+						user.setProfileClip(fFile);
+						yFile.saveInBackground(new SaveCallback() {
+
+							@Override
+							public void done(AVException e) {
+								// TODO Auto-generated method stub
+								if(e != null){
+									return ;
+								}
+								user.setProfileOrign(yFile);
+								ObjUserWrap.completeUserInfo(user,new ObjFunBooleanCallback() {
+
+									@Override
+									public void callback(boolean result, AVException e) {
+										// TODO Auto-generated method stub
+										if(result){
+											clickBtn.setText(LOAD_SUC);
+											Toast.makeText(getApplicationContext(), "save suc", 1000).show();
+										}else{
+											clickBtn.setText(LOAD_FAIL);
+											Toast.makeText(getApplicationContext(), "save fail", 1000).show();
+										}
+									}
+								});
+
+							}
+						});
+					}
+				});
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		/**
+		 * 
+		 * 一下为测试界面相关部分
+		 */
+
+		private void showDialog(){
+			final  AlertDialog portraidlg=new AlertDialog.Builder(this).create();
+			portraidlg.show();
+			Window win=portraidlg.getWindow();
+			win.setContentView(R.layout.dialog_show_photo);
+			RadioButton portrait_native=(RadioButton)win.findViewById(R.id.Portrait_native);
+			portrait_native.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					Intent intent1=new Intent(Intent.ACTION_PICK,null);
+					intent1.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+					startActivityForResult(intent1, 11);
+					portraidlg.dismiss();
+				}
+			});
+			RadioButton portrait_take=(RadioButton)win.findViewById(R.id.Portrait_take);
+			portrait_take.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					//调用摄像头
+					Intent intent2=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+					intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
+							"/user_header.png")));
+					startActivityForResult(intent2, 22);
+					portraidlg.dismiss();
+				}
+			});
+			View viewTop=win.findViewById(R.id.view_top_dialog_sethead);
+			View viewBottom=win.findViewById(R.id.view_bottom_dialog_sethead);
+			//点击dialog外部，关闭dialog
+			viewTop.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					portraidlg.dismiss();
+				}
+			});
+			viewBottom.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					portraidlg.dismiss();
+				}
+			});
+
+
+
+		}
+		private Bitmap headerPortait;
+		@Override
+		public void onActivityResult(int requestCode, int resultCode, Intent data) {
+			// TODO Auto-generated method stub
+			switch (requestCode) {
+			case 11:
+				if(resultCode==this.RESULT_OK){
+					cropPhoto(data.getData());//裁剪图片
+				}
+				break ;
+			case 22:
+				if(resultCode==this.RESULT_OK){
+					File temp=new File(Environment.getExternalStorageDirectory()
+							+ "/user_header.png");
+					cropPhoto(Uri.fromFile(temp));//裁剪图片
+
+				}
+
+				break;
+			case 33:
+				if(data!=null){
+					Bundle extras=data.getExtras();
+					//裁剪后图片
+					headerPortait=extras.getParcelable("data");
+					if(headerPortait!=null){
+						fPath = saveHeadImg(headerPortait,false);
+					}
+					//切圆图片
+					headerPortait=BitmapCut.toRoundBitmap(headerPortait);
+					if(headerPortait!=null){
+						yPath = saveHeadImg(headerPortait,true);
+						ivTouxiang.setImageBitmap(headerPortait);
+					}
+				}
+				break;
+
+			default:
+				break;
+			}
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+		public String saveHeadImg(Bitmap head,boolean isY){
+			FileOutputStream fos=null;
+			String path = "";
+			if(isY){
+				path = Environment.getExternalStorageDirectory()+"/user_header.png";
+			}else{
+				path = Environment.getExternalStorageDirectory()+"/f_user_header.png";
+			}
+			try {
+				fos=new FileOutputStream(new File(path));
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			head.compress(CompressFormat.PNG, 100, fos);
+			try {
+				fos.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				fos.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return path;
+
+
+		}
+
+		@Override
+		public boolean onCreateOptionsMenu(Menu menu) {
+			// Inflate the menu; this adds items to the action bar if it is present.
+			getMenuInflater().inflate(R.menu.shezhigerenxinxi, menu);
+			return true;
+		}
+
+
+		public Bitmap readHead(){
+			String file=Environment.getExternalStorageDirectory()+"/user_header.png";
+			return BitmapFactory.decodeFile(file);
+		}
+
+		/**
+		 * 调用拍照的裁剪功能
+		 * @param uri
+		 */
+
+		public void cropPhoto(Uri uri){
+			//调用拍照的裁剪功能
+			Intent intent=new Intent("com.android.camera.action.CROP");
+			intent.setDataAndType(uri, "image/*");
+			intent.putExtra("crop", "true");
+			//aspectX aspectY 是宽和搞的比例
+			intent.putExtra("aspectX", 1);
+			intent.putExtra("aspectY", 1);
+			// // outputX outputY 是裁剪图片宽高
+			intent.putExtra("outputX", 250);
+			intent.putExtra("outputY", 250);
+			intent.putExtra("return-data",true);
+			startActivityForResult(intent,33);
+		}
 
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.shezhigerenxinxi, menu);
-		return true;
-	}
-
-
-	public Bitmap readHead(){
-		String file=Environment.getExternalStorageDirectory()+"/user_header.png";
-		return BitmapFactory.decodeFile(file);
-	}
-
-	/**
-	 * 调用拍照的裁剪功能
-	 * @param uri
-	 */
-
-	public void cropPhoto(Uri uri){
-		//调用拍照的裁剪功能
-		Intent intent=new Intent("com.android.camera.action.CROP");
-		intent.setDataAndType(uri, "image/*");
-		intent.putExtra("crop", "true");
-		//aspectX aspectY 是宽和搞的比例
-		intent.putExtra("aspectX", 1);
-		intent.putExtra("aspectY", 1);
-		// // outputX outputY 是裁剪图片宽高
-		intent.putExtra("outputX", 250);
-		intent.putExtra("outputY", 250);
-		intent.putExtra("return-data",true);
-		startActivityForResult(intent,33);
-	}
-
-}

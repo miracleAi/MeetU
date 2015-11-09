@@ -95,7 +95,7 @@ public class WelcomeActivity extends Activity {
         //拿到本地的用户
         AVUser currentUser = AVUser.getCurrentUser();
 		if(currentUser!=null){
-			Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
+			Intent intent = new Intent(WelcomeActivity.this,TestActivity.class);
 			startActivity(intent);
 			finish();
 			
