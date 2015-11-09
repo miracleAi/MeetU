@@ -16,6 +16,9 @@ import java.util.List;
 
 
 import com.meetu.R;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogUtil.log;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -27,6 +30,10 @@ import com.meetu.adapter.PhotoWallAdapter;
 import com.meetu.adapter.PhotoWallAdapter.GridViewHeightaListener;
 import com.meetu.adapter.StaggeredHomeAdapter;
 import com.meetu.adapter.StaggeredHomeAdapter.OnItemClickCallBack;
+import com.meetu.cloud.callback.ObjUserPhotoCallback;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.object.ObjUserPhoto;
+import com.meetu.cloud.wrap.ObjUserPhotoWrap;
 import com.meetu.entity.Middle;
 import com.meetu.entity.PhotoWall;
 import com.meetu.tools.BitmapCut;
@@ -68,11 +75,11 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBack{
 	
-//	private FinalHttp afinal;
+
 	private PullToRefreshGridView pview;
 	private PhotoWallAdapter adapter;
 	private List<PhotoWall> data=new ArrayList<PhotoWall>();
-//	private List<String> data=new ArrayList<String>();
+
 	private View view;
 	private LinearLayout newsList;
 	
@@ -80,6 +87,13 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 	
 	private StaggeredHomeAdapter mAdapter;
 	private GridViewHeightaListener gridViewHeightaListener;
+	
+	//网络数据 相关
+	private AVUser currentUser = AVUser.getCurrentUser();
+	 //当前用户
+	private ObjUser user = new ObjUser();
+	//网络请求下来的 图片信息
+	private List<ObjUserPhoto> objUserPhotos=new ArrayList<ObjUserPhoto>();
 	
 	@Override
 	public void onAttach(Activity activity) {
@@ -93,11 +107,17 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 			Bundle savedInstanceState) {
 		
 		if(view==null){
+			
+			if (currentUser != null) {
+				//强制类型转换
+				user = AVUser.cast(currentUser, ObjUser.class);
+			}
 
 			view=inflater.inflate(R.layout.fragment_mine_photo_wall, null);
 			mRecyclerView=(RecyclerView) view.findViewById(R.id.id_RecyclerView);
 			loaddata();
-			mAdapter=new StaggeredHomeAdapter(getActivity(), data);
+
+			mAdapter=new StaggeredHomeAdapter(getActivity(), objUserPhotos);
 			mAdapter.setOnItemClickLitener(this);
 			mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager
 					(2,StaggeredGridLayoutManager.VERTICAL));
@@ -132,22 +152,33 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 		super.setArguments(args);
 	}
 	private void loaddata(){
-		data=new ArrayList<PhotoWall>();
-		data.add(new PhotoWall(10,R.drawable.img1_ceshi));
-		data.add(new PhotoWall(2,R.drawable.img2_ceshi));
-		data.add(new PhotoWall(3,R.drawable.img3_ceshi));
-		data.add(new PhotoWall(4,R.drawable.img4_ceshi));
-		data.add(new PhotoWall(5,R.drawable.img5_ceshi));
-		data.add(new PhotoWall(5,R.drawable.img1_ceshi));
-		data.add(new PhotoWall(7,R.drawable.img2_ceshi));
-		data.add(new PhotoWall(10,R.drawable.img3_ceshi));
-		data.add(new PhotoWall(12,R.drawable.img4_ceshi));
-		data.add(new PhotoWall(10,R.drawable.img5_ceshi));
-		data.add(new PhotoWall(11,R.drawable.img1_ceshi));
-		data.add(new PhotoWall(12,R.drawable.img2_ceshi));
-		data.add(new PhotoWall(13,R.drawable.img3_ceshi));
-		data.add(new PhotoWall(14,R.drawable.img4_ceshi));
-		data.add(new PhotoWall(15,R.drawable.img5_ceshi));
+//		data=new ArrayList<PhotoWall>();
+//		data.add(new PhotoWall(10,R.drawable.img1_ceshi));
+//		data.add(new PhotoWall(2,R.drawable.img2_ceshi));
+//		data.add(new PhotoWall(3,R.drawable.img3_ceshi));
+//		data.add(new PhotoWall(4,R.drawable.img4_ceshi));
+//		data.add(new PhotoWall(5,R.drawable.img5_ceshi));
+//		data.add(new PhotoWall(5,R.drawable.img1_ceshi));
+//		data.add(new PhotoWall(7,R.drawable.img2_ceshi));
+//		data.add(new PhotoWall(10,R.drawable.img3_ceshi));
+//		data.add(new PhotoWall(12,R.drawable.img4_ceshi));
+//		data.add(new PhotoWall(10,R.drawable.img5_ceshi));
+//		data.add(new PhotoWall(11,R.drawable.img1_ceshi));
+//		data.add(new PhotoWall(12,R.drawable.img2_ceshi));
+//		data.add(new PhotoWall(13,R.drawable.img3_ceshi));
+//		data.add(new PhotoWall(14,R.drawable.img4_ceshi));
+//		data.add(new PhotoWall(15,R.drawable.img5_ceshi));
+		
+		ObjUserPhotoWrap.queryUserPhoto(user, new ObjUserPhotoCallback() {
+			
+			@Override
+			public void callback(List<ObjUserPhoto> objects, AVException e) {
+				// TODO Auto-generated method stub
+				
+				objUserPhotos=objects;
+				log.e("lucifer", "我的照片数量"+objUserPhotos.size());
+			}
+		});
 
 	}
 

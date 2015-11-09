@@ -89,7 +89,7 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 	private boolean isMyserf=true;//是否是我自己进入这个页面  默认是我自己true
 	
 	//网络 数据相关
-	private BitmapUtils bitmapUtils; ;
+	private BitmapUtils bitmapUtils; 
 	private String headURl="";//头像的URL
 	//拿本地的  user 
 	private AVUser currentUser = AVUser.getCurrentUser();
@@ -274,6 +274,7 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
+		//上传照片：
 			case R.id.update_mine_img :
 				//Toast.makeText(getActivity(), "s", Toast.LENGTH_SHORT).show();			
 				Intent intent=new Intent(Intent.ACTION_PICK,null);
@@ -311,7 +312,7 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 				Uri url = data.getData(); 
 				try {
 					//
-					photoPortait=getThumbnail(url,500);
+					photoPortait=getThumbnail(url,1200);
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -327,7 +328,7 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 //					updata.setImageBitmap(headerPortait);
 				}
 				Intent intent=new Intent(getActivity(),UpdatepictureActivity.class);
-				startActivity(intent);
+				startActivityForResult(intent, 44);
 			}
 			break;
 		case 11:
@@ -359,15 +360,15 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 			if (currentUser != null) {
 						//强制类型转换
 						ObjUser user = AVUser.cast(currentUser, ObjUser.class);
-						completeInfo(user);
-						
-			
-					}
-			
-	
-//					ivTouxiang.setImageBitmap(headerPortait);
-					
+						completeInfo(user);					
+					}					
 				}
+			}
+			break;
+		case 44:
+			if(resultCode==getActivity().RESULT_OK){
+				//TODO  刷新 照片列表
+				log.e("lucifer", "上传照片成功刷新照片列表");
 			}
 			break;
 

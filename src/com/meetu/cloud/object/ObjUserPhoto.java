@@ -44,6 +44,7 @@ public class ObjUserPhoto extends AVObject{
 	
 	public ObjUserPhoto() {
 		// TODO Auto-generated constructor stub
+		
 	}
 	
 	public ObjUser getUser() {

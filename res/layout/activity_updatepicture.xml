@@ -91,8 +91,9 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:drawableLeft="@drawable/mine_photoview_photoupload_img_edit"
-            android:hint="来写点你想说的吧"
+            android:hint="说点儿什么，为心情留个印记吧~"
             android:maxLength="50"
+            android:drawablePadding="6dp"
             android:textColorHint="#bfbfbf"
             android:textColorLink="#33c6e5"
             android:textSize="12dp" >
@@ -103,15 +104,20 @@
             android:layout_height="1dp"
             android:background="#33c6e5" />
     </LinearLayout>
-     <ImageView
-        android:id="@+id/update_picture_mine"
+    <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/top_update_rl"
-        android:layout_above="@id/center_update_ll"
-        android:layout_marginBottom="20dp"
-        android:scaleType="centerCrop"       
-        android:layout_alignParentLeft="true"       
-        android:src="@drawable/img5_ceshi" />
+        android:layout_above="@id/center_update_ll"        
+        android:layout_marginBottom="20dp">
+     <ImageView
+        android:id="@+id/update_picture_mine"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"      
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+         android:src="@drawable/avty_cover_card4_img"             
+        />
+     </RelativeLayout>
 
 </RelativeLayout>

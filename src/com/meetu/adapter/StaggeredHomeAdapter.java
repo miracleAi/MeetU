@@ -1,11 +1,16 @@
 package com.meetu.adapter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import com.avos.avoscloud.LogUtil.log;
+import com.lidroid.xutils.BitmapUtils;
 import com.meetu.R;
 import com.meetu.adapter.PhotoWallAdapter.GridViewHeightaListener;
+import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.entity.PhotoWall;
+import com.meetu.tools.DateUtils;
 import com.meetu.tools.DisplayUtils;
 
 import android.app.Activity;
@@ -27,24 +32,20 @@ import android.widget.TextView;
 public class StaggeredHomeAdapter extends
 			RecyclerView.Adapter<StaggeredHomeAdapter.MyViewHolder> {
 
-	private List<PhotoWall> mDatas;
+//	private List<PhotoWall> mDatas;
+	private List<ObjUserPhoto> mPhotos;
 	private LayoutInflater mInflater;
 	private List<Integer> mHeights;
 	private int width;
+	private Context mContext;
 
 	// private List<Integer> mHeights;
 	private GridViewHeightaListener gridViewHeightaListener;
-	 
-//	public interface GridViewHeightaListener {
-//		/**
-//		 * 监听高度的变化
-//		 * @param height
-//		 */
-//		public void callBackHeight(int height);
-//	}
-//	public void setGridViewHeightaListener(GridViewHeightaListener gridViewHeightaListener) {
-//		this.gridViewHeightaListener = gridViewHeightaListener;
-//	}
+	
+	//网络数据相关
+	
+	private BitmapUtils bitmapUtils; 
+	private String photoUrl;
 
 	public interface OnItemClickCallBack {
 		void onItemClick(int id);
@@ -58,11 +59,13 @@ public class StaggeredHomeAdapter extends
 		this.mOnItemClickLitener = mOnItemClickLitener;
 	}
 
-	public StaggeredHomeAdapter(Context context, List<PhotoWall> datas) {
+	public StaggeredHomeAdapter(Context context, List<ObjUserPhoto> datas) {
 		
 		mInflater = LayoutInflater.from(context);
-		mDatas = datas;
+		mPhotos = datas;
 		width = DisplayUtils.getWindowWidth((Activity)context);
+		mContext=context;
+		bitmapUtils=new BitmapUtils(mContext);
 //		 mHeights = new ArrayList<Integer>();
 //		 if(mDatas!=null && mDatas.size()>0){
 //		 for (int i = 0; i < mDatas.size(); i++)
@@ -74,7 +77,7 @@ public class StaggeredHomeAdapter extends
 
 	@Override
 	public int getItemCount() {
-		return mDatas.size();
+		return mPhotos.size();
 	}
 
 	@Override
@@ -87,7 +90,7 @@ public class StaggeredHomeAdapter extends
 
 	@Override
 	public void onBindViewHolder(final MyViewHolder holder, final int position) {
-		if(mDatas!=null && mDatas.size()>0){
+		if(mPhotos!=null && mPhotos.size()>0){
 		 LayoutParams lp = holder.ivImg.getLayoutParams();
 //		 lp.height = mHeights.get(position);
 		 lp.width=(width)/2;
@@ -99,9 +102,25 @@ public class StaggeredHomeAdapter extends
 				
 				 holder.ivImg.setLayoutParams(lp);
 		
-		PhotoWall item = mDatas.get(position);
-		holder.ivImg.setImageResource(item.getImg());
-		holder.id = item.getId();
+		ObjUserPhoto item = mPhotos.get(position);
+		
+		photoUrl=item.getPhoto().getUrl();
+		log.e("lucifer", "photoUrl=="+photoUrl);
+		//使用xutils 框架自带缓存机制设置加载网络图片
+		
+		bitmapUtils.display(holder.ivImg, photoUrl);
+		
+		holder.ivFavorNumber.setText(item.getPraiseCount());
+		holder.ivViewNumber.setText(item.getBrowseCount());
+		
+		Date photoDate=item.getCreatedAt();
+		
+		String photoDateString=DateUtils.getDateToString(photoDate.getTime());
+		holder.ivphotoDate.setText(photoDateString);
+		
+//		holder.ivImg.setImageResource(item.getImg());
+//		holder.id = item.getId();
+		
 		// 如果设置了回调，则设置点击事件
 		if (mOnItemClickLitener != null) {
 			holder.itemView.setOnClickListener(new OnClickListener() {
@@ -159,14 +178,17 @@ public class StaggeredHomeAdapter extends
 
 	class MyViewHolder extends ViewHolder {
 		private RelativeLayout rlAll;
-		ImageView ivImg;
-
+		private ImageView ivImg;
+		private TextView ivFavorNumber,ivViewNumber,ivphotoDate;
 		int id;
 		public MyViewHolder(View view) {
 			super(view);
 			
 			ivImg = (ImageView) view.findViewById(R.id.mine_img_loading);
 			rlAll=(RelativeLayout) view.findViewById(R.id.rl_all);
+			ivFavorNumber=(TextView) view.findViewById(R.id.mine_favourNumber);
+			ivViewNumber=(TextView) view.findViewById(R.id.mine_viewNumber);
+			ivphotoDate=(TextView) view.findViewById(R.id.mine_date_item_photoWall_tv);
 		}
 
 		public void setData() {

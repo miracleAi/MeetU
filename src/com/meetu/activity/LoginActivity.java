@@ -119,6 +119,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 							log.e("object", object.getClassName());
 							Intent intent=new Intent(LoginActivity.this,MainActivity.class);
 							startActivity(intent);
+							finish();
 							
 						}else {
 							if(e.getCode()==1){
