@@ -55,6 +55,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -77,8 +79,8 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 	
 
 	private PullToRefreshGridView pview;
-	private PhotoWallAdapter adapter;
-	private List<PhotoWall> data=new ArrayList<PhotoWall>();
+//	private PhotoWallAdapter adapter;
+//	private List<PhotoWall> data=new ArrayList<PhotoWall>();
 
 	private View view;
 	private LinearLayout newsList;
@@ -115,14 +117,15 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 
 			view=inflater.inflate(R.layout.fragment_mine_photo_wall, null);
 			mRecyclerView=(RecyclerView) view.findViewById(R.id.id_RecyclerView);
-			loaddata();
-
+			
 			mAdapter=new StaggeredHomeAdapter(getActivity(), objUserPhotos);
+			
 			mAdapter.setOnItemClickLitener(this);
+			
 			mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager
 					(2,StaggeredGridLayoutManager.VERTICAL));
 			mRecyclerView.setAdapter(mAdapter);
-			
+			loaddata();
 			
 			//计算recycleview 的滑动距离
 
@@ -176,7 +179,9 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 				// TODO Auto-generated method stub
 				
 				objUserPhotos=objects;
-				log.e("lucifer", "我的照片数量"+objUserPhotos.size());
+				mAdapter=new StaggeredHomeAdapter(getActivity(), objUserPhotos);
+				log.e("lucifer", "我的照片数量"+objUserPhotos.size()+"url=="+objUserPhotos.get(0).getPhoto().getUrl());
+				handler.sendEmptyMessage(1);
 			}
 		});
 
@@ -188,7 +193,7 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 //		Toast.makeText(getActivity(), "点击了某个位置"+id, Toast.LENGTH_SHORT).show();
 		Intent intent =new Intent(super.getActivity(),MinephotoActivity.class);
 		Bundle bundle = new Bundle();
-		bundle.putSerializable("PhotoWall",data.get(id));
+		bundle.putSerializable("PhotoWall",id);
 		
 		intent.putExtras(bundle);
 		intent.putExtra("id", ""+id);
@@ -201,6 +206,32 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 	public void onItemLongClick(View view, int position) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	Handler handler=new Handler(){
+
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			switch(msg.what){
+			case 1:
+				mAdapter.notifyDataSetChanged();
+		//		refreshComplete();
+				log.e("zcq", "刷新了");
+				break;
+			}
+		}
+	
+	};
+	private void refreshComplete(){
+		mRecyclerView.postDelayed(new Runnable() {
+	
+	            @Override
+	            public void run() {
+	      //      	mRecyclerView.onRefreshComplete();
+	            	
+	            }
+	    }, 500);
 	}
 
 	
