@@ -62,15 +62,12 @@ import android.widget.Toast;
 
 public class WelcomeActivity extends Activity {
 
-	
+
 	//导入学校数据库到本地
 	private  DBManager dbHelper;
-	
+
 	//导入城市数据库到本地
 	private  DBManagerCity dbHelperCity;
-
-
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,46 +77,29 @@ public class WelcomeActivity extends Activity {
 		super.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_welcome);
-		
+
 		//导入数据库
 		dbHelper = new DBManager(this);
-        dbHelper.openDatabase();
-        dbHelper.closeDatabase();
-        
-        dbHelperCity=new DBManagerCity(this);
-        dbHelperCity.openDatabase();
-        dbHelperCity.closeDatabase();
-		
-		
-		//
-        //拿到本地的用户
-        AVUser currentUser = AVUser.getCurrentUser();
+		dbHelper.openDatabase();
+		dbHelper.closeDatabase();
+
+		dbHelperCity=new DBManagerCity(this);
+		dbHelperCity.openDatabase();
+		dbHelperCity.closeDatabase();
+
+
+		//拿到本地的用户
+		AVUser currentUser = AVUser.getCurrentUser();
 		if(currentUser!=null){
 			Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
 			startActivity(intent);
 			finish();
-			
+
 		}else{
 			Intent intent = new Intent(WelcomeActivity.this,LoginOrRegisterActivity.class);
 			startActivity(intent);
 			finish();
 		}
-	
-		
-		//next();
-
-
-
-		/*new Timer().schedule(new TimerTask() {
-
-				@Override
-				public void run() {
-
-					Intent intent = new Intent(WelcomeActivity.this,TestActivity.class);
-					startActivity(intent);
-					finish();
-				}
-			}, 1500);*/
 	}
 
 

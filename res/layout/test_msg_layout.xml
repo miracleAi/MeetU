@@ -13,7 +13,7 @@
          >
 
         <ImageView
-            android:id="@+id/selfinfo1_userhead_img"
+            android:id="@+id/up_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -21,11 +21,6 @@
             android:src="@drawable/complete_add_720" />
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/ed"
-        android:layout_width="60dp"
-        android:layout_height="50dp"
-        android:visibility="gone" />
 
     <Button
         android:id="@+id/click"
@@ -40,10 +35,7 @@
         android:id="@+id/favor_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
         android:src="@drawable/acty_cardimg_btn_like_hl" />
 
 

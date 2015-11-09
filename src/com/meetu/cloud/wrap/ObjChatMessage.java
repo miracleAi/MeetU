@@ -9,6 +9,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
@@ -19,6 +23,11 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.meetu.activity.miliao.ChatGroupActivity;
+import com.meetu.cloud.callback.ObjAuthoriseCategoryCallback;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.object.ObjAuthoriseCategory;
+import com.meetu.cloud.object.ObjTableName;
+import com.meetu.cloud.object.ObjUser;
 import com.meetu.entity.Chatmsgs;
 import com.avos.avoscloud.im.v2.AVIMMessageHandler;
 

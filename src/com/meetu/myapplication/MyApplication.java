@@ -21,6 +21,8 @@ import com.meetu.cloud.object.ObjActivityPhoto;
 import com.meetu.cloud.object.ObjActivityPhotoPraise;
 import com.meetu.cloud.object.ObjActivityPraise;
 import com.meetu.cloud.object.ObjActivityTicket;
+import com.meetu.cloud.object.ObjAuthoriseApply;
+import com.meetu.cloud.object.ObjAuthoriseCategory;
 import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.cloud.object.ObjUserPhotoPraise;
 
@@ -35,6 +37,7 @@ public class MyApplication extends Application {
 		// TODO Auto-generated method stub
 		super.onCreate();
 		log.e("AVOSCloud", "3254");
+		//leancloud子类注册
 		AVObject.registerSubclass(ObjActivity.class);
 		AVObject.registerSubclass(ObjActivityPraise.class);
 		AVObject.registerSubclass(ObjActivityPhoto.class);
@@ -45,6 +48,8 @@ public class MyApplication extends Application {
 		AVObject.registerSubclass(ObjActivityFeedback.class);
 		AVObject.registerSubclass(ObjUserPhoto.class);
 		AVObject.registerSubclass(ObjUserPhotoPraise.class);
+		AVObject.registerSubclass(ObjAuthoriseCategory.class);
+		AVObject.registerSubclass(ObjAuthoriseApply.class);
 		AVOSCloud.initialize(this,
 				"tcd4rj3s3c54bdlkv1vfu5puvu9c2k96ur9kge3qvptqxp8p",
 				"8fpp7j815746jg9x26f0d3c5p76xqkyqm586v2onvx3m2k7a");
@@ -52,23 +57,6 @@ public class MyApplication extends Application {
 		// 注册默认的消息处理逻辑
 		AVIMMessageManager
 		.registerDefaultMessageHandler(new CustomMessageHandler());
-
-		// finalBitmap.configLoadingImage(R.drawable.default_news_img);
-		// finalBitmap.configLoadfailImage(R.drawable.default_news_img);
-		// finalBitmap.configBitmapMaxHeight(bitmapHeight);
-
-		// JPushInterface.init(this);
-		// JPushInterface.setDebugMode(true);
-		// JPushInterface.setAlias(this, "123", new TagAliasCallback() {
-		//
-		// @Override
-		// public void gotResult(int arg0, String arg1, Set<String> arg2) {
-		// // TODO Auto-generated method stub
-		// if(arg0!=0){
-		//
-		// }
-		// }
-		// });
 	}
 
 

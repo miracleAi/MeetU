@@ -94,17 +94,6 @@ public class TestActivityTwo extends Activity{
 		firstTv = (TextView) findViewById(R.id.first_tv);
 		secondTv = (TextView) findViewById(R.id.second_tv);
 		favorImg = (ImageView) findViewById(R.id.favor_img);
-		/*bigImg =  (TextView) findViewById(R.id.big_img);
-		favrCout = (TextView) findViewById(R.id.favor_count_tv);
-		followTv = (TextView) findViewById(R.id.follow_tv);
-		joinTv = (TextView) findViewById(R.id.join_tv);
-		statusTv = (TextView) findViewById(R.id.status_tv);
-		titleTv = (TextView) findViewById(R.id.title_tv);
-		addressTv = (TextView) findViewById(R.id.address_tv);
-		timeTv = (TextView) findViewById(R.id.time_tv);
-		contentTv = (TextView) findViewById(R.id.content_tv);
-		orderUserTv = (TextView) findViewById(R.id.user_order_tv);
-		actyCoverTv = (TextView) findViewById(R.id.acty_cover_tv);*/
 		Bitmap head=readHead();
 		if(head!=null){
 			userphoto = head;

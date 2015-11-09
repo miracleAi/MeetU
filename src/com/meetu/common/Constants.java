@@ -99,4 +99,8 @@ public class Constants {
 	public static final String ACTIVITY_CACHE_SP = "activity_cache_sp";
 	//缓存时间标记
 	public static final String ACTIVITY_CACHE_TIME = "activity_cache_time";
+	/**
+	 * 用户权限分类
+	 * */
+	public static final int GROUP_CREATE = 100;
 }
