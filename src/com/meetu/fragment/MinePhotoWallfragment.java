@@ -10,11 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
-
-
-
-
 import com.meetu.R;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
@@ -118,8 +113,7 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 			view=inflater.inflate(R.layout.fragment_mine_photo_wall, null);
 			mRecyclerView=(RecyclerView) view.findViewById(R.id.id_RecyclerView);
 			
-			mAdapter=new StaggeredHomeAdapter(getActivity(), objUserPhotos);
-			
+			mAdapter=new StaggeredHomeAdapter(getActivity(), objUserPhotos);			
 			mAdapter.setOnItemClickLitener(this);
 			
 			mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager
@@ -178,9 +172,11 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 			public void callback(List<ObjUserPhoto> objects, AVException e) {
 				// TODO Auto-generated method stub
 				
-				objUserPhotos=objects;
-				mAdapter=new StaggeredHomeAdapter(getActivity(), objUserPhotos);
+				objUserPhotos.addAll(objects);
+				//mAdapter=new StaggeredHomeAdapter(getActivity(), objUserPhotos);
+				//mRecyclerView.setAdapter(mAdapter);
 				log.e("lucifer", "我的照片数量"+objUserPhotos.size()+"url=="+objUserPhotos.get(0).getPhoto().getUrl());
+				log.e("zcq", ""+objUserPhotos.get(0).getPraiseCount());
 				handler.sendEmptyMessage(1);
 			}
 		});
@@ -192,12 +188,14 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 		// TODO Auto-generated method stub
 //		Toast.makeText(getActivity(), "点击了某个位置"+id, Toast.LENGTH_SHORT).show();
 		Intent intent =new Intent(super.getActivity(),MinephotoActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putSerializable("PhotoWall",id);
-		
-		intent.putExtras(bundle);
+//		Bundle bundle = new Bundle();
+//		bundle.putSerializable("PhotoWall",id);
+//		
+//		intent.putExtras(bundle);
+		intent.putExtra("photolist", (Serializable)objUserPhotos);
 		intent.putExtra("id", ""+id);
-		
+	
+		log.e("lucifer", "id=="+id);
 		startActivity(intent);
 		getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
 	}
@@ -232,6 +230,15 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 	            	
 	            }
 	    }, 500);
+	}
+	/**
+	 * 刷新数据列表重新加载
+	 *   
+	 * @author lucifer
+	 * @date 2015-11-9
+	 */
+	public  void reflesh(){
+		mAdapter.notifyDataSetChanged();
 	}
 
 	

@@ -3,8 +3,10 @@ package com.meetu.activity.mine;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 import com.meetu.adapter.MinePhotoAdapter;
+import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.entity.PhotoWall;
 
 
@@ -31,8 +33,12 @@ public class MinephotoActivity extends Activity implements OnClickListener ,OnPa
 	private ViewPager viewPager;
 	private MinePhotoAdapter adapter;
 	int id;
-	private List<PhotoWall> photolist=new ArrayList<PhotoWall>();
+//	private List<PhotoWall> photolist=new ArrayList<PhotoWall>();
 	private RelativeLayout backLayout,delectLayout;
+	// 网络数据相关
+	private String photoUrl;
+	private List<ObjUserPhoto> objUserPhotos=new ArrayList<ObjUserPhoto>();
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,9 +50,12 @@ public class MinephotoActivity extends Activity implements OnClickListener ,OnPa
 		itemid = super.getIntent().getStringExtra("id");
 		pid = super.getIntent().getStringExtra("id");
 		id=Integer.parseInt(itemid);
+		log.e("zcq", "id=="+itemid);
+		objUserPhotos=(List<ObjUserPhoto>) this.getIntent().getSerializableExtra("photolist");
 	//	Toast.makeText(MinephotoActivity.this, itemid,Toast.LENGTH_SHORT).show();
 		Intent intent = this.getIntent();
-		dataPhotoWall = (PhotoWall) intent.getSerializableExtra("PhotoWall");
+	//	dataPhotoWall = (PhotoWall) intent.getSerializableExtra("PhotoWall");
+		photoUrl=intent.getStringExtra("url");
 		initView();
 	}
 	/*
@@ -70,7 +79,7 @@ public class MinephotoActivity extends Activity implements OnClickListener ,OnPa
 //		favor.setOnClickListener(this);
 		viewPager=(ViewPager)super.findViewById(R.id.viewpager_photo);
 		load();
-		adapter=new MinePhotoAdapter(this, photolist);
+		adapter=new MinePhotoAdapter(this, objUserPhotos);
 		viewPager.setAdapter(adapter);
 		viewPager.setOnPageChangeListener(this);
 		viewPager.setCurrentItem(id);
@@ -79,22 +88,22 @@ public class MinephotoActivity extends Activity implements OnClickListener ,OnPa
 	}
 
 	private void load() {
-		photolist=new ArrayList<PhotoWall>();
-		photolist.add(new PhotoWall(1,R.drawable.img1_ceshi));
-		photolist.add(new PhotoWall(2,R.drawable.img2_ceshi));
-		photolist.add(new PhotoWall(3,R.drawable.img3_ceshi));
-		photolist.add(new PhotoWall(4,R.drawable.img4_ceshi));
-		photolist.add(new PhotoWall(5,R.drawable.img5_ceshi));
-		photolist.add(new PhotoWall(1,R.drawable.img1_ceshi));
-		photolist.add(new PhotoWall(2,R.drawable.img2_ceshi));
-		photolist.add(new PhotoWall(3,R.drawable.img3_ceshi));
-		photolist.add(new PhotoWall(4,R.drawable.img4_ceshi));
-		photolist.add(new PhotoWall(5,R.drawable.img5_ceshi));
-		photolist.add(new PhotoWall(1,R.drawable.img1_ceshi));
-		photolist.add(new PhotoWall(2,R.drawable.img2_ceshi));
-		photolist.add(new PhotoWall(3,R.drawable.img3_ceshi));
-		photolist.add(new PhotoWall(4,R.drawable.img4_ceshi));
-		photolist.add(new PhotoWall(5,R.drawable.img5_ceshi));
+//		photolist=new ArrayList<PhotoWall>();
+//		photolist.add(new PhotoWall(1,R.drawable.img1_ceshi));
+//		photolist.add(new PhotoWall(2,R.drawable.img2_ceshi));
+//		photolist.add(new PhotoWall(3,R.drawable.img3_ceshi));
+//		photolist.add(new PhotoWall(4,R.drawable.img4_ceshi));
+//		photolist.add(new PhotoWall(5,R.drawable.img5_ceshi));
+//		photolist.add(new PhotoWall(1,R.drawable.img1_ceshi));
+//		photolist.add(new PhotoWall(2,R.drawable.img2_ceshi));
+//		photolist.add(new PhotoWall(3,R.drawable.img3_ceshi));
+//		photolist.add(new PhotoWall(4,R.drawable.img4_ceshi));
+//		photolist.add(new PhotoWall(5,R.drawable.img5_ceshi));
+//		photolist.add(new PhotoWall(1,R.drawable.img1_ceshi));
+//		photolist.add(new PhotoWall(2,R.drawable.img2_ceshi));
+//		photolist.add(new PhotoWall(3,R.drawable.img3_ceshi));
+//		photolist.add(new PhotoWall(4,R.drawable.img4_ceshi));
+//		photolist.add(new PhotoWall(5,R.drawable.img5_ceshi));
 		
 	}
 	

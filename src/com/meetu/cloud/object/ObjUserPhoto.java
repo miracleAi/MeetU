@@ -1,5 +1,7 @@
 package com.meetu.cloud.object;
 
+import java.io.Serializable;
+
 import android.os.Parcelable.Creator;
 
 import com.avos.avoscloud.AVClassName;
@@ -7,7 +9,7 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVObject.AVObjectCreator;
 @AVClassName("ObjUserPhoto")
-public class ObjUserPhoto extends AVObject{
+public class ObjUserPhoto extends AVObject implements Serializable{
 	public static final Creator CREATOR = AVObjectCreator.instance;
 	/**
 	 *  照片所属用户
