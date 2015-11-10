@@ -25,24 +25,24 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/desc_item_photo_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/rl_all"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="8dp"
-        android:text="马尔代夫的海" />
+        android:text="111" />
     <TextView
         android:id="@+id/mine_date_item_photoWall_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@+id/desc_item_photo_tv"
         android:layout_marginLeft="10dp"
         android:textSize="10dp"
         android:textColor="#33c6e5"
-        android:text="2015-10-01" />
+        android:text="" />
     
       <ImageView
             android:id="@+id/mine_icon_no_favorites"
@@ -61,8 +61,8 @@
             android:layout_alignTop="@+id/mine_icon_no_favorites"
             android:layout_marginLeft="4dp"
             android:layout_toRightOf="@+id/mine_icon_no_favorites"
-            android:textSize="10dp"
-            android:text="128"
+            android:textSize="10sp"
+            android:text=""
             android:textColor="#cccccc" />
 
         <ImageView
@@ -81,8 +81,8 @@
             android:layout_alignTop="@+id/mine_icon_views"
             android:layout_marginLeft="4dp"
             android:layout_toRightOf="@+id/mine_icon_views"  
-            android:textSize="10dp"          
-            android:text="123"
+            android:textSize="10sp"          
+            android:text=""
             android:textColor="#cccccc" />
         <View
             android:layout_width="wrap_content"

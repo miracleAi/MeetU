@@ -74,7 +74,7 @@ public class StaggeredHomeAdapter extends
 //		 mHeights.add( (int) (400+ Math.random() * 500));
 //		 }
 //	}
-		
+	
 	}
 
 	@Override
@@ -112,10 +112,11 @@ public class StaggeredHomeAdapter extends
 		log.e("lucifer", "photoUrl=="+photoUrl);
 		//使用xutils 框架自带缓存机制设置加载网络图片
 		
-		bitmapUtils.display(holder.ivImg, photoUrl);
+		bitmapUtils.display(holder.ivImg,photoUrl);
 		
-		holder.ivFavorNumber.setText(item.getPraiseCount());
-		holder.ivViewNumber.setText(item.getBrowseCount());
+		holder.ivFavorNumber.setText(""+item.getPraiseCount());
+		holder.ivViewNumber.setText(""+item.getBrowseCount());
+		holder.ivDesc.setText(""+item.getPhotoDescription());
 		
 		Date photoDate=item.getCreatedAt();
 		
@@ -183,7 +184,7 @@ public class StaggeredHomeAdapter extends
 	class MyViewHolder extends ViewHolder {
 		private RelativeLayout rlAll;
 		private ImageView ivImg;
-		private TextView ivFavorNumber,ivViewNumber,ivphotoDate;
+		private TextView ivFavorNumber,ivViewNumber,ivphotoDate,ivDesc;
 		int id;
 		public MyViewHolder(View view) {
 			super(view);
@@ -193,6 +194,7 @@ public class StaggeredHomeAdapter extends
 			ivFavorNumber=(TextView) view.findViewById(R.id.mine_favourNumber);
 			ivViewNumber=(TextView) view.findViewById(R.id.mine_viewNumber);
 			ivphotoDate=(TextView) view.findViewById(R.id.mine_date_item_photoWall_tv);
+			ivDesc=(TextView) view.findViewById(R.id.desc_item_photo_tv);
 		}
 
 		public void setData() {

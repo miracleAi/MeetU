@@ -2,10 +2,13 @@ package com.meetu.adapter;
 
 import java.util.List;
 
+import com.avos.avoscloud.LogUtil.log;
+import com.lidroid.xutils.BitmapUtils;
 import com.meetu.R;
 import com.meetu.MainActivity;
 import com.meetu.activity.mine.FavorListActivity;
 import com.meetu.activity.mine.MinephotoActivity;
+import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.entity.PhotoWall;
 import com.meetu.myapplication.MyApplication;
 
@@ -26,13 +29,18 @@ import android.widget.Toast;
 
 public class MinePhotoAdapter extends PagerAdapter{
 	private Context  mContext;
-	private List<PhotoWall> Newslist;
+	private List<ObjUserPhoto> Newslist;
 	
-	public MinePhotoAdapter(Context context, List<PhotoWall> list) {
+	//网络数据相关
+	
+		private BitmapUtils bitmapUtils; 
+		private String photoUrl;
+	
+	public MinePhotoAdapter(Context context, List<ObjUserPhoto> list) {
 		super();
 		this.mContext = context;
 		this.Newslist = list;
-		
+		bitmapUtils=new BitmapUtils(mContext);
 		MinephotoActivity activity=(MinephotoActivity)context;
 //		NewsApplication app=(NewsApplication)activity.getApplicationContext();
 //		finalBitmap=app.getFinalBitmap();
@@ -60,12 +68,15 @@ public class MinePhotoAdapter extends PagerAdapter{
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		// TODO Auto-generated method stub
-		PhotoWall item=Newslist.get(position);
+		ObjUserPhoto item=Newslist.get(position);
+		
+		log.e("zcq",""+photoUrl);
 		View view = LayoutInflater.from(mContext).inflate(R.layout.item_minephoto_viewpager,null);
 		ImageView img=(ImageView)view.findViewById(R.id.photo_demail_mine);
-//		finalBitmap.display(img,news.getImgurl());
 		
-		img.setImageResource(item.getImg());
+		photoUrl=item.getPhoto().getUrl();
+	
+		bitmapUtils.display(img, photoUrl);
 		/**
 		 * viewpager 内部事件监听处理
 		 */
