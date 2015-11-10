@@ -11,6 +11,8 @@ import com.meetu.cloud.object.ObjAuthoriseApply;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjAuthoriseWrap;
+import com.meetu.cloud.wrap.ObjChatMessage;
+import com.meetu.myapplication.MyApplication;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -29,6 +31,7 @@ public class TestMsgActivity extends Activity{
 	private static final String LOADSUC = "loadsuc";
 	private static final String LOADING = "loading";
 	private static final String CREATEGROUP = "createGroup";
+	private static final String CHATLOGOUT = "chatLogout";
 	ImageView favorImag,upImg;
 	Button clickBtn;
 	//权限
@@ -50,7 +53,8 @@ public class TestMsgActivity extends Activity{
 		clickBtn = (Button) findViewById(R.id.click);
 		AVUser currentUser = ObjUser.getCurrentUser();
 		user = AVUser.cast(currentUser, ObjUser.class);
-		clickBtn.setText(AUTHORISECATEGORY);
+		//clickBtn.setText(AUTHORISECATEGORY);
+		clickBtn.setText(CHATLOGOUT);
 		clickBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -85,6 +89,9 @@ public class TestMsgActivity extends Activity{
 				}
 				if(clickBtn.getText().toString().equals(CREATEGROUP)){
 					//创建群聊
+					
+				}
+				if(clickBtn.getText().toString().equals(CHATLOGOUT)){
 					
 				}
 			}

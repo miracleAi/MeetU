@@ -24,6 +24,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.cloud.callback.ObjAuthoriseCategoryCallback;
+import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
 import com.meetu.cloud.object.ObjTableName;
@@ -36,14 +37,19 @@ public class ObjChatMessage {
 	 * 创建与服务器连接,登录
 	 * @param client
 	 */
-	public void connectToChatServer(AVIMClient client){
+	public static void connectToChatServer(AVIMClient client,final ObjAvimclientCallback callback){
 		client.open(new AVIMClientCallback() {
 
 			@Override
 			public void done(AVIMClient client, AVIMException e) {
-				if(e == null){
-					//返回连接成功   --》创建聊天
-
+				if(e != null){
+					callback.callback(null, e);
+					return ;
+				}
+				if(client != null){
+					callback.callback(client, null);
+				}else{
+					callback.callback(client, new AVException(0, "登录失败"));
 				}
 			}
 
@@ -131,13 +137,21 @@ public class ObjChatMessage {
 	 * 
 	 * @param client
 	 */
-	public void logOutChat(AVIMClient client){
+	public static void logOutChat(AVIMClient client,final ObjFunBooleanCallback callback){
 		client.close(new AVIMClientCallback() {
 
 			@Override
-			public void done(AVIMClient arg0, AVIMException arg1) {
+			public void done(AVIMClient client, AVIMException e) {
 				// TODO Auto-generated method stub
-
+				if(e != null){
+					callback.callback(false, e);
+					return ;
+				}
+				if(client == null){
+					callback.callback(false, new AVException(0, "退出失败"));
+				}else{
+					callback.callback(true, null);
+				}
 			}
 		});
 	}

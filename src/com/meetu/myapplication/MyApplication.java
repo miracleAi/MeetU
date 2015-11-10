@@ -2,8 +2,10 @@ package com.meetu.myapplication;
 
 import java.util.Set;
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
@@ -13,6 +15,7 @@ import com.avos.avoscloud.im.v2.AVIMMessageHandler;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityCover;
 import com.meetu.cloud.object.ObjActivityFeedback;
@@ -25,13 +28,14 @@ import com.meetu.cloud.object.ObjAuthoriseApply;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
 import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.cloud.object.ObjUserPhotoPraise;
+import com.meetu.cloud.wrap.ObjChatMessage;
 
 import android.app.Application;
 import android.util.Log;
 
 public class MyApplication extends Application {
-
-
+	public AVIMClient chatClient;
+	public boolean isChatLogin = false;
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
@@ -54,41 +58,24 @@ public class MyApplication extends Application {
 				"tcd4rj3s3c54bdlkv1vfu5puvu9c2k96ur9kge3qvptqxp8p",
 				"8fpp7j815746jg9x26f0d3c5p76xqkyqm586v2onvx3m2k7a");
 		AVOSCloud.setDebugLogEnabled(true);
-		// 注册默认的消息处理逻辑
-		AVIMMessageManager
-		.registerDefaultMessageHandler(new CustomMessageHandler());
-	}
 
+		if(null != AVUser.getCurrentUser()){
+			chatClient = AVIMClient.getInstance(AVUser.getCurrentUser().getObjectId());
+			ObjChatMessage.connectToChatServer(chatClient, new ObjAvimclientCallback() {
 
-	public static class CustomMessageHandler extends AVIMMessageHandler {
-		// 接收到消息后的处理逻辑
-		@Override
-		public void onMessage(AVIMMessage message,
-				AVIMConversation conversation, AVIMClient client) {
-			if (message instanceof AVIMTextMessage) {
-				Log.d("Tom & Jerry", ((AVIMTextMessage) message).getText());
-			}
-		}
-
-		public void onMessageReceipt(AVIMMessage message,
-				AVIMConversation conversation, AVIMClient client) {
-
-		}
-	}
-
-	public void jerryReceiveMsgFromTom() {
-		// Jerry登录
-		AVIMClient jerry = AVIMClient.getInstance("Jerry");
-		jerry.open(new AVIMClientCallback() {
-
-			@Override
-			public void done(AVIMClient client, AVIMException e) {
-				// TODO Auto-generated method stub
-				if (e == null) {
-					// ...//登录成功后的逻辑
+				@Override
+				public void callback(AVIMClient client, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						isChatLogin = false;
+						log.d("mytest", " login fail");
+						return ;
+					}
+					chatClient = client;
+					isChatLogin = true;
+					log.d("mytest", " login suc");
 				}
-			}
-		});
+			});
+		} 
 	}
-
 }
