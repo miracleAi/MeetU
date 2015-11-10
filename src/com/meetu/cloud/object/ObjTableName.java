@@ -37,4 +37,8 @@ public class ObjTableName {
 	public static String getUserPhotoTb(){
 		return "ObjUserPhoto";
 	}
+	//用户权限
+	public static String getUserAuthoriseTb(){
+		return "ObjAuthorise";
+	}
 }

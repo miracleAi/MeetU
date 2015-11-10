@@ -42,9 +42,10 @@ public class ObjAuthoriseWrap {
 	/**
 	 * 查询用户是否有权限创建群聊
 	 * */
-	public static void queryUserAuthorise(ObjUser user,final ObjFunBooleanCallback callback){
-		AVQuery<AVObject> query = new AVQuery<AVObject>(ObjTableName.getUserPhotoPraiseTb());
+	public static void queryUserAuthorise(ObjAuthoriseCategory category,ObjUser user,final ObjFunBooleanCallback callback){
+		AVQuery<AVObject> query = new AVQuery<AVObject>(ObjTableName.getUserAuthoriseTb());
 		query.whereEqualTo("user", user);
+		query.whereEqualTo("category", category);
 		query.findInBackground(new FindCallback<AVObject>() {
 
 			@Override
@@ -72,7 +73,24 @@ public class ObjAuthoriseWrap {
 		apply.setArgument(argument);
 		apply.setLookStatus(0);
 		apply.saveInBackground(new SaveCallback() {
-			
+
+			@Override
+			public void done(AVException e) {
+				// TODO Auto-generated method stub
+				if(e == null){
+					callback.callback(true, null);
+				}else{
+					callback.callback(false, e);
+				}
+			}
+		});
+	}
+	/**
+	 * 重新申请权限
+	 * */
+	public static void updateApplyAuthorise(ObjAuthoriseApply apply,final ObjFunBooleanCallback callback){
+		apply.saveInBackground(new SaveCallback() {
+
 			@Override
 			public void done(AVException e) {
 				// TODO Auto-generated method stub
@@ -107,6 +125,6 @@ public class ObjAuthoriseWrap {
 				}
 			}
 		});
-		
+
 	}
 }

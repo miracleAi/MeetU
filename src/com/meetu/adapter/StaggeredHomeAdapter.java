@@ -63,6 +63,7 @@ public class StaggeredHomeAdapter extends
 		
 		mInflater = LayoutInflater.from(context);
 		this.mPhotos = datas;
+		log.d("mytest", "datas.size()=="+datas.size());
 		width = DisplayUtils.getWindowWidth((Activity)context);
 		mContext=context;
 		bitmapUtils=new BitmapUtils(mContext);
@@ -78,8 +79,7 @@ public class StaggeredHomeAdapter extends
 
 	@Override
 	public int getItemCount() {
-		
-		log.e("zcq", "mPhotos.size()=="+mPhotos.size());
+		log.d("mytest", "mPhotos.size()=="+mPhotos.size());
 		return mPhotos.size();
 		
 	}

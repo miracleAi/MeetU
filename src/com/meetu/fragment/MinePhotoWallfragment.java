@@ -9,21 +9,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-
-
-
-
+import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.meetu.R;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshGridView;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.meetu.activity.mine.MinephotoActivity;
 import com.meetu.activity.mine.UpdatepictureActivity;
 import com.meetu.adapter.PhotoWallAdapter;
@@ -38,12 +28,6 @@ import com.meetu.entity.Middle;
 import com.meetu.entity.PhotoWall;
 import com.meetu.tools.BitmapCut;
 import com.meetu.view.MyRecyclerView.OnScrollListener;
-
-
-
-
-
-
 import android.R.raw;
 import android.app.Activity;
 import android.content.ContentResolver;
