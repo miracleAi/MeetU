@@ -2,15 +2,19 @@ package com.meetu.adapter;
 
 import java.util.List;
 
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.lidroid.xutils.BitmapUtils;
 import com.meetu.R;
 import com.meetu.MainActivity;
 import com.meetu.activity.mine.FavorListActivity;
 import com.meetu.activity.mine.MinephotoActivity;
+import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.entity.PhotoWall;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.tools.DensityUtil;
+import com.meetu.tools.DisplayUtils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +40,10 @@ public class MinePhotoAdapter extends PagerAdapter{
 	
 		private BitmapUtils bitmapUtils; 
 		private String photoUrl;
+		
+		private AVUser currentUser = AVUser.getCurrentUser();
+		 //当前用户
+		private ObjUser user = new ObjUser();	
 	
 	public MinePhotoAdapter(Context context, List<ObjUserPhoto> list) {
 		super();
@@ -44,24 +53,27 @@ public class MinePhotoAdapter extends PagerAdapter{
 		MinephotoActivity activity=(MinephotoActivity)context;
 //		NewsApplication app=(NewsApplication)activity.getApplicationContext();
 //		finalBitmap=app.getFinalBitmap();
+		if (currentUser != null) {
+			//强制类型转换
+			user = AVUser.cast(currentUser, ObjUser.class);
+		}
 	}
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
+		
 		return Newslist.size();
 	}
 
 	@Override
 	public boolean isViewFromObject(View view, Object object) {
-		// TODO Auto-generated method stub
+		
 		return view==object;
 	}
 
 	@Override
 	public void destroyItem(ViewGroup container, int position, Object object) {
-		// TODO Auto-generated method stub
-		//super.destroyItem(container, position, object);r
+		
 		container.removeView((View)object);
 	}
 
@@ -72,11 +84,25 @@ public class MinePhotoAdapter extends PagerAdapter{
 		
 		log.e("zcq",""+photoUrl);
 		View view = LayoutInflater.from(mContext).inflate(R.layout.item_minephoto_viewpager,null);
+		
+		TextView name=(TextView) view.findViewById(R.id.name_mine_photoview_fullscreen);
+		name.setText(""+user.getNameNick());
+		TextView desc=(TextView) view.findViewById(R.id.desc_item_minephoto_tv);
+		desc.setText(""+item.getPhotoDescription());
+		TextView favorNumber=(TextView) view.findViewById(R.id.favorNumber_item_minephoto);
+		favorNumber.setText(""+item.getPraiseCount());
 		ImageView img=(ImageView)view.findViewById(R.id.photo_demail_mine);
 		
+		RelativeLayout.LayoutParams params=(LayoutParams) img.getLayoutParams();
+	//	params.width=DisplayUtils.getWindowWidth(mContext);
+		params.width=1200;
+		img.setLayoutParams(params);
+		
 		photoUrl=item.getPhoto().getUrl();
-	
+		
 		bitmapUtils.display(img, photoUrl);
+		ImageView photoHead=(ImageView) view.findViewById(R.id.nameheader_mine_photoview_fullscreen_img);
+		bitmapUtils.display(photoHead, user.getProfileClip().getUrl());
 		/**
 		 * viewpager 内部事件监听处理
 		 */

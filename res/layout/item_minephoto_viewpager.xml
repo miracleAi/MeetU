@@ -23,7 +23,7 @@
             android:textSize="14dp" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/desc_item_minephoto_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/name_mine_photoview_fullscreen"
@@ -44,11 +44,11 @@
             android:layout_height="wrap_content"
             
             android:layout_marginRight="8dp"
-            android:layout_toLeftOf="@+id/textView3"
+            android:layout_toLeftOf="@+id/favorNumber_item_minephoto"
             android:src="@drawable/mine_photoview_fullscreen_btn_like_hl" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/favorNumber_item_minephoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
            
@@ -76,28 +76,36 @@
 
     <ImageView
         android:id="@+id/photo_demail_mine"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"      
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+      	
+      	android:adjustViewBounds="true"
         android:src="@drawable/mine_img_loading" />   
      </RelativeLayout>
     
     	
         
     
-
+<RelativeLayout 
+    android:layout_width="62dp"
+    android:layout_height="62dp"
+    android:background="@drawable/mine_photoview_fullscreen_btn_profile_stroke"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentLeft="true"
+    android:layout_marginBottom="26dp"
+    android:layout_marginLeft="17dp"
+    android:gravity="center"
+    >
     <ImageView
         android:id="@+id/nameheader_mine_photoview_fullscreen_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="26dp"
-        android:layout_marginLeft="17dp"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        
         
         android:src="@drawable/mine_photoview_fullscreen_btn_profile_stroke" />
     
-    
+    </RelativeLayout>
 
 
 </RelativeLayout>

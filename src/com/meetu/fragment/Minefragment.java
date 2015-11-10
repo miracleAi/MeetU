@@ -312,7 +312,7 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 				Uri url = data.getData(); 
 				try {
 					//
-					photoPortait=getThumbnail(url,1200);
+					photoPortait=getThumbnail(url,2000);
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

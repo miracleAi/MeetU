@@ -88,22 +88,7 @@ public class MinephotoActivity extends Activity implements OnClickListener ,OnPa
 	}
 
 	private void load() {
-//		photolist=new ArrayList<PhotoWall>();
-//		photolist.add(new PhotoWall(1,R.drawable.img1_ceshi));
-//		photolist.add(new PhotoWall(2,R.drawable.img2_ceshi));
-//		photolist.add(new PhotoWall(3,R.drawable.img3_ceshi));
-//		photolist.add(new PhotoWall(4,R.drawable.img4_ceshi));
-//		photolist.add(new PhotoWall(5,R.drawable.img5_ceshi));
-//		photolist.add(new PhotoWall(1,R.drawable.img1_ceshi));
-//		photolist.add(new PhotoWall(2,R.drawable.img2_ceshi));
-//		photolist.add(new PhotoWall(3,R.drawable.img3_ceshi));
-//		photolist.add(new PhotoWall(4,R.drawable.img4_ceshi));
-//		photolist.add(new PhotoWall(5,R.drawable.img5_ceshi));
-//		photolist.add(new PhotoWall(1,R.drawable.img1_ceshi));
-//		photolist.add(new PhotoWall(2,R.drawable.img2_ceshi));
-//		photolist.add(new PhotoWall(3,R.drawable.img3_ceshi));
-//		photolist.add(new PhotoWall(4,R.drawable.img4_ceshi));
-//		photolist.add(new PhotoWall(5,R.drawable.img5_ceshi));
+
 		
 	}
 	
@@ -120,10 +105,6 @@ public class MinephotoActivity extends Activity implements OnClickListener ,OnPa
 				Toast.makeText(this, "进行删除操作", Toast.LENGTH_SHORT).show();
 
 				break;
-//			case R.id.favor_minephoto_mine :
-//				Intent intent = new Intent(this, FavorListActivity.class);
-//				startActivity(intent);
-//				break;
 
 			default :
 				break;
