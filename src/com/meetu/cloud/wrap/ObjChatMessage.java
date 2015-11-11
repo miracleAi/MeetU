@@ -30,6 +30,7 @@ import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.callback.ObjCoversationCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunCountCallback;
+import com.meetu.cloud.callback.ObjListCallback;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
 import com.meetu.cloud.object.ObjTableName;
 import com.meetu.cloud.object.ObjUser;
@@ -95,9 +96,7 @@ public class ObjChatMessage {
 	 * 加入对话
 	 * @param ConversationId 对话的 id
 	 */
-	public static void joinChat(AVIMClient client,String ConversationId,final ObjFunBooleanCallback callback){
-		//根据ID获取当前会话
-		AVIMConversation conv = client.getConversation(ConversationId);
+	public static void joinChat(AVIMClient client,AVIMConversation conv,final ObjFunBooleanCallback callback){
 		conv.join(new AVIMConversationCallback(){
 
 			@Override
@@ -117,9 +116,7 @@ public class ObjChatMessage {
 	/**
 	 * 查询会话成员数量
 	 * */
-	public static void getChatCount(AVIMClient client,String ConversationId,final ObjFunCountCallback callback){
-		//根据ID获取当前会话
-		AVIMConversation conv = client.getConversation(ConversationId);
+	public static void getChatCount(AVIMConversation conv,final ObjFunCountCallback callback){
 		conv.getMemberCount(new AVIMConversationMemberCountCallback() {
 			
 			@Override
@@ -140,11 +137,24 @@ public class ObjChatMessage {
 	/**
 	 *获取会话成员
 	 * */
-	public static List<String> getChatMembers(AVIMClient client,String ConversationId){
-		AVIMConversation conv = client.getConversation(ConversationId);
-		ArrayList<String> list = new ArrayList<String>();
-		list = (ArrayList<String>) conv.getMembers();
-		return list;
+	public static void getChatMembers(final AVIMConversation conv,final ObjListCallback callback){
+		final ArrayList<String> mList = new ArrayList<String>();
+		conv.fetchInfoInBackground(new AVIMConversationCallback() {
+			
+			@Override
+			public void done(AVIMException e) {
+				// TODO Auto-generated method stub
+				if(e == null){
+					List<String> list = conv.getMembers();
+					for(String s:list){
+						mList.add(s);
+					}
+					callback.callback(mList, null);
+				}else{
+					callback.callback(null, e);
+				}
+			}
+		});
 	}
 	/**
 	 * 发送消息

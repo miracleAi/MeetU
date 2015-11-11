@@ -1,5 +1,7 @@
 package com.meetu.cloud.wrap;
 
+import java.util.List;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
 import com.avos.avoscloud.AVOSCloud;
@@ -16,6 +18,8 @@ import com.avos.avoscloud.UpdatePasswordCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunEnumCallback;
 import com.meetu.cloud.callback.ObjFunObjectCallback;
+import com.meetu.cloud.callback.ObjUserCallback;
+import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjUser;
 
 
@@ -200,15 +204,25 @@ public class ObjUserWrap {
 	/**
 	 * 根据用户ID获取用户信息
 	 * */
-	public static ObjUser getObjUser(String objId){
-		ObjUser user = null;
-		try {
-			user = AVUser.createWithoutData(ObjUser.class, objId);
-			user.fetchIfNeeded();
-		} catch (AVException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return user;
+	public static void getObjUser(String objId,final ObjUserInfoCallback callback){
+		AVQuery<ObjUser> query = AVUser.getQuery(ObjUser.class);
+		query.whereEqualTo("objectId", objId);
+		query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
+		query.getFirstInBackground(new GetCallback<ObjUser>() {
+
+			@Override
+			public void done(ObjUser user, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					callback.callback(null, e);
+					return;
+				}
+				if(user != null){
+					callback.callback(user, null);
+				}else{
+					callback.callback(null, new AVException(0, "获取用户信息失败"));
+				}
+			}
+		});
 	}
 }

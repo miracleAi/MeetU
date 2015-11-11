@@ -13,6 +13,7 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.meetu.cloud.callback.ObjActivityCoverCallback;
 import com.meetu.cloud.callback.ObjAuthoriseApplyCallback;
 import com.meetu.cloud.callback.ObjAuthoriseCategoryCallback;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
@@ -20,10 +21,15 @@ import com.meetu.cloud.callback.ObjChatCallback;
 import com.meetu.cloud.callback.ObjCoversationCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunCountCallback;
+import com.meetu.cloud.callback.ObjListCallback;
+import com.meetu.cloud.callback.ObjUserInfoCallback;
+import com.meetu.cloud.object.ObjActivity;
+import com.meetu.cloud.object.ObjActivityCover;
 import com.meetu.cloud.object.ObjAuthoriseApply;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
 import com.meetu.cloud.object.ObjChat;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjActivityCoverWrap;
 import com.meetu.cloud.wrap.ObjAuthoriseWrap;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjChatWrap;
@@ -121,7 +127,8 @@ public class TestMsgActivity extends Activity{
 		});
 		//clickBtn.setText(AUTHORISECATEGORY);
 		//clickBtn.setText(CHATLOGOUT);
-		clickBtn.setText(JOINGROUP);
+		//clickBtn.setText(JOINGROUP);
+		clickBtn.setText(MEMBERCOUNT);
 		clickBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -299,7 +306,7 @@ public class TestMsgActivity extends Activity{
 	//获取觅聊群
 	public void getChatGroup(){
 		ObjChatWrap.queryChatList(new ObjChatCallback() {
-			
+
 			@Override
 			public void callback(List<ObjChat> objects, AVException e) {
 				// TODO Auto-generated method stub
@@ -336,10 +343,11 @@ public class TestMsgActivity extends Activity{
 			}
 		});
 	}
+	AVIMConversation conv = MyApplication.chatClient.getConversation("561dfd8460b22ed7ca5c3802");
 	//加入当前觅聊
 	public void joinGroup(){
-		ObjChatMessage.joinChat(MyApplication.chatClient, "561dfd8460b22ed7ca5c3802", new ObjFunBooleanCallback() {
-			
+		ObjChatMessage.joinChat(MyApplication.chatClient, conv, new ObjFunBooleanCallback() {
+
 			@Override
 			public void callback(boolean result, AVException e) {
 				// TODO Auto-generated method stub
@@ -357,8 +365,8 @@ public class TestMsgActivity extends Activity{
 	}
 	//获取会话成员数
 	public void getChatMembCount(){
-		ObjChatMessage.getChatCount(MyApplication.chatClient, "561dfd8460b22ed7ca5c3802", new ObjFunCountCallback() {
-			
+		ObjChatMessage.getChatCount(conv , new ObjFunCountCallback() {
+
 			@Override
 			public void callback(int count, AVException e) {
 				// TODO Auto-generated method stub
@@ -373,23 +381,37 @@ public class TestMsgActivity extends Activity{
 	}
 	//获取会话成员
 	public void getMembers(){
-		ArrayList<String> list = (ArrayList<String>) ObjChatMessage.getChatMembers(MyApplication.chatClient, "561dfd8460b22ed7ca5c3802");
-		for(String s:list){
-			memberList.add(s);
-		}
-		if(memberList.size()>0){
-			clickBtn.setText(MEMBERINFO);
-		}else{
-			clickBtn.setText(LOADFAIL);
-		}
+		ObjChatMessage.getChatMembers(conv,new ObjListCallback() {
+
+			@Override
+			public void callback(ArrayList<String> list, AVException e) {
+				// TODO Auto-generated method stub
+				if(list.size() == 0){
+					clickBtn.setText(LOADFAIL);
+					return;
+				}
+				for(String s:list){
+					memberList.add(s);
+				}
+				clickBtn.setText(MEMBERINFO);
+			}
+		});
 	}
 	//获取成员信息
 	public void getMemberInfo(){
-		ObjUser membUser = ObjUserWrap.getObjUser(memberList.get(0));
-		if(membUser != null){
-			infoTv.setText(membUser.getProfileClip().getUrl());
-			clickBtn.setText(LOADSUC);
-		}
+		ObjUserWrap.getObjUser(memberList.get(0),new ObjUserInfoCallback() {
+
+			@Override
+			public void callback(ObjUser user, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOADFAIL);
+					return ;
+				}
+				infoTv.setText(user.getProfileClip().getUrl());
+				clickBtn.setText(LOADSUC);
+			}
+		});
 	}
 	//退出聊天登录
 	public void logoutChat(){
