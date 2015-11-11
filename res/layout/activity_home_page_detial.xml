@@ -253,7 +253,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/address_home_page_detial_tv"
+                        android:id="@+id/textView5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/textView4"
