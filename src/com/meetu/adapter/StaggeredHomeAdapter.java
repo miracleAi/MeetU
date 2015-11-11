@@ -99,7 +99,7 @@ public class StaggeredHomeAdapter extends
 //		 lp.height = mHeights.get(position);
 		 lp.width=(width)/2;
 		//
-		// holder.ivImg.setLayoutParams(lp);
+		 holder.ivImg.setLayoutParams(lp);
 		// 获得屏幕尺寸动态设置
 //				RelativeLayout.LayoutParams lp = 
 //						new RelativeLayout.LayoutParams(width/2-26, LayoutParams.WRAP_CONTENT);

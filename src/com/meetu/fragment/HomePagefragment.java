@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.meetu.R;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -12,11 +14,20 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.meetu.activity.homepage.HomePageDetialActivity;
 import com.meetu.activity.homepage.JoinUsersActivity;
 import com.meetu.adapter.NewsListViewAdapter;
+import com.meetu.bean.ActivityBean;
+import com.meetu.cloud.callback.ObjActivityCallback;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.object.ObjActivity;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjActivityWrap;
+import com.meetu.cloud.wrap.ObjPraiseWrap;
+import com.meetu.common.Constants;
 import com.meetu.entity.Huodong;
 
 
 
 
+import com.meetu.sqlite.ActivityDao;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
 import com.meetu.view.ListScrollDistanceCalculator;
@@ -26,6 +37,8 @@ import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -64,12 +77,29 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 	private int itemHight;//加载的item的高度
 	private int number;//item的数量
 	private int maginTop;//item 最初距离top的高度
+	
+	//网络数据相关
+	AVUser currentUser = AVUser.getCurrentUser();
+	private List<ObjActivity> objactyList=new ArrayList<ObjActivity>();
+	//首页某一项活动
+	private	ActivityBean bean = new ActivityBean();
+	//网络活动表的一项
+	ObjActivity  activityItem = new ObjActivity();
+	//网络活动列表
+	ArrayList<ActivityBean> actyList = new ArrayList<ActivityBean>();
+	//当前用户
+	ObjUser user = new ObjUser();
+	ActivityDao actyDao;
+	private List<ActivityBean> actyListCache=new ArrayList<ActivityBean>();
+	
+	
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
 		
 		pingHight=DisplayUtils.getWindowHeight(getActivity());
+		actyDao=new ActivityDao(getActivity());
 	}
 
 	@Override
@@ -77,9 +107,19 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 			Bundle savedInstanceState) {
 		if(view==null){
 			 view=inflater.inflate(R.layout.fragment_homepage, null);
+			 if (currentUser != null) {
+					//强制类型转换
+					user = AVUser.cast(currentUser, ObjUser.class);
+			 }
 			 lvNewsList=(PullToRefreshListView)view.findViewById(R.id.newsList);
-			 load(1,pageSize);
-			 adapter=new NewsListViewAdapter(super.getActivity(),data);
+//			 load(1,pageSize);
+			 
+			 actyListCache.addAll(actyDao.queryActys(user.getObjectId()));
+			 if(actyListCache.size()==0){
+				 loadData();
+			 }
+			
+			 adapter=new NewsListViewAdapter(super.getActivity(),actyListCache);
 			 lvNewsList.setAdapter(adapter);
 			 lvNewsList.setMode(Mode.BOTH);
 			 lvNewsList.setOnRefreshListener(this);
@@ -102,10 +142,114 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 		}
 		return view;
 	}
+/**
+ * 获取活动首页相关 网络数据
+ *   
+ * @author lucifer
+ * @date 2015-11-10
+ */
+	private void loadData() {
+		// TODO Auto-generated method stub
+		log.e("lucifer", "正在加载网络数据");
+		actyList=new ArrayList<ActivityBean>();
+		ObjActivityWrap.queryAllActivitys(new ObjActivityCallback() {
+
+			@Override
+			public void callback(List<ObjActivity> objects, AVException e) {
+				
+				if(e != null){
+					return;
+				}
+				if(objects != null && objects.size()>0){
+					log.e("lucifer", "信息拉取成功");
+					
+					for(ObjActivity activity : objects){
+						
+							activityItem = activity;
+							objactyList.add(activity);
+							bean=new ActivityBean();
+							bean.setActyId(activity.getObjectId());
+							bean.setUserId(user.getObjectId());
+							bean.setActivityContent(activity.getActivityContent().getUrl());
+							bean.setActivityCover(activity.getActivityCover().getUrl());
+							bean.setLocationAddress(activity.getLocationAddress());
+							bean.setLocationPlace(activity.getLocationPlace());
+							bean.setOrderCountBoy(activity.getOrderCountBoy());
+							bean.setOrderCountGirl(activity.getOrderCountGirl());
+							bean.setPraiseCount(activity.getPraiseCount());
+							bean.setStatus(activity.getStatus());
+							bean.setTimeStart(activity.getTimeStart());
+							bean.setTitle(activity.getTitle());
+							bean.setTitleSub(activity.getTitleSub());
+							bean.setTimeStop(activity.getTimeStop());
+							bean.setLocationGovernment(activity.getLocationGovernment());
+							bean.setConversationId(activity.getConversationId());
+							bean.setIndex(0);
+							bean.setIsFavor(0);
+							bean.setOrderAndFollow(0);
+							actyList.add(bean);
+						
+					}
+					/**
+					 * 此处执行活动信息保存
+					 * */
+					log.e("zcq", "actyList="+actyList.size());
+					actyDao.deleteByUser(user.getObjectId());
+					log.e("zcq", "actyList="+actyList.size());
+					log.e("zcq","actyList.url=="+actyList.get(0).getActivityCover()+" =="+actyList.get(1).getActivityCover());
+					actyDao.saveActyList(actyList);
+									
+					log.e("zcq", "actyList=="+actyList.size());
+					actyListCache.addAll(actyDao.queryActys(user.getObjectId()));
+					log.e("zcq", "actyListCache=="+actyListCache.size());
+					handler.sendEmptyMessage(1);
+//					SharedPreferences sp = getSharedPreferences(Constants.ACTIVITY_CACHE_SP,MODE_PRIVATE);
+//					Editor editor = sp.edit();
+//					editor.putString(Constants.ACTIVITY_CACHE_TIME, String.valueOf(System.currentTimeMillis()));
+//					editor.commit();
+					//查询是否点赞（因测试活动照片，注释此行）
+//					queryFavor(activityItem);
+//					//轮播封面展示图片列表
+//					queryActyCovers(activityItem);
+//					//参与用户列表 参与并且我关注的人数
+//					queryOrderUsers(activityItem);
+					
+				}
+			}
+		});
+		
+	}
+	//查询是否点赞  setFavor
+	public void queryFavor(ObjActivity activity){
+		if(user == null){
+			return ;
+		}
+		ObjPraiseWrap.queryActivityFavor(user, activity, new ObjFunBooleanCallback() {
+
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				//测试点赞 取消赞  获取点赞信息后执行
+				if(result){
+//					actyList.get(0).setIsFavor(1);
+//					favorImg.setVisibility(View.VISIBLE);
+//					clickBtn.setText(CANCEL_PRAISE_ACTY);
+				}else{
+//					actyList.get(0).setIsFavor(0);
+//					favorImg.setVisibility(View.GONE);
+//					clickBtn.setText(PRAISE_ACTIVITY);
+				}
+				/**
+				 * 此处执行更新活动信息点赞字段
+				 * */
+//				actyDao.updateIsFavor(user.getObjectId(), 0, actyList.get(0).getIsFavor());
+			}
+		});
+	}
 
 	private void initView() {
 		maginTop=DensityUtil.dip2px(getActivity(), 88);
-		number=data.size();
+		number=actyListCache.size();
 		pingHight=DisplayUtils.getWindowHeight(getActivity());
 		topHight=DensityUtil.dip2px(getActivity(), 44);
 		bottomHight=DensityUtil.dip2px(getActivity(), 54);
@@ -177,6 +321,7 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 		item.setStyle(1);
 		data.add(item10);
 		
+		
 		handler.sendEmptyMessage(1);
 		
 	}
@@ -187,8 +332,12 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
 		Intent intent=new Intent(getActivity(),HomePageDetialActivity.class);
-		intent.putExtra("style", ""+data.get(position-1).getStyle());
-		log.e("00style", "data.get(position-1).getStyle()="+data.get(position-1).getStyle()+"  data.get(position+1)= "+data.get(position-1));
+//		intent.putExtra("style", ""+data.get(position-1).getStyle());
+		Bundle bundle=new Bundle();
+		bundle.putSerializable("activityBean", actyListCache.get(position-1));
+//		log.e("zcq", "objactyList=="+objactyList.size());
+//		bundle.putSerializable("objActivity", objactyList.get(position-1));
+		intent.putExtras(bundle);
 		log.e("position", "position="+position);
 		startActivity(intent);
 //		Toast.makeText(getActivity(), ""+id, Toast.LENGTH_SHORT).show();
@@ -203,6 +352,8 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 			switch(msg.what){
 			case 1:
 				adapter.notifyDataSetChanged();
+				
+				initView();
 				refreshComplete();
 				break;
 			}
@@ -226,7 +377,8 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 	public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 //		Toast.makeText(getActivity(), "下拉加载数据", Toast.LENGTH_SHORT).show();
 		pageNo=1;
-		load(1, pageSize);
+//		load(1, pageSize);
+		loadData();
 	}
 
 	@Override
@@ -234,6 +386,7 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 	//	Toast.makeText(getActivity(), "上拉加载数据", Toast.LENGTH_SHORT).show();
 		pageNo++;
 		load(pageNo,pageSize);
+		
 	}
 
 	

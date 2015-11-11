@@ -12,7 +12,7 @@ import com.avos.avoscloud.AVUser;
 import com.meetu.common.Constants;
 
 @AVClassName("ObjActivity")
-public class ObjActivity extends AVObject{
+public class ObjActivity extends AVObject implements Serializable{
 	public static final Creator CREATOR = AVObjectCreator.instance;
 	/**
 	 *  活动封面（图片）（只读）

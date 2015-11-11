@@ -7,10 +7,16 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 import com.meetu.adapter.PhotoPagerAdapter;
 import com.meetu.baidumapdemo.BaiduMapMainActivity;
+import com.meetu.bean.ActivityBean;
+import com.meetu.cloud.callback.ObjActivityPhotoCallback;
+import com.meetu.cloud.object.ObjActivity;
+import com.meetu.cloud.object.ObjActivityPhoto;
+import com.meetu.cloud.wrap.ObjActivityPhotoWrap;
 import com.meetu.entity.PhotoWall;
 import com.meetu.entity.Photolunbo;
 import com.meetu.tools.DensityUtil;
@@ -34,6 +40,7 @@ import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -61,6 +68,13 @@ public class HomePageDetialActivity extends Activity
 	private TextView titleTop;
 	private String style;
 	
+	//网络数据相关
+	private ActivityBean activityBean=new ActivityBean();
+	private ObjActivity objActivity=new ObjActivity();
+	
+	//轮播图
+	private List<ObjActivityPhoto> objPhotosList=new ArrayList<ObjActivityPhoto>();
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +84,10 @@ public class HomePageDetialActivity extends Activity
 		// 全屏
 		super.getWindow();
 		setContentView(R.layout.activity_home_page_detial);
-		style=getIntent().getStringExtra("style");
-		log.e("style","style="+style);
+		Intent intent=getIntent();
+		Bundle bundle=intent.getExtras();
+		activityBean= (ActivityBean) bundle.getSerializable("activityBean");
+		objActivity=(ObjActivity) bundle.getSerializable("objActivity");
 		initView();
 		startPlay();
 		initLoad();
@@ -82,10 +98,8 @@ public class HomePageDetialActivity extends Activity
  * 根据活动状态初始化界面
  */
 	private void initLoad() {
-		if(style.equals("1")){
-				
-			
-		}if(style.equals("2")){
+		
+		if(activityBean.getStatus()==70){
 			
 			over.setVisibility(View.VISIBLE);
 			join.setFocusable(false);
@@ -104,7 +118,7 @@ public class HomePageDetialActivity extends Activity
 		// 先加载数据在设置adapter
 		viewPager = (ViewPager) super.findViewById(R.id.viewpager_photo);
 		load();
-		adapter = new PhotoPagerAdapter(this, photolist);
+		adapter = new PhotoPagerAdapter(this, objPhotosList);
 		viewPager.setOnPageChangeListener(this);
 
 		viewPager.setAdapter(adapter);
@@ -155,7 +169,12 @@ public class HomePageDetialActivity extends Activity
 		topLayout=(RelativeLayout) super.findViewById(R.id.top_homepage_detial_rl);
 		titleTop=(TextView) super.findViewById(R.id.title_top_homepager_detial_tv);
 	}
-
+/**
+ * 加载网络数据
+ *   
+ * @author lucifer
+ * @date 2015-11-11
+ */
 	private void load() {
 		photolist = new ArrayList<Photolunbo>();
 
@@ -164,26 +183,20 @@ public class HomePageDetialActivity extends Activity
 		photolist.add(new Photolunbo("3", R.drawable.acty_show_img_banner));
 		photolist.add(new Photolunbo("4", R.drawable.acty_show_img_banner));
 		photolist.add(new Photolunbo("5", R.drawable.acty_show_img_banner));
-		// Photolunbo item=new Photolunbo();
-		// item.setImg(R.drawable.img1_ceshi);
-		// item.setTitle("今天是个好日子，心想的事儿都能成");
-		// photolist.add(item);
-		// Photolunbo item2=new Photolunbo();
-		// item2.setImg(R.drawable.img2_ceshi);
-		// item2.setTitle("2");
-		// photolist.add(item2);
-		// Photolunbo item3=new Photolunbo();
-		// item3.setImg(R.drawable.img3_ceshi);
-		// item3.setTitle("3");
-		// photolist.add(item3);
-		// Photolunbo item4=new Photolunbo();
-		// item4.setImg(R.drawable.img4_ceshi);
-		// item4.setTitle("4");
-		// photolist.add(item4);
-		// Photolunbo item5=new Photolunbo();
-		// item5.setImg(R.drawable.img5_ceshi);
-		// item5.setTitle("5");
-		// photolist.add(item5);
+		
+		objPhotosList=new ArrayList<ObjActivityPhoto>();
+		
+		ObjActivityPhotoWrap.queryActivityPhotos(objActivity, new ObjActivityPhotoCallback() {
+			
+			@Override
+			public void callback(List<ObjActivityPhoto> objects, AVException e) {
+				
+				objPhotosList.addAll(objects);
+				log.e("zcq", "objPhotosList=="+objPhotosList.size());
+			}
+		});
+		
+
 	}
 
 	/**
@@ -215,8 +228,22 @@ switch (v.getId()) {
 		startActivity(intent);
 		break;
 	case R.id.join_homepager_detial_img:
-		Intent intent2=new Intent(this,JoinActivity.class);
-		startActivity(intent2);
+		switch (activityBean.getStatus()) {
+		case 40:
+			Toast.makeText(this, "活动报名已结束", Toast.LENGTH_SHORT).show();
+			break;
+		case 50:
+			Intent intent2=new Intent(this,JoinActivity.class);
+			startActivity(intent2);
+			break;
+		case 60:
+			Toast.makeText(this, "活动报名已结束", Toast.LENGTH_SHORT).show();
+			break;
+
+		default:
+			break;
+		}
+		
 		break;
 	case R.id.memory_homepager_detial_img:
 		Intent intent3=new Intent(this,MemoryWallActivity.class);
@@ -284,6 +311,22 @@ switch (v.getId()) {
 			viewPager.setCurrentItem(currentItem);
 		}
 
+	};
+	/**
+	 * 用来刷新adapter
+	 */
+	Handler myhandler=new Handler(){
+
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			switch(msg.what){
+			case 1:
+				adapter.notifyDataSetChanged();		
+				break;
+			}
+		}
+	
 	};
 /**
  * 滑动的一定高度，标题栏显示出来

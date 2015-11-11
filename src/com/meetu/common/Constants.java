@@ -92,6 +92,8 @@ public class Constants {
 	public static final String CONVERSATIONID = "conversation_id";
 	//活动index
 	public static final String ACTIVITYINDEX = "activity_index";
+	//是否对点赞 和参加活动关注的人 缓存了
+	public static final String ISCACHEFLAG="is_cache_flag";
 	/**
 	 * 活动信息缓存时间
 	 * */

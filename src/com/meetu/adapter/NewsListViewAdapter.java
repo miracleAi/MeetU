@@ -1,10 +1,12 @@
 package com.meetu.adapter;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +21,14 @@ import android.widget.TextView;
 
 
 
+import com.lidroid.xutils.BitmapUtils;
 import com.meetu.R;
+import com.meetu.bean.ActivityBean;
+import com.meetu.cloud.object.ObjActivity;
 import com.meetu.common.ImageLoader;
 import com.meetu.entity.Huodong;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.tools.DateUtils;
 import com.meetu.tools.DensityUtil;
 
 
@@ -30,19 +36,18 @@ import com.meetu.tools.DensityUtil;
 public class NewsListViewAdapter  extends BaseAdapter implements OnClickListener {
 
 	private Context mContext;
-	private List<Huodong> newsList;
-	
-	
+	private List<ActivityBean> newsList;	
 	private ImageLoader mImageLoader;
 	
 	private final int TYPE_COUNT=2;
-//	private FinalBitmap fianlBitmap;
-//	
-	
-	public NewsListViewAdapter(Context context,List<Huodong> newsList){
+
+	//网络相关
+	private BitmapUtils bitmapUtils;
+	public NewsListViewAdapter(Context context,List<ActivityBean> newsList){
 		this.mContext=context;
 		this.newsList=newsList;
 
+		bitmapUtils=new BitmapUtils(mContext);
 	
 //		NewsApplication app=(NewsApplication)context.getApplicationContext();
 //		fianlBitmap=app.getFinalBitmap();
@@ -97,7 +102,7 @@ public class NewsListViewAdapter  extends BaseAdapter implements OnClickListener
 	
 		
 		ViewHolder holder=null;
-		Huodong item=newsList.get(position);
+		ActivityBean item=newsList.get(position);
 		
 		if(convertView==null){
 			holder=new ViewHolder();
@@ -106,6 +111,8 @@ public class NewsListViewAdapter  extends BaseAdapter implements OnClickListener
 			holder.tvTilte=(TextView) convertView.findViewById(R.id.title_huodong_homepage);
 			holder.styleTextView=(TextView) convertView.findViewById(R.id.style_homepage_tv);
 			holder.topRl=(RelativeLayout) convertView.findViewById(R.id.top_homepage_item);
+			holder.tvAdress=(TextView) convertView.findViewById(R.id.address_huodong_homepage_tv);
+			holder.tvStarTime=(TextView) convertView.findViewById(R.id.starttime_huodong_homepager_tv);
 			convertView.setTag(holder);
 		}else{
 			holder=(ViewHolder)convertView.getTag();
@@ -119,17 +126,26 @@ public class NewsListViewAdapter  extends BaseAdapter implements OnClickListener
 //		}
 		
 		
-		holder.ivImgUrl.setImageResource(item.getImg());
+//		holder.ivImgUrl.setImageResource(item.getImg());
+		bitmapUtils.display(holder.ivImgUrl, item.getActivityCover());
 		
 //		new ImageLoader().showImageByThread(holder.ivImgUrl, item.getImg());
 //		mImageLoader.showImageByAsyncTask(holder.ivImgUrl, item.getImg());
 		holder.tvTilte.setText(item.getTitle());
-		if(item.getStyle()==1){
-			holder.styleTextView.setText("活动进行中");
-		}if(item.getStyle()==2){
-			holder.styleTextView.setText("活动已结束");
+		holder.tvAdress.setText(item.getLocationAddress());
+		holder.tvStarTime.setText(DateUtils.getDateToString(item.getTimeStart()));
+		
+//		long nowTime=System.currentTimeMillis();
+		holder.styleTextView.setText(ObjActivity.getStatusStr(item.getStatus()));
+		if(item.getStatus()==70){
 			holder.topRl.setBackgroundResource(R.drawable.acty_cover_card_img_mask);
 		}
+//		if(item.getStyle()==1){
+//			holder.styleTextView.setText("活动进行中");
+//		}if(item.getStyle()==2){
+//			holder.styleTextView.setText("活动已结束");
+//			holder.topRl.setBackgroundResource(R.drawable.acty_cover_card_img_mask);
+//		}
 		
 		
 		return convertView;
@@ -145,6 +161,8 @@ public class NewsListViewAdapter  extends BaseAdapter implements OnClickListener
 		private ImageView ivExtImg2;
 		private TextView styleTextView;
 		private RelativeLayout topRl;
+		private TextView tvAdress;//活动地址
+		private TextView tvStarTime;
 	}
 
 

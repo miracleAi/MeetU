@@ -20,7 +20,7 @@ import com.meetu.cloud.wrap.ObjFollowWrap;
 import com.meetu.cloud.wrap.ObjPraiseWrap;
 import com.meetu.common.Constants;
 
-public class ActivityBean {
+public class ActivityBean implements Serializable {
 
 	//userid 缓存标记用户需要
 	private String userId;

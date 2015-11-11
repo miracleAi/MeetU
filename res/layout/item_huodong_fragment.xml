@@ -15,7 +15,9 @@
         android:id="@+id/img_huodong_homepage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scaleType="centerCrop"
         android:adjustViewBounds="true"
+        
         android:src="@drawable/acty_cover_card_img_fullmask" />
 
     <RelativeLayout
@@ -81,7 +83,7 @@
         android:text="这是用来测试的啊" />
 
      <TextView
-         android:id="@+id/textView1"
+         android:id="@+id/address_huodong_homepage_tv"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_alignParentLeft="true"
@@ -94,26 +96,20 @@
      </RelativeLayout>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/starttime_huodong_homepager_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="10dp"
+        android:drawableLeft="@drawable/acty_card_img_clock"
+        android:drawablePadding="2dp"
         android:textColor="#b5b5b5"
         android:textSize="12sp"
         android:text="2015-08-10" />
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_toLeftOf="@+id/textView2"
-        android:layout_marginRight="2dp"
-        android:layout_marginBottom="2dp"
-        android:src="@drawable/acty_card_img_clock" />      
+       
     </RelativeLayout>
     <View
         android:id="@+id/view_bottom_homepage"

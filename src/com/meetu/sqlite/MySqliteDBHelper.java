@@ -191,6 +191,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		activitySb.append(Constants.TIMESTOP+ " integer ,");
 		activitySb.append(Constants.ACTIVITYINDEX+ " integer ,");
 		activitySb.append(Constants.CONVERSATIONID+ " varchar(100) ");
+		activitySb.append(Constants.ISCACHEFLAG+ " varchar(100) ");
 		activitySb.append(")");
 		db.execSQL(activitySb.toString());
 	}
