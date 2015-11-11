@@ -186,7 +186,7 @@ public class UpdatepictureActivity extends Activity implements OnClickListener{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		ObjUserPhotoWrap.saveUserPhoto(userf, new ObjFunBooleanCallback() {
+		ObjUserPhotoWrap.savePhoto(userf, new ObjFunBooleanCallback() {
 			
 			
 			@Override

@@ -1,5 +1,6 @@
 package com.meetu.cloud.wrap;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -21,11 +22,14 @@ import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationMemberCountCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.cloud.callback.ObjAuthoriseCategoryCallback;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
+import com.meetu.cloud.callback.ObjCoversationCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjFunCountCallback;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
 import com.meetu.cloud.object.ObjTableName;
 import com.meetu.cloud.object.ObjUser;
@@ -58,7 +62,6 @@ public class ObjChatMessage {
 	/**
 	 * 创建或者查询一个已有的对话
 	 * @param members 对话的成员
-	 * @param members 对话的成员
 	 * @param name 对话的名字
 	 * @param attributes 对话的额外属性
 	 * @param isTransient 是否是暂态对话
@@ -67,17 +70,81 @@ public class ObjChatMessage {
 	 *                 为 true 时，则先查询，如果已有符合条件的对话，则返回已有的，否则，创建新的并返回
 	 *                 为 true 时，仅 members 为有效查询条件
 	 * @param callback
+	 * public void createConversation(final List<String> members, final String name,
+      final Map<String, Object> attributes, final boolean isTransient, final boolean isUnique,
+      final AVIMConversationCreatedCallback callback)
 	 */
-	public void createChat(AVIMClient client,List<String> members,String name,Map<String, Object> attributes,boolean isTransient,boolean isUnique){
-		client.createConversation(members, name, attributes,isTransient,isUnique,
+	public static void createChat(AVIMClient client,List<String> members,String name,final ObjCoversationCallback callback){
+		client.createConversation(members, name, null,
 				new AVIMConversationCreatedCallback() {
 
 			@Override
 			public void done(AVIMConversation conversation, AVIMException e) {
-				if(e == null){
-					//返回成功， conversation -- 》发送消息
+				if(e != null){
+					callback.callback(null, e);
+					return ;
+				}
+				if(null != conversation){
+					callback.callback(conversation, null);
+				}else{
+					callback.callback(null, new AVException(0, "创建会话失败"));
 				}
 			}});
+	}
+	/**
+	 * 加入对话
+	 * @param ConversationId 对话的 id
+	 */
+	public static void joinChat(AVIMClient client,String ConversationId,final ObjFunBooleanCallback callback){
+		//根据ID获取当前会话
+		AVIMConversation conv = client.getConversation(ConversationId);
+		conv.join(new AVIMConversationCallback(){
+
+			@Override
+			public void done(AVIMException e) {
+				if(e != null){
+					callback.callback(false, e);
+					return ;
+				}else{
+					//加入成功
+					callback.callback(true, null);
+				}
+			}
+
+		});
+
+	}
+	/**
+	 * 查询会话成员数量
+	 * */
+	public static void getChatCount(AVIMClient client,String ConversationId,final ObjFunCountCallback callback){
+		//根据ID获取当前会话
+		AVIMConversation conv = client.getConversation(ConversationId);
+		conv.getMemberCount(new AVIMConversationMemberCountCallback() {
+			
+			@Override
+			public void done(Integer count, AVIMException e) {
+				// TODO Auto-generated method stub
+				if( e != null){
+					callback.callback(0, e);
+					return ;
+				}
+				if(count != null){
+					callback.callback(count, null);
+				}else{
+					callback.callback(0, new AVException(0, "获取成员数量失败"));
+				}
+			}
+		});
+	}
+	/**
+	 *获取会话成员
+	 * */
+	public static List<String> getChatMembers(AVIMClient client,String ConversationId){
+		AVIMConversation conv = client.getConversation(ConversationId);
+		ArrayList<String> list = new ArrayList<String>();
+		list = (ArrayList<String>) conv.getMembers();
+		return list;
 	}
 	/**
 	 * 发送消息
@@ -95,25 +162,6 @@ public class ObjChatMessage {
 				// TODO Auto-generated method stub
 				if (e == null) {
 					//发送成功
-				}
-			}
-
-		});
-
-	}
-	/**
-	 * 加入对话
-	 * @param ConversationId 对话的 id
-	 */
-	public void joinChat(AVIMClient client,String ConversationId){
-		//登录成功
-		AVIMConversation conv = client.getConversation(ConversationId);
-		conv.join(new AVIMConversationCallback(){
-
-			@Override
-			public void done(AVIMException e) {
-				if(e == null){
-					//加入成功
 				}
 			}
 

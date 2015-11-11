@@ -197,5 +197,18 @@ public class ObjUserWrap {
 	public static void logOut(){
 		AVUser.logOut(); 
 	}
-
+	/**
+	 * 根据用户ID获取用户信息
+	 * */
+	public static ObjUser getObjUser(String objId){
+		ObjUser user = null;
+		try {
+			user = AVUser.createWithoutData(ObjUser.class, objId);
+			user.fetchIfNeeded();
+		} catch (AVException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return user;
+	}
 }

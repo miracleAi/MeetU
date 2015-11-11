@@ -1,25 +1,58 @@
 package com.meetu;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.meetu.cloud.callback.ObjAuthoriseApplyCallback;
 import com.meetu.cloud.callback.ObjAuthoriseCategoryCallback;
+import com.meetu.cloud.callback.ObjAvimclientCallback;
+import com.meetu.cloud.callback.ObjChatCallback;
+import com.meetu.cloud.callback.ObjCoversationCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjFunCountCallback;
 import com.meetu.cloud.object.ObjAuthoriseApply;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
+import com.meetu.cloud.object.ObjChat;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjAuthoriseWrap;
 import com.meetu.cloud.wrap.ObjChatMessage;
+import com.meetu.cloud.wrap.ObjChatWrap;
+import com.meetu.cloud.wrap.ObjUserPhotoWrap;
+import com.meetu.cloud.wrap.ObjUserWrap;
+import com.meetu.common.Constants;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.tools.BitmapCut;
 
+import android.R.array;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.CompressFormat;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.Menu;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.TextView;
 
 public class TestMsgActivity extends Activity{
 	private static final String AUTHORISECATEGORY = "AuthoriseCategory";
@@ -30,15 +63,32 @@ public class TestMsgActivity extends Activity{
 	private static final String LOADFAIL = "loadfail";
 	private static final String LOADSUC = "loadsuc";
 	private static final String LOADING = "loading";
+	private static final String UPLOADPIC = "uploadPic";
+	private static final String SAVEGROUP = "saveGroup";
 	private static final String CREATEGROUP = "createGroup";
+	private static final String GETCHAT = "getChat";
+	private static final String JOINGROUP = "joinGroup";
 	private static final String CHATLOGOUT = "chatLogout";
-	ImageView favorImag,upImg;
+	private static final String MEMBERCOUNT = "memberCount";
+	private static final String MEMEBERS = "getMembers";
+	private static final String MEMBERINFO = "memberInfo";
+	ImageView upImg;
 	Button clickBtn;
+	TextView countTv,infoTv;
+	AVIMConversation chatConversation;
+	//当前觅聊会话ID
+	String conversationId;
+	//会话成员列表
+	ArrayList<String> memberList = new ArrayList<String>();
 	//权限
 	ObjAuthoriseCategory category = new ObjAuthoriseCategory();
 	//权限申请
 	ObjAuthoriseApply apply = new ObjAuthoriseApply();
 	ObjUser user = new ObjUser();
+	String fPath = "";
+	String yPath = "";
+	//需上传的用户照片
+	Bitmap groupPhoto;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -48,13 +98,30 @@ public class TestMsgActivity extends Activity{
 	}
 	private void initView() {
 		// TODO Auto-generated method stub
-		favorImag = (ImageView) findViewById(R.id.favor_img);
 		upImg = (ImageView) findViewById(R.id.up_img);
+		countTv = (TextView) findViewById(R.id.count_tv);
+		infoTv = (TextView) findViewById(R.id.info_tv);
 		clickBtn = (Button) findViewById(R.id.click);
 		AVUser currentUser = ObjUser.getCurrentUser();
 		user = AVUser.cast(currentUser, ObjUser.class);
+		Bitmap head=readHead();
+		if(head!=null){
+			groupPhoto = head;
+			fPath = Environment.getExternalStorageDirectory()+"/f_user_photo.png";
+			yPath = Environment.getExternalStorageDirectory()+"/user_photo.png";
+			upImg.setImageBitmap(head);
+		}
+		upImg.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				showDialog();
+			}
+		});
 		//clickBtn.setText(AUTHORISECATEGORY);
-		clickBtn.setText(CHATLOGOUT);
+		//clickBtn.setText(CHATLOGOUT);
+		clickBtn.setText(JOINGROUP);
 		clickBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -87,12 +154,258 @@ public class TestMsgActivity extends Activity{
 					clickBtn.setText(LOADING);
 					updateApplyAuthorise(apply);
 				}
+				if(clickBtn.getText().toString().equals(UPLOADPIC)){
+					//创建群聊：上传群照片，创建群，群信息插入觅聊表
+					clickBtn.setText(LOADING);
+					createGroup();
+				}
 				if(clickBtn.getText().toString().equals(CREATEGROUP)){
-					//创建群聊
-					
+					//创建群聊：上传群照片，创建群，群信息插入觅聊表
+					clickBtn.setText(LOADING);
+					createChat();
+				}
+				if(clickBtn.getText().toString().equals(SAVEGROUP)){
+					//创建群聊：上传群照片，创建群，群信息插入觅聊表
+					clickBtn.setText(LOADING);
+					saveGroupInfo();
+				}
+				if(clickBtn.getText().toString().equals(GETCHAT)){
+					//创建群聊：上传群照片，创建群，群信息插入觅聊表
+					clickBtn.setText(LOADING);
+					getChatGroup();
+				}
+				if(clickBtn.getText().toString().equals(JOINGROUP)){
+					//加入当前觅聊
+					clickBtn.setText(LOADING);
+					joinGroup();
+				}
+				if(clickBtn.getText().toString().equals(MEMBERCOUNT)){
+					//会话成员数
+					clickBtn.setText(LOADING);
+					getChatMembCount();
+				}
+				if(clickBtn.getText().toString().equals(MEMEBERS)){
+					//会话成员
+					clickBtn.setText(LOADING);
+					getMembers();
+				}
+				if(clickBtn.getText().toString().equals(MEMBERINFO)){
+					//会话成员信息
+					clickBtn.setText(LOADING);
+					getMemberInfo();
 				}
 				if(clickBtn.getText().toString().equals(CHATLOGOUT)){
-					
+					clickBtn.setText(LOADING);
+					//退出聊天登录
+					logoutChat();
+				}
+			}
+		});
+	}
+	AVFile groupf = null;
+	//创建群
+	public void createGroup(){
+		try {
+			groupf = AVFile.withAbsoluteLocalPath("chat"+user.getObjectId()+Constants.IMG_TYPE, fPath);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//上传图片
+		ObjUserPhotoWrap.savePhoto(groupf, new ObjFunBooleanCallback() {
+
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOADFAIL);
+					return ;
+				}
+				if(!result){
+					clickBtn.setText(LOADFAIL);
+					return;
+
+				}
+				if(MyApplication.isChatLogin){
+					clickBtn.setText(CREATEGROUP);
+				}else{
+					ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
+
+						@Override
+						public void callback(AVIMClient client, AVException e) {
+							// TODO Auto-generated method stub
+							if(e != null){
+								clickBtn.setText(LOADFAIL);
+								return ;
+							}
+							if(client != null){
+								MyApplication.chatClient = client;
+								clickBtn.setText(CREATEGROUP);
+							}else{
+								clickBtn.setText(LOADFAIL);
+							}
+						}
+					});
+				}
+			}
+		});
+	}
+	//创建会话
+	public void createChat(){
+		ObjChatMessage.createChat(MyApplication.chatClient, Arrays.asList(user.getObjectId()), "chat", new ObjCoversationCallback() {
+
+			@Override
+			public void callback(AVIMConversation conversation, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOADFAIL);
+					return ;
+				}
+				if(conversation != null){
+					chatConversation = conversation;
+					clickBtn.setText(SAVEGROUP);
+				}else{
+					clickBtn.setText(LOADFAIL);
+				}
+			}
+		});
+	}
+	//保存群信息
+	public void saveGroupInfo(){
+		if(chatConversation == null){
+			clickBtn.setText(LOADFAIL);
+			return;
+		}
+		ObjChatWrap.saveGroupInfo(user, groupf, "zlp_hello", chatConversation.getConversationId(), new ObjFunBooleanCallback() {
+
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOADFAIL);
+					return ;
+				}
+				if(result){
+					clickBtn.setText(GETCHAT);
+				}else{
+					clickBtn.setText(LOADFAIL);
+				}
+			}
+		});
+	}
+	//获取觅聊群
+	public void getChatGroup(){
+		ObjChatWrap.queryChatList(new ObjChatCallback() {
+			
+			@Override
+			public void callback(List<ObjChat> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOADFAIL);
+					return ;
+				}
+				if(objects.size()>0){
+					conversationId = objects.get(0).getConversationId();
+					if(MyApplication.isChatLogin){
+						clickBtn.setText(JOINGROUP);
+					}else{
+						ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
+
+							@Override
+							public void callback(AVIMClient client, AVException e) {
+								// TODO Auto-generated method stub
+								if(e != null){
+									clickBtn.setText(LOADFAIL);
+									return ;
+								}
+								if(client != null){
+									MyApplication.chatClient = client;
+									clickBtn.setText(JOINGROUP);
+								}else{
+									clickBtn.setText(LOADFAIL);
+								}
+							}
+						});
+					}
+				}else{
+					clickBtn.setText("no chat");
+				}
+			}
+		});
+	}
+	//加入当前觅聊
+	public void joinGroup(){
+		ObjChatMessage.joinChat(MyApplication.chatClient, "561dfd8460b22ed7ca5c3802", new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOADFAIL);
+					return ;
+				}
+				if(result){
+					clickBtn.setText(LOADSUC);
+				}else{
+					clickBtn.setText(LOADFAIL);
+				}
+			}
+		});
+	}
+	//获取会话成员数
+	public void getChatMembCount(){
+		ObjChatMessage.getChatCount(MyApplication.chatClient, "561dfd8460b22ed7ca5c3802", new ObjFunCountCallback() {
+			
+			@Override
+			public void callback(int count, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOADFAIL);
+					return ;
+				}
+				countTv.setText(String.valueOf(count));
+				clickBtn.setText(MEMEBERS);
+			}
+		});
+	}
+	//获取会话成员
+	public void getMembers(){
+		ArrayList<String> list = (ArrayList<String>) ObjChatMessage.getChatMembers(MyApplication.chatClient, "561dfd8460b22ed7ca5c3802");
+		for(String s:list){
+			memberList.add(s);
+		}
+		if(memberList.size()>0){
+			clickBtn.setText(MEMBERINFO);
+		}else{
+			clickBtn.setText(LOADFAIL);
+		}
+	}
+	//获取成员信息
+	public void getMemberInfo(){
+		ObjUser membUser = ObjUserWrap.getObjUser(memberList.get(0));
+		if(membUser != null){
+			infoTv.setText(membUser.getProfileClip().getUrl());
+			clickBtn.setText(LOADSUC);
+		}
+	}
+	//退出聊天登录
+	public void logoutChat(){
+		ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
+
+			@Override
+			public void callback(AVIMClient client, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOADFAIL);
+					return ;
+				}
+				if(client != null){
+					clickBtn.setText(LOADSUC);
+				}else{
+					clickBtn.setText(LOADFAIL);
 				}
 			}
 		});
@@ -116,7 +429,7 @@ public class TestMsgActivity extends Activity{
 				if(category.isNeedAuthorise()){
 					clickBtn.setText(HAVEAUTHOREISE);
 				}else{
-					clickBtn.setText(CREATEGROUP);
+					clickBtn.setText(UPLOADPIC);
 				}
 			}
 		});
@@ -133,7 +446,7 @@ public class TestMsgActivity extends Activity{
 					return;
 				}
 				if(result){
-					clickBtn.setText(CREATEGROUP);
+					clickBtn.setText(UPLOADPIC);
 				}else{
 					clickBtn.setText(ISAPPLY);
 				}
@@ -198,5 +511,163 @@ public class TestMsgActivity extends Activity{
 				}
 			}
 		});
+	}
+	private void showDialog(){
+		final  AlertDialog portraidlg=new AlertDialog.Builder(this).create();
+		portraidlg.show();
+		Window win=portraidlg.getWindow();
+		win.setContentView(R.layout.dialog_show_photo);
+		RadioButton portrait_native=(RadioButton)win.findViewById(R.id.Portrait_native);
+		portrait_native.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent1=new Intent(Intent.ACTION_PICK,null);
+				intent1.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+				startActivityForResult(intent1, 11);
+				portraidlg.dismiss();
+			}
+		});
+		RadioButton portrait_take=(RadioButton)win.findViewById(R.id.Portrait_take);
+		portrait_take.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				//调用摄像头
+				Intent intent2=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
+						"/user_photo.png")));
+				startActivityForResult(intent2, 22);
+				portraidlg.dismiss();
+			}
+		});
+		View viewTop=win.findViewById(R.id.view_top_dialog_sethead);
+		View viewBottom=win.findViewById(R.id.view_bottom_dialog_sethead);
+		//点击dialog外部，关闭dialog
+		viewTop.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				portraidlg.dismiss();
+			}
+		});
+		viewBottom.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				portraidlg.dismiss();
+			}
+		});
+
+
+
+	}
+	private Bitmap headerPortait;
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		switch (requestCode) {
+		case 11:
+			if(resultCode==this.RESULT_OK){
+				cropPhoto(data.getData());//裁剪图片
+			}
+			break ;
+		case 22:
+			if(resultCode==this.RESULT_OK){
+				File temp=new File(Environment.getExternalStorageDirectory()
+						+ "/user_photo.png");
+				cropPhoto(Uri.fromFile(temp));//裁剪图片
+
+			}
+
+			break;
+		case 33:
+			if(data!=null){
+				Bundle extras=data.getExtras();
+				//裁剪后图片
+				headerPortait=extras.getParcelable("data");
+				groupPhoto = headerPortait;
+				if(headerPortait!=null){
+					fPath = saveHeadImg(headerPortait,false);
+				}
+				//切圆图片
+				headerPortait=BitmapCut.toRoundBitmap(headerPortait);
+				if(headerPortait!=null){
+					yPath = saveHeadImg(headerPortait,true);
+					upImg.setImageBitmap(headerPortait);
+				}
+			}
+			break;
+
+		default:
+			break;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+	public String saveHeadImg(Bitmap head,boolean isY){
+		FileOutputStream fos=null;
+		String path = "";
+		if(isY){
+			path = Environment.getExternalStorageDirectory()+"/user_photo.png";
+		}else{
+			path = Environment.getExternalStorageDirectory()+"/f_user_photo.png";
+		}
+		try {
+			fos=new FileOutputStream(new File(path));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		head.compress(CompressFormat.PNG, 100, fos);
+		try {
+			fos.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			fos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return path;
+
+
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.shezhigerenxinxi, menu);
+		return true;
+	}
+
+
+	public Bitmap readHead(){
+		String file=Environment.getExternalStorageDirectory()+"/user_photo.png";
+		return BitmapFactory.decodeFile(file);
+	}
+
+	/**
+	 * 调用拍照的裁剪功能
+	 * @param uri
+	 */
+
+	public void cropPhoto(Uri uri){
+		//调用拍照的裁剪功能
+		Intent intent=new Intent("com.android.camera.action.CROP");
+		intent.setDataAndType(uri, "image/*");
+		intent.putExtra("crop", "true");
+		//aspectX aspectY 是宽和搞的比例
+		intent.putExtra("aspectX", 1);
+		intent.putExtra("aspectY", 1);
+		// // outputX outputY 是裁剪图片宽高
+		intent.putExtra("outputX", 250);
+		intent.putExtra("outputY", 250);
+		intent.putExtra("return-data",true);
+		startActivityForResult(intent,33);
 	}
 }

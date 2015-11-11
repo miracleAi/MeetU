@@ -26,6 +26,7 @@ import com.meetu.cloud.object.ObjActivityPraise;
 import com.meetu.cloud.object.ObjActivityTicket;
 import com.meetu.cloud.object.ObjAuthoriseApply;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
+import com.meetu.cloud.object.ObjChat;
 import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.cloud.object.ObjUserPhotoPraise;
 import com.meetu.cloud.wrap.ObjChatMessage;
@@ -34,8 +35,8 @@ import android.app.Application;
 import android.util.Log;
 
 public class MyApplication extends Application {
-	public AVIMClient chatClient;
-	public boolean isChatLogin = false;
+	public static AVIMClient chatClient;
+	public static boolean isChatLogin = false;
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
@@ -54,6 +55,7 @@ public class MyApplication extends Application {
 		AVObject.registerSubclass(ObjUserPhotoPraise.class);
 		AVObject.registerSubclass(ObjAuthoriseCategory.class);
 		AVObject.registerSubclass(ObjAuthoriseApply.class);
+		AVObject.registerSubclass(ObjChat.class);
 		AVOSCloud.initialize(this,
 				"tcd4rj3s3c54bdlkv1vfu5puvu9c2k96ur9kge3qvptqxp8p",
 				"8fpp7j815746jg9x26f0d3c5p76xqkyqm586v2onvx3m2k7a");

@@ -99,7 +99,6 @@ public class TestActivityTwo extends Activity{
 			userphoto = head;
 			fPath = Environment.getExternalStorageDirectory()+"/f_user_photo.png";
 			yPath = Environment.getExternalStorageDirectory()+"/user_photo.png";
-			ivTouxiang.setImageBitmap(head);
 		}
 		ivTouxiang.setOnClickListener(new OnClickListener() {
 
@@ -168,13 +167,14 @@ public class TestActivityTwo extends Activity{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		ObjUserPhotoWrap.saveUserPhoto(userf, new ObjFunBooleanCallback() {
+		ObjUserPhotoWrap.savePhoto(userf, new ObjFunBooleanCallback() {
 			
 			@Override
 			public void callback(boolean result, AVException e) {
 				// TODO Auto-generated method stub
 				if(e != null){
 					clickBtn.setText(LOAD_FAIL);
+					return ;
 				}
 				if(result){
 					int wedth = userphoto.getWidth();

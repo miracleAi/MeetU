@@ -101,7 +101,7 @@ public class ObjActivityPhotoWrap {
 	public static void cancelPraiseActivityPhoto(ObjUser user,ObjActivityPhoto photo,final ObjFunBooleanCallback callback){
 		AVQuery<AVObject> query = new AVQuery<AVObject>(ObjTableName.getPhotoPraiseTb());
 		query.whereEqualTo("user", user);
-		query.whereEqualTo("activityPhoto", photo);
+		query.whereEqualTo("activityPhoto", photo); 
 		query.deleteAllInBackground(new DeleteCallback() {
 			
 			@Override

@@ -122,11 +122,11 @@ public class ObjUserPhotoWrap {
 		});
 	}
 	/**
-	 * 上传用户照片
+	 * 上传照片
 	 * @param path
 	 */
-	public static void saveUserPhoto(AVFile userf,final ObjFunBooleanCallback callback){
-		userf.saveInBackground(new SaveCallback() {
+	public static void savePhoto(AVFile file,final ObjFunBooleanCallback callback){
+		file.saveInBackground(new SaveCallback() {
 			
 			@Override
 			public void done(AVException e) {

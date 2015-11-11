@@ -31,12 +31,18 @@
         android:background="@color/buyticket_check"
         android:text="click test" />
 
-    <ImageView
-        android:id="@+id/favor_img"
+    <TextView
+        android:id="@+id/count_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/acty_cardimg_btn_like_hl" />
+         />
+     <TextView
+        android:id="@+id/info_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+         />
 
 
 </LinearLayout>
