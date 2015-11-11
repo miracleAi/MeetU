@@ -161,9 +161,9 @@ public class ObjChatMessage {
 	 * @param conversation
 	 * @param message
 	 */
-	public void sendChatMsg(AVIMConversation conversation,Chatmsgs message){
+	public static void sendChatMsg(AVIMConversation conversation,String text,final ObjFunBooleanCallback callback){
 		AVIMTextMessage msg = new AVIMTextMessage();
-		msg.setText(message.getContent());
+		msg.setText(text);
 		// 发送消息
 		conversation.sendMessage(msg, new AVIMConversationCallback() {
 
@@ -172,6 +172,9 @@ public class ObjChatMessage {
 				// TODO Auto-generated method stub
 				if (e == null) {
 					//发送成功
+					callback.callback(true, null);
+				}else{
+					callback.callback(false, e);
 				}
 			}
 
@@ -189,7 +192,7 @@ public class ObjChatMessage {
 				AVIMConversation conversation, AVIMClient client) {
 			// TODO Auto-generated method stub
 			super.onMessage(message, conversation, client);
-		}
+		}  
 	}
 	/**注销聊天
 	 * 

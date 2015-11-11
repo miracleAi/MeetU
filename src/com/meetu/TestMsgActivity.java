@@ -13,7 +13,6 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.meetu.cloud.callback.ObjActivityCoverCallback;
 import com.meetu.cloud.callback.ObjAuthoriseApplyCallback;
 import com.meetu.cloud.callback.ObjAuthoriseCategoryCallback;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
@@ -23,13 +22,10 @@ import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunCountCallback;
 import com.meetu.cloud.callback.ObjListCallback;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
-import com.meetu.cloud.object.ObjActivity;
-import com.meetu.cloud.object.ObjActivityCover;
 import com.meetu.cloud.object.ObjAuthoriseApply;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
 import com.meetu.cloud.object.ObjChat;
 import com.meetu.cloud.object.ObjUser;
-import com.meetu.cloud.wrap.ObjActivityCoverWrap;
 import com.meetu.cloud.wrap.ObjAuthoriseWrap;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjChatWrap;
@@ -78,6 +74,7 @@ public class TestMsgActivity extends Activity{
 	private static final String MEMBERCOUNT = "memberCount";
 	private static final String MEMEBERS = "getMembers";
 	private static final String MEMBERINFO = "memberInfo";
+	private static final String SENDMSG = "sendmsg";
 	ImageView upImg;
 	Button clickBtn;
 	TextView countTv,infoTv;
@@ -128,7 +125,8 @@ public class TestMsgActivity extends Activity{
 		//clickBtn.setText(AUTHORISECATEGORY);
 		//clickBtn.setText(CHATLOGOUT);
 		//clickBtn.setText(JOINGROUP);
-		clickBtn.setText(MEMBERCOUNT);
+		//clickBtn.setText(MEMBERCOUNT);
+		clickBtn.setText(SENDMSG);
 		clickBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -201,10 +199,35 @@ public class TestMsgActivity extends Activity{
 					clickBtn.setText(LOADING);
 					getMemberInfo();
 				}
+				if(clickBtn.getText().toString().equals(SENDMSG)){
+					//发送信息
+					clickBtn.setText(LOADING);
+					sendMsg();
+				}
 				if(clickBtn.getText().toString().equals(CHATLOGOUT)){
 					clickBtn.setText(LOADING);
 					//退出聊天登录
 					logoutChat();
+				}
+			}
+		});
+	}
+	AVIMConversation conv = MyApplication.chatClient.getConversation("561dfd8460b22ed7ca5c3802");
+	//发送信息
+	public void sendMsg(){
+		ObjChatMessage.sendChatMsg(conv, "你好", new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOADFAIL);
+					return ;
+				}
+				if(result){
+					clickBtn.setText(LOADSUC);
+				}else{
+					clickBtn.setText(LOADFAIL);
 				}
 			}
 		});
@@ -343,7 +366,6 @@ public class TestMsgActivity extends Activity{
 			}
 		});
 	}
-	AVIMConversation conv = MyApplication.chatClient.getConversation("561dfd8460b22ed7ca5c3802");
 	//加入当前觅聊
 	public void joinGroup(){
 		ObjChatMessage.joinChat(MyApplication.chatClient, conv, new ObjFunBooleanCallback() {
