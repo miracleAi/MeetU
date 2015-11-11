@@ -8,15 +8,20 @@ import java.util.concurrent.TimeUnit;
 
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 import com.meetu.adapter.PhotoPagerAdapter;
 import com.meetu.baidumapdemo.BaiduMapMainActivity;
 import com.meetu.bean.ActivityBean;
+import com.meetu.cloud.callback.ObjActivityCoverCallback;
 import com.meetu.cloud.callback.ObjActivityPhotoCallback;
 import com.meetu.cloud.object.ObjActivity;
+import com.meetu.cloud.object.ObjActivityCover;
 import com.meetu.cloud.object.ObjActivityPhoto;
+import com.meetu.cloud.wrap.ObjActivityCoverWrap;
 import com.meetu.cloud.wrap.ObjActivityPhotoWrap;
+import com.meetu.cloud.wrap.ObjActivityWrap;
 import com.meetu.entity.PhotoWall;
 import com.meetu.entity.Photolunbo;
 import com.meetu.tools.DensityUtil;
@@ -49,6 +54,8 @@ public class HomePageDetialActivity extends Activity
 		implements
 			OnPageChangeListener,
 			OnClickListener ,OnScrollListener{
+	//控件相关
+	
 	private ViewPager viewPager;
 	private PhotoPagerAdapter adapter;
 	private List<Photolunbo> photolist = new ArrayList<Photolunbo>();
@@ -68,12 +75,13 @@ public class HomePageDetialActivity extends Activity
 	private TextView titleTop;
 	private String style;
 	
+	private TextView address;
 	//网络数据相关
 	private ActivityBean activityBean=new ActivityBean();
-	private ObjActivity objActivity=new ObjActivity();
+	private ObjActivity objActivity = null;
 	
 	//轮播图
-	private List<ObjActivityPhoto> objPhotosList=new ArrayList<ObjActivityPhoto>();
+	private List<ObjActivityCover> objPhotosList=new ArrayList<ObjActivityCover>();
 	
 
 	@Override
@@ -87,9 +95,11 @@ public class HomePageDetialActivity extends Activity
 		Intent intent=getIntent();
 		Bundle bundle=intent.getExtras();
 		activityBean= (ActivityBean) bundle.getSerializable("activityBean");
-		objActivity=(ObjActivity) bundle.getSerializable("objActivity");
+//		objActivity=(ObjActivity) bundle.getSerializable("objActivity");
+		
+		initLoadActivity(activityBean.getActyId());
 		initView();
-		startPlay();
+//		startPlay();
 		initLoad();
 		mhighty=DensityUtil.dip2px(this, 250-44);
 		
@@ -113,13 +123,37 @@ public class HomePageDetialActivity extends Activity
 		}
 		
 	}
+	/**
+	 * 根据 活动id 本地生成一个objactivy 对象
+	 * @param activityId  
+	 * @author lucifer
+	 * @date 2015-11-11
+	 */
+	private void initLoadActivity(String activityId){
+		log.e("zcq", "activityId=="+activityId);
+		try {
+			 objActivity=AVObject.createWithoutData(ObjActivity.class, activityId);
+//			ObjActivityCoverWrap.queryActivityCover(objActivity, new ObjActivityCoverCallback() {
+//				
+//				@Override
+//				public void callback(List<ObjActivityCover> objects, AVException e) {
+//					// TODO Auto-generated method stub
+//					
+//				}
+//			});
+		} catch (AVException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 	private void initView() {
 		// 先加载数据在设置adapter
 		viewPager = (ViewPager) super.findViewById(R.id.viewpager_photo);
 		load();
 		adapter = new PhotoPagerAdapter(this, objPhotosList);
-		viewPager.setOnPageChangeListener(this);
+//		viewPager.setOnPageChangeListener(this);
 
 		viewPager.setAdapter(adapter);
 		mLinearLayout = (LinearLayout) super
@@ -142,7 +176,7 @@ public class HomePageDetialActivity extends Activity
 		 * vebview相关 加载网页
 		 */
 		webView = (WebView) super.findViewById(R.id.contentWebView);
-		webView.loadUrl("http://ac-tcd4rj3s.clouddn.com/91b665314097ddf6.html");
+		webView.loadUrl(""+activityBean.getActivityContent());
 		
 		//控件点击相关
 		backLayout=(RelativeLayout) super.findViewById(R.id.back_homepage_detial_rl);
@@ -168,6 +202,9 @@ public class HomePageDetialActivity extends Activity
 		mScrollView.setOnScrollListener(this);
 		topLayout=(RelativeLayout) super.findViewById(R.id.top_homepage_detial_rl);
 		titleTop=(TextView) super.findViewById(R.id.title_top_homepager_detial_tv);
+		
+		address=(TextView) super.findViewById(R.id.address_home_page_detial_tv);
+		address.setText(""+activityBean.getLocationAddress()+"  "+activityBean.getLocationGovernment());
 	}
 /**
  * 加载网络数据
@@ -176,25 +213,46 @@ public class HomePageDetialActivity extends Activity
  * @date 2015-11-11
  */
 	private void load() {
-		photolist = new ArrayList<Photolunbo>();
-
-		photolist.add(new Photolunbo("1", R.drawable.acty_show_img_banner));
-		photolist.add(new Photolunbo("2", R.drawable.acty_show_img_banner));
-		photolist.add(new Photolunbo("3", R.drawable.acty_show_img_banner));
-		photolist.add(new Photolunbo("4", R.drawable.acty_show_img_banner));
-		photolist.add(new Photolunbo("5", R.drawable.acty_show_img_banner));
+//		photolist = new ArrayList<Photolunbo>();
+//
+//		photolist.add(new Photolunbo("1", R.drawable.acty_show_img_banner));
+//		photolist.add(new Photolunbo("2", R.drawable.acty_show_img_banner));
+//		photolist.add(new Photolunbo("3", R.drawable.acty_show_img_banner));
+//		photolist.add(new Photolunbo("4", R.drawable.acty_show_img_banner));
+//		photolist.add(new Photolunbo("5", R.drawable.acty_show_img_banner));
 		
-		objPhotosList=new ArrayList<ObjActivityPhoto>();
+		objPhotosList=new ArrayList<ObjActivityCover>();
 		
-		ObjActivityPhotoWrap.queryActivityPhotos(objActivity, new ObjActivityPhotoCallback() {
+//		ObjActivityPhotoWrap.queryActivityPhotos(objActivity, new ObjActivityPhotoCallback() {
+//			
+//			@Override
+//			public void callback(List<ObjActivityPhoto> objects, AVException e) {
+//				// TODO Auto-generated method stub
+//				if(e!=null){
+//					log.e("zcq", e);
+//				}else{
+//					objPhotosList.addAll(objects);
+//					
+//					myhandler.sendEmptyMessage(1);
+//				}
+//				
+//			}
+//		});
+		ObjActivityCoverWrap.queryActivityCover(objActivity, new ObjActivityCoverCallback() {
 			
 			@Override
-			public void callback(List<ObjActivityPhoto> objects, AVException e) {
-				
-				objPhotosList.addAll(objects);
-				log.e("zcq", "objPhotosList=="+objPhotosList.size());
+			public void callback(List<ObjActivityCover> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if(e!=null){
+					log.e("zcq", e);
+				}else{
+					objPhotosList.addAll(objects);
+					log.e("zcq", "objPhotosList=="+objPhotosList.size());
+					myhandler.sendEmptyMessage(1);
+				}
 			}
 		});
+
 		
 
 	}
@@ -280,7 +338,12 @@ switch (v.getId()) {
 		setImageBackground(pos % photolist.size());
 
 	}
-
+/**
+ * 开始播放轮播图
+ *   
+ * @author lucifer
+ * @date 2015-11-11
+ */
 	private void startPlay() {
 		scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 		scheduledExecutorService.scheduleAtFixedRate(new SlideShowTask(), 1, 4,
@@ -323,6 +386,7 @@ switch (v.getId()) {
 			switch(msg.what){
 			case 1:
 				adapter.notifyDataSetChanged();		
+				startPlay();
 				break;
 			}
 		}
