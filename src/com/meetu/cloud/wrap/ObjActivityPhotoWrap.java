@@ -35,9 +35,8 @@ public class ObjActivityPhotoWrap {
 					return ;
 				}
 				if(objects != null){
-					callback.callback(objects, null);
-				}else{
-					callback.callback(null, new AVException(0, "获取活动失败"));
+					ObjActivityPhoto photo = objects.get(0);
+					callback.callback(objects, e);
 				}
 			}
 		});
