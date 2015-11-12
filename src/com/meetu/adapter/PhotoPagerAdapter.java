@@ -5,6 +5,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import net.tsz.afinal.FinalBitmap;
+
 
 
 import com.lidroid.xutils.BitmapUtils;
@@ -28,7 +30,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
 	private Context  mContext;
 	private List<ObjActivityCover> Newslist;
 	private BitmapUtils bitmapUtils;
-	
+	private FinalBitmap finalBitmap;
 	
 	public PhotoPagerAdapter(Context context, List<ObjActivityCover> list) {
 		super();
@@ -38,6 +40,8 @@ public class PhotoPagerAdapter extends PagerAdapter {
 		HomePageDetialActivity activity=(HomePageDetialActivity)context;
 //		NewsApplication app=(NewsApplication)activity.getApplicationContext();
 //		finalBitmap=app.getFinalBitmap();
+		MyApplication app=(MyApplication) context.getApplicationContext();
+		finalBitmap=app.getFinalBitmap();
 	}
 
 	@Override
@@ -69,8 +73,8 @@ public class PhotoPagerAdapter extends PagerAdapter {
 //		finalBitmap.display(img,news.getImgurl());
 //		img.setImageResource(item.getImg());
 		
-		bitmapUtils.display(img, item.getCover().getUrl());
-		
+//		bitmapUtils.display(img, item.getCover().getUrl());
+		finalBitmap.display(img, item.getCover().getUrl());
 		//View view2=LayoutInflater.from(mContext).inflate(R.layout.photo_desc_item_layout, null);
 		
 //		TextView title=(TextView)view.findViewById(R.id.title_lunbo_item_homepage_tv);

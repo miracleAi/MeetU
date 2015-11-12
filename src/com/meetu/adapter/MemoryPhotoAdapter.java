@@ -2,10 +2,14 @@ package com.meetu.adapter;
 
 import java.util.List;
 
+import net.tsz.afinal.FinalBitmap;
+
 import com.meetu.R;
 import com.meetu.activity.mine.FavorListActivity;
 import com.meetu.activity.mine.MinephotoActivity;
+import com.meetu.cloud.object.ObjActivityPhoto;
 import com.meetu.entity.PhotoWall;
+import com.meetu.myapplication.MyApplication;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,16 +24,17 @@ import android.widget.RelativeLayout;
 
 public class MemoryPhotoAdapter extends PagerAdapter{
 	private Context  mContext;
-	private List<PhotoWall> Newslist;
+	private List<ObjActivityPhoto> Newslist;
+	private FinalBitmap finalBitmap;
 	
-	public MemoryPhotoAdapter(Context context, List<PhotoWall> list) {
+	public MemoryPhotoAdapter(Context context, List<ObjActivityPhoto> list) {
 		super();
 		this.mContext = context;
 		this.Newslist = list;
 		
-//		MinephotoActivity activity=(MinephotoActivity)context;
-//		NewsApplication app=(NewsApplication)activity.getApplicationContext();
-//		finalBitmap=app.getFinalBitmap();
+
+		MyApplication app=(MyApplication)context.getApplicationContext();
+		finalBitmap=app.getFinalBitmap();
 	}
 
 	@Override
@@ -54,7 +59,7 @@ public class MemoryPhotoAdapter extends PagerAdapter{
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		// TODO Auto-generated method stub
-		PhotoWall item=Newslist.get(position);
+		ObjActivityPhoto item=Newslist.get(position);
 		View view = LayoutInflater.from(mContext).inflate(R.layout.item_memory_detial,null);
 		ImageView img=(ImageView)view.findViewById(R.id.img_memorywall_detial_item);
 		img.setOnClickListener(new OnClickListener() {
@@ -68,7 +73,8 @@ public class MemoryPhotoAdapter extends PagerAdapter{
 		});
 //		finalBitmap.display(img,news.getImgurl());
 		
-		img.setImageResource(item.getImg());
+//		img.setImageResource(item.getImg());
+		finalBitmap.display(img, item.getPhoto().getUrl());
 //		/**
 //		 * viewpager 内部事件监听处理
 //		 */

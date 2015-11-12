@@ -167,6 +167,7 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 						
 							activityItem = activity;
 							objactyList.add(activity);
+							log.e("zcq", "getLocationLongitude=="+activity.getLocationLongitude()+"  "+activity.getLocationLatitude());
 							bean=new ActivityBean();
 							bean.setActyId(activity.getObjectId());
 							bean.setUserId(user.getObjectId());
@@ -187,8 +188,8 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 							bean.setIndex(0);
 							bean.setIsFavor(0);
 							bean.setOrderAndFollow(0);
-							bean.setLocationLatitude(activity.getLocationLatitude());
-							bean.setLocationLongtitude(activity.getLocationLongitude());
+							bean.setLocationLatitude(""+activity.getLocationLatitude());
+							bean.setLocationLongtitude(""+activity.getLocationLongitude());
 							actyList.add(bean);
 						
 					}

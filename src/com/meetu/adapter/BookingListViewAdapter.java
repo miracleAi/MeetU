@@ -20,8 +20,10 @@ import android.widget.TextView;
 
 
 
+import com.avos.avoscloud.LogUtil.log;
 import com.baidu.location.e.r;
 import com.meetu.R;
+import com.meetu.cloud.object.ObjActivityTicket;
 import com.meetu.entity.Booking;
 import com.meetu.entity.Huodong;
 
@@ -30,14 +32,14 @@ import com.meetu.entity.Huodong;
 public class BookingListViewAdapter  extends BaseAdapter implements OnClickListener {
 
 	private Context mContext;
-	private List<Booking> newsList;
+	private List<ObjActivityTicket> newsList;
 	
 	private final int TYPE_COUNT=4;
 //	private FinalBitmap fianlBitmap;
 //	
 	private int selectedPosition = -1;
 	
-	public BookingListViewAdapter(Context context,List<Booking> newsList){
+	public BookingListViewAdapter(Context context,List<ObjActivityTicket> newsList){
 		this.mContext=context;
 		this.newsList=newsList;
 
@@ -89,7 +91,7 @@ public class BookingListViewAdapter  extends BaseAdapter implements OnClickListe
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		ViewHolder holder=null;
-		Booking item=newsList.get(position);
+		ObjActivityTicket item=newsList.get(position);
 		if(convertView==null){
 			holder=new ViewHolder();
 //			//��layout.xmlת��ΪView
@@ -101,15 +103,18 @@ public class BookingListViewAdapter  extends BaseAdapter implements OnClickListe
 			holder.tvPrice=(TextView) convertView.findViewById(R.id.price_baypiao_join_homepager);
 			holder.tvleftPrice=(TextView) convertView.findViewById(R.id.left_price_baypiao_join_homepager);
 			holder.noTickets=(ImageView) convertView.findViewById(R.id.no_tickets_join);
-			
+			holder.tvDesc=(TextView) convertView.findViewById(R.id.desc_buyPiao_join_homepager);
 			convertView.setTag(holder);
 		}else{
 			holder=(ViewHolder)convertView.getTag();
 		}
 
-		holder.tvTilte.setText(item.getName());
-		holder.tvPrice.setText(item.getPrice());
-		if(item.getNumber()<=0){
+		holder.tvTilte.setText(""+item.getTicketTitle());
+		holder.tvPrice.setText(""+item.getPrice());
+		holder.tvDesc.setText(""+item.getTicketDescription());
+		int number=Integer.valueOf(item.getTicketCount())-Integer.valueOf(item.getTicketSaleCount());
+		log.e("zcq", "number=="+number);
+		if(number<=0){
 			holder.noTickets.setVisibility(View.VISIBLE);
 			holder.tvPrice.setTextColor(mContext.getResources().getColor(R.color.text_changehui));
 			holder.tvleftPrice.setTextColor(mContext.getResources().getColor(R.color.text_changehui));
@@ -137,6 +142,7 @@ public class BookingListViewAdapter  extends BaseAdapter implements OnClickListe
 		private TextView tvTilte;
 		private TextView tvPrice;
 		private TextView tvleftPrice;
+		private TextView tvDesc;
 		private ImageView noTickets;
 		
 		

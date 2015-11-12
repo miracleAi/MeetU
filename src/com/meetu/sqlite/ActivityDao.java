@@ -91,8 +91,8 @@ public class ActivityDao {
 			bean.setTitleSub(cursor.getString(cursor.getColumnIndex(Constants.TITLESUB)));
 			bean.setTimeStop(cursor.getLong(cursor.getColumnIndex(Constants.TIMESTOP)));
 			bean.setLocationGovernment(cursor.getString(cursor.getColumnIndex(Constants.LOCATIONGOVERNMENT)));
-			bean.setLocationLatitude(cursor.getLong(cursor.getColumnIndex(Constants.LOCATIONLATITUDE)));
-			bean.setLocationLongtitude(cursor.getLong(cursor.getColumnIndex(Constants.LOCATIONLONGTITUDE)));
+			bean.setLocationLatitude(cursor.getString(cursor.getColumnIndex(Constants.LOCATIONLATITUDE)));
+			bean.setLocationLongtitude(cursor.getString(cursor.getColumnIndex(Constants.LOCATIONLONGTITUDE)));
 			bean.setConversationId(cursor.getString(cursor.getColumnIndex(Constants.CONVERSATIONID)));
 			bean.setIndex(cursor.getInt(cursor.getColumnIndex(Constants.ACTIVITYINDEX)));
 			bean.setIsFavor(cursor.getInt(cursor.getColumnIndex(Constants.ISACTIVITYPRAISE)));

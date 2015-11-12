@@ -16,25 +16,25 @@ public class Info implements Serializable
 	private String distance;
 	private int zan;
 
-	public static List<Info> infos = new ArrayList<Info>();
-
-	static
-	{
-		infos.add(new Info(39.98945849,116.33495187, R.drawable.school1, "清华大学",
-				"距离209米", 1456));
-
-	}
-
-	public Info(double latitude, double longitude, int imgId, String name,
-			String distance, int zan)
-	{
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.imgId = imgId;
-		this.name = name;
-		this.distance = distance;
-		this.zan = zan;
-	}
+//	public static List<Info> infos = new ArrayList<Info>();
+//
+//	static
+//	{
+//		infos.add(new Info(39.98945849,116.33495187, R.drawable.school1, "清华大学",
+//				"距离209米", 1456));
+//
+//	}
+//
+//	public Info(double latitude, double longitude, int imgId, String name,
+//			String distance, int zan)
+//	{
+//		this.latitude = latitude;
+//		this.longitude = longitude;
+//		this.imgId = imgId;
+//		this.name = name;
+//		this.distance = distance;
+//		this.zan = zan;
+//	}
 
 	public double getLatitude()
 	{

@@ -1,19 +1,31 @@
 package com.meetu.activity.homepage;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 import com.meetu.R.layout;
 import com.meetu.adapter.StaggeredHomeAdapter;
 import com.meetu.adapter.StaggeredMemoryWallAdapter;
 import com.meetu.adapter.StaggeredMemoryWallAdapter.OnItemClickCallBack;
+import com.meetu.bean.ActivityBean;
+import com.meetu.cloud.callback.ObjActivityPhotoCallback;
+import com.meetu.cloud.object.ObjActivity;
+import com.meetu.cloud.object.ObjActivityPhoto;
+import com.meetu.cloud.wrap.ObjActivityPhotoWrap;
 import com.meetu.common.Images;
 import com.meetu.entity.PhotoWall;
 import com.meetu.entity.PhotoWallTest;
+import com.meetu.tools.DensityUtil;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +37,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.widget.RelativeLayout.LayoutParams;
 
 public class MemoryWallActivity extends Activity implements OnItemClickCallBack,OnClickListener{
 	
@@ -33,6 +46,11 @@ public class MemoryWallActivity extends Activity implements OnItemClickCallBack,
 	private List<PhotoWall> data=new ArrayList<PhotoWall>();
 	private RelativeLayout backLayout;
 	private ImageView barrage;
+	//网络相关信息
+	private ActivityBean activityBean=new ActivityBean();
+	private ObjActivity objActivity= null;
+	private List<ObjActivityPhoto> photoList=new ArrayList<ObjActivityPhoto>();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,13 +59,26 @@ public class MemoryWallActivity extends Activity implements OnItemClickCallBack,
 				// 全屏
 				super.getWindow();
 		setContentView(R.layout.activity_memory_wall);
+		activityBean= (ActivityBean) getIntent().getExtras().getSerializable("activityBean");
+		initLoadActivity(activityBean.getActyId());
 		initView();
+	}
+	private void initLoadActivity(String activityId) {
+		log.e("zcq", "activityId=="+activityId);
+		try {
+			 objActivity=AVObject.createWithoutData(ObjActivity.class, activityId);
+
+		} catch (AVException e) {
+			
+			e.printStackTrace();
+		}
+		
 	}
 	private void initView() {
 		mRecyclerView=(RecyclerView) super.findViewById(R.id.id_RecyclerView_memoryWall);
 //		loaddataUrl();
 		loaddata();
-		mAdapter=new StaggeredMemoryWallAdapter(this, data);
+		mAdapter=new StaggeredMemoryWallAdapter(this, photoList);
 		mAdapter.setOnItemClickLitener(this);
 		mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
 		mRecyclerView.setAdapter(mAdapter);
@@ -70,29 +101,42 @@ public class MemoryWallActivity extends Activity implements OnItemClickCallBack,
 //		
 //	}
 	private void loaddata() {
-		data=new ArrayList<PhotoWall>();
-		data.add(new PhotoWall(10,R.drawable.img1_ceshi));
-		data.add(new PhotoWall(2,R.drawable.img2_ceshi));
-		data.add(new PhotoWall(3,R.drawable.img3_ceshi));
-		data.add(new PhotoWall(4,R.drawable.img4_ceshi));
-		data.add(new PhotoWall(5,R.drawable.img5_ceshi));
-		data.add(new PhotoWall(5,R.drawable.img1_ceshi));
-		data.add(new PhotoWall(7,R.drawable.img2_ceshi));
-		data.add(new PhotoWall(10,R.drawable.img3_ceshi));
-		data.add(new PhotoWall(12,R.drawable.img4_ceshi));
-		data.add(new PhotoWall(10,R.drawable.img5_ceshi));
-		data.add(new PhotoWall(11,R.drawable.img1_ceshi));
-		data.add(new PhotoWall(12,R.drawable.img2_ceshi));
-		data.add(new PhotoWall(13,R.drawable.img3_ceshi));
-		data.add(new PhotoWall(14,R.drawable.img4_ceshi));
-		data.add(new PhotoWall(15,R.drawable.img5_ceshi));
+//		data=new ArrayList<PhotoWall>();
+//		data.add(new PhotoWall(10,R.drawable.img1_ceshi));
+//		data.add(new PhotoWall(2,R.drawable.img2_ceshi));
+//		data.add(new PhotoWall(3,R.drawable.img3_ceshi));
+//		data.add(new PhotoWall(4,R.drawable.img4_ceshi));
+//		data.add(new PhotoWall(5,R.drawable.img5_ceshi));
+//		data.add(new PhotoWall(5,R.drawable.img1_ceshi));
+//		data.add(new PhotoWall(7,R.drawable.img2_ceshi));
+//		data.add(new PhotoWall(10,R.drawable.img3_ceshi));
+//		data.add(new PhotoWall(12,R.drawable.img4_ceshi));
+//		data.add(new PhotoWall(10,R.drawable.img5_ceshi));
+//		data.add(new PhotoWall(11,R.drawable.img1_ceshi));
+//		data.add(new PhotoWall(12,R.drawable.img2_ceshi));
+//		data.add(new PhotoWall(13,R.drawable.img3_ceshi));
+//		data.add(new PhotoWall(14,R.drawable.img4_ceshi));
+//		data.add(new PhotoWall(15,R.drawable.img5_ceshi));
+		
+		ObjActivityPhotoWrap.queryActivityPhotos(objActivity, new ObjActivityPhotoCallback() {
+			
+			@Override
+			public void callback(List<ObjActivityPhoto> objects, AVException e) {
+				// TODO Auto-generated method stub
+				photoList.addAll(objects);
+				handler.sendEmptyMessage(1);
+			}
+		});
+		
 		
 	}
 	@Override
 	public void onItemClick(int id) {
 		Intent intent=new Intent(this,MemoryPhotoActivity.class);
 		intent.putExtra("id", ""+id);
-		
+		Bundle bundle=new Bundle();
+//		bundle.putSerializable("ObjActivityPhoto", photoList);
+		intent.putExtras(bundle);
 		startActivity(intent);
 		
 		this.overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
@@ -120,6 +164,22 @@ public class MemoryWallActivity extends Activity implements OnItemClickCallBack,
 		}
 		
 	}
+	
+	Handler handler=new Handler(){
+
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			switch(msg.what){
+			case 1:
+				
+				mAdapter.notifyDataSetChanged();
+								
+				break;
+			}
+		}
+	
+	};
 
 	
 

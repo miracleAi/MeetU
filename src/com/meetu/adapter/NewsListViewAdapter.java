@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import net.tsz.afinal.FinalBitmap;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.format.Time;
@@ -40,7 +42,7 @@ public class NewsListViewAdapter  extends BaseAdapter implements OnClickListener
 	private ImageLoader mImageLoader;
 	
 	private final int TYPE_COUNT=2;
-
+	private FinalBitmap finalBitmap;
 	//网络相关
 	private BitmapUtils bitmapUtils;
 	public NewsListViewAdapter(Context context,List<ActivityBean> newsList){
@@ -48,7 +50,8 @@ public class NewsListViewAdapter  extends BaseAdapter implements OnClickListener
 		this.newsList=newsList;
 
 		bitmapUtils=new BitmapUtils(mContext);
-	
+		MyApplication app=(MyApplication) context.getApplicationContext();
+		finalBitmap=app.getFinalBitmap();
 //		NewsApplication app=(NewsApplication)context.getApplicationContext();
 //		fianlBitmap=app.getFinalBitmap();
 	}
@@ -127,8 +130,8 @@ public class NewsListViewAdapter  extends BaseAdapter implements OnClickListener
 		
 		
 //		holder.ivImgUrl.setImageResource(item.getImg());
-		bitmapUtils.display(holder.ivImgUrl, item.getActivityCover());
-		
+//		bitmapUtils.display(holder.ivImgUrl, item.getActivityCover());
+		finalBitmap.display(holder.ivImgUrl, item.getActivityCover());
 //		new ImageLoader().showImageByThread(holder.ivImgUrl, item.getImg());
 //		mImageLoader.showImageByAsyncTask(holder.ivImgUrl, item.getImg());
 		holder.tvTilte.setText(item.getTitle());

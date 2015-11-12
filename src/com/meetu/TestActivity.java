@@ -318,8 +318,8 @@ public class TestActivity extends Activity{
 							bean.setIndex(0);
 							bean.setIsFavor(0);
 							bean.setOrderAndFollow(0);
-							bean.setLocationLatitude(activity.getLocationLatitude());
-							bean.setLocationLongtitude(activity.getLocationLongitude());
+							bean.setLocationLatitude(""+activity.getLocationLatitude());
+							bean.setLocationLongtitude(""+activity.getLocationLongitude());
 							actyList.add(bean);
 						}
 					}

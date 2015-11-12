@@ -10,6 +10,9 @@ import com.meetu.R.id;
 import com.meetu.R.layout;
 import com.meetu.adapter.MemoryPhotoAdapter;
 import com.meetu.adapter.MinePhotoAdapter;
+import com.meetu.bean.ActivityBean;
+import com.meetu.cloud.object.ObjActivity;
+import com.meetu.cloud.object.ObjActivityPhoto;
 import com.meetu.entity.PhotoWall;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
@@ -34,13 +37,19 @@ public class MemoryPhotoActivity extends Activity implements OnPageChangeListene
 	private String itemid;
 	private ViewPager viewPager;
 	int id;
-	private List<PhotoWall> photolist=new ArrayList<PhotoWall>();
+//	private List<PhotoWall> photolist=new ArrayList<PhotoWall>();
 	private MemoryPhotoAdapter adapter;
 	private ImageView favor;
 	private int favourWight;//点赞布局的宽度
 	private int windowWidth;
 	//控件相关
 	private RelativeLayout favorLayout;
+	//网络相关
+	//网络相关信息
+		private ActivityBean activityBean=new ActivityBean();
+		private ObjActivity objActivity= null;
+		private List<ObjActivityPhoto> objphotoList=new ArrayList<ObjActivityPhoto>();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,6 +60,7 @@ public class MemoryPhotoActivity extends Activity implements OnPageChangeListene
 		super.getWindow();
 		setContentView(R.layout.activity_memory_photo);
 		itemid = super.getIntent().getStringExtra("id");
+		objphotoList=(List<ObjActivityPhoto>) getIntent().getExtras().getSerializable("ObjActivityPhoto");
 		id=Integer.parseInt(itemid);
 		initView();
 	}
@@ -58,7 +68,7 @@ public class MemoryPhotoActivity extends Activity implements OnPageChangeListene
 	private void initView() {
 		viewPager=(ViewPager) super.findViewById(R.id.viewpager_photo_memory_detial);
 		load();
-		adapter=new MemoryPhotoAdapter(this, photolist);
+		adapter=new MemoryPhotoAdapter(this, objphotoList);
 		viewPager.setAdapter(adapter);
 		viewPager.setOnPageChangeListener(this);
 		viewPager.setCurrentItem(id);
@@ -73,22 +83,22 @@ public class MemoryPhotoActivity extends Activity implements OnPageChangeListene
 	}
 
 	private void load() {
-		photolist=new ArrayList<PhotoWall>();
-		photolist.add(new PhotoWall(1,R.drawable.img1_ceshi));
-		photolist.add(new PhotoWall(2,R.drawable.img2_ceshi));
-		photolist.add(new PhotoWall(3,R.drawable.img3_ceshi));
-		photolist.add(new PhotoWall(4,R.drawable.img4_ceshi));
-		photolist.add(new PhotoWall(5,R.drawable.img5_ceshi));
-		photolist.add(new PhotoWall(1,R.drawable.img1_ceshi));
-		photolist.add(new PhotoWall(2,R.drawable.img2_ceshi));
-		photolist.add(new PhotoWall(3,R.drawable.img3_ceshi));
-		photolist.add(new PhotoWall(4,R.drawable.img4_ceshi));
-		photolist.add(new PhotoWall(5,R.drawable.img5_ceshi));
-		photolist.add(new PhotoWall(1,R.drawable.img1_ceshi));
-		photolist.add(new PhotoWall(2,R.drawable.img2_ceshi));
-		photolist.add(new PhotoWall(3,R.drawable.img3_ceshi));
-		photolist.add(new PhotoWall(4,R.drawable.img4_ceshi));
-		photolist.add(new PhotoWall(5,R.drawable.img5_ceshi));
+//		photolist=new ArrayList<PhotoWall>();
+//		photolist.add(new PhotoWall(1,R.drawable.img1_ceshi));
+//		photolist.add(new PhotoWall(2,R.drawable.img2_ceshi));
+//		photolist.add(new PhotoWall(3,R.drawable.img3_ceshi));
+//		photolist.add(new PhotoWall(4,R.drawable.img4_ceshi));
+//		photolist.add(new PhotoWall(5,R.drawable.img5_ceshi));
+//		photolist.add(new PhotoWall(1,R.drawable.img1_ceshi));
+//		photolist.add(new PhotoWall(2,R.drawable.img2_ceshi));
+//		photolist.add(new PhotoWall(3,R.drawable.img3_ceshi));
+//		photolist.add(new PhotoWall(4,R.drawable.img4_ceshi));
+//		photolist.add(new PhotoWall(5,R.drawable.img5_ceshi));
+//		photolist.add(new PhotoWall(1,R.drawable.img1_ceshi));
+//		photolist.add(new PhotoWall(2,R.drawable.img2_ceshi));
+//		photolist.add(new PhotoWall(3,R.drawable.img3_ceshi));
+//		photolist.add(new PhotoWall(4,R.drawable.img4_ceshi));
+//		photolist.add(new PhotoWall(5,R.drawable.img5_ceshi));
 		
 	}
 

@@ -2,6 +2,8 @@ package com.meetu.myapplication;
 
 import java.util.Set;
 
+import net.tsz.afinal.FinalBitmap;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
@@ -16,6 +18,7 @@ import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.lidroid.xutils.BitmapUtils;
+import com.meetu.R;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityCover;
@@ -41,19 +44,21 @@ public class MyApplication extends Application {
 	
 	
 	public BitmapUtils bitmapUtils=null;
+	private FinalBitmap finalBitmap=null;
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
 		//配置bitmapUtils
-//		bitmapUtils=BitmapUtils.
-//		finalBitmap.configBitmapLoadThreadSize(3);//线程尺寸
-//		finalBitmap.configDiskCachePath(getFilesDir().toString());//
-//		finalBitmap.configDiskCacheSize(1024*1024*10);
-//		int memory=(int)Runtime.getRuntime().maxMemory()/8;
-//		finalBitmap.configMemoryCacheSize(memory);
-//		finalBitmap.configLoadingImage(R.drawable.default_news_img);
-//		finalBitmap.configLoadfailImage(R.drawable.default_news_img);
+		finalBitmap=FinalBitmap.create(this);
+		finalBitmap.configBitmapLoadThreadSize(3);//线程尺寸
+		finalBitmap.configDiskCachePath(getFilesDir().toString());//
+		finalBitmap.configDiskCacheSize(1024*1024*100);
+		int memory=(int)Runtime.getRuntime().maxMemory()/8;
+		finalBitmap.configMemoryCacheSize(memory);
+		finalBitmap.configLoadingImage(R.drawable.mine_img_loading);
+		finalBitmap.configLoadfailImage(R.drawable.mine_img_loading);
+		//finalBitmap.configBitmapMaxHeight(bitmapHeight);
 		
 		log.e("AVOSCloud", "3254");
 		//leancloud子类注册
@@ -92,5 +97,9 @@ public class MyApplication extends Application {
 			});
 		} 
 		AVIMMessageManager.registerDefaultMessageHandler(new DefaultMessageHandler());
+	}
+	public FinalBitmap getFinalBitmap() {
+		// TODO Auto-generated method stub
+		return finalBitmap;
 	}
 }

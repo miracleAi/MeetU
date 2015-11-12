@@ -1,9 +1,11 @@
 package com.meetu.baidumapdemo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.security.auth.PrivateCredentialPermission;
 
+import com.avos.avoscloud.LogUtil.log;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -30,6 +32,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.meetu.R;
 import com.meetu.baidumapdemo.MyOrientationListener.OnOrientationListener;
+import com.meetu.bean.ActivityBean;
 
 
 
@@ -41,9 +44,11 @@ import com.meetu.baidumapdemo.MyOrientationListener.OnOrientationListener;
 
 
 
+import android.R.integer;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.view.Menu;
@@ -85,6 +90,10 @@ public class BaiduMapMainActivity extends Activity {
 	//控件点击相关
 	private Button addressButton;
 	private ImageView back;
+	//网络数据相关
+	private ActivityBean activityBean=new ActivityBean();
+	private double LocationLongtitude,LocationLatitude;
+	private List<Info> infoList=new ArrayList<Info>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -94,7 +103,17 @@ public class BaiduMapMainActivity extends Activity {
         //注意该方法要再setContentView方法之前实现 
         SDKInitializer.initialize(getApplicationContext());  
 		setContentView(R.layout.activity_baidumap_main);
+		//
+		Intent intent=getIntent();
+		Bundle bundle=intent.getExtras();
+		
+		activityBean=(ActivityBean) bundle.getSerializable("activityBean");
+		
+		log.e("baiduzcq", "activityBean"+activityBean.getLocationLongtitude()+"   "+activityBean.getLocationLatitude());
+		LocationLongtitude=Double.valueOf(activityBean.getLocationLongtitude())/100000000;
+		LocationLatitude=Double.valueOf(activityBean.getLocationLatitude())/100000000;
 		this.context=this;
+		loadInfo();
 		initView();
 		
 		//初始化定位
@@ -168,13 +187,24 @@ public class BaiduMapMainActivity extends Activity {
 		});
 		
 	}
+	private void loadInfo() {
+		infoList=new ArrayList<Info>();
+		Info item=new Info();
+		item.setLatitude(LocationLatitude);
+		item.setLongitude(LocationLongtitude);
+		item.setImgId(R.drawable.school1);
+		item.setName(activityBean.getLocationPlace());
+		item.setZan(100);
+		infoList.add(item);
+		
+	}
 	private void initkongjian() {
 		addressButton=(Button) super.findViewById(R.id.address_baidumap_detial);
 		addressButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				addOverlays(Info.infos);
+				addOverlays(infoList);
 				
 			}
 		});
@@ -336,7 +366,8 @@ public class BaiduMapMainActivity extends Activity {
 		for (Info info : infos)
 		{
 			// 经纬度
-			latLng = new LatLng(info.getLatitude(), info.getLongitude());
+//			latLng = new LatLng(info.getLatitude(), info.getLongitude());
+			latLng = new LatLng(LocationLatitude, LocationLongtitude);
 			// 图标
 			options = new MarkerOptions().position(latLng).icon(mMarker)
 					.zIndex(5);

@@ -3,11 +3,15 @@ package com.meetu.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.tsz.afinal.FinalBitmap;
+
 import com.meetu.R;
 import com.meetu.adapter.PhotoWallAdapter.GridViewHeightaListener;
+import com.meetu.cloud.object.ObjActivityPhoto;
 import com.meetu.common.ImageLoader;
 import com.meetu.entity.PhotoWall;
 import com.meetu.entity.PhotoWallTest;
+import com.meetu.myapplication.MyApplication;
 import com.meetu.tools.DisplayUtils;
 
 import android.app.Activity;
@@ -32,7 +36,7 @@ import android.widget.TextView;
 public class StaggeredMemoryWallAdapter extends
 			RecyclerView.Adapter<StaggeredMemoryWallAdapter.MyViewHolder> {
 
-	private List<PhotoWall> mDatas;
+	private List<ObjActivityPhoto> mDatas;
 	private LayoutInflater mInflater;
 	private List<Integer> mHeights;
 	private int width;
@@ -42,7 +46,7 @@ public class StaggeredMemoryWallAdapter extends
 
 	private Bitmap bitmap;
 
-	 
+	 private FinalBitmap finalBitmap;
 
 
 	public interface OnItemClickCallBack {
@@ -57,18 +61,15 @@ public class StaggeredMemoryWallAdapter extends
 		this.mOnItemClickLitener = mOnItemClickLitener;
 	}
 
-	public StaggeredMemoryWallAdapter(Context context, List<PhotoWall> datas) {
+	public StaggeredMemoryWallAdapter(Context context, List<ObjActivityPhoto> datas) {
 		
 		mInflater = LayoutInflater.from(context);
 		mDatas = datas;
 		width = DisplayUtils.getWindowWidth((Activity)context);
-//		 mHeights = new ArrayList<Integer>();
-//		 if(mDatas!=null && mDatas.size()>0){
-//		 for (int i = 0; i < mDatas.size(); i++)
-//		 {
-//		 mHeights.add( (int) (400+ Math.random() * 500));
-//		 }
-//	}
+		
+		MyApplication app=(MyApplication) context.getApplicationContext();
+		finalBitmap=app.getFinalBitmap();
+
 	}
 
 	@Override
@@ -89,13 +90,13 @@ public class StaggeredMemoryWallAdapter extends
 		if (mDatas!=null && mDatas.size()>0){
 
 					
-			PhotoWall item = mDatas.get(position);
+			ObjActivityPhoto item = mDatas.get(position);
 					
 			//TODO 因为是假数据。手动转成bitmap测试
 					
-					holder.ivImg.setImageResource(item.getImg());
-					
-					holder.id = item.getId();
+//					holder.ivImg.setImageResource(item.getPhoto().getUrl());
+			finalBitmap.display(holder.ivImg, item.getPhoto().getUrl());
+//					holder.id = item.getId();
 					
 //					holder.ivImg.setTag(item.getImageURL());
 //					

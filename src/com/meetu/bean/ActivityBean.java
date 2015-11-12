@@ -55,9 +55,9 @@ public class ActivityBean implements Serializable {
 	//  活动举办地的行政地址（只读）
 	private String locationGovernment;
 	//活动经度
-	private long locationLongtitude;
+	private String locationLongtitude;
 	//活动纬度
-	private long locationLatitude;
+	private String locationLatitude;
 	//  活动结束时间（UNIX时间戳，毫秒）（只读）
 	private long timeStop;
 	//  活动群聊的对话ID（只读）
@@ -65,19 +65,19 @@ public class ActivityBean implements Serializable {
 	//index标记是插入的第几条活动
 	private int index;
 
-	public long getLocationLongtitude() {
+	public String getLocationLongtitude() {
 		return locationLongtitude;
 	}
 
-	public void setLocationLongtitude(long locationLongtitude) {
+	public void setLocationLongtitude(String locationLongtitude) {
 		this.locationLongtitude = locationLongtitude;
 	}
 
-	public long getLocationLatitude() {
+	public String getLocationLatitude() {
 		return locationLatitude;
 	}
 
-	public void setLocationLatitude(long locationLatitude) {
+	public void setLocationLatitude(String locationLatitude) {
 		this.locationLatitude = locationLatitude;
 	}
 

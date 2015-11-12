@@ -97,6 +97,7 @@ public class HomePageDetialActivity extends Activity
 //		objActivity=(ObjActivity) bundle.getSerializable("objActivity");
 		
 		log.e("zcq", "activityBean"+activityBean.getLocationLongtitude()+"   "+activityBean.getLocationLatitude());
+		log.e("zcq", "TimeStart()=="+activityBean.getTimeStart()+"  =="+activityBean.getTimeStop());
 		initLoadActivity(activityBean.getActyId());
 		initView();
 //		startPlay();
@@ -146,10 +147,10 @@ private void initLoadActivity(String activityId) {
 		// 先加载数据在设置adapter
 		viewPager = (ViewPager) super.findViewById(R.id.viewpager_photo);
 		load();
-		adapter = new PhotoPagerAdapter(this, objPhotosList);
-		viewPager.setOnPageChangeListener(this);
-
-		viewPager.setAdapter(adapter);
+//		adapter = new PhotoPagerAdapter(this, objPhotosList);
+//		viewPager.setOnPageChangeListener(this);
+//
+//		viewPager.setAdapter(adapter);
 		mLinearLayout = (LinearLayout) super
 				.findViewById(R.id.dian_linearlayout_homepage);
 
@@ -265,6 +266,9 @@ switch (v.getId()) {
 		break;
 	case R.id.baidumap_homepage_detial:
 		Intent intent=new Intent(this,BaiduMapMainActivity.class);
+		Bundle bundle=new Bundle();
+		bundle.putSerializable("activityBean", activityBean);
+		intent.putExtras(bundle);
 		startActivity(intent);
 		break;
 	case R.id.join_homepager_detial_img:
@@ -274,6 +278,9 @@ switch (v.getId()) {
 			break;
 		case 50:
 			Intent intent2=new Intent(this,JoinActivity.class);
+			Bundle bundle2=new Bundle();
+			bundle2.putSerializable("activityBean", activityBean);
+			intent2.putExtras(bundle2);
 			startActivity(intent2);
 			break;
 		case 60:
@@ -287,6 +294,9 @@ switch (v.getId()) {
 		break;
 	case R.id.memory_homepager_detial_img:
 		Intent intent3=new Intent(this,MemoryWallActivity.class);
+		Bundle bundle3=new Bundle();
+		bundle3.putSerializable("activityBean", activityBean);
+		intent3.putExtras(bundle3);
 		startActivity(intent3);
 		break;
 	case R.id.feedback_homepage_detial_img:
@@ -379,8 +389,13 @@ switch (v.getId()) {
 					viewDot.setLayoutParams(params);
 					dotViewsList.add(viewDot);
 					mLinearLayout.addView(viewDot);
+					
+					adapter = new PhotoPagerAdapter(HomePageDetialActivity.this, objPhotosList);
+					viewPager.setOnPageChangeListener(HomePageDetialActivity.this);
+
+					viewPager.setAdapter(adapter);
 				}
-				adapter.notifyDataSetChanged();		
+	//			adapter.notifyDataSetChanged();		
 				startPlay();
 				break;
 			}
