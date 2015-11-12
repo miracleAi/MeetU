@@ -18,7 +18,7 @@ import com.meetu.cloud.object.ObjTableName;
 
 public class ObjActivityCoverWrap {
 	/**
-	 * 查询活动封面
+	 * 查询活动封面 轮播图
 	 * @param callback
 	 */
 	public static void queryActivityCover(ObjActivity activity,final ObjActivityCoverCallback callback){

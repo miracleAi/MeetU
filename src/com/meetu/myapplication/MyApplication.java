@@ -15,6 +15,7 @@ import com.avos.avoscloud.im.v2.AVIMMessageHandler;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.lidroid.xutils.BitmapUtils;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityCover;
@@ -37,10 +38,23 @@ import android.util.Log;
 public class MyApplication extends Application {
 	public static AVIMClient chatClient;
 	public static boolean isChatLogin = false;
+	
+	
+	public BitmapUtils bitmapUtils=null;
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
+		//配置bitmapUtils
+//		bitmapUtils=BitmapUtils.
+//		finalBitmap.configBitmapLoadThreadSize(3);//线程尺寸
+//		finalBitmap.configDiskCachePath(getFilesDir().toString());//
+//		finalBitmap.configDiskCacheSize(1024*1024*10);
+//		int memory=(int)Runtime.getRuntime().maxMemory()/8;
+//		finalBitmap.configMemoryCacheSize(memory);
+//		finalBitmap.configLoadingImage(R.drawable.default_news_img);
+//		finalBitmap.configLoadfailImage(R.drawable.default_news_img);
+		
 		log.e("AVOSCloud", "3254");
 		//leancloud子类注册
 		AVObject.registerSubclass(ObjActivity.class);

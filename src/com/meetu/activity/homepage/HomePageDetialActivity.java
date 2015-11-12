@@ -74,6 +74,7 @@ public class HomePageDetialActivity extends Activity
 	private String style;
 	
 	private TextView address;
+	private TextView titile,titleSub;
 	//网络数据相关
 	private ActivityBean activityBean=new ActivityBean();
 	private ObjActivity objActivity= null;
@@ -94,6 +95,8 @@ public class HomePageDetialActivity extends Activity
 		Bundle bundle=intent.getExtras();
 		activityBean= (ActivityBean) bundle.getSerializable("activityBean");
 //		objActivity=(ObjActivity) bundle.getSerializable("objActivity");
+		
+		
 		initLoadActivity(activityBean.getActyId());
 		initView();
 //		startPlay();
@@ -144,25 +147,25 @@ private void initLoadActivity(String activityId) {
 		viewPager = (ViewPager) super.findViewById(R.id.viewpager_photo);
 		load();
 		adapter = new PhotoPagerAdapter(this, objPhotosList);
-//		viewPager.setOnPageChangeListener(this);
+		viewPager.setOnPageChangeListener(this);
 
 		viewPager.setAdapter(adapter);
 		mLinearLayout = (LinearLayout) super
 				.findViewById(R.id.dian_linearlayout_homepage);
 
-		for(int i=0;i<photolist.size();i++){
-			ImageView viewDot = new ImageView(this);
-			if (i == 0) {
-				viewDot.setBackgroundResource(R.drawable.main_dot_white);
-			} else {
-				viewDot.setBackgroundResource(R.drawable.main_dot_light);
-			}
-			LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-			params.rightMargin=10;
-			viewDot.setLayoutParams(params);
-			dotViewsList.add(viewDot);
-			mLinearLayout.addView(viewDot);
-		}
+//		for(int i=0;i<objPhotosList.size();i++){
+//			ImageView viewDot = new ImageView(this);
+//			if (i == 0) {
+//				viewDot.setBackgroundResource(R.drawable.main_dot_white);
+//			} else {
+//				viewDot.setBackgroundResource(R.drawable.main_dot_light);
+//			}
+//			LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+//			params.rightMargin=10;
+//			viewDot.setLayoutParams(params);
+//			dotViewsList.add(viewDot);
+//			mLinearLayout.addView(viewDot);
+//		}
 		/**
 		 * vebview相关 加载网页
 		 */
@@ -195,7 +198,12 @@ private void initLoadActivity(String activityId) {
 		titleTop=(TextView) super.findViewById(R.id.title_top_homepager_detial_tv);
 		
 		address=(TextView) super.findViewById(R.id.address_home_page_detial_tv);
-		address.setText(""+activityBean.getLocationAddress()+"  "+activityBean.getLocationGovernment());
+		address.setText(""+activityBean.getLocationAddress()+"  "+activityBean.getLocationPlace());
+		
+		titile=(TextView) super.findViewById(R.id.title_lunbo_item_homepage_tv);
+		titile.setText(""+activityBean.getTitle());
+		titleSub=(TextView) super.findViewById(R.id.title_sub_lunbo_item_homepage_tv);
+		titleSub.setText(""+activityBean.getTitleSub());
 	}
 /**
  * 加载网络数据
@@ -309,7 +317,7 @@ switch (v.getId()) {
 	@Override
 	public void onPageSelected(int pos) {
 		// TODO Auto-generated method stub
-		setImageBackground(pos % photolist.size());
+		setImageBackground(pos % objPhotosList.size());
 
 	}
 /**
@@ -334,7 +342,7 @@ switch (v.getId()) {
 		public void run() {
 			// TODO Auto-generated method stub
 			synchronized (viewPager) {
-				currentItem = (currentItem + 1) % photolist.size();
+				currentItem = (currentItem + 1) % objPhotosList.size();
 				handler.obtainMessage().sendToTarget();
 			}
 		}
@@ -359,7 +367,20 @@ switch (v.getId()) {
 			// TODO Auto-generated method stub
 			switch(msg.what){
 			case 1:
-				adapter.notifyDataSetChanged();	
+				for(int i=0;i<objPhotosList.size();i++){
+					ImageView viewDot = new ImageView(HomePageDetialActivity.this);
+					if (i == 0) {
+						viewDot.setBackgroundResource(R.drawable.main_dot_white);
+					} else {
+						viewDot.setBackgroundResource(R.drawable.main_dot_light);
+					}
+					LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+					params.rightMargin=10;
+					viewDot.setLayoutParams(params);
+					dotViewsList.add(viewDot);
+					mLinearLayout.addView(viewDot);
+				}
+				adapter.notifyDataSetChanged();		
 				startPlay();
 				break;
 			}
