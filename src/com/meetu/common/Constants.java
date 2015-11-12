@@ -109,4 +109,32 @@ public class Constants {
 	 * 用户权限分类
 	 * */
 	public static final int GROUP_CREATE = 100;
+	/**
+	 * 消息类型常量
+	 * */
+	public static final int TEXT_TYPE = -1;
+	public static final int IMAGE_TYPE = -2;
+	public static final int AUDIO_TYPE = -3;
+	public static final int VEDIO_TYPE = -4;
+	public static final int LOCATION_TYPE = -5;
+	public static final int FILE_TYPE = -6;
+	public static final int UNSUPPORT_TYPE = -7;
+	/**
+	 * 消息状态常量
+	 * */
+	public static final int STATUES_NONE = 1;
+	public static final int STATUES_SENDING = 2;
+	public static final int STATUES_SENT = 3;
+	public static final int STATUES_RECEIPT = 4;
+	public static final int STATUES_FAILED = 5;
+	/**
+	 * 消息方向常量
+	 * */
+	public static final int IOTYPE_IN = 1;
+	public static final int IOTYPE_OUT = 2;
+	/**
+	 * 消息时间是否显示
+	 * */
+	public static final int TIMESHOW = 1;
+	public static final int TIMESHOWNOT = 0;
 }

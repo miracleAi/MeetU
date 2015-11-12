@@ -11,11 +11,15 @@ public class Chatmsgs {
 	 */
 	private String messageCacheId;
 	/**
+	 * 用户id
+	 * */
+	private String uid;
+	/**
 	 * 消息id
 	 */
 	private String messageId;
 	/**
-	 * 用户id
+	 * 消息发送者id
 	 */
 	private String clientId;
 	/**
@@ -66,6 +70,7 @@ public class Chatmsgs {
 	 * 新加入成员的id
 	 */
 	private int nowJoinUserId;
+	//以下没有用
 	/**
 	 * 文本通知消息的内容
 	 */
@@ -109,6 +114,12 @@ public class Chatmsgs {
 	}
 	public int getChatMsgType() {
 		return chatMsgType;
+	}
+	public String getUid() {
+		return uid;
+	}
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 	public void setChatMsgType(int chatMsgType) {
 		this.chatMsgType = chatMsgType;

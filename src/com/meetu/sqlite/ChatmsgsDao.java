@@ -28,8 +28,8 @@ public class ChatmsgsDao {
 				"?,?,?,?,?," +
 				"?,?,?,?,?," +
 				"?,?,?,?,?," +
-				"?,?,?)",
-				new Object[]{chatmsgs.getMessageId(),chatmsgs.getClientId(),chatmsgs.getConversationId(),chatmsgs.getChatMsgType(),chatmsgs.getChatMsgDirection(),
+				"?,?,?,?)",
+				new Object[]{chatmsgs.getUid(),chatmsgs.getMessageId(),chatmsgs.getClientId(),chatmsgs.getConversationId(),chatmsgs.getChatMsgType(),chatmsgs.getChatMsgDirection(),
 				chatmsgs.getChatMsgStatus(),chatmsgs.getIsShowTime(),chatmsgs.getSendTimeStamp(),chatmsgs.getDeliveredTimeStamp(),chatmsgs.getContent(),
 				chatmsgs.getImgMsgImageUrl(),chatmsgs.getImgMsgImageWidth(),chatmsgs.getImgMsgImageHeight(),chatmsgs.getNowJoinUserId(),chatmsgs.getNotificationBaseContent(),
 				chatmsgs.getNotificationActyContent(),chatmsgs.getNotificationActyTitle(),chatmsgs.getNotificationActyTitleSub()});

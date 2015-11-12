@@ -108,6 +108,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		sb3.append("create table if not exists ");
 		sb3.append(TBL_CHATMSGS+"(");
 		sb3.append( TBL_CHATMSGS_MESSAGE_CACHE_ID+" integer primary key autoincrement ,");
+		sb3.append(Constants.USERID+ " varchar(100) ,");
 		sb3.append(TBL_CHATMSGS_MESSAGE_ID+" varchar(100) , ");
 		sb3.append(TBL_CHATMSGS_CLIENT_ID+" varchar(100) , ");
 		sb3.append(TBL_CHATMSGS_CONVERSATION_ID+" varchar(100) , ");		
@@ -136,6 +137,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		sb4.append("create table if not exists ");
 		sb4.append(TBL_MESSAGES+"(");
 		sb4.append(TBL_MESSAGES_CACHEID+ " integer primary key autoincrement ,");
+		sb4.append(Constants.USERID+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_CONVERSATION_ID+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_CONVERSATION_TYPE+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_CREATOR_ID+ " varchar(100) ,");
