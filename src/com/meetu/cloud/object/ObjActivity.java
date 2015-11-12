@@ -127,11 +127,11 @@ public class ObjActivity extends AVObject implements Serializable{
 	public String getLocationPlace() {
 		return this.getString(LOCATIONPLACE);
 	}
-	public int getLocationLongitude() {
-		return this.getInt(LOCATIONLONGITUDE);
+	public long getLocationLongitude() {
+		return this.getLong(LOCATIONLONGITUDE);
 	}
-	public int getLocationLatitude() {
-		return this.getInt(LOCATIONLATITUDE);
+	public long getLocationLatitude() {
+		return this.getLong(LOCATIONLATITUDE);
 	}
 	public String getLocationTitle() {
 		return this.getString(LOCATIONTITLE);

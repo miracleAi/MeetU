@@ -6,9 +6,12 @@ import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMMessageHandler;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
+import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
+import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 public class TestReceiveMsg extends Activity{
@@ -47,7 +50,16 @@ public class TestReceiveMsg extends Activity{
 			// TODO Auto-generated method stub
 			super.onMessage(message, conversation, client);
 			//接收消息界面更新，插入数据库
-			textIv.setText(message.getContent());
+			Log.d("mytest", "jieshou"+message.getContent());
+			if(message instanceof AVIMTextMessage){
+				String text = ((AVIMTextMessage)message).getText();
+				textIv.setText(text);
+				return;
+			}
+			if(message instanceof AVIMImageMessage){
+				String url = ((AVIMImageMessage)message).getFileUrl();
+				urlTv.setText(url);
+			}
 		}
 		@Override
 		public void onMessageReceipt(AVIMMessage message,
