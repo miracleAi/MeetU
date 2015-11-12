@@ -48,8 +48,8 @@
 
                         <ImageView
                             android:id="@+id/mine_btn_profile_iv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="85dp"
+                            android:layout_height="85dp"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="84dp"
                             android:src="@drawable/mine_btn_profile" />

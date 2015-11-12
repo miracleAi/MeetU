@@ -115,37 +115,19 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/imageView3"
-        android:text="填写全称,可能会更快遇到TA"
+        android:text="选择专业"
         android:textColor="#da33c6e5"
         android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/bottom_changeMajor_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textView2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:text="真诚以待 以个人信息开始"
-        android:textColor="#bfbfbf"
-        android:textSize="12sp" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:text="Meet U致力打造轻松健康有趣的社交平台"
-        android:textColor="#bfbfbf"
-        android:textSize="12sp" />
-    
-    <ListView android:id="@+id/listview_changeMajor"
+    <ListView 
+        android:id="@+id/listview_changeMajor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tip_changeMajor_tv"
-        android:layout_above="@id/bottom_changeMajor_tv"
-        />
+        android:cacheColorHint="#00000000"
+        android:fadingEdge="none"
+        android:divider="@null"
+        android:listSelector="@android:color/transparent"
+       android:scrollingCache="false"
+        android:layout_below="@id/tip_changeMajor_tv" />
 
 </RelativeLayout>
