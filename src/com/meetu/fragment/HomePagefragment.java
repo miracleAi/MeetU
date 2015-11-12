@@ -187,6 +187,8 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 							bean.setIndex(0);
 							bean.setIsFavor(0);
 							bean.setOrderAndFollow(0);
+							bean.setLocationLatitude(activity.getLocationLatitude());
+							bean.setLocationLongtitude(activity.getLocationLongitude());
 							actyList.add(bean);
 						
 					}

@@ -96,7 +96,7 @@ public class HomePageDetialActivity extends Activity
 		activityBean= (ActivityBean) bundle.getSerializable("activityBean");
 //		objActivity=(ObjActivity) bundle.getSerializable("objActivity");
 		
-		
+		log.e("zcq", "activityBean"+activityBean.getLocationLongtitude()+"   "+activityBean.getLocationLatitude());
 		initLoadActivity(activityBean.getActyId());
 		initView();
 //		startPlay();

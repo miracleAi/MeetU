@@ -12,7 +12,7 @@ import android.text.StaticLayout;
 
 public class MySqliteDBHelper extends SQLiteOpenHelper {
 	
-	private static final int VERSION=4;
+	private static final int VERSION=1;
 	
 	private static final String TBL_CHANNEL="channel";
 	private static final String TBL_CHANNEL_COLUMN_ID="_id";
@@ -192,7 +192,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		activitySb.append(Constants.ACTIVITYINDEX+ " integer ,");
 		activitySb.append(Constants.LOCATIONLONGTITUDE+ " integer ,");
 		activitySb.append(Constants.LOCATIONLATITUDE+ " integer ,");
-		activitySb.append(Constants.CONVERSATIONID+ " varchar(100) ");
+		activitySb.append(Constants.CONVERSATIONID+ " varchar(100) ,");
 		activitySb.append(Constants.ISCACHEFLAG+ " varchar(100) ");
 		activitySb.append(")");
 		db.execSQL(activitySb.toString());
