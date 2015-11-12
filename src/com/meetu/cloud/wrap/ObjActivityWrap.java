@@ -129,4 +129,18 @@ public class ObjActivityWrap {
 			}
 		});
 	}
+	/**
+	 * 根据ID生成activity对象
+	 * */
+	public static  ObjActivity getActivityById(String id){
+		ObjActivity activity = null;
+		try {
+			activity = AVObject.createWithoutData(ObjActivity.class, id);
+			activity.fetchIfNeeded();
+		} catch (AVException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return activity;
+	}
 }
