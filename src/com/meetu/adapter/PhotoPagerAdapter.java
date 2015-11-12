@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import com.lidroid.xutils.BitmapUtils;
 import com.meetu.R;
 import com.meetu.activity.homepage.HomePageDetialActivity;
+import com.meetu.cloud.object.ObjActivityCover;
 import com.meetu.cloud.object.ObjActivityPhoto;
 import com.meetu.entity.PhotoWall;
 import com.meetu.entity.Photolunbo;
@@ -25,11 +26,11 @@ import android.widget.TextView;
 
 public class PhotoPagerAdapter extends PagerAdapter {
 	private Context  mContext;
-	private List<ObjActivityPhoto> Newslist;
+	private List<ObjActivityCover> Newslist;
 	private BitmapUtils bitmapUtils;
 	
 	
-	public PhotoPagerAdapter(Context context, List<ObjActivityPhoto> list) {
+	public PhotoPagerAdapter(Context context, List<ObjActivityCover> list) {
 		super();
 		this.mContext = context;
 		this.Newslist = list;
@@ -62,13 +63,13 @@ public class PhotoPagerAdapter extends PagerAdapter {
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		// TODO Auto-generated method stub
-		ObjActivityPhoto item=Newslist.get(position % Newslist.size());
+		ObjActivityCover item=Newslist.get(position % Newslist.size());
 		View view = LayoutInflater.from(mContext).inflate(R.layout.item_photolunbo_detial,null);
 		ImageView img=(ImageView)view.findViewById(R.id.photo_lunbo_item_homepage_img);
 //		finalBitmap.display(img,news.getImgurl());
 //		img.setImageResource(item.getImg());
 		
-		bitmapUtils.display(img, item.getPhoto().getUrl());
+		bitmapUtils.display(img, item.getCover().getUrl());
 		
 		//View view2=LayoutInflater.from(mContext).inflate(R.layout.photo_desc_item_layout, null);
 		

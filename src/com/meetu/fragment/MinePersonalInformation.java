@@ -68,7 +68,7 @@ public class MinePersonalInformation extends Fragment implements OnClickListener
 		if(view==null){
 			view=inflater.inflate(R.layout.fragment_mine_personal_information, null);
 			
-			//initView();
+			initView();
 		}
 		ViewGroup parent=(ViewGroup)view.getParent();
 		if(parent!=null){
