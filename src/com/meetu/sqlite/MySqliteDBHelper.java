@@ -190,6 +190,8 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		activitySb.append(Constants.LOCATIONGOVERNMENT+ " varchar(100) ,");
 		activitySb.append(Constants.TIMESTOP+ " integer ,");
 		activitySb.append(Constants.ACTIVITYINDEX+ " integer ,");
+		activitySb.append(Constants.LOCATIONLONGTITUDE+ " integer ,");
+		activitySb.append(Constants.LOCATIONLATITUDE+ " integer ,");
 		activitySb.append(Constants.CONVERSATIONID+ " varchar(100) ");
 		activitySb.append(Constants.ISCACHEFLAG+ " varchar(100) ");
 		activitySb.append(")");

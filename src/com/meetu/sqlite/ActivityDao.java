@@ -42,6 +42,8 @@ public class ActivityDao {
 			cv.put(Constants.LOCATIONADDRESS, bean.getLocationAddress());
 			cv.put(Constants.LOCATIONPLACE, bean.getLocationPlace());
 			cv.put(Constants.LOCATIONGOVERNMENT, bean.getLocationGovernment());
+			cv.put(Constants.LOCATIONLATITUDE, bean.getLocationLatitude());
+			cv.put(Constants.LOCATIONLONGTITUDE, bean.getLocationLongtitude());
 			cv.put(Constants.CONVERSATIONID, bean.getConversationId());
 			sdb.insert(Constants.ACTIVITY_CACHE_TB, null, cv);
 		}
@@ -89,6 +91,8 @@ public class ActivityDao {
 			bean.setTitleSub(cursor.getString(cursor.getColumnIndex(Constants.TITLESUB)));
 			bean.setTimeStop(cursor.getLong(cursor.getColumnIndex(Constants.TIMESTOP)));
 			bean.setLocationGovernment(cursor.getString(cursor.getColumnIndex(Constants.LOCATIONGOVERNMENT)));
+			bean.setLocationLatitude(cursor.getLong(cursor.getColumnIndex(Constants.LOCATIONLATITUDE)));
+			bean.setLocationLongtitude(cursor.getLong(cursor.getColumnIndex(Constants.LOCATIONLONGTITUDE)));
 			bean.setConversationId(cursor.getString(cursor.getColumnIndex(Constants.CONVERSATIONID)));
 			bean.setIndex(cursor.getInt(cursor.getColumnIndex(Constants.ACTIVITYINDEX)));
 			bean.setIsFavor(cursor.getInt(cursor.getColumnIndex(Constants.ISACTIVITYPRAISE)));

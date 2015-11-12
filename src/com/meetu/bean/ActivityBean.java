@@ -54,12 +54,32 @@ public class ActivityBean implements Serializable {
 	private String locationPlace;
 	//  活动举办地的行政地址（只读）
 	private String locationGovernment;
+	//活动经度
+	private long locationLongtitude;
+	//活动纬度
+	private long locationLatitude;
 	//  活动结束时间（UNIX时间戳，毫秒）（只读）
 	private long timeStop;
 	//  活动群聊的对话ID（只读）
 	String conversationId;
 	//index标记是插入的第几条活动
 	private int index;
+
+	public long getLocationLongtitude() {
+		return locationLongtitude;
+	}
+
+	public void setLocationLongtitude(long locationLongtitude) {
+		this.locationLongtitude = locationLongtitude;
+	}
+
+	public long getLocationLatitude() {
+		return locationLatitude;
+	}
+
+	public void setLocationLatitude(long locationLatitude) {
+		this.locationLatitude = locationLatitude;
+	}
 
 	public int getIndex() {
 		return index;

@@ -70,14 +70,13 @@ public class MyApplication extends Application {
 					// TODO Auto-generated method stub
 					if(e != null){
 						isChatLogin = false;
-						log.d("mytest", " login fail");
 						return ;
 					}
 					chatClient = client;
 					isChatLogin = true;
-					log.d("mytest", " login suc");
 				}
 			});
 		} 
+		AVIMMessageManager.registerDefaultMessageHandler(new DefaultMessageHandler());
 	}
 }

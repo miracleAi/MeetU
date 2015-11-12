@@ -1,5 +1,7 @@
 package com.meetu.cloud.wrap;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,6 +25,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationMemberCountCallback;
+import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.cloud.callback.ObjAuthoriseCategoryCallback;
@@ -157,7 +160,7 @@ public class ObjChatMessage {
 		});
 	}
 	/**
-	 * 发送消息
+	 * 发送文本消息
 	 * @param conversation
 	 * @param message
 	 */
@@ -181,18 +184,40 @@ public class ObjChatMessage {
 		});
 
 	}
-	/**接收消息处理
-	 * 
-	 * @author meetu
-	 *
+	/**
+	 * 发送图片消息
+	 * @param conversation
+	 * @param message
 	 */
-	class ReceiveMsgHandler extends AVIMMessageHandler{
-		@Override
-		public void onMessage(AVIMMessage message,
-				AVIMConversation conversation, AVIMClient client) {
-			// TODO Auto-generated method stub
-			super.onMessage(message, conversation, client);
-		}  
+	public void sendPicMsg(AVIMConversation conversation,String path,final ObjFunBooleanCallback callback){
+		try {
+			AVIMImageMessage picture = new AVIMImageMessage(path);
+			conversation.sendMessage(picture, new AVIMConversationCallback() {
+				
+				@Override
+				public void done(AVIMException e) {
+					// TODO Auto-generated method stub
+					if (e == null) {
+						//发送成功
+						callback.callback(true, null);
+					}else{
+						callback.callback(false, e);
+					}
+				}
+			});
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * 获取聊天记录
+	 */
+	public static void getHistoryMsg(){
+		
 	}
 	/**注销聊天
 	 * 

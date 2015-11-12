@@ -67,7 +67,6 @@ public class TestMsgActivity extends Activity{
 	private static final String LOADING = "loading";
 	private static final String UPLOADPIC = "uploadPic";
 	private static final String SAVEGROUP = "saveGroup";
-	private static final String CREATEGROUP = "createGroup";
 	private static final String GETCHAT = "getChat";
 	private static final String JOINGROUP = "joinGroup";
 	private static final String CHATLOGOUT = "chatLogout";
@@ -75,6 +74,7 @@ public class TestMsgActivity extends Activity{
 	private static final String MEMEBERS = "getMembers";
 	private static final String MEMBERINFO = "memberInfo";
 	private static final String SENDMSG = "sendmsg";
+	private static final String SENDPICMSG = "sendPicmsg";
 	ImageView upImg;
 	Button clickBtn;
 	TextView countTv,infoTv;
@@ -126,7 +126,7 @@ public class TestMsgActivity extends Activity{
 		//clickBtn.setText(CHATLOGOUT);
 		//clickBtn.setText(JOINGROUP);
 		//clickBtn.setText(MEMBERCOUNT);
-		clickBtn.setText(SENDMSG);
+		clickBtn.setText(SENDPICMSG);
 		clickBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -164,18 +164,18 @@ public class TestMsgActivity extends Activity{
 					clickBtn.setText(LOADING);
 					createGroup();
 				}
-				if(clickBtn.getText().toString().equals(CREATEGROUP)){
+				/*if(clickBtn.getText().toString().equals(CREATEGROUP)){
 					//创建群聊：上传群照片，创建群，群信息插入觅聊表
 					clickBtn.setText(LOADING);
 					createChat();
-				}
+				}*/
 				if(clickBtn.getText().toString().equals(SAVEGROUP)){
-					//创建群聊：上传群照片，创建群，群信息插入觅聊表
+					//创建群聊：上传群照片，群信息插入觅聊表
 					clickBtn.setText(LOADING);
 					saveGroupInfo();
 				}
 				if(clickBtn.getText().toString().equals(GETCHAT)){
-					//创建群聊：上传群照片，创建群，群信息插入觅聊表
+					//创建群聊：上传群照片群信息插入觅聊表
 					clickBtn.setText(LOADING);
 					getChatGroup();
 				}
@@ -204,6 +204,11 @@ public class TestMsgActivity extends Activity{
 					clickBtn.setText(LOADING);
 					sendMsg();
 				}
+				if(clickBtn.getText().toString().equals(SENDPICMSG)){
+					//发送信息
+					clickBtn.setText(LOADING);
+					sendMsg();
+				}
 				if(clickBtn.getText().toString().equals(CHATLOGOUT)){
 					clickBtn.setText(LOADING);
 					//退出聊天登录
@@ -212,10 +217,29 @@ public class TestMsgActivity extends Activity{
 			}
 		});
 	}
-	AVIMConversation conv = MyApplication.chatClient.getConversation("561dfd8460b22ed7ca5c3802");
+	AVIMConversation conv = MyApplication.chatClient.getConversation("5644076600b0c060f9704638");
 	//发送信息
 	public void sendMsg(){
 		ObjChatMessage.sendChatMsg(conv, "你好", new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOADFAIL);
+					return ;
+				}
+				if(result){
+					clickBtn.setText(LOADSUC);
+				}else{
+					clickBtn.setText(LOADFAIL);
+				}
+			}
+		});
+	}
+	//发送图片消息
+	public void sendPicmsg(){
+		ObjChatMessage.sendChatMsg(conv, fPath, new ObjFunBooleanCallback() {
 			
 			@Override
 			public void callback(boolean result, AVException e) {
@@ -260,7 +284,7 @@ public class TestMsgActivity extends Activity{
 
 				}
 				if(MyApplication.isChatLogin){
-					clickBtn.setText(CREATEGROUP);
+					clickBtn.setText(SAVEGROUP);
 				}else{
 					ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
 
@@ -273,7 +297,7 @@ public class TestMsgActivity extends Activity{
 							}
 							if(client != null){
 								MyApplication.chatClient = client;
-								clickBtn.setText(CREATEGROUP);
+								clickBtn.setText(SAVEGROUP);
 							}else{
 								clickBtn.setText(LOADFAIL);
 							}
@@ -283,8 +307,8 @@ public class TestMsgActivity extends Activity{
 			}
 		});
 	}
-	//创建会话
-	public void createChat(){
+	//创建会话,已改为后台创建
+	/*public void createChat(){
 		ObjChatMessage.createChat(MyApplication.chatClient, Arrays.asList(user.getObjectId()), "chat", new ObjCoversationCallback() {
 
 			@Override
@@ -302,14 +326,14 @@ public class TestMsgActivity extends Activity{
 				}
 			}
 		});
-	}
+	}*/
 	//保存群信息
 	public void saveGroupInfo(){
 		if(chatConversation == null){
 			clickBtn.setText(LOADFAIL);
 			return;
 		}
-		ObjChatWrap.saveGroupInfo(user, groupf, "zlp_hello", chatConversation.getConversationId(), new ObjFunBooleanCallback() {
+		ObjChatWrap.saveGroupInfo(user, groupf, "zlp_hello", new ObjFunBooleanCallback() {
 
 			@Override
 			public void callback(boolean result, AVException e) {

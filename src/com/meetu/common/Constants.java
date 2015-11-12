@@ -86,6 +86,10 @@ public class Constants {
 	public static final String LOCATIONPLACE = "location_place";
 	//活动行政地址
 	public static final String LOCATIONGOVERNMENT = "location_government";
+	//活动经度
+	public static final String LOCATIONLONGTITUDE = "location_longtitude";
+	//活动纬度
+	public static final String LOCATIONLATITUDE = "location_latitude";
 	//活动结束时间
 	public static final String TIMESTOP = "time_stop";
 	//活动群聊ID

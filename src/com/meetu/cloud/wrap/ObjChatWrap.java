@@ -15,12 +15,11 @@ import com.meetu.cloud.object.ObjUser;
 
 public class ObjChatWrap {
 	//保存觅聊信息
-	public static void saveGroupInfo(ObjUser user,AVFile file,String title,String conversation,final ObjFunBooleanCallback callback){
+	public static void saveGroupInfo(ObjUser user,AVFile file,String title,final ObjFunBooleanCallback callback){
 		ObjChat chat = new ObjChat();
 		chat.setUser(user);
 		chat.setChatPicture(file);
 		chat.setChatTitle(title);
-		chat.setConversationId(conversation);
 		long stopTime = System.currentTimeMillis()+24*3600*1000;
 		chat.setTimeChatStop(stopTime);
 		chat.saveInBackground(new SaveCallback() {
