@@ -45,7 +45,7 @@ public class ActivityDao {
 			cv.put(Constants.LOCATIONLATITUDE, bean.getLocationLatitude());
 			cv.put(Constants.LOCATIONLONGTITUDE, bean.getLocationLongtitude());
 			cv.put(Constants.CONVERSATIONID, bean.getConversationId());
-			sdb.insert(Constants.ACTIVITY_CACHE_TB, null, cv);
+			sdb.insert(Constants.ACTIVITY_CACHE_TB, null, cv);    
 		}
 		sdb.close();
 	}

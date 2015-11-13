@@ -97,10 +97,11 @@ public class MyApplication extends Application {
 					}
 					chatClient = client;
 					isChatLogin = true;
+					//AVIMMessageManager.setConversationEventHandler(DefaultMemberHandler.class);
+					AVIMMessageManager.registerDefaultMessageHandler(new DefaultMessageHandler());
 				}
 			});
 		} 
-		AVIMMessageManager.registerDefaultMessageHandler(new DefaultMessageHandler());
 	}
 	public FinalBitmap getFinalBitmap() {
 		// TODO Auto-generated method stub
