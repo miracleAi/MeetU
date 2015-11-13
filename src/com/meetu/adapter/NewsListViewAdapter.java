@@ -18,33 +18,49 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogUtil.log;
 import com.lidroid.xutils.BitmapUtils;
 import com.meetu.R;
 import com.meetu.bean.ActivityBean;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjActivity;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjActivityPhotoWrap;
+import com.meetu.cloud.wrap.ObjPraiseWrap;
 import com.meetu.common.ImageLoader;
 import com.meetu.entity.Huodong;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.ActivityDao;
 import com.meetu.tools.DateUtils;
 import com.meetu.tools.DensityUtil;
 
 
 @SuppressLint("NewApi")
-public class NewsListViewAdapter  extends BaseAdapter implements OnClickListener {
+public class NewsListViewAdapter  extends BaseAdapter{
 
 	private Context mContext;
 	private List<ActivityBean> newsList;	
 	private ImageLoader mImageLoader;
 	
-	private final int TYPE_COUNT=2;
+	private final int TYPE_COUNT=4;
 	private FinalBitmap finalBitmap;
 	//网络相关
 	private BitmapUtils bitmapUtils;
+	//网络数据相关
+	AVUser currentUser = AVUser.getCurrentUser();
+	//当前用户
+	ObjUser user = new ObjUser();
+	ActivityDao activityDao;
+	private ObjActivity objActivity= null;
 	public NewsListViewAdapter(Context context,List<ActivityBean> newsList){
 		this.mContext=context;
 		this.newsList=newsList;
@@ -52,25 +68,35 @@ public class NewsListViewAdapter  extends BaseAdapter implements OnClickListener
 		bitmapUtils=new BitmapUtils(mContext);
 		MyApplication app=(MyApplication) context.getApplicationContext();
 		finalBitmap=app.getFinalBitmap();
-//		NewsApplication app=(NewsApplication)context.getApplicationContext();
-//		fianlBitmap=app.getFinalBitmap();
+		activityDao=new ActivityDao(mContext);
+		
+		 if (currentUser != null) {
+				//强制类型转换
+				user = AVUser.cast(currentUser, ObjUser.class);
+		 }
 	}
-	/**
-	 * 活动状态 style
-	 *  1 表示进行中 2表示已结束
-	 */
-//	@Override
-//	public int getItemViewType(int position) {
-//		
-//		// TODO Auto-generated method stub
-//		return newsList!=null?newsList.get(position).getStyle():-1;
-//	}
+	//设置点赞回调
+	public interface OnItemImageFavorClickCallBack {
+		//点赞
+		void onItemImageFavorClick(int position);
+		//取消点赞
+		void onItemCancleImageFavorClick(int position);
+
+	}
+	private OnItemImageFavorClickCallBack onItemImageFavorClickCallBack;
+	
+	
+	public void setOnItemImageFavorClickCallBack(OnItemImageFavorClickCallBack onItemImageFavorClickCallBack){
+		this.onItemImageFavorClickCallBack=onItemImageFavorClickCallBack;
+	}
+	
+
 	/**
 	 * 
 	 */
 	@Override
 	public int getViewTypeCount() {
-		// TODO Auto-generated method stub
+		
 		return TYPE_COUNT;
 	}
 
@@ -80,33 +106,33 @@ public class NewsListViewAdapter  extends BaseAdapter implements OnClickListener
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
+		
 		Log.d("lucifer","getCount()");
-//		return newsList.size();
+
 		return newsList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		// TODO Auto-generated method stub
+		
 		Log.d("lucifer","getItem()");
 		return newsList.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
+		
 		Log.d("lucifer","getItemId()");
 		return position;
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 	
 		
-		ViewHolder holder=null;
-		ActivityBean item=newsList.get(position);
-		
+		final ViewHolder holder;
+		final ActivityBean item=newsList.get(position);
+		initLoadActivity(item.getActyId());
 		if(convertView==null){
 			holder=new ViewHolder();
 			convertView=LayoutInflater.from(mContext).inflate(R.layout.item_huodong_fragment, null);
@@ -116,6 +142,8 @@ public class NewsListViewAdapter  extends BaseAdapter implements OnClickListener
 			holder.topRl=(RelativeLayout) convertView.findViewById(R.id.top_homepage_item);
 			holder.tvAdress=(TextView) convertView.findViewById(R.id.address_huodong_homepage_tv);
 			holder.tvStarTime=(TextView) convertView.findViewById(R.id.starttime_huodong_homepager_tv);
+			holder.favourImg=(ImageView) convertView.findViewById(R.id.favour_hongdong_fragment_img);
+			holder.praiseCount=(TextView) convertView.findViewById(R.id.praiseCount_huodong_fragment_tv);
 			convertView.setTag(holder);
 		}else{
 			holder=(ViewHolder)convertView.getTag();
@@ -137,25 +165,78 @@ public class NewsListViewAdapter  extends BaseAdapter implements OnClickListener
 		holder.tvTilte.setText(item.getTitle());
 		holder.tvAdress.setText(item.getLocationAddress());
 		holder.tvStarTime.setText(DateUtils.getDateToString(item.getTimeStart()));
+		holder.praiseCount.setText(""+item.getPraiseCount());
 		
 //		long nowTime=System.currentTimeMillis();
 		holder.styleTextView.setText(ObjActivity.getStatusStr(item.getStatus()));
 		if(item.getStatus()==70){
 			holder.topRl.setBackgroundResource(R.drawable.acty_cover_card_img_mask);
 		}
-//		if(item.getStyle()==1){
-//			holder.styleTextView.setText("活动进行中");
-//		}if(item.getStyle()==2){
-//			holder.styleTextView.setText("活动已结束");
-//			holder.topRl.setBackgroundResource(R.drawable.acty_cover_card_img_mask);
-//		}
+		if(item.getIsFavor()==0){
+			holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
+		}else{
+			holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+		}
+		holder.favourImg.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				if(item.getIsFavor()==0){
+					holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+					onItemImageFavorClickCallBack.onItemImageFavorClick(position);
+				}else{
+					holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
+					onItemImageFavorClickCallBack.onItemCancleImageFavorClick(position);
+				}
+				
+				
+//				if(item.getIsFavor()==0){
+////					holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+//					//修改云端
+//					ObjPraiseWrap.praiseActivity(user, objActivity, new ObjFunBooleanCallback() {
+//						
+//						@Override
+//						public void callback(boolean result, AVException e) {
+//							// TODO Auto-generated method stub
+//							if(e!=null||result==false){
+//								Toast.makeText(mContext, "点赞失败，请检查网络", 1000).show();
+//							}else{
+//								//插入到本地数据库    成功
+//								activityDao.updateIsFavor(user.getObjectId(), item.getActyId(), 1);	
+//								Toast.makeText(mContext, "点赞成功", 1000).show();
+//							}
+//						}
+//					});
+//				
+//				}else{
+//					activityDao.updateIsFavor(user.getObjectId(), item.getActyId(), 0);
+//					//修改云端
+//					ObjPraiseWrap.cancelPraiseActivity(user, objActivity, new ObjFunBooleanCallback() {
+//						
+//						@Override
+//						public void callback(boolean result, AVException e) {
+//							if(e!=null||result==false){
+//								Toast.makeText(mContext, "取消失败，请检查网络", 1000).show();
+//							}else{
+//								//插入到本地数据库    成功
+//								activityDao.updateIsFavor(user.getObjectId(), item.getActyId(), 1);
+//								Toast.makeText(mContext, "点赞成功", 1000).show();
+////								holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+//							}
+//						}
+//					});
+//				}
+				
+			}
+		});
+
 		
 		
 		return convertView;
 	}
 	
 	
-	private class ViewHolder{
+	public class ViewHolder{
 		private TextView tvTilte;
 		private TextView tvDigest;
 		private TextView tvReply;
@@ -166,14 +247,29 @@ public class NewsListViewAdapter  extends BaseAdapter implements OnClickListener
 		private RelativeLayout topRl;
 		private TextView tvAdress;//活动地址
 		private TextView tvStarTime;
+		private ImageView favourImg;//点赞图片
+		private TextView praiseCount;//点赞数量
 	}
 
 
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
+	/**
+	 * 获得活动的activity
+	 * @param activityId  
+	 * @author lucifer
+	 * @date 2015-11-13
+	 */
+	private void initLoadActivity(String activityId) {
+		log.e("zcq", "activityId=="+activityId);
+			try {
+				 objActivity=AVObject.createWithoutData(ObjActivity.class, activityId);
 
-	}
+			} catch (AVException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+
 	
 
 

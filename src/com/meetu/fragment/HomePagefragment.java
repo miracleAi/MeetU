@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.meetu.R;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -14,6 +15,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.meetu.activity.homepage.HomePageDetialActivity;
 import com.meetu.activity.homepage.JoinUsersActivity;
 import com.meetu.adapter.NewsListViewAdapter;
+import com.meetu.adapter.NewsListViewAdapter.OnItemImageFavorClickCallBack;
 import com.meetu.bean.ActivityBean;
 import com.meetu.cloud.callback.ObjActivityCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
@@ -90,14 +92,15 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 	//当前用户
 	ObjUser user = new ObjUser();
 	ActivityDao actyDao;
+	ActivityDao activityDao;
 	private List<ActivityBean> actyListCache=new ArrayList<ActivityBean>();
 	
-	
+	private ObjActivity objActivity= null;
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
-		
+		activityDao=new ActivityDao(getActivity());
 		pingHight=DisplayUtils.getWindowHeight(getActivity());
 		actyDao=new ActivityDao(getActivity());
 	}
@@ -120,6 +123,57 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 			 }
 			
 			 adapter=new NewsListViewAdapter(super.getActivity(),actyListCache);
+			 
+			 //点赞回调   
+			 adapter.setOnItemImageFavorClickCallBack(new OnItemImageFavorClickCallBack() {
+				
+				
+				@Override
+				public void onItemImageFavorClick(final int position) {
+					// TODO Auto-generated method stub
+					initLoadActivity(actyListCache.get(position).getActyId());
+					//修改云端
+					ObjPraiseWrap.praiseActivity(user, objActivity, new ObjFunBooleanCallback() {
+						
+						@Override
+						public void callback(boolean result, AVException e) {
+							// TODO Auto-generated method stub
+							if(e!=null||result==false){
+								Toast.makeText(getActivity(), "点赞失败，请检查网络", 1000).show();
+							}else{
+								//插入到本地数据库    成功
+								activityDao.updateIsFavor(user.getObjectId(), actyListCache.get(position).getActyId(), 1);	
+								Toast.makeText(getActivity(), "点赞成功", 1000).show();
+								adapter.notifyDataSetChanged();
+							}
+						}
+					});
+				}
+				
+				@Override
+				public void onItemCancleImageFavorClick(final int position) {
+					//获取当前activity
+					initLoadActivity(actyListCache.get(position).getActyId());
+					//修改云端
+					ObjPraiseWrap.cancelPraiseActivity(user, objActivity, new ObjFunBooleanCallback() {
+						
+						@Override
+						public void callback(boolean result, AVException e) {
+							if(e!=null||result==false){
+								Toast.makeText(getActivity(), "取消失败，请检查网络", 1000).show();
+							}else{
+								//插入到本地数据库    成功
+								activityDao.updateIsFavor(user.getObjectId(), actyListCache.get(position).getActyId(), 1);
+								Toast.makeText(getActivity(), "点赞成功", 1000).show();
+//								holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+								adapter.notifyDataSetChanged();
+							}
+						}
+					});
+					
+				}
+			});
+			 
 			 lvNewsList.setAdapter(adapter);
 			 lvNewsList.setMode(Mode.BOTH);
 			 lvNewsList.setOnRefreshListener(this);
@@ -422,7 +476,24 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 		}
 		
 	}
-	
+
+	/**
+	 * 获得活动的activity
+	 * @param activityId  
+	 * @author lucifer
+	 * @date 2015-11-13
+	 */
+	public void initLoadActivity(String activityId) {
+		log.e("zcq", "activityId=="+activityId);
+			try {
+				 objActivity=AVObject.createWithoutData(ObjActivity.class, activityId);
+
+			} catch (AVException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 	 
 
 }

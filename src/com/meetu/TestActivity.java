@@ -419,7 +419,7 @@ public class TestActivity extends Activity{
 					/**
 					 * 此处执行更新活动信息点赞字段
 					 * */
-					actyDao.updateIsFavor(user.getObjectId(), 0, actyList.get(0).getIsFavor());
+//					actyDao.updateIsFavor(user.getObjectId(), 0, actyList.get(0).getIsFavor());
 				}
 			});
 		}
@@ -575,7 +575,7 @@ public class TestActivity extends Activity{
 					/**
 					 * 此处执行更新活动信息点赞字段
 					 * */
-					actyDao.updateIsFavor(user.getObjectId(), 0, actyList.get(0).getIsFavor());
+//					actyDao.updateIsFavor(user.getObjectId(), 0, actyList.get(0).getIsFavor());
 				}
 			});
 		}
@@ -601,7 +601,7 @@ public class TestActivity extends Activity{
 					/**
 					 * 此处执行更新活动信息点赞字段
 					 * */
-					actyDao.updateIsFavor(user.getObjectId(), 0, actyList.get(0).getIsFavor());
+//					actyDao.updateIsFavor(user.getObjectId(), 0, actyList.get(0).getIsFavor());
 				}
 			});
 		}

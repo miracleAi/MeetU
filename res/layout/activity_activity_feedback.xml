@@ -84,32 +84,32 @@
         android:src="@drawable/acty_feedback_img_trangle" />
 
     <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/photo_head_feedback_img"
+        android:layout_width="31dp"
+        android:layout_height="31dp"
         android:layout_alignLeft="@+id/imageView2"
         android:layout_alignTop="@+id/imageView1"
         android:layout_marginTop="4dp"
         android:src="@drawable/acty_show_img_profile" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/title_feedback_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView3"
+        android:layout_alignBottom="@+id/photo_head_feedback_img"
         android:layout_marginLeft="6dp"
         android:layout_marginBottom="4dp"
-        android:layout_toRightOf="@+id/imageView3"
+        android:layout_toRightOf="@+id/photo_head_feedback_img"
         android:textSize="16sp"
         android:textColor="#ffffff"
         android:text="新疆深度游........" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/time_feedback_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView2"
-        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignBaseline="@+id/title_feedback_tv"
+        android:layout_alignBottom="@+id/title_feedback_tv"
         android:layout_alignRight="@+id/imageView1"
         android:layout_marginRight="10dp"
         android:textSize="16sp"
@@ -117,11 +117,11 @@
         android:text="2015/10/10" />
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/content_feedback_et"
         android:layout_width="280dp"
         android:layout_height="190dp"
-        android:layout_alignLeft="@+id/imageView3"
-        android:layout_below="@+id/imageView3"
+        android:layout_alignLeft="@+id/photo_head_feedback_img"
+        android:layout_below="@+id/photo_head_feedback_img"
         android:layout_marginTop="20dp"
         android:textSize="15sp"
         android:gravity="left|top"

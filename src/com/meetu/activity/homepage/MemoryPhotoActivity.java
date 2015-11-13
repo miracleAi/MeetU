@@ -61,6 +61,7 @@ public class MemoryPhotoActivity extends Activity implements OnPageChangeListene
 		setContentView(R.layout.activity_memory_photo);
 		itemid = super.getIntent().getStringExtra("id");
 		objphotoList=(List<ObjActivityPhoto>) getIntent().getExtras().getSerializable("ObjActivityPhoto");
+		log.e("lucifer","objphotoList"+objphotoList.size());
 		id=Integer.parseInt(itemid);
 		initView();
 	}
@@ -71,6 +72,7 @@ public class MemoryPhotoActivity extends Activity implements OnPageChangeListene
 		adapter=new MemoryPhotoAdapter(this, objphotoList);
 		viewPager.setAdapter(adapter);
 		viewPager.setOnPageChangeListener(this);
+		
 		viewPager.setCurrentItem(id);
 		
 		favor=(ImageView) super.findViewById(R.id.favor_memory_detial);

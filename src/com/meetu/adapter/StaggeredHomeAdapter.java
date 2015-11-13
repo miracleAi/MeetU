@@ -4,17 +4,27 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import net.tsz.afinal.FinalBitmap;
+
 import com.avos.avoscloud.LogUtil.log;
 import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
+import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
+import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 import com.meetu.R;
 import com.meetu.adapter.PhotoWallAdapter.GridViewHeightaListener;
 import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.entity.PhotoWall;
+import com.meetu.myapplication.MyApplication;
+import com.meetu.tools.BitmapChange;
 import com.meetu.tools.DateUtils;
+import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -25,6 +35,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,6 +57,7 @@ public class StaggeredHomeAdapter extends
 	
 	private BitmapUtils bitmapUtils; 
 	private String photoUrl;
+	private FinalBitmap finalBitmap;
 
 	public interface OnItemClickCallBack {
 		void onItemClick(int id);
@@ -64,9 +76,11 @@ public class StaggeredHomeAdapter extends
 		mInflater = LayoutInflater.from(context);
 		this.mPhotos = datas;
 		log.d("mytest", "datas.size()=="+datas.size());
-		width = DisplayUtils.getWindowWidth((Activity)context);
+		width = DisplayUtils.getWindowWidth((Activity)context)-DensityUtil.dip2px(context, 28);
 		mContext=context;
 		bitmapUtils=new BitmapUtils(mContext);
+		MyApplication app=(MyApplication) context.getApplicationContext();
+		finalBitmap=app.getFinalBitmap();
 //		 mHeights = new ArrayList<Integer>();
 //		 if(mDatas!=null && mDatas.size()>0){
 //		 for (int i = 0; i < mDatas.size(); i++)
@@ -95,24 +109,50 @@ public class StaggeredHomeAdapter extends
 	@Override
 	public void onBindViewHolder(final MyViewHolder holder, final int position) {
 		if(mPhotos!=null && mPhotos.size()>0){
-		 LayoutParams lp = holder.ivImg.getLayoutParams();
-//		 lp.height = mHeights.get(position);
-		 lp.width=(width)/2;
-		//
-		 holder.ivImg.setLayoutParams(lp);
-		// 获得屏幕尺寸动态设置
-//				RelativeLayout.LayoutParams lp = 
-//						new RelativeLayout.LayoutParams(width/2-26, LayoutParams.WRAP_CONTENT);
-				
-				 holder.ivImg.setLayoutParams(lp);
+
+
 		
 		ObjUserPhoto item = mPhotos.get(position);
-		
+		//设置第一行的上magin
+		if(position==0||position==1){
+			RelativeLayout.LayoutParams params= (android.widget.RelativeLayout.LayoutParams) holder.rlAll.getLayoutParams();
+			params.topMargin=DensityUtil.dip2px(mContext, 10);
+			holder.rlAll.setLayoutParams(params);
+		}
 		photoUrl=item.getPhoto().getUrl();
 		log.e("lucifer", "photoUrl=="+photoUrl);
-		//使用xutils 框架自带缓存机制设置加载网络图片
-		
-		bitmapUtils.display(holder.ivImg,photoUrl);
+
+		int photoWidth=item.getImageWidth();
+		int photoHight=item.getImageHeight();
+		log.e("lucifer", "photoWidth=="+photoWidth+" photoHight=="+photoHight);
+		int Hight=(int) ((double)photoWidth/(width/2)*(photoHight));
+		log.e("lucifer", "Hight=="+Hight);
+		if(photoWidth>=(width/2)){
+			finalBitmap.display(holder.ivImg, item.getPhoto().getUrl(), width/2, Hight);
+		}else{
+			//处理bitmap 
+			bitmapUtils.display(holder.ivImg, item.getPhoto().getUrl(),new BitmapLoadCallBack<ImageView>() {
+
+				@Override
+				public void onLoadCompleted(ImageView container, String uri,
+						Bitmap bitmap, BitmapDisplayConfig config,
+						BitmapLoadFrom from) {
+					
+					bitmap=BitmapChange.zoomImg(bitmap, width/2);
+					log.e("zcq", "www=== "+bitmap.getWidth()+" hhh==="+bitmap.getHeight());
+					holder.ivImg.setImageBitmap(bitmap);
+				}
+
+				@Override
+				public void onLoadFailed(ImageView arg0, String arg1,
+						Drawable arg2) {
+					// TODO Auto-generated method stub
+					
+				}
+			} );
+			
+		}
+
 		
 		holder.ivFavorNumber.setText(""+item.getPraiseCount());
 		holder.ivViewNumber.setText(""+item.getBrowseCount());

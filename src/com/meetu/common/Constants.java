@@ -56,7 +56,7 @@ public class Constants {
 	 * */
 	//用户ID
 	public static final String USERID = "user_id";
-	//用户ID
+	//活动ID
 	public static final String ACTIVITYID = "activity_id";
 	//是否对活动点赞
 	public static final String ISACTIVITYPRAISE = "is_activity_praise";

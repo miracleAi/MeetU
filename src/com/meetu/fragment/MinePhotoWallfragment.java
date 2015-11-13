@@ -138,22 +138,7 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 		super.setArguments(args);
 	}
 	private void loaddata(){
-//		data=new ArrayList<PhotoWall>();
-//		data.add(new PhotoWall(10,R.drawable.img1_ceshi));
-//		data.add(new PhotoWall(2,R.drawable.img2_ceshi));
-//		data.add(new PhotoWall(3,R.drawable.img3_ceshi));
-//		data.add(new PhotoWall(4,R.drawable.img4_ceshi));
-//		data.add(new PhotoWall(5,R.drawable.img5_ceshi));
-//		data.add(new PhotoWall(5,R.drawable.img1_ceshi));
-//		data.add(new PhotoWall(7,R.drawable.img2_ceshi));
-//		data.add(new PhotoWall(10,R.drawable.img3_ceshi));
-//		data.add(new PhotoWall(12,R.drawable.img4_ceshi));
-//		data.add(new PhotoWall(10,R.drawable.img5_ceshi));
-//		data.add(new PhotoWall(11,R.drawable.img1_ceshi));
-//		data.add(new PhotoWall(12,R.drawable.img2_ceshi));
-//		data.add(new PhotoWall(13,R.drawable.img3_ceshi));
-//		data.add(new PhotoWall(14,R.drawable.img4_ceshi));
-//		data.add(new PhotoWall(15,R.drawable.img5_ceshi));
+
 		
 		ObjUserPhotoWrap.queryUserPhoto(user, new ObjUserPhotoCallback() {
 			

@@ -27,7 +27,7 @@
         android:background="@drawable/acty_cover_card_img_mask" >
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/favour_hongdong_fragment_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -37,13 +37,13 @@
             android:src="@drawable/acty_cardimg_btn_like_hl" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/praiseCount_huodong_fragment_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/imageView2"
+            android:layout_alignBottom="@+id/favour_hongdong_fragment_img"
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/imageView2"
+            android:layout_toRightOf="@+id/favour_hongdong_fragment_img"
             android:text="50"
             android:textColor="#ccffffff"
             android:textSize="14sp" />
@@ -52,7 +52,7 @@
             android:id="@+id/style_homepage_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/textView3"
+            android:layout_alignBottom="@+id/praiseCount_huodong_fragment_tv"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:text="活动进行中"

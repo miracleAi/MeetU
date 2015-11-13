@@ -50,12 +50,12 @@ public class ActivityDao {
 		sdb.close();
 	}
 	//修改活动列表是否点赞项
-	public void updateIsFavor(String userId,int index,int flag){
+	public void updateIsFavor(String userId,String activityId,int flag){
 		SQLiteDatabase sdb=dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(Constants.ISACTIVITYPRAISE, flag);
-		sdb.update(Constants.ACTIVITY_CACHE_TB, values,Constants.USERID+"=? and "+Constants.ACTIVITYINDEX+"=?"
-				,new String[]{userId,Integer.toString(index)});
+		sdb.update(Constants.ACTIVITY_CACHE_TB, values,Constants.USERID+"=? and "+Constants.ACTIVITYID+"=?"
+				,new String[]{userId,activityId});
 		sdb.close();
 	}
 	//修改活动列表关注人数项

@@ -61,7 +61,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 			viewPager.setPageTransformer(true, new MyZoomOutPageTransformer());
 			
 			viewPager.setOnPageChangeListener(this);
-			
+	//		viewPager.setOffscreenPageLimit(3);
 			numberAll=(TextView) view.findViewById(R.id.numberAll_miliao);	
 			numberPosition=(TextView) view.findViewById(R.id.numberPosition_miliao);
 			addLayout=(RelativeLayout) view.findViewById(R.id.add_miliao_rl);

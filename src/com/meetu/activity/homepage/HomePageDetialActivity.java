@@ -301,10 +301,14 @@ switch (v.getId()) {
 		break;
 	case R.id.feedback_homepage_detial_img:
 		Intent intent4=new Intent(this,ActivityFeedbackActivity.class);
+		Bundle bundle4=new Bundle();
+		bundle4.putSerializable("activityBean", activityBean);
+		intent4.putExtras(bundle4);
 		startActivity(intent4);
 		break;
 	case R.id.barrage_homepage_detial_img:
 		Intent intent5=new Intent(this,BarrageActivity.class);
+		
 		startActivity(intent5);
 		break;
 	default :

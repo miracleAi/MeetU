@@ -60,6 +60,7 @@ public class MemoryWallActivity extends Activity implements OnItemClickCallBack,
 				super.getWindow();
 		setContentView(R.layout.activity_memory_wall);
 		activityBean= (ActivityBean) getIntent().getExtras().getSerializable("activityBean");
+		
 		initLoadActivity(activityBean.getActyId());
 		initView();
 	}
@@ -88,42 +89,20 @@ public class MemoryWallActivity extends Activity implements OnItemClickCallBack,
 		barrage=(ImageView) super.findViewById(R.id.barrage_memorywall_img);
 		barrage.setOnClickListener(this);
 	}
-//	private void loaddataUrl() {
-//		data=new ArrayList<PhotoWallTest>();
-//		
-//		PhotoWallTest item=new PhotoWallTest();
-//		for(int i=0;i<Images.imageThumbUrls.length;i++){
-//			
-//			item.setImageURL(Images.imageThumbUrls[i].toString());
-//			data.add(item);
-//		}
-//		
-//		
-//	}
+
 	private void loaddata() {
-//		data=new ArrayList<PhotoWall>();
-//		data.add(new PhotoWall(10,R.drawable.img1_ceshi));
-//		data.add(new PhotoWall(2,R.drawable.img2_ceshi));
-//		data.add(new PhotoWall(3,R.drawable.img3_ceshi));
-//		data.add(new PhotoWall(4,R.drawable.img4_ceshi));
-//		data.add(new PhotoWall(5,R.drawable.img5_ceshi));
-//		data.add(new PhotoWall(5,R.drawable.img1_ceshi));
-//		data.add(new PhotoWall(7,R.drawable.img2_ceshi));
-//		data.add(new PhotoWall(10,R.drawable.img3_ceshi));
-//		data.add(new PhotoWall(12,R.drawable.img4_ceshi));
-//		data.add(new PhotoWall(10,R.drawable.img5_ceshi));
-//		data.add(new PhotoWall(11,R.drawable.img1_ceshi));
-//		data.add(new PhotoWall(12,R.drawable.img2_ceshi));
-//		data.add(new PhotoWall(13,R.drawable.img3_ceshi));
-//		data.add(new PhotoWall(14,R.drawable.img4_ceshi));
-//		data.add(new PhotoWall(15,R.drawable.img5_ceshi));
+
 		
 		ObjActivityPhotoWrap.queryActivityPhotos(objActivity, new ObjActivityPhotoCallback() {
 			
 			@Override
 			public void callback(List<ObjActivityPhoto> objects, AVException e) {
 				// TODO Auto-generated method stub
-				photoList.addAll(objects);
+				
+				if(objects!=null){
+					photoList.addAll(objects);
+				}
+				
 				handler.sendEmptyMessage(1);
 			}
 		});
@@ -135,7 +114,7 @@ public class MemoryWallActivity extends Activity implements OnItemClickCallBack,
 		Intent intent=new Intent(this,MemoryPhotoActivity.class);
 		intent.putExtra("id", ""+id);
 		Bundle bundle=new Bundle();
-//		bundle.putSerializable("ObjActivityPhoto", photoList);
+		bundle.putSerializable("ObjActivityPhoto", (Serializable) photoList);
 		intent.putExtras(bundle);
 		startActivity(intent);
 		

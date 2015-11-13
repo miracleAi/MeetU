@@ -16,8 +16,7 @@
             android:id="@+id/img_item_memorywall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"            
+                
             android:adjustViewBounds="true"
             android:src="@drawable/acty_memorieswall_img_photocard_4" />
 
