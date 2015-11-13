@@ -25,6 +25,9 @@ public class ObjActivityPhotoWrap {
 	public static void queryActivityPhotos(ObjActivity activity,final ObjActivityPhotoCallback callback){
 		AVQuery<ObjActivityPhoto> query = AVObject.getQuery(ObjActivityPhoto.class);
 		query.whereEqualTo("activity", activity);
+		query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
+		//TimeUnit.DAYS.toMillis(1)
+		query.setMaxCacheAge(10*60*1000);
 		query.findInBackground(new FindCallback<ObjActivityPhoto>() {
 			
 			@Override

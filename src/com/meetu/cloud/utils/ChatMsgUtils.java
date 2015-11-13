@@ -77,12 +77,12 @@ public class ChatMsgUtils {
 		}
 	}
 	//设置是否显示消息
-	public static int isShowChatTime(long start){
+	public static boolean isShowChatTime(long start){
 		long t = System.currentTimeMillis() - start;
 		if(t > 60000){
-			return Constants.TIMESHOW;
+			return true;
 		}else{
-			return Constants.TIMESHOWNOT;
+			return false;
 		}
 	}
 }

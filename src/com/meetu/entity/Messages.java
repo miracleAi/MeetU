@@ -23,7 +23,7 @@ public class Messages {
 	private long timeOver;
 	/**
 	 * 用户ID
-	 */
+	 */ 
 	private String scripUserId;
 	/**
 	 * 用户昵称，用于单聊

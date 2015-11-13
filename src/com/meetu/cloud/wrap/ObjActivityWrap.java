@@ -65,8 +65,9 @@ public class ObjActivityWrap {
 		AVQuery<AVObject> query = new AVQuery<AVObject>(ObjTableName.getActivitySignUpTb());
 		query.whereEqualTo("activity", activity);
 		query.whereEqualTo("user", user);
-		query.setMaxCacheAge(TimeUnit.DAYS.toMillis(1));
-		query.setCachePolicy(CachePolicy.CACHE_ELSE_NETWORK);
+		query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
+		//TimeUnit.DAYS.toMillis(1)
+		query.setMaxCacheAge(10*60*1000);
 		query.findInBackground(new FindCallback<AVObject>() {
 
 			@Override

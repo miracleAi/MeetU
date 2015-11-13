@@ -209,7 +209,8 @@ public class ObjUserWrap {
 		AVQuery<ObjUser> query = AVUser.getQuery(ObjUser.class);
 		query.whereEqualTo("objectId", objId);
 		query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
-		query.setMaxCacheAge(TimeUnit.DAYS.toMillis(1));
+		//TimeUnit.DAYS.toMillis(1)
+		query.setMaxCacheAge(10*60*1000);
 		query.getFirstInBackground(new GetCallback<ObjUser>() {
 
 			@Override

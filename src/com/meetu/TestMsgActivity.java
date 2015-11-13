@@ -6,29 +6,44 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
+import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.meetu.cloud.callback.ObjAuthoriseApplyCallback;
 import com.meetu.cloud.callback.ObjAuthoriseCategoryCallback;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
+import com.meetu.cloud.callback.ObjChatBeanCallback;
 import com.meetu.cloud.callback.ObjChatCallback;
 import com.meetu.cloud.callback.ObjCoversationCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunCountCallback;
 import com.meetu.cloud.callback.ObjListCallback;
+import com.meetu.cloud.callback.ObjScripBoxCallback;
+import com.meetu.cloud.callback.ObjScripCallback;
+import com.meetu.cloud.callback.ObjScripInfoCallback;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjAuthoriseApply;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
 import com.meetu.cloud.object.ObjChat;
+import com.meetu.cloud.object.ObjScrip;
+import com.meetu.cloud.object.ObjScripBox;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.utils.ChatMsgUtils;
 import com.meetu.cloud.wrap.ObjAuthoriseWrap;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjChatWrap;
+import com.meetu.cloud.wrap.ObjScriptWrap;
 import com.meetu.cloud.wrap.ObjUserPhotoWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
@@ -75,6 +90,9 @@ public class TestMsgActivity extends Activity{
 	private static final String MEMBERINFO = "memberInfo";
 	private static final String SENDMSG = "sendmsg";
 	private static final String SENDPICMSG = "sendPicmsg";
+	private static final String CREATESCRIP = "createScrip";
+	private static final String GETSCRIPS = "getScrips";
+	private static final String GETSCRIPBOXS = "getScripBoxs";
 	ImageView upImg;
 	Button clickBtn;
 	TextView countTv,infoTv;
@@ -92,6 +110,10 @@ public class TestMsgActivity extends Activity{
 	String yPath = "";
 	//需上传的用户照片
 	Bitmap groupPhoto;
+	//当前小纸条
+	ObjScrip scripCurrent = null;
+	//纸条箱
+	ObjScripBox box = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -126,7 +148,9 @@ public class TestMsgActivity extends Activity{
 		//clickBtn.setText(CHATLOGOUT);
 		//clickBtn.setText(JOINGROUP);
 		//clickBtn.setText(MEMBERCOUNT);
-		clickBtn.setText(SENDPICMSG);
+		//clickBtn.setText(SENDPICMSG);
+		//clickBtn.setText(UPLOADPIC);
+		clickBtn.setText(GETSCRIPBOXS);
 		clickBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -202,26 +226,126 @@ public class TestMsgActivity extends Activity{
 				if(clickBtn.getText().toString().equals(SENDMSG)){
 					//发送信息
 					clickBtn.setText(LOADING);
-					sendMsg();
+					sendMsg(false);
 				}
 				if(clickBtn.getText().toString().equals(SENDPICMSG)){
-					//发送信息
+					//发送图片信息
 					clickBtn.setText(LOADING);
-					sendMsg();
+					sendPicmsg(false);
 				}
 				if(clickBtn.getText().toString().equals(CHATLOGOUT)){
 					clickBtn.setText(LOADING);
 					//退出聊天登录
 					logoutChat();
 				}
+				if(clickBtn.getText().toString().equals(CREATESCRIP)){
+					//创建小纸条
+					clickBtn.setText(LOADING);
+					createScript();
+				}
+				if(clickBtn.getText().toString().equals(GETSCRIPBOXS)){
+					//获取纸条箱
+					clickBtn.setText(LOADING);
+					getScripBoxs();
+				}
+				if(clickBtn.getText().toString().equals(GETSCRIPS)){
+					//获取纸条箱内小纸条
+					clickBtn.setText(LOADING);
+					getScrips(box);
+				}
+			}
+		});
+	}
+	//创建小纸条
+	public void createScript(){
+		ObjUser receiver = null;
+		try {
+			receiver = ObjUser.createWithoutData(ObjUser.class, "55d050e600b0de09f8a0ab89");
+			ObjScrip scrip = new ObjScrip();
+			scrip.setSender(user);
+			scrip.setReceiver(receiver);
+			scrip.setContentImage(groupf);
+			scrip.setContentText("123");
+			List<String> list = new ArrayList<String>();
+			list.add(user.getObjectId());
+			list.add(receiver.getObjectId());
+			scrip.setM(list);
+			ObjScriptWrap.createScrip(scrip, new ObjScripInfoCallback() {
+				
+				@Override
+				public void callback(ObjScrip scrip, AVException e) {
+					// TODO Auto-generated method stub
+					if( e != null){
+						clickBtn.setText(LOADFAIL);
+					}else{
+						clickBtn.setText(LOADSUC);
+						scripCurrent = scrip;
+					}
+				}
+			});
+		} catch (AVException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	//获取所有纸条箱
+	public void getScripBoxs(){
+		ObjScriptWrap.queryScripBox(user, new ObjScripBoxCallback() {
+			
+			@Override
+			public void callback(List<ObjScripBox> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOADFAIL);
+					return ;
+				}
+				if(objects.size()>0){
+					box = objects.get(0);
+					clickBtn.setText(GETSCRIPS);
+				}else{
+					clickBtn.setText(LOADFAIL);
+				}
+			}
+		});
+	}
+	//获取纸条箱内所有小纸条
+	public void getScrips(ObjScripBox box){
+		ObjScriptWrap.queryAllScrip(box, new ObjScripCallback() {
+			
+			@Override
+			public void callback(List<ObjScrip> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					clickBtn.setText(LOADFAIL);
+					return ;
+				}
+				if(objects.size()>0){
+					clickBtn.setText(LOADSUC);
+				}else{
+					clickBtn.setText(LOADFAIL);
+				}
 			}
 		});
 	}
 	AVIMConversation conv = MyApplication.chatClient.getConversation("5644076600b0c060f9704638");
 	//发送信息
-	public void sendMsg(){
-		ObjChatMessage.sendChatMsg(conv, "你好", new ObjFunBooleanCallback() {
-			
+	public void sendMsg(boolean isScrip){
+		AVIMTextMessage msg = new AVIMTextMessage();
+		msg.setText("你好");
+		Map<String, Object> map = null;
+		if(isScrip){
+			map.put(Constants.SCRIP_ID,scripCurrent.getObjectId());
+			map.put(Constants.SCRIP_TYPE, Constants.SCRIPT_MSG);
+			map.put(Constants.SCRIP_X, 500);
+			map.put(Constants.SCRIP_Y, 100);
+		}else{
+			//测试数据，实际为最新一条消息发送时间
+			long l = System.currentTimeMillis() - 10000;
+			map.put(Constants.IS_SHOW_TIME, ChatMsgUtils.isShowChatTime(l));
+		}
+		msg.setAttrs(map);
+		ObjChatMessage.sendChatMsg(conv,msg , new ObjFunBooleanCallback() {
+
 			@Override
 			public void callback(boolean result, AVException e) {
 				// TODO Auto-generated method stub
@@ -238,23 +362,45 @@ public class TestMsgActivity extends Activity{
 		});
 	}
 	//发送图片消息
-	public void sendPicmsg(){
-		ObjChatMessage.sendChatMsg(conv, fPath, new ObjFunBooleanCallback() {
-			
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOADFAIL);
-					return ;
-				}
-				if(result){
-					clickBtn.setText(LOADSUC);
-				}else{
-					clickBtn.setText(LOADFAIL);
-				}
+	public void sendPicmsg(boolean isScrip){
+		AVIMImageMessage msg;
+		try {
+			msg = new AVIMImageMessage(fPath);
+			Map<String, Object> map = null;
+			if(isScrip){
+				map.put(Constants.SCRIP_ID,scripCurrent.getObjectId());
+				map.put(Constants.SCRIP_TYPE, Constants.SCRIPT_MSG);
+				map.put(Constants.SCRIP_X, 500);
+				map.put(Constants.SCRIP_Y, 100);
+			}else{
+				//测试数据，实际为最新一条消息发送时间
+				long l = System.currentTimeMillis() - 10000;
+				map.put(Constants.IS_SHOW_TIME, ChatMsgUtils.isShowChatTime(l));
 			}
-		});
+			msg.setAttrs(map);
+			ObjChatMessage.sendPicMsg(conv, msg, new ObjFunBooleanCallback() {
+
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						clickBtn.setText(LOADFAIL);
+						return ;
+					}
+					if(result){
+						clickBtn.setText(LOADSUC);
+					}else{
+						clickBtn.setText(LOADFAIL);
+					}
+				}
+			});
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 	AVFile groupf = null;
 	//创建群
@@ -284,7 +430,8 @@ public class TestMsgActivity extends Activity{
 
 				}
 				if(MyApplication.isChatLogin){
-					clickBtn.setText(SAVEGROUP);
+					//clickBtn.setText(SAVEGROUP);
+					clickBtn.setText(CREATESCRIP);
 				}else{
 					ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
 
@@ -297,7 +444,8 @@ public class TestMsgActivity extends Activity{
 							}
 							if(client != null){
 								MyApplication.chatClient = client;
-								clickBtn.setText(SAVEGROUP);
+								//clickBtn.setText(SAVEGROUP);
+								clickBtn.setText(CREATESCRIP);
 							}else{
 								clickBtn.setText(LOADFAIL);
 							}
@@ -333,20 +481,16 @@ public class TestMsgActivity extends Activity{
 			clickBtn.setText(LOADFAIL);
 			return;
 		}
-		ObjChatWrap.saveGroupInfo(user, groupf, "zlp_hello", new ObjFunBooleanCallback() {
+		ObjChatWrap.saveGroupInfo(user, groupf, "zlp_hello", new ObjChatBeanCallback() {
 
 			@Override
-			public void callback(boolean result, AVException e) {
+			public void callback(ObjChat object, AVException e) {
 				// TODO Auto-generated method stub
 				if(e != null){
 					clickBtn.setText(LOADFAIL);
 					return ;
 				}
-				if(result){
-					clickBtn.setText(GETCHAT);
-				}else{
-					clickBtn.setText(LOADFAIL);
-				}
+				clickBtn.setText(GETCHAT);
 			}
 		});
 	}

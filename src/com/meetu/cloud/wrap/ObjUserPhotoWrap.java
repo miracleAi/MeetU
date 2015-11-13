@@ -30,6 +30,9 @@ public class ObjUserPhotoWrap {
 		AVQuery<ObjUserPhoto> query = AVObject.getQuery(ObjUserPhoto.class);
 		query.whereEqualTo("user", user);
 		query.orderByDescending("createdAt");
+		query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
+		//TimeUnit.DAYS.toMillis(1)
+		query.setMaxCacheAge(10*60*1000);
 		query.findInBackground(new FindCallback<ObjUserPhoto>() {
 
 			@Override

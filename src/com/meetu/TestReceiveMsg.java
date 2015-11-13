@@ -7,10 +7,7 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMConversationEventHandler;
-import com.avos.avoscloud.im.v2.AVIMMessage;
-import com.avos.avoscloud.im.v2.AVIMMessageHandler;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
-import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
@@ -82,9 +79,8 @@ public class TestReceiveMsg extends Activity{
 		chatBean.setConversationId(msg.getConversationId());
 		chatBean.setChatMsgDirection(ChatMsgUtils.getDerection(msg.getMessageIOType()));
 		chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
-		//此处为测试数据，实际为获取最新一条消息时间
-		long t = System.currentTimeMillis() - 10000;
-		chatBean.setIsShowTime(ChatMsgUtils.isShowChatTime(t));
+		boolean b = (Boolean) msg.getAttrs().get("isShowTime");
+		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
 		chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
 		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
 		chatBean.setContent(msg.getText());
@@ -144,7 +140,7 @@ public class TestReceiveMsg extends Activity{
 							//已参加
 							//保存
 							Chatmsgs chatBean = new Chatmsgs();
-							chatBean.setChatMsgType(Constants.MEMBER_TYPE);
+							chatBean.setChatMsgType(Constants.MEMBERADD_TYPE);
 							chatBean.setNowJoinUserId(client.getClientId());
 							chatBean.setUid(user.getObjectId());
 							chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
@@ -165,7 +161,7 @@ public class TestReceiveMsg extends Activity{
 		}else{
 			//普通群，直接保存
 			Chatmsgs chatBean = new Chatmsgs();
-			chatBean.setChatMsgType(Constants.MEMBER_TYPE);
+			chatBean.setChatMsgType(Constants.MEMBERADD_TYPE);
 			chatBean.setNowJoinUserId(client.getClientId());
 			chatBean.setUid(user.getObjectId());
 			chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));

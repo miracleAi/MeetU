@@ -11,6 +11,7 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
+import com.avos.avoscloud.AVQuery.CachePolicy;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunObjectsCallback;
 import com.meetu.cloud.callback.ObjUserCallback;
@@ -36,6 +37,8 @@ public class ObjActivityOrderWrap {
 		query.whereContainedIn("orderStatus", numbers);
 		query.orderByAscending("userGender");
 		query.orderByDescending("userNo");
+		query.setCachePolicy(CachePolicy.CACHE_ELSE_NETWORK);
+		query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
 		query.limit(1000);
 		query.findInBackground(new FindCallback<ObjActivityOrder>() {
 

@@ -119,7 +119,10 @@ public class Constants {
 	public static final int LOCATION_TYPE = -5;
 	public static final int FILE_TYPE = -6;
 	public static final int UNSUPPORT_TYPE = -7;
-	public static final int MEMBER_TYPE = -8;
+	//以上与leancloud对应，以下为自定义标记
+	public static final int MEMBERADD_TYPE = -8;
+	//传到云端，必须与iOS保持一直
+	public static final int SCRIPT_MSG = 5;
 	/**
 	 * 消息状态常量
 	 * */
@@ -144,4 +147,12 @@ public class Constants {
 	public static final int ACTYSG = 1;
 	public static final int SEEKMSG = 2;
 	public static final int SRIPTMSG = 3;
+	/**
+	 * 上传map key值常量
+	 * */
+	public static final String IS_SHOW_TIME = "IsShowTime";
+	public static final String SCRIP_TYPE = "ChatMsgType";
+	public static final String SCRIP_ID = "ScripId";
+	public static final String SCRIP_X = "ScripX";
+	public static final String SCRIP_Y = "ScripY";
 }

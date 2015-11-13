@@ -164,9 +164,7 @@ public class ObjChatMessage {
 	 * @param conversation
 	 * @param message
 	 */
-	public static void sendChatMsg(AVIMConversation conversation,String text,final ObjFunBooleanCallback callback){
-		AVIMTextMessage msg = new AVIMTextMessage();
-		msg.setText(text);
+	public static void sendChatMsg(AVIMConversation conversation,AVIMTextMessage msg,final ObjFunBooleanCallback callback){
 		// 发送消息
 		conversation.sendMessage(msg, new AVIMConversationCallback() {
 
@@ -189,9 +187,7 @@ public class ObjChatMessage {
 	 * @param conversation
 	 * @param message
 	 */
-	public void sendPicMsg(AVIMConversation conversation,String path,final ObjFunBooleanCallback callback){
-		try {
-			AVIMImageMessage picture = new AVIMImageMessage(path);
+	public static void sendPicMsg(AVIMConversation conversation,AVIMImageMessage picture,final ObjFunBooleanCallback callback){
 			conversation.sendMessage(picture, new AVIMConversationCallback() {
 				
 				@Override
@@ -205,13 +201,6 @@ public class ObjChatMessage {
 					}
 				}
 			});
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	/**
 	 * 获取聊天记录

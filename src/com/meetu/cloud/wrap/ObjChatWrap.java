@@ -8,6 +8,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
+import com.meetu.cloud.callback.ObjChatBeanCallback;
 import com.meetu.cloud.callback.ObjChatCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjChat;
@@ -15,22 +16,23 @@ import com.meetu.cloud.object.ObjUser;
 
 public class ObjChatWrap {
 	//保存觅聊信息
-	public static void saveGroupInfo(ObjUser user,AVFile file,String title,final ObjFunBooleanCallback callback){
-		ObjChat chat = new ObjChat();
+	public static void saveGroupInfo(ObjUser user,AVFile file,String title,final ObjChatBeanCallback callback){
+		final ObjChat chat = new ObjChat();
 		chat.setUser(user);
 		chat.setChatPicture(file);
 		chat.setChatTitle(title);
 		long stopTime = System.currentTimeMillis()+24*3600*1000;
 		chat.setTimeChatStop(stopTime);
+		chat.setFetchWhenSave(true);
 		chat.saveInBackground(new SaveCallback() {
 			
 			@Override
 			public void done(AVException e) {
 				// TODO Auto-generated method stub
 				if(e == null){
-					callback.callback(true, null);
+					callback.callback(chat, null);
 				}else{
-					callback.callback(false, e);
+					callback.callback(null, e);
 				}
 			}
 		});
