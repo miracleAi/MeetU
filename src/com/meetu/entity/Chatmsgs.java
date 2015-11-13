@@ -69,7 +69,7 @@ public class Chatmsgs {
 	/**
 	 * 新加入成员的id
 	 */
-	private int nowJoinUserId;
+	private String nowJoinUserId;
 	//以下没有用
 	/**
 	 * 文本通知消息的内容
@@ -178,10 +178,10 @@ public class Chatmsgs {
 	public void setImgMsgImageHeight(int imgMsgImageHeight) {
 		this.imgMsgImageHeight = imgMsgImageHeight;
 	}
-	public int getNowJoinUserId() {
+	public String getNowJoinUserId() {
 		return nowJoinUserId;
 	}
-	public void setNowJoinUserId(int nowJoinUserId) {
+	public void setNowJoinUserId(String nowJoinUserId) {
 		this.nowJoinUserId = nowJoinUserId;
 	}
 	public String getNotificationBaseContent() {
@@ -212,7 +212,7 @@ public class Chatmsgs {
 			String conversationId, int chatMsgType, int chatMsgDirection,
 			int chatMsgStatus, int isShowTime, String sendTimeStamp,
 			String deliveredTimeStamp, String content, String imgMsgImageUrl,
-			int imgMsgImageWidth, int imgMsgImageHeight, int nowJoinUserId,
+			int imgMsgImageWidth, int imgMsgImageHeight, String nowJoinUserId,
 			String notificationBaseContent, String notificationActyContent,
 			String notificationActyTitle, String notificationActyTitleSub) {
 		super();

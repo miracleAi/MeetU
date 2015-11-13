@@ -2,10 +2,12 @@ package com.meetu.cloud.wrap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVQuery.CachePolicy;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.LogUtil.log;
@@ -63,6 +65,8 @@ public class ObjActivityWrap {
 		AVQuery<AVObject> query = new AVQuery<AVObject>(ObjTableName.getActivitySignUpTb());
 		query.whereEqualTo("activity", activity);
 		query.whereEqualTo("user", user);
+		query.setMaxCacheAge(TimeUnit.DAYS.toMillis(1));
+		query.setCachePolicy(CachePolicy.CACHE_ELSE_NETWORK);
 		query.findInBackground(new FindCallback<AVObject>() {
 
 			@Override
@@ -136,7 +140,6 @@ public class ObjActivityWrap {
 		ObjActivity activity = null;
 		try {
 			activity = AVObject.createWithoutData(ObjActivity.class, id);
-			activity.fetchIfNeeded();
 		} catch (AVException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

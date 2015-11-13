@@ -1,6 +1,7 @@
 package com.meetu.cloud.wrap;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
@@ -208,6 +209,7 @@ public class ObjUserWrap {
 		AVQuery<ObjUser> query = AVUser.getQuery(ObjUser.class);
 		query.whereEqualTo("objectId", objId);
 		query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
+		query.setMaxCacheAge(TimeUnit.DAYS.toMillis(1));
 		query.getFirstInBackground(new GetCallback<ObjUser>() {
 
 			@Override

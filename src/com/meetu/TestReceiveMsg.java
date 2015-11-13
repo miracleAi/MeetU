@@ -2,6 +2,7 @@ package com.meetu;
 
 import java.util.List;
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
@@ -14,8 +15,11 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.utils.ChatMsgUtils;
+import com.meetu.cloud.wrap.ObjActivityWrap;
 import com.meetu.common.Constants;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.sqlite.ChatmsgsDao;
@@ -27,7 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TestReceiveMsg extends Activity{
-	TextView textIv,urlTv;
+	TextView textIv,urlTv,memberTv;
 	MessageHandler msgHandler;
 	//当前用户
 	ObjUser user = new ObjUser();
@@ -58,6 +62,7 @@ public class TestReceiveMsg extends Activity{
 		// TODO Auto-generated method stub
 		textIv = (TextView) findViewById(R.id.text_tv);
 		urlTv = (TextView) findViewById(R.id.url_tv);
+		memberTv = (TextView) findViewById(R.id.member_tv);
 	}
 	@Override
 	protected void onPause() {
@@ -66,7 +71,7 @@ public class TestReceiveMsg extends Activity{
 		AVIMMessageManager.unregisterMessageHandler(AVIMTypedMessage.class, msgHandler);
 	}
 	//文本消息处理方法
-	public void createChatMsg(AVIMTypedMessage message){
+	public void createChatMsg(AVIMConversation conversation,AVIMTypedMessage message){
 		AVIMTextMessage msg = ((AVIMTextMessage)message);
 		Chatmsgs chatBean = new Chatmsgs();
 		chatBean.setChatMsgType(Constants.TEXT_TYPE);
@@ -84,11 +89,16 @@ public class TestReceiveMsg extends Activity{
 		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
 		chatBean.setContent(msg.getText());
 		chatDao.insert(chatBean);
-		//测试显示
-		textIv.setText(msg.getText());
+		if(conversation.getConversationId().equals(conversationId)){
+			//测试显示
+			textIv.setText(msg.getText());
+		}else{
+			//未读消息加1
+		}
+
 	}
 	//图片消息处理方法
-	public void createChatPicMsg(AVIMTypedMessage message){
+	public void createChatPicMsg(AVIMConversation conversation,AVIMTypedMessage message){
 		AVIMImageMessage msg = ((AVIMImageMessage)message);
 		Chatmsgs chatBean = new Chatmsgs();
 		chatBean.setChatMsgType(Constants.IMAGE_TYPE);
@@ -99,27 +109,78 @@ public class TestReceiveMsg extends Activity{
 		chatBean.setConversationId(msg.getConversationId());
 		chatBean.setChatMsgDirection(ChatMsgUtils.getDerection(msg.getMessageIOType()));
 		chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
-		//此处为测试数据，实际为获取最新一条消息时间
-		long t = System.currentTimeMillis() - 10000;
-		chatBean.setIsShowTime(ChatMsgUtils.isShowChatTime(t));
+		boolean b = (Boolean) msg.getAttrs().get("isShowTime");
+		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
 		chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
 		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
 		chatBean.setImgMsgImageUrl(msg.getFileUrl());
 		chatBean.setImgMsgImageHeight(msg.getHeight());
 		chatBean.setImgMsgImageWidth(msg.getWidth());
 		chatDao.insert(chatBean);
-		//测试显示
-		urlTv.setText(msg.getFileUrl());
+		if(conversation.getConversationId().equals(conversationId)){
+			//测试显示
+			urlTv.setText(msg.getFileUrl());
+		}else{
+			//未读消息加1
+		}
 	}
 	//成员加入消息处理
-	public void handleMember(AVIMClient client, AVIMConversation conversation,
+	public void handleMember(final AVIMClient client, final AVIMConversation conversation,
 			List<String> array, String str){
-		if(conversation.getConversationId().equals(conversationId)){
-			//位于当前页面,显示  保存
-			textIv.setText(array.get(0));
+		int msgType = (Integer) conversation.getAttribute("cType");
+		if(msgType == Constants.ACTYSG){
+			//活动群，判断是否参加
+			String actyId = (String) conversation.getAttribute("appendId");
+			try {
+				ObjActivity acty = ObjActivity.createWithoutData(ObjActivity.class, actyId);
+				ObjActivityWrap.queryUserJoin(acty, user, new ObjFunBooleanCallback() {
+
+					@Override
+					public void callback(boolean result, AVException e) {
+						if(e != null){
+							return ;
+						}
+						if(result){
+							//已参加
+							//保存
+							Chatmsgs chatBean = new Chatmsgs();
+							chatBean.setChatMsgType(Constants.MEMBER_TYPE);
+							chatBean.setNowJoinUserId(client.getClientId());
+							chatBean.setUid(user.getObjectId());
+							chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
+							chatDao.insert(chatBean);
+							if(conversation.getConversationId().equals(conversationId)){
+								//显示
+								memberTv.setText(client.getClientId());
+							}else{
+								//未读消息加1,保存未读
+							}
+						}
+					}
+				});
+			} catch (AVException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else{
-			//直接保存
+			//普通群，直接保存
+			Chatmsgs chatBean = new Chatmsgs();
+			chatBean.setChatMsgType(Constants.MEMBER_TYPE);
+			chatBean.setNowJoinUserId(client.getClientId());
+			chatBean.setUid(user.getObjectId());
+			chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
+			chatDao.insert(chatBean);
+			if(conversation.getConversationId().equals(conversationId)){
+				//显示
+				memberTv.setText(client.getClientId());
+			}else{
+				//未读消息加1,保存未读
+			}
 		}
+	}
+	//保存未读消息
+	public void updateUnreadmsg(int type){
+		
 	}
 	//消息处理handler
 	public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>{
@@ -130,11 +191,11 @@ public class TestReceiveMsg extends Activity{
 			super.onMessage(message, conversation, client);
 			switch (message.getMessageType()) {
 			case Constants.TEXT_TYPE:
-				createChatMsg(message);
+				createChatMsg(conversation,message);
 				break;
 			case Constants.IMAGE_TYPE:
+				createChatPicMsg(conversation,message);
 				break;
-
 			default:
 				break;
 			}
@@ -169,6 +230,7 @@ public class TestReceiveMsg extends Activity{
 			// 参与者  ，邀请人
 			//在当前聊天--》1.活动群，判断参与者是否参加活动，不参加不提示。2.普通群：提示
 			//不在当前聊天--》1.参加，插入数据库。2.插入数据库
+			handleMember(client, conversation, array, str);
 		}
 
 		@Override

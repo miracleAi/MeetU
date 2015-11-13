@@ -113,7 +113,7 @@ public class ChatmsgsDao {
 			chatmsgs.setImgMsgImageUrl(c.getString(c.getColumnIndex("_img_msg_image_url")));
 			chatmsgs.setImgMsgImageWidth(c.getInt(c.getColumnIndex("_img_msg_image_width")));
 			chatmsgs.setImgMsgImageHeight(c.getInt(c.getColumnIndex("_img_msg_image_height")));
-			chatmsgs.setNowJoinUserId(c.getInt(c.getColumnIndex("_now_join_user_id")));
+			chatmsgs.setNowJoinUserId(c.getString(c.getColumnIndex("_now_join_user_id")));
 			chatmsgs.setNotificationBaseContent(c.getString(c.getColumnIndex("_notification_base_content")));
 			chatmsgs.setNotificationActyContent(c.getString(c.getColumnIndex("_notification_acty_content")));
 			chatmsgs.setNotificationActyTitle(c.getString(c.getColumnIndex("_notification_acty_title")));

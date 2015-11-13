@@ -17,5 +17,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
          android:text="receive_url" />
+    <TextView
+        android:id="@+id/member_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+         android:text="receive_url" />
 
 </LinearLayout>
