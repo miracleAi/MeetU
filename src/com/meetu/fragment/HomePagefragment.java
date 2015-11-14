@@ -144,6 +144,9 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 								//插入到本地数据库    成功
 								activityDao.updateIsFavor(user.getObjectId(), actyListCache.get(position).getActyId(), 1);	
 								Toast.makeText(getActivity(), "点赞成功", 1000).show();
+								
+								actyListCache.clear();
+								actyListCache.addAll(actyDao.queryActys(user.getObjectId()));
 								adapter.notifyDataSetChanged();
 							}
 						}
@@ -166,6 +169,8 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 								activityDao.updateIsFavor(user.getObjectId(), actyListCache.get(position).getActyId(), 1);
 								Toast.makeText(getActivity(), "点赞成功", 1000).show();
 //								holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+								actyListCache.clear();
+								actyListCache.addAll(actyDao.queryActys(user.getObjectId()));
 								adapter.notifyDataSetChanged();
 							}
 						}
@@ -466,7 +471,11 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 		switch (v.getId()) {
 			case R.id.usernumber_homepage_rl :
 //				Toast.makeText(getActivity(), "进入报名列表", Toast.LENGTH_SHORT).show();
+				//TODO 要传入实时滑动到的那个activity
 				Intent intent=new Intent(getActivity(),JoinUsersActivity.class);
+				Bundle bundle=new Bundle();
+				bundle.putSerializable("activityBean", actyListCache.get(0));
+				intent.putExtras(bundle);
 				startActivity(intent);
 				
 				break;

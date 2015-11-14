@@ -8,6 +8,7 @@ import com.meetu.R;
 import com.meetu.activity.mine.FavorListActivity;
 import com.meetu.activity.mine.MinephotoActivity;
 import com.meetu.cloud.object.ObjActivityPhoto;
+import com.meetu.common.MyImageFavorCallBack;
 import com.meetu.entity.PhotoWall;
 import com.meetu.myapplication.MyApplication;
 
@@ -36,6 +37,11 @@ public class MemoryPhotoAdapter extends PagerAdapter{
 		MyApplication app=(MyApplication)context.getApplicationContext();
 		finalBitmap=app.getFinalBitmap();
 	}
+	private MyImageFavorCallBack myImageFavorCallBack;
+	
+	private void setImageFavorMemoryPhoto(MyImageFavorCallBack myImageFavorCallBack){
+		this.myImageFavorCallBack=myImageFavorCallBack;
+	}
 
 	@Override
 	public int getCount() {
@@ -62,6 +68,7 @@ public class MemoryPhotoAdapter extends PagerAdapter{
 		ObjActivityPhoto item=Newslist.get(position);
 		View view = LayoutInflater.from(mContext).inflate(R.layout.item_memory_detial,null);
 		ImageView img=(ImageView)view.findViewById(R.id.img_memorywall_detial_item);
+		
 		img.setOnClickListener(new OnClickListener() {
 			
 			@Override

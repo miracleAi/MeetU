@@ -7,16 +7,20 @@ import java.util.List;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 import com.meetu.R.layout;
 import com.meetu.adapter.StaggeredHomeAdapter;
 import com.meetu.adapter.StaggeredMemoryWallAdapter;
 import com.meetu.adapter.StaggeredMemoryWallAdapter.OnItemClickCallBack;
+import com.meetu.adapter.StaggeredMemoryWallAdapter.OnItemFavourMemory;
 import com.meetu.bean.ActivityBean;
 import com.meetu.cloud.callback.ObjActivityPhotoCallback;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityPhoto;
+import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjActivityPhotoWrap;
 import com.meetu.common.Images;
 import com.meetu.entity.PhotoWall;
@@ -42,7 +46,7 @@ import android.widget.RelativeLayout.LayoutParams;
 public class MemoryWallActivity extends Activity implements OnItemClickCallBack,OnClickListener{
 	
 	private RecyclerView mRecyclerView;
-	private StaggeredMemoryWallAdapter mAdapter;
+	private static StaggeredMemoryWallAdapter mAdapter;
 	private List<PhotoWall> data=new ArrayList<PhotoWall>();
 	private RelativeLayout backLayout;
 	private ImageView barrage;
@@ -50,7 +54,9 @@ public class MemoryWallActivity extends Activity implements OnItemClickCallBack,
 	private ActivityBean activityBean=new ActivityBean();
 	private ObjActivity objActivity= null;
 	private List<ObjActivityPhoto> photoList=new ArrayList<ObjActivityPhoto>();
-	
+	//当前用户
+		ObjUser user = new ObjUser();
+		AVUser currentUser = AVUser.getCurrentUser();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,6 +66,10 @@ public class MemoryWallActivity extends Activity implements OnItemClickCallBack,
 				super.getWindow();
 		setContentView(R.layout.activity_memory_wall);
 		activityBean= (ActivityBean) getIntent().getExtras().getSerializable("activityBean");
+		if (currentUser != null) {
+			//强制类型转换
+			user = AVUser.cast(currentUser, ObjUser.class);
+		}
 		
 		initLoadActivity(activityBean.getActyId());
 		initView();
@@ -80,6 +90,52 @@ public class MemoryWallActivity extends Activity implements OnItemClickCallBack,
 //		loaddataUrl();
 		loaddata();
 		mAdapter=new StaggeredMemoryWallAdapter(this, photoList);
+		//对点赞 的回调进行处理
+		mAdapter.setOnItemFavourMemory(new OnItemFavourMemory() {
+			
+			@Override
+			public void onItemFavour(int position) {
+				// TODO Auto-generated method stub
+				ObjActivityPhotoWrap.praiseActivityPhoto(photoList.get(position), user, new ObjFunBooleanCallback() {
+					
+					@Override
+					public void callback(boolean result, AVException e) {
+						if(e!=null){
+							log.e("zcq", e);
+						}else if(result){
+							log.e("zcq", "点赞成功");
+							handler.sendEmptyMessage(1);
+						}else{
+							log.e("zcq", "点赞失败");
+							handler.sendEmptyMessage(1);
+						}
+						
+					}
+				});
+				
+			}
+			
+			@Override
+			public void onItemCancleFavour(int position) {
+				ObjActivityPhotoWrap.cancelPraiseActivityPhoto(user, photoList.get(position), new ObjFunBooleanCallback() {
+					
+					@Override
+					public void callback(boolean result, AVException e) {
+						if(e!=null){
+							log.e("zcq", e);
+						}else if(result){
+							log.e("zcq", "取消点赞成功");
+							handler.sendEmptyMessage(1);
+						}else{
+							log.e("zcq", "取消点赞失败");
+							handler.sendEmptyMessage(1);
+						}
+						
+					}
+				});
+				
+			}
+		});
 		mAdapter.setOnItemClickLitener(this);
 		mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
 		mRecyclerView.setAdapter(mAdapter);
@@ -98,9 +154,14 @@ public class MemoryWallActivity extends Activity implements OnItemClickCallBack,
 			@Override
 			public void callback(List<ObjActivityPhoto> objects, AVException e) {
 				// TODO Auto-generated method stub
-				
-				if(objects!=null){
+				if(e!=null){
+					log.e("zcq", e);
+				}
+				else if(objects!=null && objects.size()>0){
+					
 					photoList.addAll(objects);
+				}else{
+	//				Toast.makeText(getApplicationContext(), "数据加载失败", 1000).show();
 				}
 				
 				handler.sendEmptyMessage(1);
@@ -144,7 +205,7 @@ public class MemoryWallActivity extends Activity implements OnItemClickCallBack,
 		
 	}
 	
-	Handler handler=new Handler(){
+	public static Handler handler=new Handler(){
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -159,6 +220,7 @@ public class MemoryWallActivity extends Activity implements OnItemClickCallBack,
 		}
 	
 	};
+	
 
 	
 

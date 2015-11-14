@@ -109,9 +109,9 @@
          >
 
         <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/photo_head_my_join_users_huodong_tv"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
@@ -121,12 +121,12 @@
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@+id/imageView2"
+            android:layout_toRightOf="@+id/photo_head_my_join_users_huodong_tv"
            
             android:gravity="center" >
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/name_user_huodong_join_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="刘德华"
@@ -134,23 +134,23 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/school_user_huodong_join_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@+id/textView2"
+                android:layout_below="@+id/name_user_huodong_join_tv"
                 android:text="北京大学"
                 android:textColor="#a0a0a0"
                 android:textSize="10sp" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/user_sex_huodong_join_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="4dp"
-                android:layout_toRightOf="@+id/textView2"
+                android:layout_toRightOf="@+id/name_user_huodong_join_tv"
                 android:src="@drawable/acty_joinlist_img_male" />
 
             <TextView
@@ -160,13 +160,13 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="2dp"
-                android:layout_toRightOf="@+id/imageView3"
+                android:layout_toRightOf="@+id/user_sex_huodong_join_img"
                 android:text="NO ."
                 android:textColor="#bfbfbf"
                 android:textSize="10sp" />
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/number_join_huodong_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/textView4"

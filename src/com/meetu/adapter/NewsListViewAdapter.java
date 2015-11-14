@@ -132,6 +132,7 @@ public class NewsListViewAdapter  extends BaseAdapter{
 		
 		final ViewHolder holder;
 		final ActivityBean item=newsList.get(position);
+		log.e("lucifer", "getIsFavor=="+item.getIsFavor());
 		initLoadActivity(item.getActyId());
 		if(convertView==null){
 			holder=new ViewHolder();

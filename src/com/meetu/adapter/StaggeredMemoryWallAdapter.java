@@ -5,14 +5,20 @@ import java.util.List;
 
 import net.tsz.afinal.FinalBitmap;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+import com.baidu.location.e.n;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
 import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
 import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 import com.meetu.R;
 import com.meetu.adapter.PhotoWallAdapter.GridViewHeightaListener;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjActivityPhoto;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjActivityPhotoWrap;
 import com.meetu.common.ImageLoader;
 import com.meetu.entity.PhotoWall;
 import com.meetu.entity.PhotoWallTest;
@@ -54,9 +60,28 @@ public class StaggeredMemoryWallAdapter extends
 
 	private Bitmap bitmap;
 
-	 private FinalBitmap finalBitmap;
-	 private BitmapUtils bitmapUtils; 
-
+	private FinalBitmap finalBitmap;
+	private BitmapUtils bitmapUtils; 
+	
+	//网络相关
+	//当前用户
+	ObjUser user = new ObjUser();
+	AVUser currentUser = AVUser.getCurrentUser();
+	
+	public interface OnItemFavourMemory{
+		void onItemFavour(int position);
+		void onItemCancleFavour(int position);
+	}
+	private OnItemFavourMemory onItemFavourMemory;
+	public void setOnItemFavourMemory(OnItemFavourMemory onItemFavourMemory){
+		this.onItemFavourMemory=onItemFavourMemory;
+	}
+		
+/**
+ * item 点击接口
+ * @author lucifer
+ *
+ */
 	public interface OnItemClickCallBack {
 		void onItemClick(int id);
 
@@ -81,6 +106,10 @@ public class StaggeredMemoryWallAdapter extends
 		finalBitmap=app.getFinalBitmap();
 
 		bitmapUtils=new BitmapUtils(context);
+		if (currentUser != null) {
+			//强制类型转换
+			user = AVUser.cast(currentUser, ObjUser.class);
+		}
 	}
 
 	@Override
@@ -98,6 +127,7 @@ public class StaggeredMemoryWallAdapter extends
 
 	@Override
 	public void onBindViewHolder(final MyViewHolder holder, final int position) {
+		  boolean isFavor=false;
 		if (mDatas!=null && mDatas.size()>0){
 
 					
@@ -138,6 +168,45 @@ public class StaggeredMemoryWallAdapter extends
 				} );
 				
 			}
+			holder.numberFavor.setText(""+item.getPraiseCount());
+		
+			//查询是否对照片点赞
+			ObjActivityPhotoWrap.queryPhotoPraise(item, user, new ObjFunBooleanCallback() {
+				
+				@Override
+				public void callback(boolean result, AVException e) {
+					if(e!=null){
+						log.e("zcq", e);
+					}else if(result){
+						//表明已经已经对照片点过赞
+						holder.favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+						holder.favorImg.setOnClickListener(new OnClickListener() {
+							
+							@Override
+							public void onClick(View arg0) {
+								// TODO Auto-generated method stub
+								onItemFavourMemory.onItemCancleFavour(position);
+								holder.favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
+							}
+						});
+						
+					}else{
+						holder.favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
+						
+						holder.favorImg.setOnClickListener(new OnClickListener() {
+							
+							@Override
+							public void onClick(View arg0) {
+								// TODO Auto-generated method stub
+								onItemFavourMemory.onItemFavour(position);
+								holder.favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+							}
+						});
+					}
+					
+				}
+			});
+			
 			
 			
 					
@@ -166,7 +235,8 @@ public class StaggeredMemoryWallAdapter extends
 								return false;
 							}
 						});
-		}       
+		}   
+					
 	}
 	}
 
@@ -175,7 +245,9 @@ public class StaggeredMemoryWallAdapter extends
 
 	class MyViewHolder extends ViewHolder {
 		private RelativeLayout rlAll;
-		ImageView ivImg;
+		private ImageView ivImg;//图片
+		private ImageView favorImg;//点赞
+		private TextView numberFavor;//点赞数量
 
 		int id;
 		public MyViewHolder(View view) {
@@ -183,6 +255,8 @@ public class StaggeredMemoryWallAdapter extends
 			
 			ivImg = (ImageView) view.findViewById(R.id.img_item_memorywall);
 			rlAll=(RelativeLayout) view.findViewById(R.id.item_memorywall_rl);
+			favorImg=(ImageView) view.findViewById(R.id.favor_item_memorywall);
+			numberFavor=(TextView) view.findViewById(R.id.favorNumber_memorywall_tv);
 		}
 
 		public void setData() {

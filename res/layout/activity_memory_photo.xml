@@ -44,7 +44,7 @@
                 android:layout_centerHorizontal="true"
                 android:textSize="15sp"
                 android:textColor="#ccffffff"
-                android:text="1028" />
+                android:text="1" />
         </RelativeLayout>
 
     </RelativeLayout>

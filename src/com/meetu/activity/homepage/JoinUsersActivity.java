@@ -3,17 +3,26 @@ package com.meetu.activity.homepage;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.tsz.afinal.FinalBitmap;
+
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+import com.lidroid.xutils.BitmapUtils;
 import com.meetu.R;
 import com.meetu.R.layout;
 import com.meetu.R.menu;
 import com.meetu.adapter.JoinUserAdapter;
 import com.meetu.adapter.JoinUserFavorAdapter;
+import com.meetu.bean.ActivityBean;
+import com.meetu.cloud.object.ObjActivity;
+import com.meetu.cloud.object.ObjUser;
 import com.meetu.entity.User;
+import com.meetu.myapplication.MyApplication;
 import com.meetu.tools.DensityUtil;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Loader;
 import android.view.Menu;
 import android.view.View;
@@ -28,6 +37,7 @@ import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 
 public class JoinUsersActivity extends Activity implements OnItemClickListener,OnClickListener{
+	//控件相关
 	private ListView mlistViewAll,mListViewFavor;
 	private JoinUserAdapter adapter;
 	private List<User> joinUsersList=new ArrayList<User>();
@@ -37,6 +47,18 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,O
 	private TextView numberFavor,numberAll;
 	private RelativeLayout backLayout,signLayout;
 	private ImageView signImageView;
+	private ImageView myPHotoHead,sexPhoto;
+	private TextView userName,userSchool,numberJoin;
+	
+	//网络数据相关
+	private ActivityBean activityBean=new ActivityBean();
+	private ObjActivity objActivity= null;
+	private BitmapUtils bitmapUtils;
+	private FinalBitmap finalBitmap;
+	//当前用户
+	ObjUser user = new ObjUser();
+	AVUser currentUser = AVUser.getCurrentUser();
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -45,7 +67,13 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,O
 		//全屏
 		super.getWindow();
 		setContentView(R.layout.activity_join_users);
-		
+		if (currentUser != null) {
+			//强制类型转换
+			user = AVUser.cast(currentUser, ObjUser.class);
+		}
+		bitmapUtils=new BitmapUtils(this);
+		MyApplication app=(MyApplication) this.getApplication();
+		finalBitmap=app.getFinalBitmap();
 		loadData();
 		loadData2();
 		mlistViewAll=(ListView) super.findViewById(R.id.listview_all_joinUsers);
@@ -104,6 +132,23 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,O
 		signLayout=(RelativeLayout) super.findViewById(R.id.sign_joinUsers_homepager_rl);
 		signLayout.setOnClickListener(this);
 		signImageView=(ImageView) super.findViewById(R.id.sign_joinUsers_homepager_img);
+		myPHotoHead=(ImageView) super.findViewById(R.id.photo_head_my_join_users_huodong_tv);
+		
+		finalBitmap.display(myPHotoHead, user.getProfileClip().getUrl());
+		
+		userName=(TextView) super.findViewById(R.id.name_user_huodong_join_tv);
+		//TODO 此处应该是报名后的真实名字
+		userName.setText(user.getNameNick());
+		userSchool=(TextView) super.findViewById(R.id.school_user_huodong_join_tv);
+		userSchool.setText(user.getSchool());
+		sexPhoto=(ImageView) super.findViewById(R.id.user_sex_huodong_join_img);
+		if(user.getGender()==2){
+			
+		}else{
+			sexPhoto.setImageResource(R.drawable.acty_joinlist_img_female);
+		}
+		numberJoin=(TextView) super.findViewById(R.id.number_join_huodong_tv);
+		
 	}
 	
 	private void loadData() {

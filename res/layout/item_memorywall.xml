@@ -20,24 +20,31 @@
             android:adjustViewBounds="true"
             android:src="@drawable/acty_memorieswall_img_photocard_4" />
 
+        <RelativeLayout android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp">
         <ImageView
             android:id="@+id/favor_item_memorywall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/acty_memorieswall_btn_like_nor" />
+          
+            android:src="@drawable/acty_cardimg_btn_like_nor" />
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/favorNumber_memorywall_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/favor_item_memorywall"
+            
             android:layout_below="@+id/favor_item_memorywall"
             android:textColor="#ffffff"
-            android:text="999" />
+            android:layout_centerHorizontal="true"
+           
+            android:text="111" />
+        </RelativeLayout>
         
         </RelativeLayout>
     
