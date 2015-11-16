@@ -215,38 +215,22 @@ public class ObjChatMessage {
 		ArrayList<Integer> numbers = new ArrayList<Integer>();
 		numbers.add(1);
 		numbers.add(2);
-		//query.whereContainsIn("attr.cType", numbers);
-		//query.whereGreaterThan("attr.overTime", System.currentTimeMillis());
-		query.whereEqualTo("attr.cType",2);
+		query.whereContainsIn("attr.cType", numbers);
+		query.whereGreaterThan("attr.overTime", System.currentTimeMillis());
 		query.findInBackground(new AVIMConversationQueryCallback(){
 			@Override
-			public void done(List<AVIMConversation> convs,AVIMException e){
-				if(e==null){
-					if(convs!=null && !convs.isEmpty()){
-						//获取符合查询条件的Conversation列表
-						callback.callback(convs, null);
-					}
-				}else{
-					callback.callback(null, e);
-				}
-			}
-		});
-		/*query.findInBackground(new AVIMConversationQueryCallback() {
-
-			@Override
-			public void done(List<AVIMConversation> objects, AVIMException e) {
-				// TODO Auto-generated method stub
+			public void done(List<AVIMConversation> objects,AVIMException e){
 				if(e != null){
 					callback.callback(null, e);
 					return;
 				}
-				if(objects != null){
+				if(objects != null && !objects.isEmpty()){
 					callback.callback(objects, null);
 				}else{
 					callback.callback(null, new AVException(0, "获取会话列表失败"));
 				}
 			}
-		});*/
+		});
 	}
 	/**注销聊天
 	 * 

@@ -3,7 +3,9 @@ package com.meetu.sqlite;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.meetu.common.Constants;
 import com.meetu.entity.Chatmsgs;
+
 
 
 import android.content.Context;
@@ -79,10 +81,10 @@ public class ChatmsgsDao {
 	 * 删除单个对话缓存消息
 	 * @param conversationId 对话id
 	 */
-	public void deleteConversationId(String conversationId){
+	public void deleteConversationId(String uid,String conversationId){
 		SQLiteDatabase db=helper.getReadableDatabase();
-		String sql="delete from chatmsgs where _conversation_id=?";
-		db.execSQL(sql,new Object[]{conversationId});
+		String sql="delete from chatmsgs where _conversation_id=? and "+Constants.USERID+"=?";
+		db.execSQL(sql,new Object[]{conversationId,uid});
 		db.close();
 		
 	}

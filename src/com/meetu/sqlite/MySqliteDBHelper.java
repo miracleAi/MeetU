@@ -146,7 +146,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		sb4.append(TBL_MESSAGES_ACTY_NAME+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_CHAT_ID+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_CHAT_NAME+ " varchar(100) ,");
-		sb4.append(TBL_MESSAGES_UNREAD_COUNT+ " integer ,");
+		sb4.append(TBL_MESSAGES_UNREAD_COUNT+ " integer");
 		sb4.append(")");
 		db.execSQL(sb4.toString());
 		

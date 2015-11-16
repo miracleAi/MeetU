@@ -13,13 +13,17 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.utils.ChatMsgUtils;
 import com.meetu.cloud.wrap.ObjActivityWrap;
+import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
 import com.meetu.entity.Chatmsgs;
+import com.meetu.entity.Messages;
 import com.meetu.sqlite.ChatmsgsDao;
+import com.meetu.sqlite.MessagesDao;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -35,6 +39,7 @@ public class TestReceiveMsg extends Activity{
 	ChatmsgsDao chatDao = null;
 	//当前会话
 	String conversationId = "5623af6560b2ce30d24a2c67";
+	MessagesDao msgDao = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -42,6 +47,7 @@ public class TestReceiveMsg extends Activity{
 		setContentView(R.layout.test_receive_layout);
 		msgHandler = new MessageHandler();
 		chatDao = new ChatmsgsDao(getApplicationContext());
+		msgDao = new MessagesDao(this);
 		initView();
 		if(AVUser.getCurrentUser() != null){
 			user = AVUser.cast(AVUser.getCurrentUser(), ObjUser.class);
@@ -90,6 +96,7 @@ public class TestReceiveMsg extends Activity{
 			textIv.setText(msg.getText());
 		}else{
 			//未读消息加1
+			msgDao.updateUnread(user.getObjectId(), msg.getConversationId());
 		}
 
 	}
@@ -118,10 +125,11 @@ public class TestReceiveMsg extends Activity{
 			urlTv.setText(msg.getFileUrl());
 		}else{
 			//未读消息加1
+			msgDao.updateUnread(user.getObjectId(), msg.getConversationId());
 		}
 	}
 	//成员加入消息处理
-	public void handleMember(final AVIMClient client, final AVIMConversation conversation,
+	public void handleMemberAdd(final AVIMClient client, final AVIMConversation conversation,
 			List<String> array, String str){
 		int msgType = (Integer) conversation.getAttribute("cType");
 		if(msgType == Constants.ACTYSG){
@@ -137,20 +145,30 @@ public class TestReceiveMsg extends Activity{
 							return ;
 						}
 						if(result){
-							//已参加
-							//保存
-							Chatmsgs chatBean = new Chatmsgs();
-							chatBean.setChatMsgType(Constants.MEMBERADD_TYPE);
-							chatBean.setNowJoinUserId(client.getClientId());
-							chatBean.setUid(user.getObjectId());
-							chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
-							chatDao.insert(chatBean);
-							if(conversation.getConversationId().equals(conversationId)){
-								//显示
-								memberTv.setText(client.getClientId());
-							}else{
-								//未读消息加1,保存未读
-							}
+							//已参加，保存
+							ObjUserWrap.getObjUser(client.getClientId(), new ObjUserInfoCallback() {
+								
+								@Override
+								public void callback(ObjUser joinuser, AVException e) {
+									// TODO Auto-generated method stub
+									Chatmsgs chatBean = new Chatmsgs();
+									chatBean.setChatMsgType(Constants.MEMBERADD_TYPE);
+									chatBean.setNowJoinUserId(client.getClientId());
+									chatBean.setUid(user.getObjectId());
+									chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
+									chatBean.setContent(joinuser.getNameNick()+"加入群聊");
+									chatDao.insert(chatBean);
+									if(conversation.getConversationId().equals(conversationId)){
+										//显示
+										memberTv.setText(client.getClientId());
+									}else{
+										//未读消息加1,保存未读
+										msgDao.updateUnread(user.getObjectId(), conversation.getConversationId());
+									}
+								}
+							});
+						}else{
+							//未参加  直接放弃
 						}
 					}
 				});
@@ -171,12 +189,31 @@ public class TestReceiveMsg extends Activity{
 				memberTv.setText(client.getClientId());
 			}else{
 				//未读消息加1,保存未读
+				msgDao.updateUnread(user.getObjectId(), conversation.getConversationId());
 			}
 		}
 	}
-	//保存未读消息
-	public void updateUnreadmsg(int type){
-		
+	//被踢出
+	public void handleMemberRemove(AVIMClient client, AVIMConversation conversation,
+			List<String> array, String str){
+		if(conversation.getConversationId().equals(conversationId)){
+			//显示
+			memberTv.setText("您已被踢出");
+			//删除会话缓存
+			msgDao.deleteConv(user.getObjectId(), conversation.getConversationId());
+			//删除消息缓存
+			chatDao.deleteConversationId(user.getObjectId(), conversation.getConversationId());
+		}else{
+			//未读消息加1,保存未读
+			msgDao.updateUnread(user.getObjectId(), conversation.getConversationId());
+			Chatmsgs chatBean = new Chatmsgs();
+			chatBean.setChatMsgType(Constants.MEMBERADD_TYPE);
+			chatBean.setNowJoinUserId(client.getClientId());
+			chatBean.setUid(user.getObjectId());
+			chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
+			chatBean.setContent("您被踢出群聊");
+			chatDao.insert(chatBean);
+		}
 	}
 	//消息处理handler
 	public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>{
@@ -226,14 +263,15 @@ public class TestReceiveMsg extends Activity{
 			// 参与者  ，邀请人
 			//在当前聊天--》1.活动群，判断参与者是否参加活动，不参加不提示。2.普通群：提示
 			//不在当前聊天--》1.参加，插入数据库。2.插入数据库
-			handleMember(client, conversation, array, str);
+			handleMemberAdd(client, conversation, array, str);
 		}
 
 		@Override
 		public void onMemberLeft(AVIMClient client, AVIMConversation conversation,
 				List<String> array, String str) {
 			// 被踢出人，踢出人
-
+			handleMemberRemove(client, conversation, array, str);
+			
 		}
 
 	}
