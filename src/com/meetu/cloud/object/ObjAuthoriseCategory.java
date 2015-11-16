@@ -1,12 +1,14 @@
 package com.meetu.cloud.object;
 
+import java.io.Serializable;
+
 import android.os.Parcelable.Creator;
 
 import com.avos.avoscloud.AVClassName;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVObject.AVObjectCreator;
 @AVClassName("ObjAuthoriseCategory")
-public class ObjAuthoriseCategory extends AVObject{
+public class ObjAuthoriseCategory extends AVObject implements Serializable{
 	public static final Creator CREATOR = AVObjectCreator.instance;
 	/**
 	 *  操作编号
