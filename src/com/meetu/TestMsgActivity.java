@@ -149,8 +149,8 @@ public class TestMsgActivity extends Activity{
 		//clickBtn.setText(JOINGROUP);
 		//clickBtn.setText(MEMBERCOUNT);
 		//clickBtn.setText(SENDPICMSG);
-		//clickBtn.setText(UPLOADPIC);
-		clickBtn.setText(GETSCRIPBOXS);
+		clickBtn.setText(UPLOADPIC);
+		//clickBtn.setText(GETSCRIPBOXS);
 		clickBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -430,8 +430,8 @@ public class TestMsgActivity extends Activity{
 
 				}
 				if(MyApplication.isChatLogin){
-					//clickBtn.setText(SAVEGROUP);
-					clickBtn.setText(CREATESCRIP);
+					clickBtn.setText(SAVEGROUP);
+					//clickBtn.setText(CREATESCRIP);
 				}else{
 					ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
 
@@ -444,8 +444,8 @@ public class TestMsgActivity extends Activity{
 							}
 							if(client != null){
 								MyApplication.chatClient = client;
-								//clickBtn.setText(SAVEGROUP);
-								clickBtn.setText(CREATESCRIP);
+								clickBtn.setText(SAVEGROUP);
+								//clickBtn.setText(CREATESCRIP);
 							}else{
 								clickBtn.setText(LOADFAIL);
 							}
@@ -477,10 +477,6 @@ public class TestMsgActivity extends Activity{
 	}*/
 	//保存群信息
 	public void saveGroupInfo(){
-		if(chatConversation == null){
-			clickBtn.setText(LOADFAIL);
-			return;
-		}
 		ObjChatWrap.saveGroupInfo(user, groupf, "zlp_hello", new ObjChatBeanCallback() {
 
 			@Override

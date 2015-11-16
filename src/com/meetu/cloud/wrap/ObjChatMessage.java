@@ -16,20 +16,24 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.AVQuery.CachePolicy;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMConversationQuery;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationMemberCountCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.cloud.callback.ObjAuthoriseCategoryCallback;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
+import com.meetu.cloud.callback.ObjConversationListCallback;
 import com.meetu.cloud.callback.ObjCoversationCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunCountCallback;
@@ -37,6 +41,7 @@ import com.meetu.cloud.callback.ObjListCallback;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
 import com.meetu.cloud.object.ObjTableName;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.common.Constants;
 import com.meetu.entity.Chatmsgs;
 import com.avos.avoscloud.im.v2.AVIMMessageHandler;
 
@@ -121,7 +126,7 @@ public class ObjChatMessage {
 	 * */
 	public static void getChatCount(AVIMConversation conv,final ObjFunCountCallback callback){
 		conv.getMemberCount(new AVIMConversationMemberCountCallback() {
-			
+
 			@Override
 			public void done(Integer count, AVIMException e) {
 				// TODO Auto-generated method stub
@@ -143,7 +148,7 @@ public class ObjChatMessage {
 	public static void getChatMembers(final AVIMConversation conv,final ObjListCallback callback){
 		final ArrayList<String> mList = new ArrayList<String>();
 		conv.fetchInfoInBackground(new AVIMConversationCallback() {
-			
+
 			@Override
 			public void done(AVIMException e) {
 				// TODO Auto-generated method stub
@@ -188,25 +193,60 @@ public class ObjChatMessage {
 	 * @param message
 	 */
 	public static void sendPicMsg(AVIMConversation conversation,AVIMImageMessage picture,final ObjFunBooleanCallback callback){
-			conversation.sendMessage(picture, new AVIMConversationCallback() {
-				
-				@Override
-				public void done(AVIMException e) {
-					// TODO Auto-generated method stub
-					if (e == null) {
-						//发送成功
-						callback.callback(true, null);
-					}else{
-						callback.callback(false, e);
-					}
+		conversation.sendMessage(picture, new AVIMConversationCallback() {
+
+			@Override
+			public void done(AVIMException e) {
+				// TODO Auto-generated method stub
+				if (e == null) {
+					//发送成功
+					callback.callback(true, null);
+				}else{
+					callback.callback(false, e);
 				}
-			});
+			}
+		});
 	}
 	/**
-	 * 获取聊天记录
+	 * 获取会话
 	 */
-	public static void getHistoryMsg(){
-		
+	public static void getConversation(AVIMClient client,final ObjConversationListCallback callback){
+		AVIMConversationQuery query = client.getQuery();
+		ArrayList<Integer> numbers = new ArrayList<Integer>();
+		numbers.add(1);
+		numbers.add(2);
+		//query.whereContainsIn("attr.cType", numbers);
+		//query.whereGreaterThan("attr.overTime", System.currentTimeMillis());
+		query.whereEqualTo("attr.cType",2);
+		query.findInBackground(new AVIMConversationQueryCallback(){
+			@Override
+			public void done(List<AVIMConversation> convs,AVIMException e){
+				if(e==null){
+					if(convs!=null && !convs.isEmpty()){
+						//获取符合查询条件的Conversation列表
+						callback.callback(convs, null);
+					}
+				}else{
+					callback.callback(null, e);
+				}
+			}
+		});
+		/*query.findInBackground(new AVIMConversationQueryCallback() {
+
+			@Override
+			public void done(List<AVIMConversation> objects, AVIMException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					callback.callback(null, e);
+					return;
+				}
+				if(objects != null){
+					callback.callback(objects, null);
+				}else{
+					callback.callback(null, new AVException(0, "获取会话列表失败"));
+				}
+			}
+		});*/
 	}
 	/**注销聊天
 	 * 

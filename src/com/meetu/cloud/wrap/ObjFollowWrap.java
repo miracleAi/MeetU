@@ -20,7 +20,7 @@ public class ObjFollowWrap {
 	 * 查询我关注的并且参加活动的人列表
 	 * @param callback
 	 */
-	public static void myFollow(final ArrayList<ObjUser> orderUsers,AVUser user,final ObjFunObjectsCallback callback){
+	public static void myFollow(final ArrayList<ObjUser> orderUsers,AVUser user,final ObjUserCallback callback){
 		AVQuery<AVObject> query = new AVQuery<AVObject>(ObjTableName.getMyFollowTb());
 		query.include("followee");
 		query.whereEqualTo("user", user);
@@ -36,11 +36,13 @@ public class ObjFollowWrap {
 				if(null == list){
 					return ;
 				}
-				ArrayList<AVObject> followAndOrderUsers = new ArrayList<AVObject>();
+				ArrayList<ObjUser> followAndOrderUsers = new ArrayList<ObjUser>();
 				for(AVObject objects :list){
 					for(AVUser objectOrder : orderUsers){
-						if(objects.getAVObject("followee").getObjectId() == objectOrder.getObjectId()){
-							followAndOrderUsers.add(objectOrder);
+						AVUser followee = objects.getAVUser("followee");
+						if(followee.getObjectId() == objectOrder.getObjectId()){
+							ObjUser fUser = AVUser.cast(followee, ObjUser.class);
+							followAndOrderUsers.add(fUser);
 						}
 					}
 				}

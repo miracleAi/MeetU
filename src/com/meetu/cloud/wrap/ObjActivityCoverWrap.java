@@ -25,7 +25,6 @@ public class ObjActivityCoverWrap {
 	public static void queryActivityCover(ObjActivity activity,final ObjActivityCoverCallback callback){
 		AVQuery<ObjActivityCover> query = AVObject.getQuery(ObjActivityCover.class);
 		query.whereEqualTo("activity", activity);
-		query.setCachePolicy(CachePolicy.CACHE_ELSE_NETWORK);
 		query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
 		//TimeUnit.DAYS.toMillis(1)
 		query.setMaxCacheAge(10*60*1000);

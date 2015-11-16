@@ -459,10 +459,10 @@ public class TestActivity extends Activity{
 		//获取参加活动并且我关注的人  setOrderAndFollow
 		public void queryFollowAndOrder(ObjActivity activity){
 			ArrayList<ObjUser> followUsers = new ArrayList<ObjUser>();
-			ObjFollowWrap.myFollow(userList, user, new ObjFunObjectsCallback() {
-
+			ObjFollowWrap.myFollow(userList, user,new ObjUserCallback() {
+				
 				@Override
-				public void callback(List<AVObject> objects, AVException e) {
+				public void callback(List<ObjUser> objects, AVException e) {
 					// TODO Auto-generated method stub
 					if(e != null){
 						return ;

@@ -51,21 +51,20 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 	
 	//消息总表
 	private static final String TBL_MESSAGES="messages";//表名
-	private static final String TBL_MESSAGES_CACHEID="_messages_cache_id";//表名
+	
+	private static final String TBL_MESSAGES_CACHEID="_messages_cache_id";
 	private static final String TBL_MESSAGES_CONVERSATION_ID="_conversation_id";
 	private static final String TBL_MESSAGES_CONVERSATION_TYPE="_conversation_type";
 	private static final String TBL_MESSAGES_CREATOR_ID="_creator_id";
-	private static final String TBL_MESSAGES_UNREAD_MSG_COUNT="_unread_msg_count";
 	private static final String TBL_MESSAGES_TIME_OVER="_time_over";
-	private static final String TBL_MESSAGES_SCRIP_USER_ID="_scrip_user_id";
-	private static final String TBL_MESSAGES_SCRIP_USER_NAME="_scrip_user_name";
 	private static final String TBL_MESSAGES_ACTY_ID="_acty_id";
 	private static final String TBL_MESSAGES_ACTY_NAME="_acty_name";
 	private static final String TBL_MESSAGES_CHAT_ID="_chat_id";
 	private static final String TBL_MESSAGES_CHAT_NAME="_chat_name";
-	private static final String TBL_MESSAGES_PERSON_COUNT="_person_count";
-	private static final String TBL_MESSAGES_PERSON_COUNT_UPDATE="_person_count_update";
+	private static final String TBL_MESSAGES_TI_STATUS="_ti_status";
+	private static final String TBL_MESSAGES_UNREAD_COUNT= "_unread_count";
 	
+	//表情
 	private static final String TBL_EMOJIS="emojis";//表名
 	private static final String TBL_EMOJIS_CACHE_ID="_emojis_cache_id";//缓存id
 	private static final String TBL_EMOJIS_ID="_emojis_id";//表情对应的本子资源图片的id
@@ -139,18 +138,15 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		sb4.append(TBL_MESSAGES_CACHEID+ " integer primary key autoincrement ,");
 		sb4.append(Constants.USERID+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_CONVERSATION_ID+ " varchar(100) ,");
-		sb4.append(TBL_MESSAGES_CONVERSATION_TYPE+ " varchar(100) ,");
+		sb4.append(TBL_MESSAGES_CONVERSATION_TYPE+ " Integer ,");
+		sb4.append(TBL_MESSAGES_TI_STATUS+ " Integer ,");
 		sb4.append(TBL_MESSAGES_CREATOR_ID+ " varchar(100) ,");
-		sb4.append(TBL_MESSAGES_UNREAD_MSG_COUNT+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_TIME_OVER+ " varchar(100) ,");
-		sb4.append(TBL_MESSAGES_SCRIP_USER_ID+ " varchar(100) ,");
-		sb4.append(TBL_MESSAGES_SCRIP_USER_NAME+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_ACTY_ID+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_ACTY_NAME+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_CHAT_ID+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_CHAT_NAME+ " varchar(100) ,");
-		sb4.append(TBL_MESSAGES_PERSON_COUNT+ " varchar(100) ,");
-		sb4.append(TBL_MESSAGES_PERSON_COUNT_UPDATE+ " varchar(100) ");
+		sb4.append(TBL_MESSAGES_UNREAD_COUNT+ " integer ,");
 		sb4.append(")");
 		db.execSQL(sb4.toString());
 		

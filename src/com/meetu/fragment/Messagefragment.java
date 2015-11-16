@@ -113,7 +113,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 		 messagesDao=new MessagesDao(getActivity());
 		 Messages messages=new Messages();
 		 messages.setConversationID("1");
-		 messages.setConversationType("1");//1 表示觅聊 0表示 单聊 2表示  活动群聊
+		 messages.setConversationType(1);//1 表示觅聊 0表示 单聊 2表示  活动群聊
 		 messages.setTimeOver((new Date()).getTime());
 	 
 		 messages.setUnreadMsgCount(200);
@@ -121,7 +121,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 
 		 messagesDao.insert(messages);
 		 
-		 mdataListCache=messagesDao.getMessages();
+		 mdataListCache=messagesDao.getMessages("");
 		
 	}
 
