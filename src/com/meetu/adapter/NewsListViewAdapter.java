@@ -173,63 +173,67 @@ public class NewsListViewAdapter  extends BaseAdapter{
 		if(item.getStatus()==70){
 			holder.topRl.setBackgroundResource(R.drawable.acty_cover_card_img_mask);
 		}
-		if(item.getIsFavor()==0){
-			holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
-		}else{
-			holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
-		}
-		holder.favourImg.setOnClickListener(new OnClickListener() {
+//		if(item.getIsFavor()==0){
+//			holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
+//		}else{
+//			holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+//		}
+		
+		/**
+		 * 查询是否对活动点赞
+		 */
+		ObjPraiseWrap.queryActivityFavor(user, objActivity, new ObjFunBooleanCallback() {
 			
 			@Override
-			public void onClick(View arg0) {
-				if(item.getIsFavor()==0){
+			public void callback(boolean result, AVException e) {
+				if(e!=null){
+					log.e("zcq", e);
+					return;
+				}else if(result){
+					//表示已经点赞
 					holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
-					onItemImageFavorClickCallBack.onItemImageFavorClick(position);
+					holder.favourImg.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View arg0) {
+							onItemImageFavorClickCallBack.onItemCancleImageFavorClick(position);
+							holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
+						}
+					});
 				}else{
+					//表示未点赞
 					holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
-					onItemImageFavorClickCallBack.onItemCancleImageFavorClick(position);
+					holder.favourImg.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View arg0) {
+							
+							onItemImageFavorClickCallBack.onItemImageFavorClick(position);
+							holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+						}
+					});
 				}
-				
-				
-//				if(item.getIsFavor()==0){
-////					holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
-//					//修改云端
-//					ObjPraiseWrap.praiseActivity(user, objActivity, new ObjFunBooleanCallback() {
-//						
-//						@Override
-//						public void callback(boolean result, AVException e) {
-//							// TODO Auto-generated method stub
-//							if(e!=null||result==false){
-//								Toast.makeText(mContext, "点赞失败，请检查网络", 1000).show();
-//							}else{
-//								//插入到本地数据库    成功
-//								activityDao.updateIsFavor(user.getObjectId(), item.getActyId(), 1);	
-//								Toast.makeText(mContext, "点赞成功", 1000).show();
-//							}
-//						}
-//					});
-//				
-//				}else{
-//					activityDao.updateIsFavor(user.getObjectId(), item.getActyId(), 0);
-//					//修改云端
-//					ObjPraiseWrap.cancelPraiseActivity(user, objActivity, new ObjFunBooleanCallback() {
-//						
-//						@Override
-//						public void callback(boolean result, AVException e) {
-//							if(e!=null||result==false){
-//								Toast.makeText(mContext, "取消失败，请检查网络", 1000).show();
-//							}else{
-//								//插入到本地数据库    成功
-//								activityDao.updateIsFavor(user.getObjectId(), item.getActyId(), 1);
-//								Toast.makeText(mContext, "点赞成功", 1000).show();
-////								holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
-//							}
-//						}
-//					});
-//				}
 				
 			}
 		});
+		
+//		holder.favourImg.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View arg0) {
+//				if(item.getIsFavor()==0){
+//					holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+//					onItemImageFavorClickCallBack.onItemImageFavorClick(position);
+//				}else{
+//					holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
+//					onItemImageFavorClickCallBack.onItemCancleImageFavorClick(position);
+//				}
+//				
+//				
+//
+//				
+//			}
+//		});
 
 		
 		
@@ -270,6 +274,22 @@ public class NewsListViewAdapter  extends BaseAdapter{
 			}
 			
 		}
+	/**
+	 * 查询是否对活动点赞
+	 *   
+	 * @author lucifer
+	 * @date 2015-11-16
+	 */
+	private void isFavor(){
+		ObjPraiseWrap.queryActivityFavor(user, objActivity, new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	}
 
 	
 

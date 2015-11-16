@@ -42,7 +42,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 	private TextView numberAll,numberPosition;
 	private RelativeLayout addLayout,joinLayout;
 	
-	
+	//网络数据相关
 
 	@Override
 	public void onAttach(Activity activity) {

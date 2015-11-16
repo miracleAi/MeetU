@@ -167,7 +167,7 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 							}else{
 								//插入到本地数据库    成功
 								activityDao.updateIsFavor(user.getObjectId(), actyListCache.get(position).getActyId(), 1);
-								Toast.makeText(getActivity(), "点赞成功", 1000).show();
+								Toast.makeText(getActivity(), "取消点赞成功", 1000).show();
 //								holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
 								actyListCache.clear();
 								actyListCache.addAll(actyDao.queryActys(user.getObjectId()));
@@ -328,64 +328,8 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 		super.setArguments(args);
 	}
 	public void load(int pageNo,int pageSize){
-		data=new ArrayList<Huodong>();
-//		data.add(new Huodong(1,R.drawable.wip_bk_dust));
-		Huodong item =new Huodong();
-	
-		item.setImg(R.drawable.avty_cover_card1_img);
-		item.setTitle("今天是个好日子");
-		item.setStyle(1);
-		data.add(item);
-		Huodong item2 =new Huodong();
-		item2.setImg(R.drawable.avty_cover_card2_img);
-		item2.setTitle("心想的事儿都能成");
-		item2.setStyle(2);
-		data.add(item2);
-		Huodong item3=new Huodong();
-		item3.setImg(R.drawable.avty_cover_card3_img);
-		item3.setTitle("今天是个好日子，心想的事儿都能成");
-		item.setStyle(1);
-		data.add(item3);
-		Huodong item4 =new Huodong();
-		item4.setImg(R.drawable.avty_cover_card4_img);
-		item4.setTitle("今天是个好日子，心想的事儿都能成");
-		item.setStyle(1);
-		data.add(item4);
-		Huodong item5 =new Huodong();
-		item5.setImg(R.drawable.avty_cover_card5_img);
-		item5.setTitle("今天是个好日子，心想的事儿都能成");
-		item.setStyle(1);
-		data.add(item5);
 
-		Huodong item6 =new Huodong();
-		item6.setImg(R.drawable.avty_cover_card6_img);
-		item6.setTitle("今天是个好日子，心想的事儿都能成");
-		item.setStyle(1);
-		data.add(item6);
-		Huodong item7=new Huodong();
-		item7.setImg(R.drawable.avty_cover_card7_img);
-		item7.setTitle("今天是个好日子，心想的事儿都能成");
-		item.setStyle(1);
-		data.add(item7);
-		Huodong item8 =new Huodong();
-		item8.setImg(R.drawable.avty_cover_card1_img);
-		item8.setTitle("今天是个好日子，心想的事儿都能成");
-		item.setStyle(1);
-		data.add(item8);
-		Huodong item9 =new Huodong();
-		item9.setImg(R.drawable.avty_cover_card2_img);
-		item9.setTitle("今天是个好日子，心想的事儿都能成");
-		item.setStyle(1);
-		data.add(item9);
-		Huodong item10 =new Huodong();
-		item10.setImg(R.drawable.avty_cover_card3_img);
-		item10.setTitle("今天是个好日子，心想的事儿都能成");
-		item.setStyle(1);
-		data.add(item10);
-		
-		
-		handler.sendEmptyMessage(1);
-		
+
 	}
 	/**
 	 * 点击进入详情页面
@@ -474,7 +418,7 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 				//TODO 要传入实时滑动到的那个activity
 				Intent intent=new Intent(getActivity(),JoinUsersActivity.class);
 				Bundle bundle=new Bundle();
-				bundle.putSerializable("activityBean", actyListCache.get(0));
+				bundle.putSerializable("activityBean", actyListCache.get(2));
 				intent.putExtras(bundle);
 				startActivity(intent);
 				

@@ -6,9 +6,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import net.tsz.afinal.FinalBitmap;
+
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 import com.meetu.adapter.PhotoPagerAdapter;
@@ -16,13 +19,19 @@ import com.meetu.baidumapdemo.BaiduMapMainActivity;
 import com.meetu.bean.ActivityBean;
 import com.meetu.cloud.callback.ObjActivityCoverCallback;
 import com.meetu.cloud.callback.ObjActivityPhotoCallback;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjUserCallback;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityCover;
 import com.meetu.cloud.object.ObjActivityPhoto;
+import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjActivityCoverWrap;
+import com.meetu.cloud.wrap.ObjActivityOrderWrap;
 import com.meetu.cloud.wrap.ObjActivityPhotoWrap;
+import com.meetu.cloud.wrap.ObjPraiseWrap;
 import com.meetu.entity.PhotoWall;
 import com.meetu.entity.Photolunbo;
+import com.meetu.myapplication.MyApplication;
 import com.meetu.tools.DensityUtil;
 import com.meetu.view.MyScrollView;
 import com.meetu.view.MyScrollView.OnScrollListener;
@@ -33,6 +42,7 @@ import android.os.Message;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -56,7 +66,7 @@ public class HomePageDetialActivity extends Activity
 	//控件相关
 	private ViewPager viewPager;
 	private PhotoPagerAdapter adapter;
-	private List<Photolunbo> photolist = new ArrayList<Photolunbo>();
+//	private List<Photolunbo> photolist = new ArrayList<Photolunbo>();
 	private List<ImageView> dotViewsList = new ArrayList<ImageView>();
 	private ScheduledExecutorService scheduledExecutorService;
 	private int currentItem = 0;
@@ -65,16 +75,19 @@ public class HomePageDetialActivity extends Activity
 	private WebView webView;
 	private RelativeLayout backLayout;
 	private ImageView baiduMap,join,over,backFeed,memory,barrage;
-	
+	private TextView userNumber;
 	private MyScrollView mScrollView;
 	private int mhighty;//滑动的高度y,改变标题栏背景透明度
 	
 	private RelativeLayout topLayout;
 	private TextView titleTop;
 	private String style;
+	private ImageView favorImg;//点赞图标
+	private TextView favorNumber;
 	
 	private TextView address;
 	private TextView titile,titleSub;
+	private ImageView oneUser,twoUser,threeUser,fourUser,fiveUser,sixUser,sevenUser;
 	//网络数据相关
 	private ActivityBean activityBean=new ActivityBean();
 	private ObjActivity objActivity= null;
@@ -82,6 +95,14 @@ public class HomePageDetialActivity extends Activity
 	//轮播图
 	private List<ObjActivityCover> objPhotosList=new ArrayList<ObjActivityCover>();
 	
+	//当前用户
+	AVUser currentUser = AVUser.getCurrentUser();
+	private ObjUser user = new ObjUser();
+	
+	//参加活动用户列表
+		ArrayList<ObjUser> userList = new ArrayList<ObjUser>();
+	
+	private FinalBitmap  finalBitmap;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +115,12 @@ public class HomePageDetialActivity extends Activity
 		Intent intent=getIntent();
 		Bundle bundle=intent.getExtras();
 		activityBean= (ActivityBean) bundle.getSerializable("activityBean");
-//		objActivity=(ObjActivity) bundle.getSerializable("objActivity");
-		
+		 if (currentUser != null) {
+				//强制类型转换
+				user = AVUser.cast(currentUser, ObjUser.class);
+		 }
+		MyApplication app=(MyApplication) this.getApplicationContext();
+		finalBitmap=app.getFinalBitmap();
 		log.e("zcq", "activityBean"+activityBean.getLocationLongtitude()+"   "+activityBean.getLocationLatitude());
 		log.e("zcq", "TimeStart()=="+activityBean.getTimeStart()+"  =="+activityBean.getTimeStop());
 		initLoadActivity(activityBean.getActyId());
@@ -103,22 +128,16 @@ public class HomePageDetialActivity extends Activity
 //		startPlay();
 		initLoad();
 		mhighty=DensityUtil.dip2px(this, 250-44);
-		
+		//点赞相关处理
+		isFavor(user,objActivity);
+		queryOrderUsers(objActivity);
 	}
 private void initLoadActivity(String activityId) {
 	log.e("zcq", "activityId=="+activityId);
 		try {
 			 objActivity=AVObject.createWithoutData(ObjActivity.class, activityId);
-//			ObjActivityCoverWrap.queryActivityCover(objActivity, new ObjActivityCoverCallback() {
-//				
-//				@Override
-//				public void callback(List<ObjActivityCover> objects, AVException e) {
-//					// TODO Auto-generated method stub
-//					
-//				}
-//			});
+
 		} catch (AVException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -147,26 +166,11 @@ private void initLoadActivity(String activityId) {
 		// 先加载数据在设置adapter
 		viewPager = (ViewPager) super.findViewById(R.id.viewpager_photo);
 		load();
-//		adapter = new PhotoPagerAdapter(this, objPhotosList);
-//		viewPager.setOnPageChangeListener(this);
-//
-//		viewPager.setAdapter(adapter);
+
 		mLinearLayout = (LinearLayout) super
 				.findViewById(R.id.dian_linearlayout_homepage);
 
-//		for(int i=0;i<objPhotosList.size();i++){
-//			ImageView viewDot = new ImageView(this);
-//			if (i == 0) {
-//				viewDot.setBackgroundResource(R.drawable.main_dot_white);
-//			} else {
-//				viewDot.setBackgroundResource(R.drawable.main_dot_light);
-//			}
-//			LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-//			params.rightMargin=10;
-//			viewDot.setLayoutParams(params);
-//			dotViewsList.add(viewDot);
-//			mLinearLayout.addView(viewDot);
-//		}
+
 		/**
 		 * vebview相关 加载网页
 		 */
@@ -205,6 +209,20 @@ private void initLoadActivity(String activityId) {
 		titile.setText(""+activityBean.getTitle());
 		titleSub=(TextView) super.findViewById(R.id.title_sub_lunbo_item_homepage_tv);
 		titleSub.setText(""+activityBean.getTitleSub());
+		
+		favorImg=(ImageView) super.findViewById(R.id.favor_home_page_detial_img);
+		
+		favorNumber=(TextView) super.findViewById(R.id.favornumber_homepage_detail);
+		favorNumber.setText(""+activityBean.getPraiseCount());
+		//参加活动的人
+		oneUser=(ImageView) super.findViewById(R.id.userhead_one_heomePageDetial_img);
+		twoUser=(ImageView) super.findViewById(R.id.userhead_two_heomePageDetial_img);
+		threeUser=(ImageView) super.findViewById(R.id.userhead_three_heomePageDetial_img);
+		fourUser=(ImageView) super.findViewById(R.id.userhead_four_heomePageDetial_img);
+		fiveUser=(ImageView) super.findViewById(R.id.userhead_five_heomePageDetial_img);
+		sixUser=(ImageView) super.findViewById(R.id.userhead_six_heomePageDetial_img);
+		sevenUser=(ImageView) super.findViewById(R.id.userhead_seven_heomePageDetial_img);
+		userNumber=(TextView) super.findViewById(R.id.userNumber_homePagedetial_tv);
 	}
 /**
  * 加载网络数据
@@ -213,13 +231,6 @@ private void initLoadActivity(String activityId) {
  * @date 2015-11-11
  */
 	private void load() {
-//		photolist = new ArrayList<Photolunbo>();
-//
-//		photolist.add(new Photolunbo("1", R.drawable.acty_show_img_banner));
-//		photolist.add(new Photolunbo("2", R.drawable.acty_show_img_banner));
-//		photolist.add(new Photolunbo("3", R.drawable.acty_show_img_banner));
-//		photolist.add(new Photolunbo("4", R.drawable.acty_show_img_banner));
-//		photolist.add(new Photolunbo("5", R.drawable.acty_show_img_banner));
 		
 		objPhotosList=new ArrayList<ObjActivityCover>();
 		
@@ -429,5 +440,123 @@ switch (v.getId()) {
 		}
 		
 	}
+	/**
+	 * 点赞操作
+	 * @param user
+	 * @param objActivity  
+	 * @author lucifer
+	 * @date 2015-11-16
+	 */
+	private void isFavor(final ObjUser user,final ObjActivity objActivity){
+		ObjPraiseWrap.queryActivityFavor(user, objActivity, new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				if(e!=null){
+					log.e("zcq", e);
+				}else if(result){
+					//点赞过
+					favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+					favorImg.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View arg0) {
+							
+							
+							//修改云端
+							ObjPraiseWrap.cancelPraiseActivity(user, objActivity, new ObjFunBooleanCallback() {
+								
+								@Override
+								public void callback(boolean result, AVException e) {
+									if(e!=null||result==false){
+										Toast.makeText(getApplicationContext(), "取消失败，请检查网络", 1000).show();
+									}else{
+										//插入到本地数据库    成功
+//										activityDao.updateIsFavor(user.getObjectId(), actyListCache.get(position).getActyId(), 1);
+										Toast.makeText(getApplicationContext(), "取消点赞成功", 1000).show();
+
+										favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
+										isFavor(user,objActivity);
+									}
+								}
+							});
+						}
+					});
+				}else{
+					//没点赞
+					favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
+					favorImg.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View arg0) {
+							// TODO Auto-generated method stub
+							
+							//修改云端
+							ObjPraiseWrap.praiseActivity(user, objActivity, new ObjFunBooleanCallback() {
+								
+								@Override
+								public void callback(boolean result, AVException e) {
+									// TODO Auto-generated method stub
+									if(e!=null||result==false){
+										Toast.makeText(getApplicationContext(), "点赞失败，请检查网络", 1000).show();
+									}else{
+										//插入到本地数据库    成功
+										//activityDao.updateIsFavor(user.getObjectId(), actyListCache.get(position).getActyId(), 1);	
+										Toast.makeText(getApplicationContext(), "点赞成功", 1000).show();
+										favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+										isFavor(user,objActivity);
+									
+									}
+								}
+							});
+						}
+					});
+				}
+				
+			}
+		});
+	}
+	/**
+	 * 活动报名的人
+	 *   
+	 * @author lucifer
+	 * @date 2015-11-16
+	 */
+	public void queryOrderUsers(final ObjActivity activity){
+		ObjActivityOrderWrap.queryActivitySignUp(activity, new ObjUserCallback() {
+			
+			@Override
+			public void callback(List<ObjUser> objects, AVException e) {
+				if(e!=null){
+					log.e("zcq", e);
+					return ;
+				}else if(objects!=null){
+					userList.addAll(objects);
+					log.e("zcq", "userList=="+userList.size());
+					userNumber.setText(""+userList.size());
+					//TODO   点击进入个人主页   未完成
+					if(userList.size()>=7){						
+						finalBitmap.display(sevenUser, userList.get(6).getProfileClip().getUrl());
+					}if(userList.size()>=6){
+						finalBitmap.display(sixUser, userList.get(5).getProfileClip().getUrl());
+					} if(userList.size()>=5){
+						finalBitmap.display(fiveUser, userList.get(4).getProfileClip().getUrl());
+					} if(userList.size()>=4){
+						finalBitmap.display(fourUser, userList.get(3).getProfileClip().getUrl());
+					}if(userList.size()>=3){
+						finalBitmap.display(threeUser, userList.get(2).getProfileClip().getUrl());
+					}if(userList.size()>=2){
+						finalBitmap.display(twoUser, userList.get(1).getProfileClip().getUrl());
+					}if(userList.size()>=1){
+						finalBitmap.display(oneUser, userList.get(0).getProfileClip().getUrl());
+					}
+	
+				}
+				
+			}
+		});
+		
+	}
+	
 
 }
