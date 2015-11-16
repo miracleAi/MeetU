@@ -2,11 +2,15 @@ package com.meetu.adapter;
 
 import java.util.List;
 
+import net.tsz.afinal.FinalBitmap;
+
 
 import com.meetu.R;
 
+import com.meetu.cloud.object.ObjUser;
 import com.meetu.entity.Huodong;
 import com.meetu.entity.User;
+import com.meetu.myapplication.MyApplication;
 
 
 import android.content.Context;
@@ -21,11 +25,15 @@ import android.widget.TextView;
 
 public class JoinUserFavorAdapter extends BaseAdapter {
 	private Context mContext;
-	private List<User> joinUsersList;
+	private List<ObjUser> joinUsersList;
+	//网络数据相关
+		private FinalBitmap finalBitmap;
 	
-	public JoinUserFavorAdapter(Context context,List<User> joinUsersList){
+	public JoinUserFavorAdapter(Context context,List<ObjUser> joinUsersList){
 		this.mContext=context;
 		this.joinUsersList=joinUsersList;
+		MyApplication app=(MyApplication) context.getApplicationContext();
+		finalBitmap=app.getFinalBitmap();
 	}
 
 	@Override
@@ -49,7 +57,7 @@ public class JoinUserFavorAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder=null;
-		User item=joinUsersList.get(position);
+		ObjUser item=joinUsersList.get(position);
 		
 		
 			if(convertView==null){
@@ -65,14 +73,13 @@ public class JoinUserFavorAdapter extends BaseAdapter {
 			}else{
 				holder=(ViewHolder)convertView.getTag();
 			}
-			holder.ivImgUrl.setImageResource(item.getHeadPhoto());
-			holder.tvName.setText(item.getName());
-			holder.tvSchool.setText(item.getSchool());
+			finalBitmap.display(holder.ivImgUrl, item.getProfileClip().getUrl());
+			holder.tvName.setText(""+item.getNameNick());
+			holder.tvSchool.setText(""+item.getSchool());
 			holder.tvWeizhi.setText(""+position);
-			
-			if(item.getSex().equals("女")){
+			if(item.getGender()==2){
 				holder.ivSex.setImageResource(R.drawable.acty_joinlist_img_female);
-			}
+			}	
 			return convertView;
 	}
 	

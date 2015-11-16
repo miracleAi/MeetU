@@ -1,11 +1,13 @@
 package com.meetu.cloud.object;
 
 
+import java.io.Serializable;
+
 import com.avos.avoscloud.AVClassName;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 @AVClassName("ObjChat")
-public class ObjChat extends AVObject{
+public class ObjChat extends AVObject implements Serializable{
 	public static final Creator CREATOR = AVObjectCreator.instance;
 	/**
 	 *  觅聊创建用户

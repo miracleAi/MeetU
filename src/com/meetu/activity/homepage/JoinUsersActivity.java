@@ -51,7 +51,7 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,O
 	private ListView mlistViewAll,mListViewFavor;
 	private JoinUserAdapter adapter;
 	private List<User> joinUsersList=new ArrayList<User>();
-	private List<User> joinUsersFavorList=new ArrayList<User>();
+//	private List<User> joinUsersFavorList=new ArrayList<User>();
 	private JoinUserFavorAdapter adapterfavor;
 	private float itemHight=(float) 60.5;//item高度加下划线高度
 	private TextView numberFavor,numberAll;
@@ -107,7 +107,7 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,O
 		
 		mlistViewAll.setAdapter(adapter);
 		mlistViewAll.setOnItemClickListener(this);
-		adapterfavor=new JoinUserFavorAdapter(this, joinUsersFavorList);
+		adapterfavor=new JoinUserFavorAdapter(this, userFavorList);
 		mListViewFavor.setAdapter(adapterfavor);
 		
 		
@@ -117,20 +117,20 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,O
 	
 
 	private void loadData2() {
-		joinUsersFavorList=new ArrayList<User>();
-		User item=new User();
-		item.setName("刘亦菲");
-		item.setSchool("北京大学");
-		item.setSex("女");
-		item.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		joinUsersFavorList.add(item);
-		
-		User item1=new User();
-		item1.setName("李连杰");
-		item1.setSchool("清华大学");
-		item1.setSex("男");
-		item1.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		joinUsersFavorList.add(item1);
+//		joinUsersFavorList=new ArrayList<User>();
+//		User item=new User();
+//		item.setName("刘亦菲");
+//		item.setSchool("北京大学");
+//		item.setSex("女");
+//		item.setHeadPhoto(R.drawable.mine_likelist_profile_default);
+//		joinUsersFavorList.add(item);
+//		
+//		User item1=new User();
+//		item1.setName("李连杰");
+//		item1.setSchool("清华大学");
+//		item1.setSex("男");
+//		item1.setHeadPhoto(R.drawable.mine_likelist_profile_default);
+//		joinUsersFavorList.add(item1);
 		
 	}
 
@@ -143,12 +143,12 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,O
 		mlistViewAll.setLayoutParams(rlAll);
 		
 		RelativeLayout.LayoutParams rlfavor=(LayoutParams) mListViewFavor.getLayoutParams();
-		rlfavor.height=DensityUtil.dip2px(this, itemHight)*joinUsersFavorList.size()+40;
+		rlfavor.height=DensityUtil.dip2px(this, itemHight)*userFavorList.size()+40;
 		mListViewFavor.setLayoutParams(rlfavor);
 		
 		log.e("lucifer", "itemHight="+itemHight);
 		numberFavor=(TextView) super.findViewById(R.id.number_favor_joinUser);
-		numberFavor.setText("("+joinUsersFavorList.size()+")");
+		numberFavor.setText("("+userFavorList.size()+")");
 		numberAll=(TextView) super.findViewById(R.id.number_all_joinUser);
 		numberAll.setText("("+userList.size()+")");
 		//点击事件处理
@@ -277,6 +277,20 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,O
 			//获取参加活动并且我关注的人  setOrderAndFollow
 			public void queryFollowAndOrder(ObjActivity activity){
 				ArrayList<ObjUser> followUsers = new ArrayList<ObjUser>();
+				ObjFollowWrap.myFollow(userList, user, new ObjUserCallback() {
+					
+					@Override
+					public void callback(List<ObjUser> objects, AVException e) {
+						if(e!=null){
+							log.e("zcq",e);
+						}else if(objects!=null){
+							userFavorList.addAll(objects);
+							log.e("zcq", "userFavorList=="+userList.size());
+							handler.sendEmptyMessage(1);
+						}
+						
+					}
+				});
 			}
 
 	
@@ -291,6 +305,7 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,O
 			case 1:
 				adapter.notifyDataSetChanged();
 				log.e("lucifer", "shuaxin");
+				adapterfavor.notifyDataSetChanged();
 				initView();
 				break;
 

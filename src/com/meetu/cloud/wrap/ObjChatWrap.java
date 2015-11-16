@@ -40,7 +40,7 @@ public class ObjChatWrap {
 	//获取觅聊列表
 	public static void queryChatList(final ObjChatCallback callback){
 		AVQuery<ObjChat> query = AVObject.getQuery(ObjChat.class);
-		query.whereLessThan("timeChatStop", System.currentTimeMillis());
+//	query.whereGreaterThan("timeChatStop", System.currentTimeMillis());
 		query.findInBackground(new FindCallback<ObjChat>() {
 			
 			@Override
