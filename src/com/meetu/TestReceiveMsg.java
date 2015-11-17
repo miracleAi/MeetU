@@ -22,6 +22,7 @@ import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.entity.Messages;
+import com.meetu.myapplication.DefaultMemberHandler;
 import com.meetu.sqlite.ChatmsgsDao;
 import com.meetu.sqlite.MessagesDao;
 
@@ -60,6 +61,7 @@ public class TestReceiveMsg extends Activity{
 		// TODO Auto-generated method stub
 		super.onResume();
 		AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
+		AVIMMessageManager.setConversationEventHandler(new MemberChangeHandler());
 	}
 	private void initView() {
 		// TODO Auto-generated method stub
@@ -72,6 +74,7 @@ public class TestReceiveMsg extends Activity{
 		// TODO Auto-generated method stub
 		super.onPause();
 		AVIMMessageManager.unregisterMessageHandler(AVIMTypedMessage.class, msgHandler);
+		AVIMMessageManager.setConversationEventHandler(new DefaultMemberHandler(getApplicationContext()));
 	}
 	//文本消息处理方法
 	public void createChatMsg(AVIMConversation conversation,AVIMTypedMessage message){
@@ -135,61 +138,67 @@ public class TestReceiveMsg extends Activity{
 		if(msgType == Constants.ACTYSG){
 			//活动群，判断是否参加
 			String actyId = (String) conversation.getAttribute("appendId");
-			try {
-				ObjActivity acty = ObjActivity.createWithoutData(ObjActivity.class, actyId);
-				ObjActivityWrap.queryUserJoin(acty, user, new ObjFunBooleanCallback() {
+			for(final String userId:array){
+				try {
+					ObjActivity acty = ObjActivity.createWithoutData(ObjActivity.class, actyId);
+					ObjUser joinUser = ObjUser.createWithoutData(ObjUser.class, userId);
+					ObjActivityWrap.queryUserJoin(acty, user, new ObjFunBooleanCallback() {
 
-					@Override
-					public void callback(boolean result, AVException e) {
-						if(e != null){
-							return ;
-						}
-						if(result){
-							//已参加，保存
-							ObjUserWrap.getObjUser(client.getClientId(), new ObjUserInfoCallback() {
-								
-								@Override
-								public void callback(ObjUser joinuser, AVException e) {
-									// TODO Auto-generated method stub
-									Chatmsgs chatBean = new Chatmsgs();
-									chatBean.setChatMsgType(Constants.MEMBERADD_TYPE);
-									chatBean.setNowJoinUserId(client.getClientId());
-									chatBean.setUid(user.getObjectId());
-									chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
-									chatBean.setContent(joinuser.getNameNick()+"加入群聊");
-									chatDao.insert(chatBean);
-									if(conversation.getConversationId().equals(conversationId)){
-										//显示
-										memberTv.setText(client.getClientId());
-									}else{
-										//未读消息加1,保存未读
-										msgDao.updateUnread(user.getObjectId(), conversation.getConversationId());
+						@Override
+						public void callback(boolean result, AVException e) {
+							if(e != null){
+								return ;
+							}
+							if(result){
+								//已参加，保存
+								ObjUserWrap.getObjUser(client.getClientId(), new ObjUserInfoCallback() {
+
+									@Override
+									public void callback(ObjUser joinuser, AVException e) {
+										// TODO Auto-generated method stub
+										Chatmsgs chatBean = new Chatmsgs();
+										chatBean.setChatMsgType(Constants.MEMBERCHANGE_TYPE);
+										chatBean.setNowJoinUserId(client.getClientId());
+										chatBean.setUid(user.getObjectId());
+										chatBean.setNowJoinUserId(userId);
+										chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
+										chatDao.insert(chatBean);
+										if(conversation.getConversationId().equals(conversationId)){
+											//测试显示（实际刷新界面）
+											memberTv.setText(client.getClientId());
+										}else{
+											//未读消息加1,保存未读
+											msgDao.updateUnread(user.getObjectId(), conversation.getConversationId());
+										}
 									}
-								}
-							});
-						}else{
-							//未参加  直接放弃
+								});
+							}else{
+								//未参加  直接放弃
+							}
 						}
-					}
-				});
-			} catch (AVException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+					});
+				} catch (AVException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}else{
-			//普通群，直接保存
-			Chatmsgs chatBean = new Chatmsgs();
-			chatBean.setChatMsgType(Constants.MEMBERADD_TYPE);
-			chatBean.setNowJoinUserId(client.getClientId());
-			chatBean.setUid(user.getObjectId());
-			chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
-			chatDao.insert(chatBean);
-			if(conversation.getConversationId().equals(conversationId)){
-				//显示
-				memberTv.setText(client.getClientId());
-			}else{
-				//未读消息加1,保存未读
-				msgDao.updateUnread(user.getObjectId(), conversation.getConversationId());
+			for(String userId:array){
+				//普通群，直接保存
+				Chatmsgs chatBean = new Chatmsgs();
+				chatBean.setChatMsgType(Constants.MEMBERCHANGE_TYPE);
+				chatBean.setNowJoinUserId(client.getClientId());
+				chatBean.setUid(user.getObjectId());
+				chatBean.setNowJoinUserId(userId);
+				chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
+				chatDao.insert(chatBean);
+				if(conversation.getConversationId().equals(conversationId)){
+					//测试显示（实际刷新界面）
+					memberTv.setText(client.getClientId());
+				}else{
+					//未读消息加1,保存未读
+					msgDao.updateUnread(user.getObjectId(), conversation.getConversationId());
+				}
 			}
 		}
 	}
@@ -207,7 +216,7 @@ public class TestReceiveMsg extends Activity{
 			//未读消息加1,保存未读
 			msgDao.updateUnread(user.getObjectId(), conversation.getConversationId());
 			Chatmsgs chatBean = new Chatmsgs();
-			chatBean.setChatMsgType(Constants.MEMBERADD_TYPE);
+			chatBean.setChatMsgType(Constants.MEMBERCHANGE_TYPE);
 			chatBean.setNowJoinUserId(client.getClientId());
 			chatBean.setUid(user.getObjectId());
 			chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
@@ -264,14 +273,18 @@ public class TestReceiveMsg extends Activity{
 			//在当前聊天--》1.活动群，判断参与者是否参加活动，不参加不提示。2.普通群：提示
 			//不在当前聊天--》1.参加，插入数据库。2.插入数据库
 			handleMemberAdd(client, conversation, array, str);
-		}
+		} 
 
 		@Override
 		public void onMemberLeft(AVIMClient client, AVIMConversation conversation,
 				List<String> array, String str) {
+			if(!array.contains(user.getObjectId())){
+				//被踢出者中不包含自己，不处理 
+				return;
+			}
 			// 被踢出人，踢出人
 			handleMemberRemove(client, conversation, array, str);
-			
+
 		}
 
 	}

@@ -96,7 +96,7 @@ public class TestMsgTwoActivity extends Activity{
 				// TODO Auto-generated method stub
 				if(e != null){
 					clickBtn.setText(LOADFAIL);
-					return;
+					return;  
 				}
 				clickBtn.setText(QUERYLOCALCOVERSATION);
 				ArrayList<AVIMConversation> convList = new ArrayList<AVIMConversation>();

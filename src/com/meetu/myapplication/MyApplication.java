@@ -47,7 +47,6 @@ public class MyApplication extends Application {
 	
 	public BitmapUtils bitmapUtils=null;
 	private FinalBitmap finalBitmap=null;
-	DefaultMemberHandler defMemHandler = null;
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
@@ -98,9 +97,7 @@ public class MyApplication extends Application {
 					}
 					chatClient = client;
 					isChatLogin = true;
-					defMemHandler = new DefaultMemberHandler();
-					AVIMMessageManager.setConversationEventHandler(defMemHandler);
-					AVIMMessageManager.registerDefaultMessageHandler(new DefaultMessageHandler());
+					AVIMMessageManager.registerDefaultMessageHandler(new DefaultMessageHandler(getApplicationContext()));
 				}
 			});
 		} 

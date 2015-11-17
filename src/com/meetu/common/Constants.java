@@ -120,7 +120,7 @@ public class Constants {
 	public static final int FILE_TYPE = -6;
 	public static final int UNSUPPORT_TYPE = -7;
 	//以上与leancloud对应，以下为自定义标记
-	public static final int MEMBERADD_TYPE = -8;
+	public static final int MEMBERCHANGE_TYPE = -8;
 	//传到云端，必须与iOS保持一直
 	public static final int SCRIPT_MSG = 5;
 	/**

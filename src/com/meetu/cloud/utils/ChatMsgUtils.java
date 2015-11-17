@@ -6,31 +6,6 @@ import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 import com.meetu.common.Constants;
 
 public class ChatMsgUtils {
-	//消息类型转换
-	public static int getType(AVIMReservedMessageType t){
-		if(t == AVIMReservedMessageType.TextMessageType){
-			return Constants.TEXT_TYPE;
-		}
-		if(t == AVIMReservedMessageType.ImageMessageType){
-			return Constants.IMAGE_TYPE;
-		}
-		if(t == AVIMReservedMessageType.AudioMessageType){
-			return Constants.AUDIO_TYPE;
-		}
-		if(t == AVIMReservedMessageType.VideoMessageType){
-			return Constants.VEDIO_TYPE;
-		}
-		if(t == AVIMReservedMessageType.LocationMessageType){
-			return Constants.LOCATION_TYPE;
-		}
-		if(t == AVIMReservedMessageType.FileMessageType){
-			return Constants.FILE_TYPE;
-		}
-		if(t == AVIMReservedMessageType.UnsupportedMessageType){
-			return Constants.UNSUPPORT_TYPE;
-		}
-		return 0;
-	}
 	//转换消息状态
 	public static int getStatus(AVIMMessageStatus s){
 		if(s == AVIMMessageStatus.AVIMMessageStatusNone){
@@ -60,7 +35,7 @@ public class ChatMsgUtils {
 		}
 		return 0;
 	}
-	//发送消息是否显示转换
+	//发送消息是否显示-转换
 	public static boolean getsendTimeIsShow(int i){
 		if(i == Constants.TIMESHOW){
 			return true;
@@ -68,7 +43,7 @@ public class ChatMsgUtils {
 			return false;
 		}
 	}
-	//接收消息是否显示转换
+	//接收消息是否显示-转换
 	public static int geRecvTimeIsShow(boolean b){
 		if(b){
 			return Constants.TIMESHOW;
