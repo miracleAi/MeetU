@@ -108,7 +108,7 @@ public class TestActivityTwo extends Activity{
 				showDialog();
 			}
 		});
-		clickBtn.setText(LOADUSERPHOTO);
+		//clickBtn.setText(LOADUSERPHOTO);
 		//clickBtn.setText(ADDUSERPHOTO);
 		clickBtn.setOnClickListener(new OnClickListener() {
 
@@ -143,7 +143,6 @@ public class TestActivityTwo extends Activity{
 						return ;
 					}
 					if(clickBtn.getText().toString().equals(DELETEUSERPHOTO)){
-						//上传用户照片
 						clickBtn.setText(LOADING);
 						deleteUserPhoto(photoBean);
 						return ;

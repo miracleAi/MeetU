@@ -33,6 +33,7 @@ import com.meetu.cloud.object.ObjAuthoriseCategory;
 import com.meetu.cloud.object.ObjChat;
 import com.meetu.cloud.object.ObjScrip;
 import com.meetu.cloud.object.ObjScripBox;
+import com.meetu.cloud.object.ObjSysMsg;
 import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.cloud.object.ObjUserPhotoPraise;
 import com.meetu.cloud.wrap.ObjChatMessage;
@@ -79,6 +80,7 @@ public class MyApplication extends Application {
 		AVObject.registerSubclass(ObjChat.class);
 		AVObject.registerSubclass(ObjScrip.class);
 		AVObject.registerSubclass(ObjScripBox.class);
+		AVObject.registerSubclass(ObjSysMsg.class);
 		AVOSCloud.initialize(this,
 				"tcd4rj3s3c54bdlkv1vfu5puvu9c2k96ur9kge3qvptqxp8p",
 				"8fpp7j815746jg9x26f0d3c5p76xqkyqm586v2onvx3m2k7a");

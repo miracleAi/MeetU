@@ -2,7 +2,6 @@ package com.meetu.sqlite;
 
 import java.util.ArrayList;
 
-import com.meetu.bean.ActivityBean;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.common.Constants;
 
