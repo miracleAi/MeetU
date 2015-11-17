@@ -88,7 +88,7 @@ public class TestReceiveMsg extends Activity{
 		chatBean.setConversationId(msg.getConversationId());
 		chatBean.setChatMsgDirection(ChatMsgUtils.getDerection(msg.getMessageIOType()));
 		chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
-		boolean b = (Boolean) msg.getAttrs().get("isShowTime");
+		boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
 		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
 		chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
 		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
@@ -115,7 +115,7 @@ public class TestReceiveMsg extends Activity{
 		chatBean.setConversationId(msg.getConversationId());
 		chatBean.setChatMsgDirection(ChatMsgUtils.getDerection(msg.getMessageIOType()));
 		chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
-		boolean b = (Boolean) msg.getAttrs().get("isShowTime");
+		boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
 		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
 		chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
 		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));

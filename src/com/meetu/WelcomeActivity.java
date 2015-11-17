@@ -100,6 +100,8 @@ public class WelcomeActivity extends Activity {
 			startActivity(intent);
 			finish();
 		}
+		next();
+		
 	}
 
 
@@ -126,6 +128,7 @@ public class WelcomeActivity extends Activity {
 		sp.edit().putInt("user", 1).commit();
 		//解析xml  开子线程处理任务
 		new MyAsyncTask().execute();
+		goHome();
 	}
 
 	private void goHome() {

@@ -88,7 +88,8 @@ public class ObjAuthoriseWrap {
 	/**
 	 * 重新申请权限
 	 * */
-	public static void updateApplyAuthorise(ObjAuthoriseApply apply,final ObjFunBooleanCallback callback){
+	public static void updateApplyAuthorise(ObjAuthoriseApply apply,String argument,final ObjFunBooleanCallback callback){
+		apply.setArgument(argument);
 		apply.saveInBackground(new SaveCallback() {
 
 			@Override

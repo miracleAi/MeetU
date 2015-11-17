@@ -8,8 +8,10 @@ import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 import com.meetu.R.layout;
 import com.meetu.R.menu;
+import com.meetu.cloud.callback.ObjAuthoriseApplyCallback;
 import com.meetu.cloud.callback.ObjAuthoriseCategoryCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.object.ObjAuthoriseApply;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjAuthoriseWrap;
@@ -37,7 +39,8 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener{
 	ObjUser user = new ObjUser();
 	//权限
 	ObjAuthoriseCategory category = new ObjAuthoriseCategory();
-	
+	//权限申请
+		ObjAuthoriseApply apply = new ObjAuthoriseApply();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -71,8 +74,14 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener{
 		case R.id.applyForMiLiao_img:
 			
 			
-			Intent intent=new Intent(ApplyForMiLiaoActivity.this,CreationChatActivity.class);
-			startActivity(intent);
+//			Intent intent=new Intent(ApplyForMiLiaoActivity.this,CreationChatActivity.class);
+//			startActivity(intent);
+			if(content.getText().length()==0){
+				Toast.makeText(getApplicationContext(), "请填写申请内容", 1000).show();
+			}else{
+				queryIsApply(category);
+				finish();
+			}
 			
 
 		default:
@@ -81,9 +90,61 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener{
 		
 	}
 	
-	//查询是否有权限
-		public void queryHaveAuthorise(ObjAuthoriseCategory category){
-			ObjAuthoriseWrap.queryUserAuthorise(category,user, new ObjFunBooleanCallback() {
+	//查询是否已申请
+		public void queryIsApply(final ObjAuthoriseCategory category){
+			ObjAuthoriseWrap.queryApply(user, category, new ObjAuthoriseApplyCallback() {
+
+				@Override
+				public void callback(List<ObjAuthoriseApply> objects, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+					log.e("zcq", e);
+						return;
+					}
+					if(objects.size() == 0){
+						//没申请过
+						applyAuthorise(category,content.getText().toString());
+					}else{
+						//申请过
+						apply = objects.get(0);
+						updateApplyAuthorise(apply,content.getText().toString());
+					}
+				}
+			});
+		}
+		//发起申请
+		/**
+		 * 发起申请权限
+		 * @param caty 
+		 * @param argument  内容
+		 * @author lucifer
+		 * @date 2015-11-17
+		 */
+		public void applyAuthorise(ObjAuthoriseCategory caty,String argument){
+			ObjAuthoriseWrap.applyAuthorise(user, caty, argument, new ObjFunBooleanCallback() {
+
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						log.e("zcq", e);
+			
+						return;
+					}
+					if(result){
+						log.e("zcq", "发起申请成功");
+						Toast.makeText(getApplicationContext(), "发起申请成功", Toast.LENGTH_SHORT).show();
+					}else{
+						log.e("zcq", "发起申请失败，请检查网络");
+						Toast.makeText(getApplicationContext(), "发起申请失败，请检查网络", Toast.LENGTH_SHORT).show();
+					}
+				}
+			});
+		}
+		//重新申请
+		public void updateApplyAuthorise(ObjAuthoriseApply aply,String argument){
+			aply.setLookStatus(0);
+			ObjAuthoriseWrap.updateApplyAuthorise(aply, argument,new ObjFunBooleanCallback() {
 
 				@Override
 				public void callback(boolean result, AVException e) {
@@ -93,12 +154,11 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener{
 						return;
 					}
 					if(result){
-					//	clickBtn.setText(UPLOADPIC);
-						log.e("zcq", "有权限");
-						
+						log.e("zcq", "重新发起申请成功");
+						Toast.makeText(getApplicationContext(), "重新发起申请成功", Toast.LENGTH_SHORT).show();
 					}else{
-					//	clickBtn.setText(ISAPPLY);
-						log.e("zcq", "木有权限");
+						log.e("zcq", "重新发起申请失败，请检查网络");
+						Toast.makeText(getApplicationContext(), "重新发起申请失败，请检查网络", Toast.LENGTH_SHORT).show();
 					}
 				}
 			});

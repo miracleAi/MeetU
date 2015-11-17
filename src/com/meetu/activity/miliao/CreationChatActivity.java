@@ -5,12 +5,27 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+import com.avos.avoscloud.im.v2.AVIMClient;
 import com.meetu.R;
+import com.meetu.cloud.callback.ObjAvimclientCallback;
+import com.meetu.cloud.callback.ObjChatBeanCallback;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.object.ObjChat;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjChatMessage;
+import com.meetu.cloud.wrap.ObjChatWrap;
+import com.meetu.cloud.wrap.ObjUserPhotoWrap;
+import com.meetu.common.Constants;
+import com.meetu.myapplication.MyApplication;
 import com.meetu.tools.BitmapCut;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
 
+import android.R.string;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -44,6 +59,12 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 	private TextView textsize;//输入的文字数量
 	private RelativeLayout photoUpdateLayout,photoLayout;
 	private int PhotoWidth,PhotoHight;
+	private RelativeLayout upLayout,backLayout;
+	//网络数据相关
+	private String photoPath="";
+	ObjUser user = new ObjUser();
+	AVUser currentUser = ObjUser.getCurrentUser();
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +72,9 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.getWindow();
 		setContentView(R.layout.activity_creation_chat);
+		if(currentUser!=null){
+			user = AVUser.cast(currentUser, ObjUser.class);
+		}
 		initView();
 	}
 
@@ -90,6 +114,12 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 		updateText=(EditText) super.findViewById(R.id.CreationChat_text_mine);
 		updateText.addTextChangedListener(watcher);
 		textsize=(TextView) super.findViewById(R.id.textsize_CreationChat_tv);
+		
+		// wancheng
+		upLayout=(RelativeLayout) super.findViewById(R.id.wancheng_creationChat_rl);
+		upLayout.setOnClickListener(this);
+		backLayout=(RelativeLayout) super.findViewById(R.id.back_creationChat_rl);
+		backLayout.setOnClickListener(this);
 	}
 	/**
 	 * 监听editview 中输入的字符的数量 动态改变数量
@@ -132,6 +162,19 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 		case R.id.uploadAgain_creationChat_img:
 		//	Toast.makeText(this, "重新上传", Toast.LENGTH_SHORT).show();
 			showDialog();
+			break;
+		case R.id.wancheng_creationChat_rl:
+			if(updateText.getText().length()==0){
+				Toast.makeText(getApplicationContext(), "请输入觅聊标题", Toast.LENGTH_SHORT).show();
+			}else{
+				//开始创建操作
+				createGroup();
+			}
+			break;
+		case R.id.back_creationChat_rl:
+			Intent intent=getIntent();
+			setResult(RESULT_OK,intent);
+			finish();
 			break;
 
 		default:
@@ -214,10 +257,8 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 			if(data!=null){
 				Bundle extras=data.getExtras();
 				headerPortait=extras.getParcelable("data");
-//				headerPortait=BitmapCut.toRoundBitmap(headerPortait);
-//				headerPortait=BitmapCut.getRadiusBitmap(headerPortait);
 				if(headerPortait!=null){
-					saveHeadImg(headerPortait);
+					photoPath=saveHeadImg(headerPortait);
 					photo.setImageBitmap(headerPortait);
 					photoUpdateLayout.setVisibility(View.GONE);
 					photoUpdateLayout.setFocusable(false);
@@ -236,8 +277,10 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 	 * 把要上传的图片存到本地sd卡上
 	 * @param photo
 	 */
-	public void saveHeadImg(Bitmap photo){
+	public String saveHeadImg(Bitmap photo){
 		FileOutputStream fos=null;
+		String path = "";
+		path = Environment.getExternalStorageDirectory()+"/photo.png";
 		try {
 			fos=new FileOutputStream(new File(Environment.getExternalStorageDirectory()+"/photo.png"));
 			photo.compress(CompressFormat.PNG, 100, fos);
@@ -254,7 +297,7 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 					e.printStackTrace();
 				}
 		}
-		
+		return path;
 		
 	}
 	
@@ -277,12 +320,105 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
 		// // outputX outputY 是裁剪后图片宽高
-		intent.putExtra("outputX", 275);
-		intent.putExtra("outputY", 258);
+		intent.putExtra("outputX", 550);
+		intent.putExtra("outputY", 516);
 		intent.putExtra("return-data",true);
 		log.e("lucifer", "PhotoWidth="+PhotoWidth+"  PhotoHight"+PhotoHight);
 		startActivityForResult(intent,33);
 	}
+	
+	//创建群
+	AVFile groupf = null;
+		public void createGroup(){
+			try {
+				groupf = AVFile.withAbsoluteLocalPath("chat"+user.getObjectId()+Constants.IMG_TYPE, photoPath);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//上传图片
+			ObjUserPhotoWrap.savePhoto(groupf, new ObjFunBooleanCallback() {
+
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+					//	clickBtn.setText(LOADFAIL);
+						log.e("zcq", e);
+						return ;
+					}
+					else if(!result){
+					//	clickBtn.setText(LOADFAIL);
+						log.e("zcq", "照片上传失败");
+						return;
+
+					}else if(MyApplication.isChatLogin){
+					//	clickBtn.setText(SAVEGROUP);
+						//clickBtn.setText(CREATESCRIP);
+						//建立长连接
+						log.e("zcq","已经建立过长连接");
+						saveGroupInfo();
+					}else{
+						saveGroupInfo();
+						ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
+
+							@Override
+							public void callback(AVIMClient client, AVException e) {
+								// TODO Auto-generated method stub
+								if(e != null){
+								//	clickBtn.setText(LOADFAIL);
+									log.e("zcq", e);
+									return ;
+								}
+								if(client != null){
+									MyApplication.chatClient = client;
+									log.e("zcq", "连接聊天长连接成功");
+								//	clickBtn.setText(SAVEGROUP);
+									//clickBtn.setText(CREATESCRIP);
+								}else{
+								//	clickBtn.setText(LOADFAIL);
+									log.e("zcq", "连接聊天长连接失败");
+								}
+							}
+						});
+					}
+				}
+			});
+		}
+		
+		//保存群信息
+		public void saveGroupInfo(){
+			ObjChatWrap.saveGroupInfo(user, groupf, updateText.getText().toString(), new ObjChatBeanCallback() {
+
+				@Override
+				public void callback(ObjChat object, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						//clickBtn.setText(LOADFAIL);
+						return ;
+					}else{
+						Intent intent=getIntent();
+						setResult(RESULT_OK, intent);
+						finish();
+					}
+					
+				}
+			});
+		}
+
+		@Override
+		public void onBackPressed() {
+			// TODO Auto-generated method stub
+			Intent intent=getIntent();
+			setResult(RESULT_OK,intent);
+			finish();
+			super.onBackPressed();
+		}
+		
+		
 
 	
 
