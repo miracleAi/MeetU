@@ -12,10 +12,13 @@ import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 import com.meetu.activity.miliao.ApplyForMiLiaoActivity;
 import com.meetu.activity.miliao.ChatGroupActivity;
+import com.meetu.activity.miliao.CreationChatActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
+import com.meetu.cloud.callback.ObjAuthoriseApplyCallback;
 import com.meetu.cloud.callback.ObjAuthoriseCategoryCallback;
 import com.meetu.cloud.callback.ObjChatCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.object.ObjAuthoriseApply;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
 import com.meetu.cloud.object.ObjChat;
 import com.meetu.cloud.object.ObjUser;
@@ -62,6 +65,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 	ObjUser user = new ObjUser();
 	//权限
 		ObjAuthoriseCategory category = new ObjAuthoriseCategory();
+		ObjAuthoriseApply apply=new ObjAuthoriseApply();
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -121,23 +125,19 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
  */
 
 	private void initViewPager() {
-		// TODO 先测试5个卡片
+		// TODO 加载网络数据后设置 viewpager数据 
 		fragmentList=new ArrayList<Fragment>();
 		for(int i=0;i<objChatsList.size();i++){
 		MiliaoChannelFragment frag=new MiliaoChannelFragment();
 		Bundle bundle=new Bundle();
-//		bundle.putString("weburl", channelList.get(i).getWeburl());
-//		bundle.putString("id", channelList.get(i).getId());
-//		bundle.putString("name", channelList.get(i).getName());
-//		bundle.putString("hweburl", channelList.get(i).getHweburl());
-		bundle.putSerializable("ObjChat", objChatsList.get(positonNow));
+		bundle.putSerializable("ObjChat", objChatsList.get(i));
 		frag.setArguments(bundle);
 		fragmentList.add(frag);
 		}
 		
 		adapter=new BoardPageFragmentAdapter(super.getActivity().getSupportFragmentManager(), fragmentList);
 		viewPager.setAdapter(adapter);
-//		viewPager.setOffscreenPageLimit(2);
+		viewPager.setOffscreenPageLimit(3);
 		viewPager.setCurrentItem(0);
 		 
 		
@@ -280,7 +280,8 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 							category = objects.get(0);
 							if(category.isNeedAuthorise()){
 					
-								queryHaveAuthorise(category);
+								//queryHaveAuthorise(category);
+								queryIsApply(category);
 							}else{
 						
 								
@@ -290,5 +291,58 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 					}
 				});
 			}
+			//查询是否已申请
+			public void queryIsApply(final ObjAuthoriseCategory category){
+				ObjAuthoriseWrap.queryApply(user, category, new ObjAuthoriseApplyCallback() {
+
+					@Override
+					public void callback(List<ObjAuthoriseApply> objects, AVException e) {
+						// TODO Auto-generated method stub
+						if(e != null){
+						log.e("zcq", e);
+							return;
+						}
+						if(objects.size() == 0){
+							//没申请过
+							log.e("zcq", "木有权限");
+							Intent intent=new Intent(getActivity(),ApplyForMiLiaoActivity.class);
+							startActivity(intent);
+						}else{
+							//申请过
+							apply = objects.get(0);
+						if(apply.getApplyResult()==2){
+							//表示有权限创建觅聊
+							log.e("zcq", "有权限");
+							
+							Intent intent=new Intent(getActivity(),CreationChatActivity.class);
+							startActivityForResult(intent, 100);
+						}else{
+							log.e("zcq", "木有权限");
+							Intent intent=new Intent(getActivity(),ApplyForMiLiaoActivity.class);
+							startActivity(intent);
+						}
+						}
+					}
+				});
+			}
+
+
+			@Override
+			public void onActivityResult(int requestCode, int resultCode,
+					Intent data) {
+				switch (requestCode) {
+				case 100:
+					if(resultCode==getActivity().RESULT_OK){
+						//TODO 创建 觅聊成功  应刷新viewpager中数据
+						log.e("zcq", "回传成功，该刷新viewpager数据了");
+					}
+					
+					break;
+
+				default:
+					break;
+				}
+			}
+			
 
 }

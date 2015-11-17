@@ -703,22 +703,22 @@ public class TestMsgActivity extends Activity{
 	//重新申请
 	public void updateApplyAuthorise(ObjAuthoriseApply aply){
 		aply.setLookStatus(0);
-		ObjAuthoriseWrap.updateApplyAuthorise(aply, new ObjFunBooleanCallback() {
-
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOADFAIL);
-					return;
-				}
-				if(result){
-					clickBtn.setText(LOADSUC);
-				}else{
-					clickBtn.setText(LOADFAIL);
-				}
-			}
-		});
+//		ObjAuthoriseWrap.updateApplyAuthorise(aply, new ObjFunBooleanCallback() {
+//
+//			@Override
+//			public void callback(boolean result, AVException e) {
+//				// TODO Auto-generated method stub
+//				if(e != null){
+//					clickBtn.setText(LOADFAIL);
+//					return;
+//				}
+//				if(result){
+//					clickBtn.setText(LOADSUC);
+//				}else{
+//					clickBtn.setText(LOADFAIL);
+//				}
+//			}
+//		});
 	}
 	private void showDialog(){
 		final  AlertDialog portraidlg=new AlertDialog.Builder(this).create();

@@ -223,15 +223,15 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 					log.e("lucifer", "信息拉取成功");
 					
 					for(ObjActivity activity : objects){
-						
+							System.out.println(objects);
 							activityItem = activity;
 							objactyList.add(activity);
 							log.e("zcq", "getLocationLongitude=="+activity.getLocationLongitude()+"  "+activity.getLocationLatitude());
 							bean=new ActivityBean();
 							bean.setActyId(activity.getObjectId());
 							bean.setUserId(user.getObjectId());
-							bean.setActivityContent(activity.getActivityContent().getUrl());
-							bean.setActivityCover(activity.getActivityCover().getUrl());
+//							bean.setActivityContent(""+activity.getActivityContent().getUrl());
+							bean.setActivityCover(""+activity.getActivityCover().getUrl());
 							bean.setLocationAddress(activity.getLocationAddress());
 							bean.setLocationPlace(activity.getLocationPlace());
 							bean.setOrderCountBoy(activity.getOrderCountBoy());
@@ -250,6 +250,7 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 							bean.setLocationLatitude(""+activity.getLocationLatitude());
 							bean.setLocationLongtitude(""+activity.getLocationLongitude());
 							actyList.add(bean);
+							log.e("zcq", "objects=="+objects.size()+" ");
 						
 					}
 					/**

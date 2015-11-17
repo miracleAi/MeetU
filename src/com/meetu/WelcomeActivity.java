@@ -87,19 +87,19 @@ public class WelcomeActivity extends Activity {
 		dbHelperCity.openDatabase();
 		dbHelperCity.closeDatabase();
 
-
-		//拿到本地的用户
-		AVUser currentUser = AVUser.getCurrentUser();
-		if(currentUser!=null){
-			Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
-			startActivity(intent);
-			finish();
-
-		}else{
-			Intent intent = new Intent(WelcomeActivity.this,LoginOrRegisterActivity.class);
-			startActivity(intent);
-			finish();
-		}
+		next();
+//		//拿到本地的用户
+//		AVUser currentUser = AVUser.getCurrentUser();
+//		if(currentUser!=null){
+//			Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
+//			startActivity(intent);
+//			finish();
+//
+//		}else{
+//			Intent intent = new Intent(WelcomeActivity.this,LoginOrRegisterActivity.class);
+//			startActivity(intent);
+//			finish();
+//		}
 	}
 
 
@@ -126,6 +126,7 @@ public class WelcomeActivity extends Activity {
 		sp.edit().putInt("user", 1).commit();
 		//解析xml  开子线程处理任务
 		new MyAsyncTask().execute();
+		goHome();
 	}
 
 	private void goHome() {
