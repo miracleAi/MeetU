@@ -194,21 +194,24 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		activitySb.append(Constants.ISCACHEFLAG+ " varchar(100) ");
 		activitySb.append(")");
 		db.execSQL(activitySb.toString());
+		/**
+		 * 首页活动缓存表
+		 * */
+		StringBuffer aboutSb=new StringBuffer();
+		activitySb.append("create table if not exists ");
+		activitySb.append(Constants.USERABOUT_CACHE_TB+"(");
+		activitySb.append("id integer primary key autoincrement ,");
+		activitySb.append(Constants.USERID+ " varchar(100) ,");
+		activitySb.append(Constants.ABOUTTYPE+ " integer ,");
+		activitySb.append(Constants.ABOUTUSERID+ " varchar(100) ,");
+		activitySb.append(Constants.ABOUTCOLECTIONID+ " varchar(100) ,");
+		activitySb.append(")");
+		db.execSQL(activitySb.toString());
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
 		// TODO Auto-generated method stub
-//		String sql1="drop table if exists "+TBL_CHANNEL;
-//		String sql2="drop table if exists "+TBL_USERS;
-//		String sql3="drop table if exists "+TBL_CHATMSGS;
-//		String sql4="drop table if exists "+TBL_MESSAGES;
-//		String sql5="drop table if exists "+TBL_EMOJIS;
-//		db.execSQL(sql1);
-//		db.execSQL(sql2);
-//		db.execSQL(sql3);
-//		db.execSQL(sql4);
-//		db.execSQL(sql5);
 		
 		onCreate(db);
 	}

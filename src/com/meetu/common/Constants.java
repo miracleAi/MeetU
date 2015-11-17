@@ -151,8 +151,29 @@ public class Constants {
 	 * 上传map key值常量
 	 * */
 	public static final String IS_SHOW_TIME = "IsShowTime";
+	//小纸条相关
 	public static final String SCRIP_TYPE = "ChatMsgType";
 	public static final String SCRIP_ID = "ScripId";
 	public static final String SCRIP_X = "ScripX";
 	public static final String SCRIP_Y = "ScripY";
+	/**
+	 * 用户集合类型
+	 * */
+	public static final int FOLLOW_TYPE = 1;
+	public static final int CONVERSATION_TYPE = 2;
+	public static final int ACTIVITY_TYPE = 3;
+	/**
+	 * 用户集合相关
+	 * */
+	public static final String USERABOUT_CACHE_TB = "userabout_cache_tb";
+	/**
+	 * 表字段常量名
+	 * */
+	//类型ID
+	public static final String ABOUTTYPE = "about_type";
+	//是否对活动点赞
+	public static final String ABOUTUSERID = "about_user_id";
+	//集合ID,用于存储活动ID--活动参与者  会话ID--会话成员
+	public static final String ABOUTCOLECTIONID = "about_conversation_id";
+	
 }
