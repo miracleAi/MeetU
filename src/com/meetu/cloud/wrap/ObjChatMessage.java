@@ -23,7 +23,9 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMConversationQuery;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.AVIMMessage;
+import com.avos.avoscloud.im.v2.AVIMClient.AVIMClientStatus;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMClientStatusCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationMemberCountCallback;
@@ -43,6 +45,7 @@ import com.meetu.cloud.object.ObjTableName;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.common.Constants;
 import com.meetu.entity.Chatmsgs;
+import com.meetu.myapplication.MyApplication;
 import com.avos.avoscloud.im.v2.AVIMMessageHandler;
 
 public class ObjChatMessage {
@@ -66,6 +69,23 @@ public class ObjChatMessage {
 				}
 			}
 
+		});
+	}
+	/**
+	 * 查询会话连接状态
+	 * */
+	public static void getClientStatus(AVIMClient arg0,final ObjFunBooleanCallback callback){
+		arg0.getClientStatus(new AVIMClientStatusCallback() {
+
+			@Override
+			public void done(AVIMClientStatus arg0) {
+				// TODO Auto-generated method stub
+				if(arg0 == AVIMClientStatus.AVIMClientStatusOpened){
+					callback.callback(true, null);
+				}else{
+					callback.callback(false, null);
+				}
+			}
 		});
 	}
 	/**
@@ -167,8 +187,23 @@ public class ObjChatMessage {
 	/**
 	 * 获取会话信息
 	 * */
-	public static void getConversationById(AVIMClient client,String conversationId,ObjCoversationCallback callback){
-		
+	public static void getConversationById(AVIMClient client,String conversationId,final ObjCoversationCallback callback){
+		AVIMConversationQuery query = client.getQuery();
+		query.whereEqualTo("objectId",conversationId);
+		query.findInBackground(new AVIMConversationQueryCallback(){
+			@Override
+			public void done(List<AVIMConversation> convs,AVIMException e){
+				if(e!=null){
+					callback.callback(null, e);
+					return;
+				}
+				if(convs!=null && !convs.isEmpty()){
+					callback.callback(convs.get(0), null);
+				}else{
+					callback.callback(null, new AVException(0, "获取失败"));
+				}
+			}
+		});
 	}
 	/**
 	 * 发送文本消息

@@ -85,6 +85,8 @@ public class MyApplication extends Application {
 				"tcd4rj3s3c54bdlkv1vfu5puvu9c2k96ur9kge3qvptqxp8p",
 				"8fpp7j815746jg9x26f0d3c5p76xqkyqm586v2onvx3m2k7a");
 		AVOSCloud.setDebugLogEnabled(true);
+		AVIMMessageManager.registerDefaultMessageHandler(new DefaultMessageHandler(getApplicationContext()));
+		AVIMMessageManager.setConversationEventHandler(new DefaultMemberHandler(getApplicationContext()));
 
 		if(null != AVUser.getCurrentUser()){
 			chatClient = AVIMClient.getInstance(AVUser.getCurrentUser().getObjectId());
@@ -99,7 +101,6 @@ public class MyApplication extends Application {
 					}
 					chatClient = client;
 					isChatLogin = true;
-					AVIMMessageManager.registerDefaultMessageHandler(new DefaultMessageHandler(getApplicationContext()));
 				}
 			});
 		} 
