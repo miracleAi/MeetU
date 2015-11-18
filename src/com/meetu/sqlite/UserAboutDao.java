@@ -31,11 +31,18 @@ public class UserAboutDao {
 		sdb.close();
 	}
 	//查询指定集合
-	public ArrayList<UserAboutBean> queryUserAbout(String userId,int aboutType){
+	public ArrayList<UserAboutBean> queryUserAbout(String userId,int aboutType,String colectionId){
 		SQLiteDatabase sdb=dbHelper.getWritableDatabase();
 		ArrayList<UserAboutBean> aboutList = new ArrayList<UserAboutBean>();
-		Cursor cursor=sdb.rawQuery("select * from "+ Constants.ACTIVITY_CACHE_TB+" where "+Constants.USERID +"=? and "
-				+Constants.ABOUTTYPE+"=?",new  String[]{userId,Integer.toString(aboutType)});
+		Cursor cursor = null;
+		if(!"".equals(colectionId)){
+			cursor=sdb.rawQuery("select * from "+ Constants.ACTIVITY_CACHE_TB+" where "+Constants.USERID +"=? and "
+					+Constants.ABOUTTYPE+"=? and "+Constants.ABOUTCOLECTIONID+"=?",new  String[]{userId,Integer.toString(aboutType),colectionId});
+		}else{
+			cursor=sdb.rawQuery("select * from "+ Constants.ACTIVITY_CACHE_TB+" where "+Constants.USERID +"=? and "
+					+Constants.ABOUTTYPE+"=?",new  String[]{userId,Integer.toString(aboutType)});
+		}
+		
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()){
 			UserAboutBean bean = new UserAboutBean();
@@ -49,9 +56,13 @@ public class UserAboutDao {
 		return aboutList;
 	}
 	//删除指定缓存
-	public void deleteByType(String userId,int aboutType){
+	public void deleteByType(String userId,int aboutType,String colectionId){
 		SQLiteDatabase sdb=dbHelper.getWritableDatabase();
-		sdb.delete(Constants.ACTIVITY_CACHE_TB, Constants.USERID+"=? and "+Constants.ABOUTTYPE+"=?", new String[]{userId,Integer.toString(aboutType)});
+		if(!"".equals(colectionId)){
+			sdb.delete(Constants.ACTIVITY_CACHE_TB, Constants.USERID+"=? and "+Constants.ABOUTTYPE+"=? and "+Constants.ABOUTCOLECTIONID+"=?", new String[]{userId,Integer.toString(aboutType),colectionId});
+		}else{
+			sdb.delete(Constants.ACTIVITY_CACHE_TB, Constants.USERID+"=? and "+Constants.ABOUTTYPE+"=?", new String[]{userId,Integer.toString(aboutType)});
+		}
 		sdb.close();
 	}
 	//查询参加活动并且我关注的人

@@ -60,13 +60,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class HomePageDetialActivity extends Activity
-		implements
-			OnPageChangeListener,
-			OnClickListener ,OnScrollListener{
+implements
+OnPageChangeListener,
+OnClickListener ,OnScrollListener{
 	//控件相关
 	private ViewPager viewPager;
 	private PhotoPagerAdapter adapter;
-//	private List<Photolunbo> photolist = new ArrayList<Photolunbo>();
+	//	private List<Photolunbo> photolist = new ArrayList<Photolunbo>();
 	private List<ImageView> dotViewsList = new ArrayList<ImageView>();
 	private ScheduledExecutorService scheduledExecutorService;
 	private int currentItem = 0;
@@ -78,30 +78,30 @@ public class HomePageDetialActivity extends Activity
 	private TextView userNumber;
 	private MyScrollView mScrollView;
 	private int mhighty;//滑动的高度y,改变标题栏背景透明度
-	
+
 	private RelativeLayout topLayout;
 	private TextView titleTop;
 	private String style;
 	private ImageView favorImg;//点赞图标
 	private TextView favorNumber;
-	
+
 	private TextView address;
 	private TextView titile,titleSub;
 	private ImageView oneUser,twoUser,threeUser,fourUser,fiveUser,sixUser,sevenUser;
 	//网络数据相关
 	private ActivityBean activityBean=new ActivityBean();
 	private ObjActivity objActivity= null;
-	
+
 	//轮播图
 	private List<ObjActivityCover> objPhotosList=new ArrayList<ObjActivityCover>();
-	
+
 	//当前用户
 	AVUser currentUser = AVUser.getCurrentUser();
 	private ObjUser user = new ObjUser();
-	
+
 	//参加活动用户列表
-		ArrayList<ObjUser> userList = new ArrayList<ObjUser>();
-	
+	ArrayList<ObjUser> userList = new ArrayList<ObjUser>();
+
 	private FinalBitmap  finalBitmap;
 
 	@Override
@@ -115,40 +115,40 @@ public class HomePageDetialActivity extends Activity
 		Intent intent=getIntent();
 		Bundle bundle=intent.getExtras();
 		activityBean= (ActivityBean) bundle.getSerializable("activityBean");
-		 if (currentUser != null) {
-				//强制类型转换
-				user = AVUser.cast(currentUser, ObjUser.class);
-		 }
+		if (currentUser != null) {
+			//强制类型转换
+			user = AVUser.cast(currentUser, ObjUser.class);
+		}
 		MyApplication app=(MyApplication) this.getApplicationContext();
 		finalBitmap=app.getFinalBitmap();
 		log.e("zcq", "activityBean"+activityBean.getLocationLongtitude()+"   "+activityBean.getLocationLatitude());
 		log.e("zcq", "TimeStart()=="+activityBean.getTimeStart()+"  =="+activityBean.getTimeStop());
 		initLoadActivity(activityBean.getActyId());
 		initView();
-//		startPlay();
+		//		startPlay();
 		initLoad();
 		mhighty=DensityUtil.dip2px(this, 250-44);
 		//点赞相关处理
 		isFavor(user,objActivity);
 		queryOrderUsers(objActivity);
 	}
-private void initLoadActivity(String activityId) {
-	log.e("zcq", "activityId=="+activityId);
+	private void initLoadActivity(String activityId) {
+		log.e("zcq", "activityId=="+activityId);
 		try {
-			 objActivity=AVObject.createWithoutData(ObjActivity.class, activityId);
+			objActivity=AVObject.createWithoutData(ObjActivity.class, activityId);
 
 		} catch (AVException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-/**
- * 根据活动状态初始化界面
- */
+	/**
+	 * 根据活动状态初始化界面
+	 */
 	private void initLoad() {
-		
+
 		if(activityBean.getStatus()==70){
-			
+
 			over.setVisibility(View.VISIBLE);
 			join.setFocusable(false);
 			join.setVisibility(View.INVISIBLE);
@@ -159,7 +159,7 @@ private void initLoadActivity(String activityId) {
 			backFeed.setFocusable(true);
 			backFeed.setVisibility(View.VISIBLE);
 		}
-		
+
 	}
 
 	private void initView() {
@@ -176,13 +176,13 @@ private void initLoadActivity(String activityId) {
 		 */
 		webView = (WebView) super.findViewById(R.id.contentWebView);
 		webView.loadUrl(""+activityBean.getActivityContent());
-		
+
 		//控件点击相关
 		backLayout=(RelativeLayout) super.findViewById(R.id.back_homepage_detial_rl);
 		backLayout.setOnClickListener(this);
 		baiduMap=(ImageView) super.findViewById(R.id.baidumap_homepage_detial);
 		baiduMap.setOnClickListener(this);
-		
+
 		over=(ImageView) super.findViewById(R.id.over_homepager_detial_img);
 		//报名
 		join=(ImageView) super.findViewById(R.id.join_homepager_detial_img);
@@ -196,22 +196,22 @@ private void initLoadActivity(String activityId) {
 		//回忆
 		memory=(ImageView) super.findViewById(R.id.memory_homepager_detial_img);
 		memory.setOnClickListener(this);
-		
+
 		mScrollView=(MyScrollView) super.findViewById(R.id.scrollview_homepage);
 		mScrollView.setOnScrollListener(this);
 		topLayout=(RelativeLayout) super.findViewById(R.id.top_homepage_detial_rl);
 		titleTop=(TextView) super.findViewById(R.id.title_top_homepager_detial_tv);
-		
+
 		address=(TextView) super.findViewById(R.id.address_home_page_detial_tv);
 		address.setText(""+activityBean.getLocationAddress()+"  "+activityBean.getLocationPlace());
-		
+
 		titile=(TextView) super.findViewById(R.id.title_lunbo_item_homepage_tv);
 		titile.setText(""+activityBean.getTitle());
 		titleSub=(TextView) super.findViewById(R.id.title_sub_lunbo_item_homepage_tv);
 		titleSub.setText(""+activityBean.getTitleSub());
-		
+
 		favorImg=(ImageView) super.findViewById(R.id.favor_home_page_detial_img);
-		
+
 		favorNumber=(TextView) super.findViewById(R.id.favornumber_homepage_detail);
 		favorNumber.setText(""+activityBean.getPraiseCount());
 		//参加活动的人
@@ -224,30 +224,30 @@ private void initLoadActivity(String activityId) {
 		sevenUser=(ImageView) super.findViewById(R.id.userhead_seven_heomePageDetial_img);
 		userNumber=(TextView) super.findViewById(R.id.userNumber_homePagedetial_tv);
 	}
-/**
- * 加载网络数据
- *   
- * @author lucifer
- * @date 2015-11-11
- */
+	/**
+	 * 加载网络数据
+	 *   
+	 * @author lucifer
+	 * @date 2015-11-11
+	 */
 	private void load() {
-		
+
 		objPhotosList=new ArrayList<ObjActivityCover>();
-		
+
 		ObjActivityCoverWrap.queryActivityCover(objActivity, new ObjActivityCoverCallback() {
 
 			@Override
 			public void callback(List<ObjActivityCover> objects, AVException e) {
 				if(e!=null){
-										log.e("zcq", e);
-									}else{
-										objPhotosList.addAll(objects);
-									log.e("zcq", "objPhotosList=="+objPhotosList.size());
-										myhandler.sendEmptyMessage(1);
-									}
-					 			}
-					 		});
-		
+					log.e("zcq", e);
+				}else{
+					objPhotosList.addAll(objects);
+					log.e("zcq", "objPhotosList=="+objPhotosList.size());
+					myhandler.sendEmptyMessage(1);
+				}
+			}
+		});
+
 
 	}
 
@@ -270,61 +270,61 @@ private void initLoadActivity(String activityId) {
 
 	@Override
 	public void onClick(View v) {
-switch (v.getId()) {
-	case R.id.back_homepage_detial_rl :
-		finish();
-		
-		break;
-	case R.id.baidumap_homepage_detial:
-		Intent intent=new Intent(this,BaiduMapMainActivity.class);
-		Bundle bundle=new Bundle();
-		bundle.putSerializable("activityBean", activityBean);
-		intent.putExtras(bundle);
-		startActivity(intent);
-		break;
-	case R.id.join_homepager_detial_img:
-		switch (activityBean.getStatus()) {
-		case 40:
-			Toast.makeText(this, "活动报名已结束", Toast.LENGTH_SHORT).show();
-			break;
-		case 50:
-			Intent intent2=new Intent(this,JoinActivity.class);
-			Bundle bundle2=new Bundle();
-			bundle2.putSerializable("activityBean", activityBean);
-			intent2.putExtras(bundle2);
-			startActivity(intent2);
-			break;
-		case 60:
-			Toast.makeText(this, "活动报名已结束", Toast.LENGTH_SHORT).show();
-			break;
+		switch (v.getId()) {
+		case R.id.back_homepage_detial_rl :
+			finish();
 
-		default:
+			break;
+		case R.id.baidumap_homepage_detial:
+			Intent intent=new Intent(this,BaiduMapMainActivity.class);
+			Bundle bundle=new Bundle();
+			bundle.putSerializable("activityBean", activityBean);
+			intent.putExtras(bundle);
+			startActivity(intent);
+			break;
+		case R.id.join_homepager_detial_img:
+			switch (activityBean.getStatus()) {
+			case 40:
+				Toast.makeText(this, "活动报名已结束", Toast.LENGTH_SHORT).show();
+				break;
+			case 50:
+				Intent intent2=new Intent(this,JoinActivity.class);
+				Bundle bundle2=new Bundle();
+				bundle2.putSerializable("activityBean", activityBean);
+				intent2.putExtras(bundle2);
+				startActivity(intent2);
+				break;
+			case 60:
+				Toast.makeText(this, "活动报名已结束", Toast.LENGTH_SHORT).show();
+				break;
+
+			default:
+				break;
+			}
+
+			break;
+		case R.id.memory_homepager_detial_img:
+			Intent intent3=new Intent(this,MemoryWallActivity.class);
+			Bundle bundle3=new Bundle();
+			bundle3.putSerializable("activityBean", activityBean);
+			intent3.putExtras(bundle3);
+			startActivity(intent3);
+			break;
+		case R.id.feedback_homepage_detial_img:
+			Intent intent4=new Intent(this,ActivityFeedbackActivity.class);
+			Bundle bundle4=new Bundle();
+			bundle4.putSerializable("activityBean", activityBean);
+			intent4.putExtras(bundle4);
+			startActivity(intent4);
+			break;
+		case R.id.barrage_homepage_detial_img:
+			Intent intent5=new Intent(this,BarrageActivity.class);
+
+			startActivity(intent5);
+			break;
+		default :
 			break;
 		}
-		
-		break;
-	case R.id.memory_homepager_detial_img:
-		Intent intent3=new Intent(this,MemoryWallActivity.class);
-		Bundle bundle3=new Bundle();
-		bundle3.putSerializable("activityBean", activityBean);
-		intent3.putExtras(bundle3);
-		startActivity(intent3);
-		break;
-	case R.id.feedback_homepage_detial_img:
-		Intent intent4=new Intent(this,ActivityFeedbackActivity.class);
-		Bundle bundle4=new Bundle();
-		bundle4.putSerializable("activityBean", activityBean);
-		intent4.putExtras(bundle4);
-		startActivity(intent4);
-		break;
-	case R.id.barrage_homepage_detial_img:
-		Intent intent5=new Intent(this,BarrageActivity.class);
-		
-		startActivity(intent5);
-		break;
-	default :
-		break;
-}
 	}
 
 	@Override
@@ -345,12 +345,12 @@ switch (v.getId()) {
 		setImageBackground(pos % objPhotosList.size());
 
 	}
-/**
- * 开始播放轮播图
- *   
- * @author lucifer
- * @date 2015-11-12
- */
+	/**
+	 * 开始播放轮播图
+	 *   
+	 * @author lucifer
+	 * @date 2015-11-12
+	 */
 	private void startPlay() {
 		scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 		scheduledExecutorService.scheduleAtFixedRate(new SlideShowTask(), 1, 4,
@@ -404,41 +404,41 @@ switch (v.getId()) {
 					viewDot.setLayoutParams(params);
 					dotViewsList.add(viewDot);
 					mLinearLayout.addView(viewDot);
-					
+
 					adapter = new PhotoPagerAdapter(HomePageDetialActivity.this, objPhotosList);
 					viewPager.setOnPageChangeListener(HomePageDetialActivity.this);
 
 					viewPager.setAdapter(adapter);
 				}
-	//			adapter.notifyDataSetChanged();		
+				//			adapter.notifyDataSetChanged();		
 				startPlay();
 				break;
 			}
 		}
-	
+
 	};
-/**
- * 滑动的一定高度，标题栏显示出来
- */
-	
+	/**
+	 * 滑动的一定高度，标题栏显示出来
+	 */
+
 	@SuppressLint("NewApi")
 	@Override
 	public void onScroll(int scrollY) {
 		if(scrollY>=mhighty){
 			topLayout.setBackgroundColor(this.getResources().getColor(R.color.relativelayout_change));
-//			ObjectAnimator animator = ObjectAnimator.ofFloat(topLayout, "alpha", 0f, 0.5f);  
-//			animator.setDuration(1000);  
-//			animator.start(); 
+			//			ObjectAnimator animator = ObjectAnimator.ofFloat(topLayout, "alpha", 0f, 0.5f);  
+			//			animator.setDuration(1000);  
+			//			animator.start(); 
 			titleTop.setVisibility(View.VISIBLE);
 			titleTop.setTextColor(this.getResources().getColor(R.color.text_changehui));
 		}else{
 			topLayout.setBackgroundColor(this.getResources().getColor(R.color.relativelayout_yuan));
 			titleTop.setVisibility(View.INVISIBLE);
-//			ObjectAnimator animator = ObjectAnimator.ofFloat(topLayout, "alpha", 0.5f, 0f);  
-//			animator.setDuration(1000);  
-//			animator.start(); 
+			//			ObjectAnimator animator = ObjectAnimator.ofFloat(topLayout, "alpha", 0.5f, 0f);  
+			//			animator.setDuration(1000);  
+			//			animator.start(); 
 		}
-		
+
 	}
 	/**
 	 * 点赞操作
@@ -449,7 +449,7 @@ switch (v.getId()) {
 	 */
 	private void isFavor(final ObjUser user,final ObjActivity objActivity){
 		ObjPraiseWrap.queryActivityFavor(user, objActivity, new ObjFunBooleanCallback() {
-			
+
 			@Override
 			public void callback(boolean result, AVException e) {
 				if(e!=null){
@@ -458,21 +458,21 @@ switch (v.getId()) {
 					//点赞过
 					favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
 					favorImg.setOnClickListener(new OnClickListener() {
-						
+
 						@Override
 						public void onClick(View arg0) {
-							
-							
+
+
 							//修改云端
 							ObjPraiseWrap.cancelPraiseActivity(user, objActivity, new ObjFunBooleanCallback() {
-								
+
 								@Override
 								public void callback(boolean result, AVException e) {
 									if(e!=null||result==false){
 										Toast.makeText(getApplicationContext(), "取消失败，请检查网络", 1000).show();
 									}else{
 										//插入到本地数据库    成功
-//										activityDao.updateIsFavor(user.getObjectId(), actyListCache.get(position).getActyId(), 1);
+										//										activityDao.updateIsFavor(user.getObjectId(), actyListCache.get(position).getActyId(), 1);
 										Toast.makeText(getApplicationContext(), "取消点赞成功", 1000).show();
 
 										favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
@@ -486,14 +486,14 @@ switch (v.getId()) {
 					//没点赞
 					favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
 					favorImg.setOnClickListener(new OnClickListener() {
-						
+
 						@Override
 						public void onClick(View arg0) {
 							// TODO Auto-generated method stub
-							
+
 							//修改云端
 							ObjPraiseWrap.praiseActivity(user, objActivity, new ObjFunBooleanCallback() {
-								
+
 								@Override
 								public void callback(boolean result, AVException e) {
 									// TODO Auto-generated method stub
@@ -505,14 +505,14 @@ switch (v.getId()) {
 										Toast.makeText(getApplicationContext(), "点赞成功", 1000).show();
 										favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
 										isFavor(user,objActivity);
-									
+
 									}
 								}
 							});
 						}
 					});
 				}
-				
+
 			}
 		});
 	}
@@ -524,7 +524,7 @@ switch (v.getId()) {
 	 */
 	public void queryOrderUsers(final ObjActivity activity){
 		ObjActivityOrderWrap.queryActivitySignUp(activity, new ObjUserCallback() {
-			
+
 			@Override
 			public void callback(List<ObjUser> objects, AVException e) {
 				if(e!=null){
@@ -550,13 +550,13 @@ switch (v.getId()) {
 					}if(userList.size()>=1){
 						finalBitmap.display(oneUser, userList.get(0).getProfileClip().getUrl());
 					}
-	
+
 				}
-				
+
 			}
 		});
-		
+
 	}
-	
+
 
 }
