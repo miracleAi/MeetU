@@ -167,7 +167,7 @@ public class ObjChatMessage {
 	/**
 	 * 获取会话信息
 	 * */
-	public static void getConversationById(String conversationId,ObjCoversationCallback callback){
+	public static void getConversationById(AVIMClient client,String conversationId,ObjCoversationCallback callback){
 		
 	}
 	/**

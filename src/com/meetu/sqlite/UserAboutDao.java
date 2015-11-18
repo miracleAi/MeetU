@@ -36,10 +36,10 @@ public class UserAboutDao {
 		ArrayList<UserAboutBean> aboutList = new ArrayList<UserAboutBean>();
 		Cursor cursor = null;
 		if(!"".equals(colectionId)){
-			cursor=sdb.rawQuery("select * from "+ Constants.ACTIVITY_CACHE_TB+" where "+Constants.USERID +"=? and "
+			cursor=sdb.rawQuery("select * from "+ Constants.USERABOUT_CACHE_TB+" where "+Constants.USERID +"=? and "
 					+Constants.ABOUTTYPE+"=? and "+Constants.ABOUTCOLECTIONID+"=?",new  String[]{userId,Integer.toString(aboutType),colectionId});
 		}else{
-			cursor=sdb.rawQuery("select * from "+ Constants.ACTIVITY_CACHE_TB+" where "+Constants.USERID +"=? and "
+			cursor=sdb.rawQuery("select * from "+ Constants.USERABOUT_CACHE_TB+" where "+Constants.USERID +"=? and "
 					+Constants.ABOUTTYPE+"=?",new  String[]{userId,Integer.toString(aboutType)});
 		}
 		
@@ -59,9 +59,9 @@ public class UserAboutDao {
 	public void deleteByType(String userId,int aboutType,String colectionId){
 		SQLiteDatabase sdb=dbHelper.getWritableDatabase();
 		if(!"".equals(colectionId)){
-			sdb.delete(Constants.ACTIVITY_CACHE_TB, Constants.USERID+"=? and "+Constants.ABOUTTYPE+"=? and "+Constants.ABOUTCOLECTIONID+"=?", new String[]{userId,Integer.toString(aboutType),colectionId});
+			sdb.delete(Constants.USERABOUT_CACHE_TB, Constants.USERID+"=? and "+Constants.ABOUTTYPE+"=? and "+Constants.ABOUTCOLECTIONID+"=?", new String[]{userId,Integer.toString(aboutType),colectionId});
 		}else{
-			sdb.delete(Constants.ACTIVITY_CACHE_TB, Constants.USERID+"=? and "+Constants.ABOUTTYPE+"=?", new String[]{userId,Integer.toString(aboutType)});
+			sdb.delete(Constants.USERABOUT_CACHE_TB, Constants.USERID+"=? and "+Constants.ABOUTTYPE+"=?", new String[]{userId,Integer.toString(aboutType)});
 		}
 		sdb.close();
 	}
@@ -69,7 +69,7 @@ public class UserAboutDao {
 	public ArrayList<UserAboutBean> queryOrderAndFollowUser(String userId,int type1,int type2){
 		ArrayList<UserAboutBean> list = new ArrayList<UserAboutBean>();
 		SQLiteDatabase sdb=dbHelper.getWritableDatabase();
-		Cursor cursor=sdb.rawQuery("select * from "+ Constants.ACTIVITY_CACHE_TB+" where "+Constants.USERID +"=? and "
+		Cursor cursor=sdb.rawQuery("select * from "+ Constants.USERABOUT_CACHE_TB+" where "+Constants.USERID +"=? and "
 				+Constants.ABOUTTYPE+"=? and "+Constants.ABOUTUSERID+" in select "+Constants.ABOUTUSERID+" from "+ Constants.ACTIVITY_CACHE_TB+" where "+Constants.USERID +"=? and "
 				+Constants.ABOUTTYPE+"=?",new  String[]{userId,Integer.toString(type1),userId,Integer.toString(type2)});
 		return list;
