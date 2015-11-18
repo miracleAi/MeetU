@@ -230,8 +230,12 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 							bean=new ActivityBean();
 							bean.setActyId(activity.getObjectId());
 							bean.setUserId(user.getObjectId());
-//							bean.setActivityContent(""+activity.getActivityContent().getUrl());
-							bean.setActivityCover(""+activity.getActivityCover().getUrl());
+							if(activity.getActivityContent()!=null){
+								bean.setActivityContent(""+activity.getActivityContent().getUrl());
+							}
+							if(activity.getActivityCover()!=null){
+								bean.setActivityCover(""+activity.getActivityCover().getUrl());
+							}							
 							bean.setLocationAddress(activity.getLocationAddress());
 							bean.setLocationPlace(activity.getLocationPlace());
 							bean.setOrderCountBoy(activity.getOrderCountBoy());

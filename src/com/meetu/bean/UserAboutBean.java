@@ -2,10 +2,10 @@ package com.meetu.bean;
 
 public class UserAboutBean {
 
-	private String userId;
-	private int aboutType;
-	private String aboutUserId;
-	private String aboutColetctionId;
+	private String userId;//用户id
+	private int aboutType;//类型   1我关注的人 2回话成员 3活动成员 
+	private String aboutUserId;//所有人的id
+	private String aboutColetctionId;//对话id
 	public String getUserId() {
 		return userId;
 	}

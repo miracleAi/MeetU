@@ -9,6 +9,8 @@ import java.util.List;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.meetu.R;
 import com.meetu.activity.miliao.ApplyForMiLiaoActivity;
 import com.meetu.activity.miliao.ChatGroupActivity;
@@ -16,6 +18,7 @@ import com.meetu.activity.miliao.CreationChatActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
 import com.meetu.cloud.callback.ObjAuthoriseApplyCallback;
 import com.meetu.cloud.callback.ObjAuthoriseCategoryCallback;
+import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.callback.ObjChatCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjAuthoriseApply;
@@ -25,6 +28,7 @@ import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjAuthoriseWrap;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjChatWrap;
+import com.meetu.myapplication.MyApplication;
 import com.meetu.tools.DepthPageTransformer;
 import com.meetu.tools.MyZoomOutPageTransformer;
 import com.meetu.tools.ZoomOutPageTransformer;
@@ -44,6 +48,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class Miliaofragment extends Fragment implements OnPageChangeListener,OnClickListener{
@@ -58,6 +63,8 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 	private RelativeLayout addLayout,joinLayout;
 	
 	private int positonNow=0;//当前在第几个页面
+	
+	private AVIMConversation conv;
 	
 	//网络数据相关
 	private List<ObjChat> objChatsList=new ArrayList<ObjChat>();
@@ -165,6 +172,8 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 		numberPosition.setText(""+(position+1));
 		//传过去当前页面
 		positonNow=position;
+		
+		conv = MyApplication.chatClient.getConversation(""+objChatsList.get(positonNow).getConversationId());
 //		initViewPager();
 	}
 
@@ -182,9 +191,33 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 		case R.id.join_miliao_rl:
 			//TODO 使用测试 clientId  ConversationId  进行对话
 //			
-			Intent intent2=new Intent(getActivity(),ChatGroupActivity.class);
-			startActivity(intent2);
-//			ObjChatMessage.JoinConversation(getActivity(), "55d050e600b0de09f8a0ab89", "560291e260b2b52ca74556a1");
+		
+			
+			if(MyApplication.isChatLogin){
+				//已经建立了长连接
+				log.e("zcq", "已经建立过长连接");
+				joinGroup(conv);
+			}else{
+				ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
+
+					@Override
+					public void callback(AVIMClient client, AVException e) {							
+						if(e != null){
+							log.e("zcq", e);
+							return ;
+						}
+						if(client != null){
+							MyApplication.chatClient = client;
+							log.e("zcq", "连接聊天长连接成功");
+							joinGroup(conv);
+						}else{
+							log.e("zcq", "连接聊天长连接失败");
+							Toast.makeText(getActivity(), "请检查网络重新加入", 1000).show();
+						}
+					}
+				});
+			}
+
 			break;
 
 		default:
@@ -208,6 +241,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 					log.e("zcq", e);
 					return;
 				}else if(objects!=null){
+					objChatsList.clear();
 					objChatsList.addAll(objects);
 					log.e("zcq", "objChatsList=="+objChatsList.size()+" objects=="+objects.size());
 					numberAll.setText(""+objChatsList.size());
@@ -342,6 +376,31 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 				default:
 					break;
 				}
+			}
+			
+			//加入当前觅聊
+			public void joinGroup(AVIMConversation conversation){
+				ObjChatMessage.joinChat(MyApplication.chatClient, conversation, new ObjFunBooleanCallback() {
+
+					@Override
+					public void callback(boolean result, AVException e) {
+						// TODO Auto-generated method stub
+						if(e != null){
+							log.e("zcq",e);
+							return ;
+						}
+						if(result){
+							log.e("zcq","加入觅聊成功");
+							Intent intent2=new Intent(getActivity(),ChatGroupActivity.class);
+							intent2.putExtra("ConversationId", ""+objChatsList.get(positonNow).getConversationId());
+							//传对话的类型   1 表示活动群聊 2 表示觅聊  3 表示单聊
+							intent2.putExtra("ConversationStyle", ""+2);
+							startActivity(intent2);
+						}else{
+							log.e("zcq","加入觅聊失败 ，请检查网络");
+						}
+					}
+				});
 			}
 			
 

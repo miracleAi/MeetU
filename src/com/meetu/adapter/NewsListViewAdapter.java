@@ -160,7 +160,10 @@ public class NewsListViewAdapter  extends BaseAdapter{
 		
 //		holder.ivImgUrl.setImageResource(item.getImg());
 //		bitmapUtils.display(holder.ivImgUrl, item.getActivityCover());
-		finalBitmap.display(holder.ivImgUrl, item.getActivityCover());
+		if(item.getActivityCover()!=null){
+			finalBitmap.display(holder.ivImgUrl, item.getActivityCover());
+		}
+		
 //		new ImageLoader().showImageByThread(holder.ivImgUrl, item.getImg());
 //		mImageLoader.showImageByAsyncTask(holder.ivImgUrl, item.getImg());
 		holder.tvTilte.setText(item.getTitle());
@@ -173,11 +176,7 @@ public class NewsListViewAdapter  extends BaseAdapter{
 		if(item.getStatus()==70){
 			holder.topRl.setBackgroundResource(R.drawable.acty_cover_card_img_mask);
 		}
-//		if(item.getIsFavor()==0){
-//			holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
-//		}else{
-//			holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
-//		}
+
 		
 		/**
 		 * 查询是否对活动点赞

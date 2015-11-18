@@ -366,20 +366,15 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 						ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
 
 							@Override
-							public void callback(AVIMClient client, AVException e) {
-								// TODO Auto-generated method stub
+							public void callback(AVIMClient client, AVException e) {							
 								if(e != null){
-								//	clickBtn.setText(LOADFAIL);
 									log.e("zcq", e);
 									return ;
 								}
 								if(client != null){
 									MyApplication.chatClient = client;
 									log.e("zcq", "连接聊天长连接成功");
-								//	clickBtn.setText(SAVEGROUP);
-									//clickBtn.setText(CREATESCRIP);
 								}else{
-								//	clickBtn.setText(LOADFAIL);
 									log.e("zcq", "连接聊天长连接失败");
 								}
 							}

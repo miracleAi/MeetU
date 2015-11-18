@@ -5,21 +5,26 @@ import java.util.ArrayList;
 import net.tsz.afinal.FinalBitmap;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.meetu.R;
 import com.meetu.R.id;
+import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjListCallback;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjChat;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjUserWrap;
+import com.meetu.common.Constants;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.UserAboutDao;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -43,14 +48,21 @@ public class MiliaoChannelFragment extends Fragment {
 	private AVIMConversation conv;
 	//会话成员列表
 	ArrayList<ObjUser> memberUserList = new ArrayList<ObjUser>();
-	
-	
+	private UserAboutDao userAboutDao;//成员缓存
+	AVUser currentUser = ObjUser.getCurrentUser();
+	ObjUser user = new ObjUser();
+	private ArrayList<UserAboutBean> userAboutBeanList=new ArrayList<UserAboutBean>();
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
 		if(view==null){
 			view=inflater.inflate(R.layout.fragment_miliao_channel, null);
+			if(currentUser!=null){
+				user = AVUser.cast(currentUser, ObjUser.class);
+			}
+			
+			userAboutDao=new UserAboutDao(getActivity());
 			objChat=(ObjChat) getArguments().get("ObjChat");
 			log.e("zcq","objChat=="+objChat.getObjectId()+"  objChat.getConversationId=="+objChat.getConversationId());
 			MyApplication app=(MyApplication) getActivity().getApplicationContext();
@@ -75,7 +87,10 @@ public class MiliaoChannelFragment extends Fragment {
 		numberAll=(TextView) view.findViewById(R.id.numberAll_miliao_channel);
 		numberFavor=(TextView) view.findViewById(R.id.numberFavor_miliao_channel);
 		backgroud=(ImageView) view.findViewById(R.id.backgroud_miliao_channel_img);
-		finalBitmap.display(backgroud,objChat.getChatPicture().getUrl());
+		if(objChat.getChatPicture()!=null){
+			finalBitmap.display(backgroud,objChat.getChatPicture().getUrl());
+		}
+		
 		titile.setText(""+objChat.getChatTitle());
 		
 		//参加觅聊的人
@@ -124,10 +139,22 @@ public class MiliaoChannelFragment extends Fragment {
 						log.e("zcq","群员列表获取成功");
 						log.e("zcq","list.size()=="+list.size());
 						numberUserAll.setText(""+list.size());
-						for(String s:list){
+						
+						userAboutBeanList=new ArrayList<UserAboutBean>();
+						for(String userId:list){
 							
 							getUsersListInfo(list);
+							
+							UserAboutBean userAboutBean=new UserAboutBean();
+							userAboutBean.setUserId(""+user.getObjectId());
+							userAboutBean.setAboutType(Constants.CONVERSATION_TYPE);
+							userAboutBean.setAboutUserId(""+userId);
+							userAboutBean.setAboutColetctionId(objChat.getConversationId());
+							userAboutBeanList.add(userAboutBean);
 						}
+						
+						
+						userAboutDao.saveUserAboutList(userAboutBeanList);  
 						
 				
 					}
@@ -154,6 +181,7 @@ public class MiliaoChannelFragment extends Fragment {
 						}else if(user!=null){
 							log.e("zcq","群员信息获取成功");
 							memberUserList.add(user);
+							
 							
 							if(memberUserList.size()==list.size()){
 								log.e("zcq", "设置头像");
