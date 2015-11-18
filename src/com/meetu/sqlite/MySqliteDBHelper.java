@@ -198,15 +198,15 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		 * 首页活动缓存表
 		 * */
 		StringBuffer aboutSb=new StringBuffer();
-		activitySb.append("create table if not exists ");
-		activitySb.append(Constants.USERABOUT_CACHE_TB+"(");
-		activitySb.append("id integer primary key autoincrement ,");
-		activitySb.append(Constants.USERID+ " varchar(100) ,");
-		activitySb.append(Constants.ABOUTTYPE+ " integer ,");
-		activitySb.append(Constants.ABOUTUSERID+ " varchar(100) ,");
-		activitySb.append(Constants.ABOUTCOLECTIONID+ " varchar(100) ,");
-		activitySb.append(")");
-		db.execSQL(activitySb.toString());
+		aboutSb.append("create table if not exists ");
+		aboutSb.append(Constants.USERABOUT_CACHE_TB+"(");
+		aboutSb.append("id integer primary key autoincrement ,");
+		aboutSb.append(Constants.USERID+ " varchar(100) ,");
+		aboutSb.append(Constants.ABOUTTYPE+ " integer ,");
+		aboutSb.append(Constants.ABOUTUSERID+ " varchar(100) ,");
+		aboutSb.append(Constants.ABOUTCOLECTIONID+ " varchar(100) ");
+		aboutSb.append(")");
+		db.execSQL(aboutSb.toString());
 	}
 
 	@Override

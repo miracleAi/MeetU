@@ -165,6 +165,12 @@ public class ObjChatMessage {
 		});
 	}
 	/**
+	 * 获取会话信息
+	 * */
+	public static void getConversationById(String conversationId,ObjCoversationCallback callback){
+		
+	}
+	/**
 	 * 发送文本消息
 	 * @param conversation
 	 * @param message
