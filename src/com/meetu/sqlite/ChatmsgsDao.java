@@ -90,18 +90,19 @@ public class ChatmsgsDao {
 	}
 	/**
 	 * 查询消息列表
-	 * @param conversationId 属于哪个对话的id
+	 * @param conversationId 属于哪个对话的id,哪个用户uid
 	 * @return
 	 */
-	public List<Chatmsgs> getChatmsgsList(String conversationId){
+	public List<Chatmsgs> getChatmsgsList(String conversationId,String userId){
 		SQLiteDatabase db=helper.getReadableDatabase();
 		Cursor c=db.rawQuery("select * from chatmsgs " +
-				"where _conversation_id=?", new String[]{conversationId});
+				"where _conversation_id=? and "+Constants.USERID+"=?", new String[]{conversationId,userId});
 		List<Chatmsgs> list=new ArrayList<Chatmsgs>();
 		while(c.moveToNext()){
 			Chatmsgs chatmsgs=new Chatmsgs();
 			
 			chatmsgs.setMessageCacheId(c.getString(c.getColumnIndex("_message_cache_id")));
+			chatmsgs.setUid(c.getString(c.getColumnIndex(Constants.USERID)));
 			chatmsgs.setMessageId(c.getString(c.getColumnIndex("_message_id")));
 			chatmsgs.setClientId(c.getString(c.getColumnIndex("_client_id")));
 			chatmsgs.setConversationId(c.getString(c.getColumnIndex("_conversation_id")));

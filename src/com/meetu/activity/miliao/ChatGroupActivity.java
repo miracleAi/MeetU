@@ -10,34 +10,41 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.xmlpull.v1.XmlPullParser;
 
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMMessageManager;
+import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
+
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
+import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
+import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
+import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.baidu.location.h.m;
-
-
-
 import com.meetu.R;
 import com.meetu.R.layout;
 import com.meetu.adapter.ChatmsgsListViewAdapter;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.common.Constants;
 import com.meetu.entity.ChatEmoji;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.fragment.ChatFragment;
 import com.meetu.fragment.HomePagefragment;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.ChatmsgsDao;
+import com.meetu.sqlite.EmojisDao;
 import com.meetu.tools.BitmapCut;
-
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
 import com.meetu.tools.StringToDrawbleId;
-
 import com.meetu.tools.UriToimagePath;
 import com.meetu.tools.UrlLocationToBitmap;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -53,7 +60,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
-
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -100,6 +106,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	
 	//解析xml相关
 	private EmojiParser parser;  
+	private EmojisDao emojisDao;
     private static List<ChatEmoji> chatEmojis; 
     private List<String> staticFacesList;
     
@@ -131,13 +138,10 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	//聊天列表 相关
 	
 	private List<Chatmsgs> chatmsgsList=new ArrayList<Chatmsgs>();
-	private List<Chatmsgs> chatmsgsCacheList=new ArrayList<Chatmsgs>();
-	
+	private List<Chatmsgs> chatmsgsCacheList=new ArrayList<Chatmsgs>();	
 	private Chatmsgs chatmsgs;
-	private ListView mChatmsgsListView;
-	
-	private ChatmsgsListViewAdapter mChatmsgsAdapter;
-	
+	private ListView mChatmsgsListView;	
+	private ChatmsgsListViewAdapter mChatmsgsAdapter;	
 	private RelativeLayout sendlLayout;
 	private ImageView send;
 	private ChatmsgsDao chatmsgsDao=new ChatmsgsDao(this);
@@ -149,6 +153,15 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	private static int emojiChatHight;
 	private static int emojiChatWeight;
 	
+	//网络数据相关
+	AVUser currentUser = ObjUser.getCurrentUser();
+	ObjUser user = new ObjUser();
+	
+	private String conversationStyle;//对话类型，1 表示活动群聊  2表示觅聊    3表示单聊 暂时没有
+	private String conversationId;//对话id
+	
+	MessageHandler msgHandler;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -157,26 +170,45 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		// 全屏
 		super.getWindow();
 		setContentView(R.layout.fragment_chat);
+		if(currentUser!=null){
+			user = AVUser.cast(currentUser, ObjUser.class);
+		}
+		msgHandler=new MessageHandler();
+		emojisDao=new EmojisDao(this);
+		chatEmojis=emojisDao.getChatEmojisList();
 		columns=DisplayUtils.getWindowWidth(this)/DensityUtil.dip2px(this, 45);
-
+		
+		Intent intent=getIntent();
+		conversationStyle=intent.getStringExtra("ConversationStyle");
+		conversationId=intent.getStringExtra("ConversationId");
+		log.e("lucifer", "conversationStyle=="+conversationStyle+" conversationId=="+conversationId);
 		/**
 		 * 删除所有本地聊天数据
 		 */
 //		chatmsgsDao.deleteAll();
 		
-		loadEmoji();
+//		loadEmoji();
 		
 		loadData();
 		
 		initView();
 		/**
 		 * 
-		 */
-		
+		 */	
 		InitViewPager();
 
 		
 	}
+	
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		AVIMMessageManager.unregisterMessageHandler(AVIMTypedMessage.class, msgHandler);
+	}
+
+
 	private void loadData() {
 		// TODO Auto-generated method stub
 		chatmsgsList=new ArrayList<Chatmsgs>();
@@ -205,7 +237,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 //			
 //		}
 		//根据对话id取出相应的缓存消息
-		chatmsgsCacheList=chatmsgsDao.getChatmsgsList("1");
+		chatmsgsCacheList=chatmsgsDao.getChatmsgsList("1",user.getObjectId());
 		
 		
 	//	handler.sendEmptyMessage(1);
@@ -378,43 +410,37 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	 * 获取表情a 
 	 */
 	private void loadEmoji() {
-		 
-		try {
-			 InputStream is = getAssets().open("expressionImage_custom.xml");
-			  parser = new XmlEmojifPullHelper();  
-//			 parser=new XmlEmojiSaxBookParser();
-				chatEmojis = parser.parse(is);
-				
-				chatEmojisNumber=chatEmojis.size();
-				 staticFacesList = new ArrayList<String>();
-
-				 for (ChatEmoji emoji : chatEmojis) {
-
-
-		              //根据String类型id获取对应资源id
-		              int resID = this.getResources().getIdentifier(emoji.getFaceName(),
-								"drawable", this.getPackageName());
-		              log.e("lucifer222222","name"+emoji.getFaceName()+" resID=="+resID);		              
-		              emoji.setId(resID);
-		              staticFacesList.add(""+resID);     
-		          }  
-//				 ChatEmoji chatEmoji=new ChatEmoji();
-//				 for(int i=0;i<chatEmojis.size();i++){
-//					 int resID = this.getResources().getIdentifier(chatEmojis.get(i).getFaceName(),
+//		 
+//		try {
+//			 InputStream is = getAssets().open("expressionImage_custom.xml");
+//			  parser = new XmlEmojifPullHelper();  
+////			 parser=new XmlEmojiSaxBookParser();
+//				chatEmojis = parser.parse(is);
+//				
+//				chatEmojisNumber=chatEmojis.size();
+//				 staticFacesList = new ArrayList<String>();
+//
+//				 for (ChatEmoji emoji : chatEmojis) {
+//
+//
+//		              //根据String类型id获取对应资源id
+//		              int resID = this.getResources().getIdentifier(emoji.getFaceName(),
 //								"drawable", this.getPackageName());
-//					 chatEmoji.setId(resID);
-//					 
-//				 }
-		} catch (IOException e1) {
-			log.e("2",e1);
-			e1.printStackTrace();
-		} 
-		 catch (Exception e) {
-			
-			 log.e("3", e);
-			e.printStackTrace();
-		}  
-         
+//		              log.e("lucifer222222","name"+emoji.getFaceName()+" resID=="+resID);		              
+//		              emoji.setId(resID);
+//		              staticFacesList.add(""+resID);     
+//		          }  
+//
+//		} catch (IOException e1) {
+//			log.e("2",e1);
+//			e1.printStackTrace();
+//		} 
+//		 catch (Exception e) {
+//			
+//			 log.e("3", e);
+//			e.printStackTrace();
+//		}  
+//         
 		
 	}
 
@@ -664,7 +690,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	 */
 	private void isShowTime(Chatmsgs chatmsgs) {
 		chatmsgsCacheList.clear();
-		chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList("1"));
+		chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList("1",user.getObjectId()));
 		long time=(new Date()).getTime();
 		chatmsgs.setSendTimeStamp(Long.toString(time));
 //		chatmsgsList.add(mchatmsgs);
@@ -857,7 +883,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 				//刷新数据时 要先清空数据 再添加。不然 不刷新  亲测。。。
 				chatmsgsCacheList.clear();
 
-				chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList("1"));	
+				chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList("1",user.getObjectId()));	
 				
 				System.err.println(chatmsgsCacheList.get(chatmsgsCacheList.size()-1).getContent()+"  id=="+chatmsgsCacheList.get(chatmsgsCacheList.size()-1).getMessageCacheId());	
 				
@@ -873,7 +899,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 				//刷新数据时 要先清空数据 再添加。不然 不刷新  亲测。。。
 				chatmsgsCacheList.clear();
 
-				chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList("1"));	
+				chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList("1",user.getObjectId()));	
 				
 				System.err.println(chatmsgsCacheList.get(chatmsgsCacheList.size()-1).getContent()+"  id=="+chatmsgsCacheList.get(chatmsgsCacheList.size()-1).getMessageCacheId());	
 				
@@ -1000,7 +1026,6 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		return spannable;
 	}
 	
-
 	/**
 	 * 表情的点击监听
 	 * @author Administrator
@@ -1012,5 +1037,46 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 
 		void onCorpusDeleted();
 	}
+	
+	/**
+	 * 用来接收消息的handle
+	 * @author lucifer
+	 *
+	 */
+	public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>{
+
+		@Override
+		public void onMessage(AVIMTypedMessage message,
+				AVIMConversation conversation, AVIMClient client) {
+			super.onMessage(message, conversation, client);
+			// 请按自己需求改写
+			switch (message.getMessageType()) {
+			case Constants.TEXT_TYPE:
+			//	createChatMsg(conversation,message);
+				break;
+			case Constants.IMAGE_TYPE:
+			//	createChatPicMsg(conversation,message);
+				break;
+			default:
+				break;
+			}
+
+		    }
+	
+
+		@Override
+		public void onMessageReceipt(AVIMTypedMessage message,
+				AVIMConversation conversation, AVIMClient client) {
+			// TODO Auto-generated method stub
+			super.onMessageReceipt(message, conversation, client);
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
 
 }
