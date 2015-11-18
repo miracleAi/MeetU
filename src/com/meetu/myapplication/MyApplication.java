@@ -95,10 +95,12 @@ public class MyApplication extends Application {
 					// TODO Auto-generated method stub
 					if(e != null){
 						isChatLogin = false;
+						log.e("zcq", "长连接登录失败");
 						return ;
 					}
 					chatClient = client;
 					isChatLogin = true;
+					log.e("zcq", "长连接登录成功");
 					AVIMMessageManager.registerDefaultMessageHandler(new DefaultMessageHandler(getApplicationContext()));
 				}
 			});
