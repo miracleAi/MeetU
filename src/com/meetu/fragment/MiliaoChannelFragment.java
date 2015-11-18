@@ -67,7 +67,7 @@ public class MiliaoChannelFragment extends Fragment {
 			log.e("zcq","objChat=="+objChat.getObjectId()+"  objChat.getConversationId=="+objChat.getConversationId());
 			MyApplication app=(MyApplication) getActivity().getApplicationContext();
 			finalBitmap=app.getFinalBitmap();
-			conv = MyApplication.chatClient.getConversation(objChat.getConversationId());
+			conv = MyApplication.chatClient.getConversation(""+objChat.getConversationId());
 			initView();
 			getUserInfo(""+objChat.getUser().getObjectId());
 			getMembers(conv);
@@ -154,8 +154,9 @@ public class MiliaoChannelFragment extends Fragment {
 						}
 						
 						userAboutDao.deleteByType(user.getObjectId(), Constants.CONVERSATION_TYPE, objChat.getConversationId());
-						userAboutDao.saveUserAboutList(userAboutBeanList);  
 						
+						userAboutDao.saveUserAboutList(userAboutBeanList);  
+						log.e("zcq", "插入数据成功");
 				
 					}
 				}

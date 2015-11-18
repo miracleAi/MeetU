@@ -88,18 +88,18 @@ public class WelcomeActivity extends Activity {
 		dbHelperCity.closeDatabase();
 
 
-		//拿到本地的用户
-		AVUser currentUser = AVUser.getCurrentUser();
-		if(currentUser!=null){
-			Intent intent = new Intent(WelcomeActivity.this,TestMsgTwoActivity.class);
-			startActivity(intent);
-			finish();
-
-		}else{
-			Intent intent = new Intent(WelcomeActivity.this,LoginOrRegisterActivity.class);
-			startActivity(intent);
-			finish();
-		}
+//		//拿到本地的用户
+//		AVUser currentUser = AVUser.getCurrentUser();
+//		if(currentUser!=null){
+//			Intent intent = new Intent(WelcomeActivity.this,TestMsgTwoActivity.class);
+//			startActivity(intent);
+//			finish();
+//
+//		}else{
+//			Intent intent = new Intent(WelcomeActivity.this,LoginOrRegisterActivity.class);
+//			startActivity(intent);
+//			finish();
+//		}
 		next();
 		
 	}
