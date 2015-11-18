@@ -24,7 +24,7 @@ public class UserAboutDao {
 			ContentValues cv=new ContentValues();
 			cv.put(Constants.USERID, bean.getUserId());
 			cv.put(Constants.ABOUTTYPE, bean.getAboutType());
-			cv.put(Constants.ABOUTTYPE, bean.getAboutUserId());
+			cv.put(Constants.ABOUTUSERID, bean.getAboutUserId());
 			cv.put(Constants.ABOUTCOLECTIONID, bean.getAboutColetctionId());
 			sdb.insert(Constants.USERABOUT_CACHE_TB, null, cv);    
 		}

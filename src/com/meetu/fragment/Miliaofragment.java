@@ -16,6 +16,7 @@ import com.meetu.activity.miliao.ApplyForMiLiaoActivity;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.activity.miliao.CreationChatActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
+import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjAuthoriseApplyCallback;
 import com.meetu.cloud.callback.ObjAuthoriseCategoryCallback;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
@@ -28,11 +29,14 @@ import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjAuthoriseWrap;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjChatWrap;
+import com.meetu.common.Constants;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DepthPageTransformer;
 import com.meetu.tools.MyZoomOutPageTransformer;
 import com.meetu.tools.ZoomOutPageTransformer;
 
+import android.R.bool;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -73,6 +77,8 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 	//权限
 		ObjAuthoriseCategory category = new ObjAuthoriseCategory();
 		ObjAuthoriseApply apply=new ObjAuthoriseApply();
+	private UserAboutDao userAboutDao;
+	ArrayList<UserAboutBean>	userAboutBeansList=new ArrayList<UserAboutBean>();
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -88,6 +94,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 			if(currentUser!=null){
 				user = AVUser.cast(currentUser, ObjUser.class);
 			}
+			userAboutDao=new UserAboutDao(getActivity());
 			//获取觅聊列表
 			getObjChatList();
 			
@@ -191,31 +198,42 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 		case R.id.join_miliao_rl:
 			//TODO 使用测试 clientId  ConversationId  进行对话
 //			
-		
-			
-			if(MyApplication.isChatLogin){
-				//已经建立了长连接
-				log.e("zcq", "已经建立过长连接");
-				joinGroup(conv);
+			if(isJoin(objChatsList.get(positonNow).getConversationId())==true){
+				log.e("zcq","已经加入过当前觅聊");
+				
+				Intent intent2=new Intent(getActivity(),ChatGroupActivity.class);
+				intent2.putExtra("ConversationId", ""+objChatsList.get(positonNow).getConversationId());
+				//传对话的类型   1 表示活动群聊 2 表示觅聊  3 表示单聊
+				intent2.putExtra("ConversationStyle", ""+2);
+				startActivity(intent2);
+				
 			}else{
-				ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
-
-					@Override
-					public void callback(AVIMClient client, AVException e) {							
-						if(e != null){
-							log.e("zcq", e);
-							return ;
+		
+				
+				if(MyApplication.isChatLogin){
+					//已经建立了长连接
+					log.e("zcq", "已经建立过长连接");
+					joinGroup(conv);
+				}else{
+					ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
+	
+						@Override
+						public void callback(AVIMClient client, AVException e) {							
+							if(e != null){
+								log.e("zcq", e);
+								return ;
+							}
+							if(client != null){
+								MyApplication.chatClient = client;
+								log.e("zcq", "连接聊天长连接成功");
+								joinGroup(conv);
+							}else{
+								log.e("zcq", "连接聊天长连接失败");
+								Toast.makeText(getActivity(), "请检查网络重新加入", 1000).show();
+							}
 						}
-						if(client != null){
-							MyApplication.chatClient = client;
-							log.e("zcq", "连接聊天长连接成功");
-							joinGroup(conv);
-						}else{
-							log.e("zcq", "连接聊天长连接失败");
-							Toast.makeText(getActivity(), "请检查网络重新加入", 1000).show();
-						}
-					}
-				});
+					});
+				}
 			}
 
 			break;
@@ -391,17 +409,40 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 						}
 						if(result){
 							log.e("zcq","加入觅聊成功");
+							
 							Intent intent2=new Intent(getActivity(),ChatGroupActivity.class);
 							intent2.putExtra("ConversationId", ""+objChatsList.get(positonNow).getConversationId());
 							//传对话的类型   1 表示活动群聊 2 表示觅聊  3 表示单聊
 							intent2.putExtra("ConversationStyle", ""+2);
 							startActivity(intent2);
+							//TODO 应该只刷新成员 省流量 
+							handler.sendEmptyMessage(1);
 						}else{
 							log.e("zcq","加入觅聊失败 ，请检查网络");
 						}
 					}
 				});
 			}
+		/**
+		 * 判断是否加入过当前觅聊	
+		 * @return  
+		 * @author lucifer
+		 * @date 2015-11-18
+		 */
+		private boolean isJoin(String colectionId){
+			
+			userAboutBeansList=new ArrayList<UserAboutBean>();
+			userAboutBeansList.addAll(userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, colectionId));
+			for(UserAboutBean userAboutBean :userAboutBeansList){
+				if(user.getObjectId().equals(userAboutBean.getAboutUserId())){
+					
+					return true;
+				}
+			}
+			
+			return false;
+			
+		}
 			
 
 }

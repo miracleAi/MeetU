@@ -153,7 +153,7 @@ public class MiliaoChannelFragment extends Fragment {
 							userAboutBeanList.add(userAboutBean);
 						}
 						
-						
+						userAboutDao.deleteByType(user.getObjectId(), Constants.CONVERSATION_TYPE, objChat.getConversationId());
 						userAboutDao.saveUserAboutList(userAboutBeanList);  
 						
 				
