@@ -84,8 +84,8 @@ public class MessagesListAdapter extends BaseAdapter {
 		
 		
 		//根据对话id拿到聊天对话的最后一条消息
-		if(chatmsgsDao.getChatmsgsList("1").size()!=0){
-			 chatmsgs=chatmsgsDao.getChatmsgsList("1").get(chatmsgsDao.getChatmsgsList("1").size()-1);
+		if(chatmsgsDao.getChatmsgsList("1","1").size()!=0){
+			 chatmsgs=chatmsgsDao.getChatmsgsList("1","1").get(chatmsgsDao.getChatmsgsList("1","1").size()-1);
 //TODO			 
 			 //  如果 是 文本消息    如果有表情的话显示表情   
 			 if(chatmsgs.getChatMsgType()==0||chatmsgs.getChatMsgType()==1){
