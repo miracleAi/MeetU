@@ -1,15 +1,19 @@
 package com.meetu.bean;
 
+import com.meetu.cloud.object.ObjUser;
+
 public class BarrageMsgBean {
-	String avertUrl;
 	String content;
-	String nickname;
+	String userId;
+	ObjUser user;
 	String time;
-	public String getAvertUrl() {
-		return avertUrl;
+	long sendTime;
+	
+	public long getSendTime() {
+		return sendTime;
 	}
-	public void setAvertUrl(String avertUrl) {
-		this.avertUrl = avertUrl;
+	public void setSendTime(long sendTime) {
+		this.sendTime = sendTime;
 	}
 	public String getContent() {
 		return content;
@@ -17,16 +21,23 @@ public class BarrageMsgBean {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getNickname() {
-		return nickname;
-	}
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
 	public String getTime() {
 		return time;
 	}
 	public void setTime(String time) {
 		this.time = time;
 	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public ObjUser getUser() {
+		return user;
+	}
+	public void setUser(ObjUser user) {
+		this.user = user;
+	}
+	
 }
