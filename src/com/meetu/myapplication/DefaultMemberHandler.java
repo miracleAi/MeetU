@@ -95,7 +95,7 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler{
 									public void callback(ObjUser joinuser, AVException e) {
 										// TODO Auto-generated method stub
 										Chatmsgs chatBean = new Chatmsgs();
-										chatBean.setChatMsgType(Constants.MEMBERCHANGE_TYPE);
+										chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
 										chatBean.setNowJoinUserId(client.getClientId());
 										chatBean.setUid(user.getObjectId());
 										chatBean.setNowJoinUserId(userId);
@@ -117,7 +117,7 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler{
 			for(String userId:array){
 			//普通群，直接保存
 			Chatmsgs chatBean = new Chatmsgs();
-			chatBean.setChatMsgType(Constants.MEMBERCHANGE_TYPE);
+			chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
 			chatBean.setNowJoinUserId(client.getClientId());
 			chatBean.setUid(user.getObjectId());
 			chatBean.setNowJoinUserId(userId);
@@ -134,7 +134,7 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler{
 		//未读消息加1,保存未读
 		msgDao.updateUnread(user.getObjectId(), conversation.getConversationId());
 		Chatmsgs chatBean = new Chatmsgs();
-		chatBean.setChatMsgType(Constants.MEMBERCHANGE_TYPE);
+		chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
 		chatBean.setNowJoinUserId(client.getClientId());
 		chatBean.setUid(user.getObjectId());
 		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));

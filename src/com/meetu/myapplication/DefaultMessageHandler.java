@@ -54,6 +54,10 @@ public class DefaultMessageHandler extends AVIMMessageHandler{
 	//文本消息处理方法
 	public void createChatMsg(AVIMConversation conversation,AVIMMessage message,MessagesDao msgDao,ChatmsgsDao chatDao){
 		AVIMTextMessage msg = ((AVIMTextMessage)message);
+		int msgType = (Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
+		if(msgType == Constants.SHOW_SCRIPT){
+			return ;
+		}
 		Chatmsgs chatBean = new Chatmsgs();
 		chatBean.setChatMsgType(Constants.TEXT_TYPE);
 		chatBean.setUid(AVUser.getCurrentUser().getObjectId());

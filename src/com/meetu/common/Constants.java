@@ -110,7 +110,7 @@ public class Constants {
 	 * */
 	public static final int GROUP_CREATE = 100;
 	/**
-	 * 消息类型常量
+	 * 消息类型常量与leancloud对应
 	 * */
 	public static final int TEXT_TYPE = -1;
 	public static final int IMAGE_TYPE = -2;
@@ -119,10 +119,34 @@ public class Constants {
 	public static final int LOCATION_TYPE = -5;
 	public static final int FILE_TYPE = -6;
 	public static final int UNSUPPORT_TYPE = -7;
-	//以上与leancloud对应，以下为自定义标记
-	public static final int MEMBERCHANGE_TYPE = -8;
-	//传到云端，必须与iOS保持一直
-	public static final int SCRIPT_MSG = 5;
+
+	/**
+	 * *传到云端，必须与iOS保持一直,标记消息展现类型
+	 */
+	//文本
+	public static final int SHOW_TEXT = 0;
+	//图片
+	public static final int SHOW_IMG = 1;
+	//群成员变动
+	public static final int SHOW_MEMBERCHANGE = 2;
+	//普通通知
+	public static final int SHOW_NOMAL_NOTIFY= 3;
+	//活动反馈通知
+	public static final int SHOW_ACTY_NOTY = 4;
+	//小纸条
+	public static final int SHOW_SCRIPT = 5;
+
+	/**
+	 * 文本 图片 区分发送接收方
+	 * */
+	//文本
+	public static final int SHOW_SEND_TEXT = 10;
+	//图片
+	public static final int SHOW_SEND_IMG = 11;
+	//文本
+	public static final int SHOW_RECV_TEXT = 12;
+	//图片
+	public static final int SHOW_RECV_IMG = 13;
 	/**
 	 * 消息状态常量
 	 * */
@@ -151,8 +175,8 @@ public class Constants {
 	 * 上传map key值常量
 	 * */
 	public static final String IS_SHOW_TIME = "IsShowTime";
+	public static final String CHAT_MSG_TYPE = "ChatMsgType";
 	//小纸条相关
-	public static final String SCRIP_TYPE = "ChatMsgType";
 	public static final String SCRIP_ID = "ScripId";
 	public static final String SCRIP_X = "ScripX";
 	public static final String SCRIP_Y = "ScripY";
@@ -175,5 +199,9 @@ public class Constants {
 	public static final String ABOUTUSERID = "about_user_id";
 	//集合ID,用于存储活动ID--活动参与者  会话ID--会话成员
 	public static final String ABOUTCOLECTIONID = "about_conversation_id";
-	
+
+	/**
+	 * 系统消息类型
+	 * */
+
 }
