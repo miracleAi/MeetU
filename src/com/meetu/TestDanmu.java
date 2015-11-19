@@ -9,6 +9,7 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.AVIMMessage;
+import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
@@ -55,6 +56,7 @@ public class TestDanmu extends Activity{
 	String activityId = "55e2b23a60b291d784a12ccb";
 	ObjUser user = null;
 	long lastMsgTime = 0;
+	MessageHandler msgHandler = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -62,6 +64,7 @@ public class TestDanmu extends Activity{
 		setContentView(R.layout.test_danmu_layout);
 		myRunnable = new MyRunnable();
 		handler = new Handler();
+		msgHandler = new MessageHandler();
 		initView();
 		if(AVUser.getCurrentUser() == null){
 			//未登录
@@ -70,7 +73,34 @@ public class TestDanmu extends Activity{
 			user = AVUser.cast(ObjUser.getCurrentUser(), ObjUser.class);
 		}
 		isChatLogin();
-		initDefDate();
+		initDefData();
+	}
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
+	}
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
+		ObjChatMessage.logOutChat(uClient, new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					return;
+				}
+				if(result){
+					Log.d("mytest", "小U退出聊天登录成功");
+				}else{
+					Log.d("mytest", "小U退出聊天登录成功失败");
+				}
+			}
+		});
+		super.onPause();
 	}
 	//检查本人客户端是否登录
 	private void isChatLogin() {
@@ -176,7 +206,7 @@ public class TestDanmu extends Activity{
 		return defIndex;
 	}
 	//初始化默认消息列表
-	private void initDefDate() {
+	private void initDefData() {
 		for(int i=0;i<defContents.length;i++){
 			BarrageMsgBean bean = new BarrageMsgBean();
 			bean.setContent(defContents[i]);
