@@ -4,9 +4,16 @@ import java.util.ArrayList;
 
 
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.LogUtil.log;
+import com.avos.avoscloud.im.v2.AVIMClient;
 import com.meetu.R;
+import com.meetu.activity.LoginActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
+import com.meetu.cloud.callback.ObjAvimclientCallback;
+import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.db.TabDb;
+import com.meetu.myapplication.MyApplication;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -53,6 +60,8 @@ public class MainActivity extends FragmentActivity implements OnTabChangeListene
 		tabHost.setOnTabChangedListener(this);
 		initTab();	
 		pageString=super.getIntent().getStringExtra("page");
+		
+		
 		
 		
 	}

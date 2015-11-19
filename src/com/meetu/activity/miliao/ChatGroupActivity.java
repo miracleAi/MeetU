@@ -8,13 +8,16 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.xmlpull.v1.XmlPullParser;
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -29,8 +32,12 @@ import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.baidu.location.h.m;
 import com.meetu.R;
 import com.meetu.R.layout;
+import com.meetu.TestReceiveMsg.MemberChangeHandler;
 import com.meetu.adapter.ChatmsgsListViewAdapter;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.utils.ChatMsgUtils;
+import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.common.Constants;
 import com.meetu.entity.ChatEmoji;
 import com.meetu.entity.Chatmsgs;
@@ -159,6 +166,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	
 	private String conversationStyle;//对话类型，1 表示活动群聊  2表示觅聊    3表示单聊 暂时没有
 	private String conversationId;//对话id
+	AVIMConversation conversation;
 	
 	MessageHandler msgHandler;
 	
@@ -181,6 +189,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		Intent intent=getIntent();
 		conversationStyle=intent.getStringExtra("ConversationStyle");
 		conversationId=intent.getStringExtra("ConversationId");
+		conversation = MyApplication.chatClient.getConversation(""+conversationId);
 		log.e("lucifer", "conversationStyle=="+conversationStyle+" conversationId=="+conversationId);
 		/**
 		 * 删除所有本地聊天数据
@@ -199,7 +208,13 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 
 		
 	}
-	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
+		
+	}
 	
 	@Override
 	protected void onPause() {
@@ -211,21 +226,21 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 
 	private void loadData() {
 		// TODO Auto-generated method stub
-		chatmsgsList=new ArrayList<Chatmsgs>();
-		
-		Chatmsgs item=new Chatmsgs();
-		item.setContent("今天是个好日子");
-		item.setSendTimeStamp("2015-10-09");
-		item.setChatMsgType(0);
-		item.setConversationId("1");
-		chatmsgsList.add(item);
-		
-		Chatmsgs item1=new Chatmsgs();
-		item1.setContent("明天是个好日子");
-		item1.setChatMsgType(0);
-		item1.setSendTimeStamp("2015-10-10");	
-		item.setConversationId("1");
-		chatmsgsList.add(item1);
+//		chatmsgsList=new ArrayList<Chatmsgs>();
+//		
+//		Chatmsgs item=new Chatmsgs();
+//		item.setContent("今天是个好日子");
+//		item.setSendTimeStamp("2015-10-09");
+//		item.setChatMsgType(0);
+//		item.setConversationId("1");
+//		chatmsgsList.add(item);
+//		
+//		Chatmsgs item1=new Chatmsgs();
+//		item1.setContent("明天是个好日子");
+//		item1.setChatMsgType(0);
+//		item1.setSendTimeStamp("2015-10-10");	
+//		item.setConversationId("1");
+//		chatmsgsList.add(item1);
 		
 //		handler.sendEmptyMessage(1);
 		
@@ -237,7 +252,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 //			
 //		}
 		//根据对话id取出相应的缓存消息
-		chatmsgsCacheList=chatmsgsDao.getChatmsgsList("1",user.getObjectId());
+		chatmsgsCacheList=chatmsgsDao.getChatmsgsList(conversationId,user.getObjectId());
 		
 		
 	//	handler.sendEmptyMessage(1);
@@ -639,46 +654,49 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		Chatmsgs mchatmsgs=new Chatmsgs();
 		if(mEditText.getText().length()!=0){
 			String mcontentString=mEditText.getText().toString();
+			mchatmsgs.setUid(user.getObjectId());
+			mchatmsgs.setClientId(user.getObjectId());
+			mchatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
 			mchatmsgs.setContent(mcontentString);
-			mchatmsgs.setConversationId("1");
-			mchatmsgs.setChatMsgType(0);
-			mchatmsgs.setChatMsgDirection(0);
-//			mchatmsgs.setSendTimeStamp(sd.format(new Date()));
-//			long time=(new Date()).getTime();
-//			mchatmsgs.setSendTimeStamp(Long.toString(time));
-////			chatmsgsList.add(mchatmsgs);
-//			if(chatmsgsCacheList.size()==0){
-//				//显示时间
-//				mchatmsgs.setIsShowTime(0);
-//			}else{
-//				String timeLaString=chatmsgsCacheList.get(chatmsgsCacheList.size()-1).getSendTimeStamp();
-//				Long timelastLong=Long.parseLong(timeLaString);
-//				if(time-timelastLong>=60000){
-//					mchatmsgs.setIsShowTime(0);
-//				}else{
-//					mchatmsgs.setIsShowTime(1);
-//				}
-//			};
+			mchatmsgs.setConversationId(conversationId);
+			mchatmsgs.setChatMsgType(10);
+			mchatmsgs.setChatMsgDirection(Constants.IOTYPE_OUT);
+			mchatmsgs.setChatMsgStatus(Constants.STATUES_SENDING);//发送中
+
 			
 			isShowTime(mchatmsgs);
 			log.e("lucifer time", ""+mchatmsgs.getIsShowTime());
 			
 			chatmsgsDao.insert(mchatmsgs);
-//TODO		测试类型 加了左边布局的数据	
-			Chatmsgs item=new Chatmsgs();
-			item.setContent(mcontentString);
-			item.setConversationId("1");
-			item.setChatMsgType(1);
-			item.setChatMsgDirection(1);
-//			item.setSendTimeStamp(sd.format(new Date()));
-			
-//			long time2=(new Date()).getTime();
-//			item.setSendTimeStamp(Long.toString(time2));
-			isShowTime(item);
-			log.e("lucifer time", ""+item.getIsShowTime());
-			chatmsgsDao.insert(item);
-			mEditText.setText("");
 			handler.sendEmptyMessage(1);
+			
+			sendTextMessage(mchatmsgs);
+//			AVIMTextMessage msg=new AVIMTextMessage();
+//			msg.setContent(mchatmsgs.getContent());
+//			Map<String, Object> map = null;
+//			
+//			if(mchatmsgs.getIsShowTime()==1){
+//				map.put(Constants.IS_SHOW_TIME, ChatMsgUtils.isShowChatTime(1));
+//			}else{
+//				map.put(Constants.IS_SHOW_TIME, ChatMsgUtils.isShowChatTime(0));
+//			}	
+//			msg.setAttrs(map);
+//			ObjChatMessage.sendChatMsg(conversation, msg, new ObjFunBooleanCallback() {
+//				
+//				@Override
+//				public void callback(boolean result, AVException e) {
+//					if(e!=null){
+//						log.e("zcq", e);
+//					}else if(result){
+//						log.e("zcq", "文本消息发送成功");
+//					}else{
+//						log.e("zcq", "文本消息发送失败");
+//					}
+//					
+//				}
+//			});
+			
+			
 
 		}else{
 			Toast.makeText(this, "发送内容不能为空", Toast.LENGTH_SHORT).show();
@@ -690,21 +708,21 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	 */
 	private void isShowTime(Chatmsgs chatmsgs) {
 		chatmsgsCacheList.clear();
-		chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList("1",user.getObjectId()));
+		chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList(conversationId,user.getObjectId()));
 		long time=(new Date()).getTime();
 		chatmsgs.setSendTimeStamp(Long.toString(time));
 //		chatmsgsList.add(mchatmsgs);
 		if(chatmsgsCacheList.size()==0){
 			//显示时间
-			chatmsgs.setIsShowTime(0);
+			chatmsgs.setIsShowTime(Constants.TIMESHOW);
 		}else{
 			String timeLaString=chatmsgsCacheList.get(chatmsgsCacheList.size()-1).getSendTimeStamp();
 			log.e("lucifer","size=="+chatmsgsCacheList.size()+"   timeLaString=="+timeLaString);
 			Long timelastLong=Long.parseLong(timeLaString);
 			if(time-timelastLong>=60000){
-				chatmsgs.setIsShowTime(0);
+				chatmsgs.setIsShowTime(Constants.TIMESHOW);
 			}else{
-				chatmsgs.setIsShowTime(1);
+				chatmsgs.setIsShowTime(Constants.TIMESHOWNOT);
 			}
 		};
 		
@@ -883,7 +901,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 				//刷新数据时 要先清空数据 再添加。不然 不刷新  亲测。。。
 				chatmsgsCacheList.clear();
 
-				chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList("1",user.getObjectId()));	
+				chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList(conversationId,user.getObjectId()));	
 				
 				System.err.println(chatmsgsCacheList.get(chatmsgsCacheList.size()-1).getContent()+"  id=="+chatmsgsCacheList.get(chatmsgsCacheList.size()-1).getMessageCacheId());	
 				
@@ -899,7 +917,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 				//刷新数据时 要先清空数据 再添加。不然 不刷新  亲测。。。
 				chatmsgsCacheList.clear();
 
-				chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList("1",user.getObjectId()));	
+				chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList(conversationId,user.getObjectId()));	
 				
 				System.err.println(chatmsgsCacheList.get(chatmsgsCacheList.size()-1).getContent()+"  id=="+chatmsgsCacheList.get(chatmsgsCacheList.size()-1).getMessageCacheId());	
 				
@@ -1052,10 +1070,12 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 			// 请按自己需求改写
 			switch (message.getMessageType()) {
 			case Constants.TEXT_TYPE:
-			//	createChatMsg(conversation,message);
+				log.e("zcq", "接收到一条文本消息");
+			createChatMsg(conversation,message);
+				
 				break;
 			case Constants.IMAGE_TYPE:
-			//	createChatPicMsg(conversation,message);
+		//	createChatPicMsg(conversation,message);
 				break;
 			default:
 				break;
@@ -1072,6 +1092,143 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		}
 		
 	}
+	/**
+	 * 文本 接收信息发送
+	 * @param conversation
+	 * @param message  
+	 * @author lucifer
+	 * @date 2015-11-19
+	 */
+	public void createChatMsg(AVIMConversation conversation,
+			AVIMTypedMessage message) {
+		// TODO Auto-generated method stub
+		AVIMTextMessage msg = ((AVIMTextMessage)message);
+		Chatmsgs chatBean = new Chatmsgs();
+		
+		chatBean.setUid(user.getObjectId());
+		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
+		chatBean.setClientId(msg.getFrom());
+		chatBean.setMessageId(msg.getMessageId());
+		chatBean.setConversationId(msg.getConversationId());
+		chatBean.setChatMsgDirection(ChatMsgUtils.getDerection(msg.getMessageIOType()));
+		chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
+		boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
+		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
+		chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
+		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
+		chatBean.setContent(msg.getText());
+		int style=(Integer) msg.getAttrs().get(Constants.SCRIP_TYPE);
+		//我接受别人的消息
+		if(style==0&&ChatMsgUtils.getDerection(msg.getMessageIOType())==Constants.IOTYPE_IN){
+			
+			chatBean.setChatMsgType(12);
+		}else{
+			//接收到自己发的消息
+			chatBean.setChatMsgType(10);
+		}
+
+		chatmsgsDao.insert(chatBean);
+		log.e("lucifer", "插入成功");
+		if(conversation.getConversationId().equals(conversationId)){
+			//测试显示  刷新adapter
+			
+			handler.sendEmptyMessage(1);
+			
+		}else{
+			//未读消息加1
+		//	msgDao.updateUnread(user.getObjectId(), msg.getConversationId());
+		}
+		
+	}
+
+	/**
+	 * 图片信息接收 发送
+	 * @param conversation
+	 * @param message  
+	 * @author lucifer
+	 * @date 2015-11-19
+	 */
+	public void createChatPicMsg(AVIMConversation conversation,
+			AVIMTypedMessage message) {
+		// TODO Auto-generated method stub
+		AVIMImageMessage msg = ((AVIMImageMessage)message);
+		Chatmsgs chatBean = new Chatmsgs();
+		
+		chatBean.setUid(user.getObjectId());
+		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
+		chatBean.setClientId(msg.getFrom());
+		chatBean.setMessageId(msg.getMessageId());
+		chatBean.setConversationId(msg.getConversationId());
+		chatBean.setChatMsgDirection(ChatMsgUtils.getDerection(msg.getMessageIOType()));
+		chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
+		boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
+		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
+		chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
+		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
+		chatBean.setImgMsgImageUrl(msg.getFileUrl());
+		chatBean.setImgMsgImageHeight(msg.getHeight());
+		chatBean.setImgMsgImageWidth(msg.getWidth());
+		
+		int style=(Integer) msg.getAttrs().get(Constants.SCRIP_TYPE);
+		if(style==1&&ChatMsgUtils.getDerection(msg.getMessageIOType())==Constants.IOTYPE_IN){
+			//TODO 方便展示数据
+			chatBean.setChatMsgType(3);
+		}else{
+			chatBean.setChatMsgType(2);
+		}
+		
+		chatmsgsDao.insert(chatBean);
+		if(conversation.getConversationId().equals(conversationId)){
+			//测试显示
+			//urlTv.setText(msg.getFileUrl());
+		}else{
+			//未读消息加1
+		//	msgDao.updateUnread(user.getObjectId(), msg.getConversationId());
+		}
+		
+	}
+	/**
+	 * 发送文本消息
+	 * @param mchatmsgs  
+	 * @author lucifer
+	 * @date 2015-11-19
+	 */
+	
+	public void sendTextMessage(Chatmsgs mchatmsgs){
+		AVIMTextMessage msg=new AVIMTextMessage();
+		log.e("zcq", "mchatmsgs.getContent()=="+mchatmsgs.getContent());
+		
+		msg.setText(""+mchatmsgs.getContent());
+		
+		Map<String, Object> map =new HashMap<String, Object>();
+			
+		if(mchatmsgs.getIsShowTime()==1){
+			map.put(Constants.IS_SHOW_TIME, true);
+		}else{
+			map.put(Constants.IS_SHOW_TIME, false);
+		}
+		map.put(Constants.SCRIP_TYPE, 0);
+		msg.setAttrs(map);
+		
+		ObjChatMessage.sendChatMsg(conversation, msg, new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				if(e!=null){
+					log.e("zcq", e);
+				}else if(result){
+					log.e("zcq", "文本消息发送成功");
+					handler.sendEmptyMessage(1);
+					
+				}else{
+					log.e("zcq", "文本消息发送失败");
+					handler.sendEmptyMessage(1);
+				}
+				
+			}
+		});
+	}
+	
 	
 	
 	

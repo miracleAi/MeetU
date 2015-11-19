@@ -51,6 +51,10 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 	
 	//TODO 暂时只测试4种状态  ,但是要进一步判断消息发送的方向
 	private final int TYPE_COUNT=4;
+	
+	//网络相关
+	
+	
 
 	
 	public ChatmsgsListViewAdapter(Context context,List<Chatmsgs> chatmsgsList){
@@ -63,9 +67,9 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 	}
 	/**
 	 * 消息状态 style
-	 *  0  我发的文本消息  1接收的文本消息  2 我发的图片的消息  3 接收的图片消息   4新人加入消息 5普通通知消息  6活动咨询反馈通知消息
+	 *  10  我发的文本消息  12接收的文本消息  11 我发的图片的消息  13接收的图片消息   2新人加入消息 3普通通知消息  4活动咨询反馈通知消息 5
 	 *  消息发送方向 
-	 *  0 我发的 1收到的
+	 * 
 	 */
 	@Override
 	public int getItemViewType(int position) {
@@ -113,30 +117,37 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 		
 		if(convertView==null){
 		holder=new ViewHolder();
+		log.e("zcq", "item.getChatMsgType()=="+item.getChatMsgType());
 			switch (item.getChatMsgType()) {
-			case 0:					
-					convertView=LayoutInflater.from(mContext).inflate(R.layout.chat_item_text_right, null);
-					holder.content=(TextView) convertView.findViewById(R.id.content_chat_item_right_tv);
-					holder.time=(TextView) convertView.findViewById(R.id.time_chat_item_right_tv);
-					holder.timeLayout=(RelativeLayout) convertView.findViewById(R.id.time_chat_item_right_rl);
-					break;								
-			case 1:
+			
+			case 10:					
+				convertView=LayoutInflater.from(mContext).inflate(R.layout.chat_item_text_right, null);
+				holder.content=(TextView) convertView.findViewById(R.id.content_chat_item_right_tv);				
+				holder.time=(TextView) convertView.findViewById(R.id.time_chat_item_right_tv);
+				holder.timeLayout=(RelativeLayout) convertView.findViewById(R.id.time_chat_item_right_rl);
+				holder.userHeadPhoto=(ImageView) convertView.findViewById(R.id.userHead_chat_item_img);
+				holder.userName=(TextView) convertView.findViewById(R.id.userName_chat_item_tv);
+				holder.failPhoto=(ImageView) convertView.findViewById(R.id.fail_chat_item_text_img);
+				break;								
+			case 12:
 				convertView=LayoutInflater.from(mContext).inflate(R.layout.chat_item_text_left, null);
 				holder.content=(TextView) convertView.findViewById(R.id.content_chat_item_left_tv);
 				holder.time=(TextView) convertView.findViewById(R.id.time_chat_item_left_tv);
 				holder.timeLayout=(RelativeLayout) convertView.findViewById(R.id.time_chat_item_left_rl);
 				break;
-			case 2:
+			case 11:
 				convertView=LayoutInflater.from(mContext).inflate(R.layout.chat_item_photo_right, null);
 				holder.photo=(ImageView) convertView.findViewById(R.id.photo_chat_item_right_img);
 				holder.time=(TextView) convertView.findViewById(R.id.time_photochat_item_right_tv);
 				holder.timeLayout=(RelativeLayout) convertView.findViewById(R.id.time_photochat_item_right_rl);
 				break;
-			case 3:
+			case 13:
 				convertView=LayoutInflater.from(mContext).inflate(R.layout.chat_item_photo_left, null);
 				holder.photo=(ImageView) convertView.findViewById(R.id.photo_chat_item_left_img);
 				holder.time=(TextView) convertView.findViewById(R.id.time_photochat_item_left_tv);
 				holder.timeLayout=(RelativeLayout) convertView.findViewById(R.id.time_photochat_item_left_rl);
+				break;
+			default:
 				break;
 			}
 
@@ -151,8 +162,7 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 				SpannableString spannableString = ChatGroupActivity.getExpressionString(mContext, item.getContent());
 				holder.content.setMaxWidth(mMaxItemWidth);
 				holder.content.setMinWidth(mMinItemWidth);
-				holder.content.setText(spannableString);
-				
+				holder.content.setText(spannableString);				
 				if(item.getIsShowTime()==0){
 					long time=Long.parseLong(item.getSendTimeStamp());
 					Date date=new Date(time);
@@ -215,8 +225,13 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 	private class ViewHolder{
 		private TextView content;
 		private ImageView photo;
+		
 		private TextView time;
 		private RelativeLayout timeLayout;
+		
+		private ImageView userHeadPhoto;
+		private TextView userName;
+		private ImageView failPhoto;
 		
 	}
 

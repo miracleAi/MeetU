@@ -150,11 +150,11 @@ public class Constants {
 	/**
 	 * 消息状态常量
 	 * */
-	public static final int STATUES_NONE = 1; 
-	public static final int STATUES_SENDING = 2;
-	public static final int STATUES_SENT = 3;
-	public static final int STATUES_RECEIPT = 4;
-	public static final int STATUES_FAILED = 5;
+	public static final int STATUES_NONE = 1; //未知
+	public static final int STATUES_SENDING = 2;//发送中
+	public static final int STATUES_SENT = 3;//已发送
+	public static final int STATUES_RECEIPT = 4;//被接收
+	public static final int STATUES_FAILED = 5;//发送失败
 	/**
 	 * 消息方向常量
 	 * */

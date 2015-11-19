@@ -356,8 +356,7 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 						return;
 
 					}else if(MyApplication.isChatLogin){
-					//	clickBtn.setText(SAVEGROUP);
-						//clickBtn.setText(CREATESCRIP);
+					
 						//建立长连接
 						log.e("zcq","已经建立过长连接");
 						saveGroupInfo();

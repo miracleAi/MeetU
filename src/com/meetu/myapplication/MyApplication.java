@@ -108,6 +108,7 @@ public class MyApplication extends Application {
 					}
 					chatClient = client;
 					isChatLogin = true;
+					log.e("zcq", "长连接登录成功");
 				}
 			});
 		} 

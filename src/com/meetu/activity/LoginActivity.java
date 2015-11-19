@@ -8,14 +8,18 @@ package com.meetu.activity;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.LogUtil.log;
+import com.avos.avoscloud.im.v2.AVIMClient;
 import com.meetu.MainActivity;
 import com.meetu.R;
+import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.callback.ObjFunEnumCallback;
 import com.meetu.cloud.callback.ObjFunObjectCallback;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjExecResult;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.cloud.wrap.ObjWrap;
+import com.meetu.myapplication.MyApplication;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -121,6 +125,34 @@ public class LoginActivity extends Activity implements OnClickListener{
 							startActivity(intent);
 							finish();
 							
+//							if(MyApplication.isChatLogin){
+//								Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+//								startActivity(intent);
+//								finish();
+//							}else{
+//								ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
+//
+//									@Override
+//									public void callback(AVIMClient client, AVException e) {							
+//										if(e != null){
+//											log.e("zcq", e);
+//											return ;
+//										}
+//										if(client != null){
+//											MyApplication.chatClient = client;
+//											log.e("zcq", "连接聊天长连接成功");
+//											Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+//											startActivity(intent);
+//											finish();
+//										}else{
+//											log.e("zcq", "连接聊天长连接失败");
+//										}
+//									}
+//								});
+//							}
+							
+							
+							
 						}else {
 							if(e.getCode()==1){
 								Toast.makeText(LoginActivity.this, "密码不正确", Toast.LENGTH_SHORT).show();
@@ -141,36 +173,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 			intent.putExtra("userphone",uphone.getText());
 			startActivity(intent);
 			
-//			if(uphone.getText().length()!=11){
-//				Toast.makeText(LoginActivity.this, "手机号码格式错误", Toast.LENGTH_SHORT).show();			
-//			}
-//			else{
-//				String phoneString=uphone.getText().toString();
-//				ObjUserWrap.phoneIsAlreadyRegister(phoneString, new ObjFunEnumCallback() {
-//					
-//					@Override
-//					public void callback(ObjExecResult result, AVException e) {
-//						log.e("cunzai", "123");
-//						if(result==ObjExecResult.EXEC_TRUE){
-//							//表述此手机号注册过
-//							
-//							Intent intent=new Intent(LoginActivity.this,ForgetPasswardActivity.class);
-//							intent.putExtra("userphone",uphone.getText());
-//							startActivity(intent);
-//							
-//							//Toast.makeText(RegisterActivity.this, "此手机号 已经注册", Toast.LENGTH_SHORT).show();
-//						}else if(result==ObjExecResult.EXEC_FALSE){
-//	
-//							Toast.makeText(LoginActivity.this, "手机号未注册", Toast.LENGTH_SHORT);
-//						}else{
-//							log.e("register", e);
-//						}
-//						
-//					}
-//				});
-//
-//				
-//			}
+
 			
 			break;
 		default:
