@@ -139,13 +139,13 @@ public class Constants {
 	/**
 	 * 文本 图片 区分发送接收方
 	 * */
-	//文本
+	//发送文本
 	public static final int SHOW_SEND_TEXT = 10;
-	//图片
+	//发送图片
 	public static final int SHOW_SEND_IMG = 11;
-	//文本
+	//接收文本
 	public static final int SHOW_RECV_TEXT = 12;
-	//图片
+	//接收图片
 	public static final int SHOW_RECV_IMG = 13;
 	/**
 	 * 消息状态常量
@@ -195,7 +195,7 @@ public class Constants {
 	 * */
 	//类型ID
 	public static final String ABOUTTYPE = "about_type";
-	//是否对活动点赞
+	//相关用户ID
 	public static final String ABOUTUSERID = "about_user_id";
 	//集合ID,用于存储活动ID--活动参与者  会话ID--会话成员
 	public static final String ABOUTCOLECTIONID = "about_conversation_id";
@@ -203,5 +203,10 @@ public class Constants {
 	/**
 	 * 系统消息类型
 	 * */
+	public static final int SysMsgTypeNone = 0;
+    public static final int SysMsgTypeText = 1;
+    public static final int SysMsgTypeFollow = 2;
+    public static final int SysMsgTypeActy = 3;
+    public static final int SysMsgTypeUserPhoto = 4;
 
 }

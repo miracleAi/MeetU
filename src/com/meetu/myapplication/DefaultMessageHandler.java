@@ -54,21 +54,29 @@ public class DefaultMessageHandler extends AVIMMessageHandler{
 	//文本消息处理方法
 	public void createChatMsg(AVIMConversation conversation,AVIMMessage message,MessagesDao msgDao,ChatmsgsDao chatDao){
 		AVIMTextMessage msg = ((AVIMTextMessage)message);
-		int msgType = (Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
-		if(msgType == Constants.SHOW_SCRIPT){
-			return ;
-		}
 		Chatmsgs chatBean = new Chatmsgs();
-		chatBean.setChatMsgType(Constants.TEXT_TYPE);
+		int msgType = (Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
+		int derection = ChatMsgUtils.getDerection(msg.getMessageIOType());
+		if(msgType == Constants.SHOW_SCRIPT){
+			chatBean.setChatMsgType(Constants.SHOW_SCRIPT);
+		}else{
+			if(msgType == Constants.SHOW_TEXT  && derection == Constants.IOTYPE_OUT){
+				chatBean.setChatMsgType(Constants.SHOW_SEND_TEXT);
+			}else if(msgType == Constants.SHOW_TEXT && derection == Constants.IOTYPE_IN){
+				chatBean.setChatMsgType(Constants.SHOW_RECV_TEXT);
+			}else{
+				chatBean.setChatMsgType(msgType);
+			}
+			boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
+			chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
+		}
 		chatBean.setUid(AVUser.getCurrentUser().getObjectId());
 		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
 		chatBean.setClientId(msg.getFrom());
 		chatBean.setMessageId(msg.getMessageId());
 		chatBean.setConversationId(msg.getConversationId());
-		chatBean.setChatMsgDirection(ChatMsgUtils.getDerection(msg.getMessageIOType()));
+		chatBean.setChatMsgDirection(derection);
 		chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
-		boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
-		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
 		chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
 		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
 		chatBean.setContent(msg.getText());
@@ -82,13 +90,22 @@ public class DefaultMessageHandler extends AVIMMessageHandler{
 	public void createChatPicMsg(AVIMConversation conversation,AVIMMessage message,MessagesDao msgDao,ChatmsgsDao chatDao){
 		AVIMImageMessage msg = ((AVIMImageMessage)message);
 		Chatmsgs chatBean = new Chatmsgs();
+		int msgType = (Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
+		int derection = ChatMsgUtils.getDerection(msg.getMessageIOType());
+		if(msgType == Constants.SHOW_IMG && derection == Constants.IOTYPE_OUT){
+			chatBean.setChatMsgType(Constants.SHOW_SEND_IMG);
+		}else if(msgType == Constants.SHOW_IMG && derection == Constants.IOTYPE_IN){
+			chatBean.setChatMsgType(Constants.SHOW_RECV_IMG);
+		}else{
+			chatBean.setChatMsgType(msgType);
+		}
 		chatBean.setChatMsgType(Constants.IMAGE_TYPE);
 		chatBean.setUid(AVUser.getCurrentUser().getObjectId());
 		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
 		chatBean.setClientId(msg.getFrom());
 		chatBean.setMessageId(msg.getMessageId());
 		chatBean.setConversationId(msg.getConversationId());
-		chatBean.setChatMsgDirection(ChatMsgUtils.getDerection(msg.getMessageIOType()));
+		chatBean.setChatMsgDirection(derection);
 		chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
 		boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
 		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
