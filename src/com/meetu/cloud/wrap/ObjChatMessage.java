@@ -273,6 +273,7 @@ public class ObjChatMessage {
 			}
 		});
 	}
+	
 	/**注销聊天
 	 * 
 	 * @param client

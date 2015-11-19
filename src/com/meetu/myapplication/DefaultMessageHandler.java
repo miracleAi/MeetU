@@ -59,6 +59,12 @@ public class DefaultMessageHandler extends AVIMMessageHandler{
 		int derection = ChatMsgUtils.getDerection(msg.getMessageIOType());
 		if(msgType == Constants.SHOW_SCRIPT){
 			chatBean.setChatMsgType(Constants.SHOW_SCRIPT);
+			String script = (String) msg.getAttrs().get(Constants.SCRIP_ID);
+			int scripx = (Integer) msg.getAttrs().get(Constants.SCRIP_X);
+			int scripy = (Integer) msg.getAttrs().get(Constants.SCRIP_Y);
+			chatBean.setScriptId(script);
+			chatBean.setScripX(scripx);
+			chatBean.setScripY(scripy);
 		}else{
 			if(msgType == Constants.SHOW_TEXT  && derection == Constants.IOTYPE_OUT){
 				chatBean.setChatMsgType(Constants.SHOW_SEND_TEXT);
@@ -99,7 +105,6 @@ public class DefaultMessageHandler extends AVIMMessageHandler{
 		}else{
 			chatBean.setChatMsgType(msgType);
 		}
-		chatBean.setChatMsgType(Constants.IMAGE_TYPE);
 		chatBean.setUid(AVUser.getCurrentUser().getObjectId());
 		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
 		chatBean.setClientId(msg.getFrom());
