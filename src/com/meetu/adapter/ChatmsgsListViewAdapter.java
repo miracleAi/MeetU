@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import net.tsz.afinal.FinalBitmap;
 import android.R.string;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -25,10 +27,14 @@ import android.widget.TextView;
 
 
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.LogUtil.log;
 
 import com.meetu.R;
 import com.meetu.activity.miliao.ChatGroupActivity;
+import com.meetu.cloud.callback.ObjUserInfoCallback;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.entity.Huodong;
 import com.meetu.myapplication.MyApplication;
@@ -50,12 +56,12 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 	private int mMinItemWidth;//item最小宽度
 	
 	//TODO 暂时只测试4种状态  ,但是要进一步判断消息发送的方向
-	private final int TYPE_COUNT=4;
+	private final int TYPE_COUNT=13;
 	
 	//网络相关
 	
-	
-
+	private ObjUser user=null;
+	FinalBitmap finalBitmap;
 	
 	public ChatmsgsListViewAdapter(Context context,List<Chatmsgs> chatmsgsList){
 		this.mContext=context;
@@ -64,6 +70,9 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 		
 		mMaxItemWidth=DisplayUtils.getWindowWidth(mContext)-DensityUtil.dip2px(mContext, 110);
 		mMinItemWidth=DensityUtil.dip2px(mContext, 44);
+		
+		MyApplication app=(MyApplication) context.getApplicationContext();
+		finalBitmap=app.getFinalBitmap();
 	}
 	/**
 	 * 消息状态 style
@@ -112,12 +121,13 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 	
-		ViewHolder holder=null;
+		final ViewHolder holder;
 		Chatmsgs item=chatmsgsList.get(position);
 		
 		if(convertView==null){
 		holder=new ViewHolder();
 		log.e("zcq", "item.getChatMsgType()=="+item.getChatMsgType());
+		log.e("zcq", "item.getClientId()=="+item.getClientId());
 			switch (item.getChatMsgType()) {
 			
 			case 10:					
@@ -125,7 +135,7 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 				holder.content=(TextView) convertView.findViewById(R.id.content_chat_item_right_tv);				
 				holder.time=(TextView) convertView.findViewById(R.id.time_chat_item_right_tv);
 				holder.timeLayout=(RelativeLayout) convertView.findViewById(R.id.time_chat_item_right_rl);
-				holder.userHeadPhoto=(ImageView) convertView.findViewById(R.id.userHead_chat_item_img);
+				holder.userHeadPhoto=(ImageView) convertView.findViewById(R.id.userHead_chat_item_right_img);
 				holder.userName=(TextView) convertView.findViewById(R.id.userName_chat_item_tv);
 				holder.failPhoto=(ImageView) convertView.findViewById(R.id.fail_chat_item_text_img);
 				break;								
@@ -134,6 +144,10 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 				holder.content=(TextView) convertView.findViewById(R.id.content_chat_item_left_tv);
 				holder.time=(TextView) convertView.findViewById(R.id.time_chat_item_left_tv);
 				holder.timeLayout=(RelativeLayout) convertView.findViewById(R.id.time_chat_item_left_rl);
+				
+				holder.userHeadPhoto=(ImageView) convertView.findViewById(R.id.userHead_chat_item_left_img);
+				holder.userName=(TextView) convertView.findViewById(R.id.userName_chat_item_left_tv);
+				holder.failPhoto=(ImageView) convertView.findViewById(R.id.fail_chat_item_text_left);
 				break;
 			case 11:
 				convertView=LayoutInflater.from(mContext).inflate(R.layout.chat_item_photo_right, null);
@@ -156,14 +170,17 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 			holder=(ViewHolder)convertView.getTag();
 		}
 		
+		user=new ObjUser();
+		
+		
 		switch (item.getChatMsgType()) {
-			case 0:
-			case 1:
+			case 10:
+			case 12:
 				SpannableString spannableString = ChatGroupActivity.getExpressionString(mContext, item.getContent());
 				holder.content.setMaxWidth(mMaxItemWidth);
 				holder.content.setMinWidth(mMinItemWidth);
 				holder.content.setText(spannableString);				
-				if(item.getIsShowTime()==0){
+				if(item.getIsShowTime()==1){
 					long time=Long.parseLong(item.getSendTimeStamp());
 					Date date=new Date(time);
 					sd=new SimpleDateFormat("MM-dd HH:mm");
@@ -172,30 +189,43 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 					holder.time.setText(string);
 					holder.timeLayout.setVisibility(View.VISIBLE);
 				}
-				if(item.getIsShowTime()==1){
+				if(item.getIsShowTime()==0){
 					holder.timeLayout.setVisibility(View.GONE);
 				}
+				ObjUserWrap.getObjUser(item.getClientId(), new ObjUserInfoCallback() {
+					
+					@Override
+					public void callback(ObjUser user, AVException e) {
+						// TODO Auto-generated method stub
+						if(e!=null){
+							log.e("zcq", e);
+							
+						}else if(user!=null){
+							
+							holder.userName.setText(user.getNameNick());
+							finalBitmap.display(holder.userHeadPhoto, user.getProfileClip().getUrl());
+							
+						}else{
+							log.e("zcq", "个人信息获取失败");
+						}
+					}
+				});
 					
 				break;
 		
 				
-			case 2:	
-			case 3:
+			case 11:	
+		
 				String fileName=item.getImgMsgImageUrl();
 				log.e("lucifer1",fileName.toString());
-//				Bitmap bm=UriToBitmap.getBitmapFromUri(mContext, uri);
-			//	holder.photo.setImageBitmap(bm);
-				
+
 				BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inSampleSize = 4;
 				Bitmap bmp = BitmapFactory.decodeFile(fileName, options);
-//				bmp=BitmapCut.toRoundCorner(bmp, 10);
+
 				 Bitmap bbmp=BitmapCut.getRadiusBitmap(bmp);
-				holder.photo.setImageBitmap(bbmp);
-				
-			//	bmp.recycle();
-				
-				if(item.getIsShowTime()==0){
+				holder.photo.setImageBitmap(bbmp);			
+				if(item.getIsShowTime()==1){
 					long time=Long.parseLong(item.getSendTimeStamp());
 					Date date=new Date(time);
 					sd=new SimpleDateFormat("MM-dd HH:mm");
@@ -204,10 +234,27 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 					holder.time.setText(string);
 					holder.timeLayout.setVisibility(View.VISIBLE);
 				}
-				if(item.getIsShowTime()==1){
+				if(item.getIsShowTime()==0){
 					holder.timeLayout.setVisibility(View.GONE);
 				}
 
+				break;
+			case 13:
+				finalBitmap.display(holder.photo, item.getImgMsgImageUrl());
+				if(item.getIsShowTime()==1){
+					long time=Long.parseLong(item.getSendTimeStamp());
+					Date date=new Date(time);
+					sd=new SimpleDateFormat("MM-dd HH:mm");
+					String string= sd.format(date);
+//					log.e(""+date+", "+sd.format(date)+", time=="+item.getSendTimeStamp());
+					holder.time.setText(string);
+					holder.timeLayout.setVisibility(View.VISIBLE);
+				}
+				if(item.getIsShowTime()==0){
+					holder.timeLayout.setVisibility(View.GONE);
+				}
+				
+				
 				break;
 		
 		}

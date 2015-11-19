@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import org.xmlpull.v1.XmlPullParser;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -166,9 +167,11 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	
 	private String conversationStyle;//对话类型，1 表示活动群聊  2表示觅聊    3表示单聊 暂时没有
 	private String conversationId;//对话id
-	AVIMConversation conversation;
+	private AVIMConversation conversation;
 	
-	MessageHandler msgHandler;
+	private MessageHandler msgHandler;
+	
+	private AVFile chatPhoto = null;//用来发送照片
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -547,10 +550,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 				String fileName=UriToimagePath.getImageAbsolutePath(this, uri);
 //				headerPortait=UrlLocationToBitmap.convertToBitmap(url.toString(), 160, 160);
 //				headerPortait=UriToBitmap.getBitmapFromUri(this, uri);
-				sendChatPhoto(fileName);
-//				send.setImageBitmap(headerPortait);
-				
-				
+				sendChatPhoto(fileName);			
 			}
 			break ;
 		case 22:
@@ -560,25 +560,15 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 				
 				String fileName=temp.toString();
 				log.e("lucifer1",fileName.toString());
-//				Bitmap bm=UriToBitmap.getBitmapFromUri(mContext, uri);
-			//	holder.photo.setImageBitmap(bm);
+
 				
 				BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inSampleSize = 4;
 				Bitmap bmp = BitmapFactory.decodeFile(fileName, options);
 				
-				saveHeadImg(bmp);
-				
-//				Uri uri=Uri.fromFile(temp);
-//				log.e("lucifer", uri.toString()+" ,filepath=="+UriToimagePath.getImageAbsolutePath(this, uri)+",temp=="+temp);
-//				String fileName=UriToimagePath.getImageAbsolutePath(this, uri);
-				
-			
-		}
-			
+				saveHeadImg(bmp);		
+		}			
 			break;
-
-
 		default:
 			break;
 		}
@@ -589,10 +579,11 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	 * 把要上传的图片存到本地sd卡上
 	 * @param photo
 	 */
-	public void saveHeadImg(Bitmap photo){
+	public void  saveHeadImg(Bitmap photo){
 		String uuid = UUID.randomUUID().toString();	 
 	    String  picName = "/"+uuid + ".jpg";
 		FileOutputStream fos=null;
+		String path = "";
 		try {
 			fos=new FileOutputStream(new File(Environment.getExternalStorageDirectory()+picName));
 			photo.compress(CompressFormat.PNG, 100, fos);	
@@ -613,33 +604,32 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		File temp=new File(Environment.getExternalStorageDirectory()
 				+ picName);
 		log.e("lucifer xin", "temp=="+temp.toString());
+		//本地图片路径
 		sendChatPhoto(temp.toString());
+		
 	}
 	
 	private void sendChatPhoto(String uir) {
 		// TODO Auto-generated method stub
 		Chatmsgs mchatmsgs=new Chatmsgs();
-	//	mchatmsgs.setImgMsgImageUrl(imgMsgImageUrl);
+
 		mchatmsgs.setImgMsgImageUrl(uir.toString());
 		mchatmsgs.setConversationId("1");
-		mchatmsgs.setChatMsgType(2);
-	//	mchatmsgs.setSendTimeStamp(sd.format(new Date()));
-//		long time=(new Date()).getTime();
-//		mchatmsgs.setSendTimeStamp(Long.toString(time));
+		mchatmsgs.setChatMsgType(11);
+
 		isShowTime(mchatmsgs);
 		log.e("lucifer time", ""+mchatmsgs.getIsShowTime());
 		chatmsgsDao.insert(mchatmsgs);
 		
-		//TODO		测试类型 加了左边布局的数据	
-		Chatmsgs item=new Chatmsgs();
-		item.setImgMsgImageUrl(uir.toString());
-		item.setConversationId("1");
-		item.setChatMsgType(3);
-	//	item.setSendTimeStamp(sd.format(new Date()));
-//		long time1=(new Date()).getTime();
-//		mchatmsgs.setSendTimeStamp(Long.toString(time1));
-		isShowTime(item);
-		chatmsgsDao.insert(item);
+		sendPictureMessage(mchatmsgs);
+//		//TODO		测试类型 加了左边布局的数据	
+//		Chatmsgs item=new Chatmsgs();
+//		item.setImgMsgImageUrl(uir.toString());
+//		item.setConversationId("1");
+//		item.setChatMsgType(3);
+//
+//		isShowTime(item);
+//		chatmsgsDao.insert(item);
 		
 		handler.sendEmptyMessage(1);
 		
@@ -650,7 +640,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	 *
 	 */
 	private void sendChatmessage() {
-		// TODO 测试类型 加了左边布局的数据
+		// TODO 发送成功失败状态没有判断
 		Chatmsgs mchatmsgs=new Chatmsgs();
 		if(mEditText.getText().length()!=0){
 			String mcontentString=mEditText.getText().toString();
@@ -671,30 +661,8 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 			handler.sendEmptyMessage(1);
 			
 			sendTextMessage(mchatmsgs);
-//			AVIMTextMessage msg=new AVIMTextMessage();
-//			msg.setContent(mchatmsgs.getContent());
-//			Map<String, Object> map = null;
-//			
-//			if(mchatmsgs.getIsShowTime()==1){
-//				map.put(Constants.IS_SHOW_TIME, ChatMsgUtils.isShowChatTime(1));
-//			}else{
-//				map.put(Constants.IS_SHOW_TIME, ChatMsgUtils.isShowChatTime(0));
-//			}	
-//			msg.setAttrs(map);
-//			ObjChatMessage.sendChatMsg(conversation, msg, new ObjFunBooleanCallback() {
-//				
-//				@Override
-//				public void callback(boolean result, AVException e) {
-//					if(e!=null){
-//						log.e("zcq", e);
-//					}else if(result){
-//						log.e("zcq", "文本消息发送成功");
-//					}else{
-//						log.e("zcq", "文本消息发送失败");
-//					}
-//					
-//				}
-//			});
+			mEditText.setText("");
+
 			
 			
 
@@ -1117,7 +1085,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
 		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
 		chatBean.setContent(msg.getText());
-		int style=(Integer) msg.getAttrs().get(Constants.SCRIP_TYPE);
+		int style=(Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
 		//我接受别人的消息
 		if(style==0&&ChatMsgUtils.getDerection(msg.getMessageIOType())==Constants.IOTYPE_IN){
 			
@@ -1169,18 +1137,18 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		chatBean.setImgMsgImageHeight(msg.getHeight());
 		chatBean.setImgMsgImageWidth(msg.getWidth());
 		
-		int style=(Integer) msg.getAttrs().get(Constants.SCRIP_TYPE);
+		int style=(Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
 		if(style==1&&ChatMsgUtils.getDerection(msg.getMessageIOType())==Constants.IOTYPE_IN){
 			//TODO 方便展示数据
-			chatBean.setChatMsgType(3);
+			chatBean.setChatMsgType(13);
 		}else{
-			chatBean.setChatMsgType(2);
+			chatBean.setChatMsgType(11);
 		}
 		
 		chatmsgsDao.insert(chatBean);
 		if(conversation.getConversationId().equals(conversationId)){
 			//测试显示
-			//urlTv.setText(msg.getFileUrl());
+			handler.sendEmptyMessage(1);
 		}else{
 			//未读消息加1
 		//	msgDao.updateUnread(user.getObjectId(), msg.getConversationId());
@@ -1207,7 +1175,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		}else{
 			map.put(Constants.IS_SHOW_TIME, false);
 		}
-		map.put(Constants.SCRIP_TYPE, 0);
+		map.put(Constants.CHAT_MSG_TYPE, Constants.SHOW_TEXT);
 		msg.setAttrs(map);
 		
 		ObjChatMessage.sendChatMsg(conversation, msg, new ObjFunBooleanCallback() {
@@ -1228,6 +1196,44 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 			}
 		});
 	}
+	
+	//发送图片消息
+		public void sendPictureMessage(Chatmsgs mchatmsgs){
+			AVIMImageMessage msg;			
+			try {
+				msg = new AVIMImageMessage(mchatmsgs.getImgMsgImageUrl());			
+				Map<String, Object> map = new HashMap<String, Object>();
+					map.put(Constants.CHAT_MSG_TYPE, Constants.SHOW_IMG);
+					if(mchatmsgs.getIsShowTime()==1){
+						map.put(Constants.IS_SHOW_TIME, true);
+					}else{
+						map.put(Constants.IS_SHOW_TIME, false);
+					}			
+				msg.setAttrs(map);
+				ObjChatMessage.sendPicMsg(conversation, msg, new ObjFunBooleanCallback() {
+					@Override
+					public void callback(boolean result, AVException e) {
+						// TODO Auto-generated method stub
+						if(e != null){
+						log.e("zcq", e);
+							return ;
+						}
+						if(result){
+							log.e("zcq", "图片消息发送成功");
+							handler.sendEmptyMessage(1);
+							
+						}else{
+							log.e("zcq", "图片消息发送失败");
+							handler.sendEmptyMessage(1);
+						}
+					}
+				});
+			} catch (FileNotFoundException e1) {				
+				e1.printStackTrace();
+			} catch (IOException e1) {				
+				e1.printStackTrace();
+			}
+		}
 	
 	
 	
