@@ -1117,7 +1117,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
 		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
 		chatBean.setContent(msg.getText());
-		int style=(Integer) msg.getAttrs().get(Constants.SCRIP_TYPE);
+		int style=(Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
 		//我接受别人的消息
 		if(style==0&&ChatMsgUtils.getDerection(msg.getMessageIOType())==Constants.IOTYPE_IN){
 			
@@ -1169,7 +1169,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		chatBean.setImgMsgImageHeight(msg.getHeight());
 		chatBean.setImgMsgImageWidth(msg.getWidth());
 		
-		int style=(Integer) msg.getAttrs().get(Constants.SCRIP_TYPE);
+		int style=(Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
 		if(style==1&&ChatMsgUtils.getDerection(msg.getMessageIOType())==Constants.IOTYPE_IN){
 			//TODO 方便展示数据
 			chatBean.setChatMsgType(3);
@@ -1207,7 +1207,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		}else{
 			map.put(Constants.IS_SHOW_TIME, false);
 		}
-		map.put(Constants.SCRIP_TYPE, 0);
+		map.put(Constants.CHAT_MSG_TYPE, 0);
 		msg.setAttrs(map);
 		
 		ObjChatMessage.sendChatMsg(conversation, msg, new ObjFunBooleanCallback() {
