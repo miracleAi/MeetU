@@ -7,11 +7,8 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMMessageHandler;
-import com.avos.avoscloud.im.v2.AVIMTypedMessage;
-import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
-import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.utils.ChatMsgUtils;
 import com.meetu.common.Constants;
 import com.meetu.entity.Chatmsgs;
@@ -59,6 +56,12 @@ public class DefaultMessageHandler extends AVIMMessageHandler{
 		int derection = ChatMsgUtils.getDerection(msg.getMessageIOType());
 		if(msgType == Constants.SHOW_SCRIPT){
 			chatBean.setChatMsgType(Constants.SHOW_SCRIPT);
+			String script = (String) msg.getAttrs().get(Constants.SCRIP_ID);
+			int scripx = (Integer) msg.getAttrs().get(Constants.SCRIP_X);
+			int scripy = (Integer) msg.getAttrs().get(Constants.SCRIP_Y);
+			chatBean.setScriptId(script);
+			chatBean.setScripX(scripx);
+			chatBean.setScripY(scripy);
 		}else{
 			if(msgType == Constants.SHOW_TEXT  && derection == Constants.IOTYPE_OUT){
 				chatBean.setChatMsgType(Constants.SHOW_SEND_TEXT);
@@ -99,7 +102,6 @@ public class DefaultMessageHandler extends AVIMMessageHandler{
 		}else{
 			chatBean.setChatMsgType(msgType);
 		}
-		chatBean.setChatMsgType(Constants.IMAGE_TYPE);
 		chatBean.setUid(AVUser.getCurrentUser().getObjectId());
 		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
 		chatBean.setClientId(msg.getFrom());

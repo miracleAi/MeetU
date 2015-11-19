@@ -47,6 +47,9 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 	private static final String TBL_CHATMSGS_NOTIFICATION_ACTY_CONTENT="_notification_acty_content";//
 	private static final String TBL_CHATMSGS_NOTIFICATION_ACTY_TITLE="_notification_acty_title";//
 	private static final String TBL_CHATMSGS_NOTIFICATION_aCTY_TITLE_SUB="_notification_acty_title_sub";//
+	private static final String TBL_CHATMSGS_SCRIPID="_scrip_id";//消息内容
+	private static final String TBL_CHATMSGS_SCRIPX="_scrip_x";//消息内容
+	private static final String TBL_CHATMSGS_SCRIPY="_scrip_y";//消息内容
 	
 	
 	//消息总表
@@ -125,7 +128,10 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		sb3.append(TBL_CHATMSGS_NOTIFICATION_BASE_CONTENT+" varchar(100) , ");
 		sb3.append(TBL_CHATMSGS_NOTIFICATION_ACTY_CONTENT+" varchar(100) , ");
 		sb3.append(TBL_CHATMSGS_NOTIFICATION_ACTY_TITLE+" varchar(100) , ");
-		sb3.append(TBL_CHATMSGS_NOTIFICATION_aCTY_TITLE_SUB+" varchar(100) ");
+		sb3.append(TBL_CHATMSGS_NOTIFICATION_aCTY_TITLE_SUB+" varchar(100) ,");
+		sb3.append(TBL_CHATMSGS_SCRIPID+" varchar(100) , ");
+		sb3.append(TBL_CHATMSGS_SCRIPX+" Integer , ");
+		sb3.append(TBL_CHATMSGS_SCRIPY+" Integer ");
 		sb3.append(")");
 		db.execSQL(sb3.toString());
 		
@@ -146,7 +152,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		sb4.append(TBL_MESSAGES_ACTY_NAME+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_CHAT_ID+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_CHAT_NAME+ " varchar(100) ,");
-		sb4.append(TBL_MESSAGES_UNREAD_COUNT+ " integer");
+		sb4.append(TBL_MESSAGES_UNREAD_COUNT+ " Integer");
 		sb4.append(")");
 		db.execSQL(sb4.toString());
 		
@@ -175,19 +181,19 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		activitySb.append(Constants.ISACTIVITYPRAISE+ " integer ,");
 		activitySb.append(Constants.ACTIVITYFOLLOWCOUNT+ " integer ,");
 		activitySb.append(Constants.ACTIVITYCOVER+ " varchar(100) ,");
-		activitySb.append(Constants.TIMESTART+ " integer ,");
-		activitySb.append(Constants.STATUS+ " integer ,");
+		activitySb.append(Constants.TIMESTART+ " Integer ,");
+		activitySb.append(Constants.STATUS+ " Integer ,");
 		activitySb.append(Constants.ACTIVITYCONTENT+ " varchar(100) ,");
-		activitySb.append(Constants.PRAISECOUNT+ " integer ,");
-		activitySb.append(Constants.ORDERCOUNTBOY+ " integer ,");
-		activitySb.append(Constants.ORDERCOUNTGIRL+ " integer ,");
+		activitySb.append(Constants.PRAISECOUNT+ " Integer ,");
+		activitySb.append(Constants.ORDERCOUNTBOY+ " Integer ,");
+		activitySb.append(Constants.ORDERCOUNTGIRL+ " Integer ,");
 		activitySb.append(Constants.TITLE+ " varchar(100) ,");
 		activitySb.append(Constants.TITLESUB+ " varchar(100) ,");
 		activitySb.append(Constants.LOCATIONADDRESS+ " varchar(100) ,");
 		activitySb.append(Constants.LOCATIONPLACE+ " varchar(100) ,");
 		activitySb.append(Constants.LOCATIONGOVERNMENT+ " varchar(100) ,");
-		activitySb.append(Constants.TIMESTOP+ " integer ,");
-		activitySb.append(Constants.ACTIVITYINDEX+ " integer ,");
+		activitySb.append(Constants.TIMESTOP+ " Integer ,");
+		activitySb.append(Constants.ACTIVITYINDEX+ " Integer ,");
 		activitySb.append(Constants.LOCATIONLONGTITUDE+ " varchar(100) ,");
 		activitySb.append(Constants.LOCATIONLATITUDE+ " varchar(100) ,");
 		activitySb.append(Constants.CONVERSATIONID+ " varchar(100) ,");
@@ -195,14 +201,14 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		activitySb.append(")");
 		db.execSQL(activitySb.toString());
 		/**
-		 * 首页活动缓存表
+		 * 用户集合缓存表
 		 * */
 		StringBuffer aboutSb=new StringBuffer();
 		aboutSb.append("create table if not exists ");
 		aboutSb.append(Constants.USERABOUT_CACHE_TB+"(");
 		aboutSb.append("id integer primary key autoincrement ,");
 		aboutSb.append(Constants.USERID+ " varchar(100) ,");
-		aboutSb.append(Constants.ABOUTTYPE+ " integer ,");
+		aboutSb.append(Constants.ABOUTTYPE+ " Integer ,");
 		aboutSb.append(Constants.ABOUTUSERID+ " varchar(100) ,");
 		aboutSb.append(Constants.ABOUTCOLECTIONID+ " varchar(100) ");
 		aboutSb.append(")");

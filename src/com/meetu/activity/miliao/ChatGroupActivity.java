@@ -1175,7 +1175,11 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		}else{
 			map.put(Constants.IS_SHOW_TIME, false);
 		}
+
 		map.put(Constants.CHAT_MSG_TYPE, Constants.SHOW_TEXT);
+
+		
+
 		msg.setAttrs(map);
 		
 		ObjChatMessage.sendChatMsg(conversation, msg, new ObjFunBooleanCallback() {

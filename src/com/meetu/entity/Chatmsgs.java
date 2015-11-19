@@ -70,6 +70,18 @@ public class Chatmsgs {
 	 * 新加入成员的id
 	 */
 	private String nowJoinUserId;
+	/**
+	 * 纸条ID
+	 * */
+	private String scriptId;
+	/**
+	 * 纸条坐标X
+	 * */
+	private int scripX;
+	/**
+	 * 纸条坐标Y
+	 * */
+	private int scripY;
 	//以下没有用
 	/**
 	 * 文本通知消息的内容
@@ -207,6 +219,25 @@ public class Chatmsgs {
 	}
 	public void setNotificationActyTitleSub(String notificationActyTitleSub) {
 		this.notificationActyTitleSub = notificationActyTitleSub;
+	}
+	
+	public String getScriptId() {
+		return scriptId;
+	}
+	public void setScriptId(String scriptId) {
+		this.scriptId = scriptId;
+	}
+	public int getScripX() {
+		return scripX;
+	}
+	public void setScripX(int scripX) {
+		this.scripX = scripX;
+	}
+	public int getScripY() {
+		return scripY;
+	}
+	public void setScripY(int scripY) {
+		this.scripY = scripY;
 	}
 	public Chatmsgs(String messageCacheId, String messageId, String clientId,
 			String conversationId, int chatMsgType, int chatMsgDirection,
