@@ -44,7 +44,7 @@ public class MessagesDao {
 				messages.setUnreadMsgCount(c.getInt(c.getColumnIndex("_unread_count")));
 			}
 			c.close();*/
-			db.execSQL("insert or replace into messages values(null," +
+			db.execSQL("insert or replace into messages values(" +
 					"?,?,?,?,?," +
 					"?,?,?,?,?,?)", 
 					new Object[]{messages.getUserId(),messages.getConversationID(),messages.getConversationType(),messages.getTiStatus(),messages.getCreatorID(),messages.getTimeOver(),
