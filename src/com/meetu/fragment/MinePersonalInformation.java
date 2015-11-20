@@ -81,8 +81,6 @@ public class MinePersonalInformation extends Fragment implements OnClickListener
 		if(currentUser!=null){
 			//强制类型转换
 			user = AVUser.cast(currentUser, ObjUser.class);
-			
-		
 		}
 		
 		username=(TextView) view.findViewById(R.id.minesetting_username_tv);

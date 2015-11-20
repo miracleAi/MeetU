@@ -152,7 +152,4 @@ public class Messages {
 	public void setPersonCountUpdate(long personCountUpdate) {
 		this.personCountUpdate = personCountUpdate;
 	}
-	
-	
-
 }
