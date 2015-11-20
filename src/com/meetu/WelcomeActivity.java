@@ -88,7 +88,7 @@ public class WelcomeActivity extends Activity {
 		dbHelperCity=new DBManagerCity(this);
 		dbHelperCity.openDatabase();
 		dbHelperCity.closeDatabase();
-
+ 
 
 //		//拿到本地的用户
 //		AVUser currentUser = AVUser.getCurrentUser();
@@ -137,7 +137,7 @@ public class WelcomeActivity extends Activity {
 		AVUser currentUser = AVUser.getCurrentUser();
 		if (currentUser != null) {
 			// 允许用户使用应用
-			Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
+			Intent intent = new Intent(WelcomeActivity.this,TestMsgTwoActivity.class);
 			WelcomeActivity.this.startActivity(intent);
 			finish();
 		} else {

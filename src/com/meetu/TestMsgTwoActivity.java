@@ -62,8 +62,8 @@ public class TestMsgTwoActivity extends Activity{
 		countTv = (TextView) findViewById(R.id.count_tv);
 		infoTv = (TextView) findViewById(R.id.info_tv);
 		clickBtn = (Button) findViewById(R.id.click);
-		//clickBtn.setText(GETCOVERSATION);
-		clickBtn.setText(GETSYSMSG);
+		clickBtn.setText(GETCOVERSATION);
+		//clickBtn.setText(GETSYSMSG);
 		clickBtn.setOnClickListener(new OnClickListener() {
 
 			@Override

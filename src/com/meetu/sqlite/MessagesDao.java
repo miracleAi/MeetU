@@ -38,12 +38,12 @@ public class MessagesDao {
 		SQLiteDatabase db=helper.getReadableDatabase();
 		for(int i=0;i<list.size();i++){
 			Messages messages = list.get(i);
-			/*Cursor c=db.rawQuery("select * from messages where "+Constants.USERID +"=? and _conversation_id=?", new String[]{messages.getUserId(),messages.getConversationID()});
+			Cursor c=db.rawQuery("select * from messages where "+Constants.USERID +"=? and _conversation_id=?", new String[]{messages.getUserId(),messages.getConversationID()});
 			if(c.moveToNext()){
 				Messages msg=new Messages();
 				messages.setUnreadMsgCount(c.getInt(c.getColumnIndex("_unread_count")));
 			}
-			c.close();*/
+			c.close();
 			db.execSQL("insert or replace into messages values(" +
 					"?,?,?,?,?," +
 					"?,?,?,?,?,?)", 
