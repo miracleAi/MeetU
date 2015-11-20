@@ -24,7 +24,7 @@ public class MessagesDao {
 	 */
 	public void insert(Messages messages){
 		SQLiteDatabase db=helper.getReadableDatabase();
-		db.execSQL("insert or replace into messages values(null," +
+		db.execSQL("insert or replace into messages values(" +
 				"?,?,?,?,?," +
 				"?,?,?,?,?,?)", 
 				new Object[]{messages.getUserId(),messages.getConversationID(),messages.getConversationType(),messages.getTiStatus(),messages.getCreatorID(),messages.getTimeOver(),
@@ -69,6 +69,29 @@ public class MessagesDao {
 		}
 		sdb.close();
 	}
+	/**
+	 * 修改未读条数  清0
+	 * @param userId
+	 * @param convId  
+	 * @author lucifer
+	 * @date 2015-11-20
+	 */
+	public void updateUnreadClear(String userId,String convId){
+		SQLiteDatabase sdb=helper.getWritableDatabase();
+		Cursor cursor=sdb.rawQuery("select * from messages where "+Constants.USERID +"=? and _conversation_id=?", new String[]{userId,convId});
+		if(cursor.moveToNext()){
+			int count = 0;
+			ContentValues values = new ContentValues();
+			values.put("_unread_count", count);
+			Log.d("mytest", ""+count);
+			int s = sdb.update("messages", values,Constants.USERID+"=? and _conversation_id=?"
+					,new String[]{userId,convId});
+			Log.d("mytest", "s"+s);
+		}
+		sdb.close();
+	}
+	
+	
 	/**
 	 * 修改所有状态改为已剔除(通过替换，得出被踢出和失效的会话，查看一次后删除)
 	 * */

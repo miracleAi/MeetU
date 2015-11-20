@@ -36,6 +36,7 @@ import com.meetu.R.layout;
 import com.meetu.TestReceiveMsg.MemberChangeHandler;
 import com.meetu.adapter.ChatmsgsListViewAdapter;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.object.ObjChat;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.utils.ChatMsgUtils;
 import com.meetu.cloud.wrap.ObjChatMessage;
@@ -47,6 +48,7 @@ import com.meetu.fragment.HomePagefragment;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.ChatmsgsDao;
 import com.meetu.sqlite.EmojisDao;
+import com.meetu.sqlite.MessagesDao;
 import com.meetu.tools.BitmapCut;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
@@ -172,6 +174,10 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	private MessageHandler msgHandler;
 	
 	private AVFile chatPhoto = null;//用来发送照片
+	private MessagesDao messagesDao;//用来操作未读消息
+	
+	private Message message;//用来接收 消息列表传过来 消息
+	private ObjChat objChat;//用来接收 觅聊列表传过来 觅聊
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +192,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		}
 		msgHandler=new MessageHandler();
 		emojisDao=new EmojisDao(this);
+		messagesDao=new MessagesDao(this);
 		chatEmojis=emojisDao.getChatEmojisList();
 		columns=DisplayUtils.getWindowWidth(this)/DensityUtil.dip2px(this, 45);
 		
@@ -193,6 +200,14 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		conversationStyle=intent.getStringExtra("ConversationStyle");
 		conversationId=intent.getStringExtra("ConversationId");
 		conversation = MyApplication.chatClient.getConversation(""+conversationId);
+		if(conversationStyle.equals("1")){
+			//表示 的是活动群聊
+			
+		}
+		if(conversationStyle.equals("2")){
+			//表示 的是觅聊
+			
+		}
 		log.e("lucifer", "conversationStyle=="+conversationStyle+" conversationId=="+conversationId);
 		/**
 		 * 删除所有本地聊天数据
@@ -1114,7 +1129,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 			
 		}else{
 			//未读消息加1
-		//	msgDao.updateUnread(user.getObjectId(), msg.getConversationId());
+			messagesDao.updateUnread(user.getObjectId(), msg.getConversationId());
 		}
 		
 	}
@@ -1161,7 +1176,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 			handler.sendEmptyMessage(1);
 		}else{
 			//未读消息加1
-		//	msgDao.updateUnread(user.getObjectId(), msg.getConversationId());
+			messagesDao.updateUnread(user.getObjectId(), msg.getConversationId());
 		}
 		
 	}

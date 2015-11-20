@@ -192,8 +192,12 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 		intent.putExtra("ConversationId", ""+mdataListCache.get(position).getConversationID());
 		//传对话的类型   1 表示活动群聊 2 表示觅聊  3 表示单聊
 		intent.putExtra("ConversationStyle", ""+mdataListCache.get(position).getConversationType());
+		Bundle bundle=new Bundle();
+		bundle.putSerializable("Messages", mdataListCache.get(position));
 		startActivity(intent);
-		
+		//清空该项未读消息
+		messagesDao.updateUnreadClear(user.getObjectId(), mdataListCache.get(position).getConversationID());
+		handler.sendEmptyMessage(1);
 	}
 
 	@Override

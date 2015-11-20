@@ -1,6 +1,8 @@
 package com.meetu.entity;
 
-public class Messages {
+import java.io.Serializable;
+
+public class Messages implements Serializable {
 	/**
 	 * 当前用户ID
 	 * */

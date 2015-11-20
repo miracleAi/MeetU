@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MessagesListAdapter extends BaseAdapter {
@@ -78,14 +79,12 @@ public class MessagesListAdapter extends BaseAdapter {
 			holder.tvContent=(TextView) convertView.findViewById(R.id.content_item_fragment_messages_tv);
 			holder.tvTime=(TextView) convertView.findViewById(R.id.time_item_fragment_messages_tv);
 			holder.tvNoReadMessages=(TextView) convertView.findViewById(R.id.number_noRead_item_fragment_messages_tv);
+			holder.noReadLayout=(RelativeLayout) convertView.findViewById(R.id.number_noRead_item_fragment_messages_rl);
 			
 			convertView.setTag(holder);
 		}else{
 			holder=(ViewHolder)convertView.getTag();
-		}
-		
-		
-		
+		}	
 		//根据对话id拿到聊天对话的最后一条消息
 		if(chatmsgsDao.getChatmsgsList(item.getConversationID(),item.getUserId()).size()!=0){
 			 chatmsgs=chatmsgsDao.getChatmsgsList(item.getConversationID(),item.getUserId()).get(chatmsgsDao.getChatmsgsList(item.getConversationID(),item.getUserId()).size()-1);
@@ -112,11 +111,26 @@ public class MessagesListAdapter extends BaseAdapter {
 //			holder.tvNoReadMessages.setText(item.getUnreadMsgCount());
 		}
 		if(item.getUnreadMsgCount()>99){
+			holder.noReadLayout.setVisibility(View.VISIBLE);
 			holder.tvNoReadMessages.setText("99+");
+		}else if(item.getUnreadMsgCount()<=0){
+			holder.noReadLayout.setVisibility(View.GONE);
+		
 		}else{
+			holder.noReadLayout.setVisibility(View.VISIBLE);
 			holder.tvNoReadMessages.setText(""+item.getUnreadMsgCount());
 		}
-		holder.tvName.setText(item.getActyName());
+		
+		if(item.getConversationType()==1){
+			
+			holder.tvName.setText(item.getActyName());
+			holder.photpHead.setImageResource(R.drawable.massage_newslist_img_acty);
+			
+		}else if(item.getConversationType()==2){
+			holder.tvName.setText(item.getChatName());
+			holder.photpHead.setImageResource(R.drawable.massage_newslist_img_chat);
+		}
+		
 		
 		return convertView;
 	}
@@ -127,6 +141,7 @@ public class MessagesListAdapter extends BaseAdapter {
 		private TextView tvTime;
 		private TextView tvNoReadMessages;
 		private ImageView photpHead;
+		private RelativeLayout noReadLayout;
 	
 	
 	}

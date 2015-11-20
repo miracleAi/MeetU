@@ -414,6 +414,9 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 							intent2.putExtra("ConversationId", ""+objChatsList.get(positonNow).getConversationId());
 							//传对话的类型   1 表示活动群聊 2 表示觅聊  3 表示单聊
 							intent2.putExtra("ConversationStyle", ""+2);
+							Bundle bundle=new Bundle();
+							bundle.putSerializable("ObjChat", objChatsList.get(positonNow));
+							intent2.putExtras(bundle);
 							startActivity(intent2);
 							//TODO 应该只刷新成员 省流量 
 							handler.sendEmptyMessage(1);
