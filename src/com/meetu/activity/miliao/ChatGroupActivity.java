@@ -612,15 +612,19 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	private void sendChatPhoto(String uir) {
 		// TODO Auto-generated method stub
 		Chatmsgs mchatmsgs=new Chatmsgs();
-
+		mchatmsgs.setUid(user.getObjectId());
+		mchatmsgs.setClientId(user.getObjectId());
+		mchatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
 		mchatmsgs.setImgMsgImageUrl(uir.toString());
-		mchatmsgs.setConversationId("1");
+		mchatmsgs.setConversationId(conversationId);
 		mchatmsgs.setChatMsgType(11);
+		mchatmsgs.setChatMsgDirection(Constants.IOTYPE_OUT);
+		mchatmsgs.setChatMsgStatus(Constants.STATUES_SENDING);//发送中
 
 		isShowTime(mchatmsgs);
 		log.e("lucifer time", ""+mchatmsgs.getIsShowTime());
 		chatmsgsDao.insert(mchatmsgs);
-		
+		handler.sendEmptyMessage(1);
 		sendPictureMessage(mchatmsgs);
 //		//TODO		测试类型 加了左边布局的数据	
 //		Chatmsgs item=new Chatmsgs();
@@ -631,7 +635,13 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 //		isShowTime(item);
 //		chatmsgsDao.insert(item);
 		
-		handler.sendEmptyMessage(1);
+		
+		
+		
+	
+	
+		
+		
 		
 		
 	}
@@ -1043,7 +1053,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 				
 				break;
 			case Constants.IMAGE_TYPE:
-		//	createChatPicMsg(conversation,message);
+			createChatPicMsg(conversation,message);
 				break;
 			default:
 				break;

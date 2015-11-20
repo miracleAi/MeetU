@@ -31,6 +31,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.LogUtil.log;
 
 import com.meetu.R;
+import com.meetu.R.id;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjUser;
@@ -56,7 +57,7 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 	private int mMinItemWidth;//item最小宽度
 	
 	//TODO 暂时只测试4种状态  ,但是要进一步判断消息发送的方向
-	private final int TYPE_COUNT=13;
+	private final int TYPE_COUNT=20;
 	
 	//网络相关
 	
@@ -154,12 +155,19 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 				holder.photo=(ImageView) convertView.findViewById(R.id.photo_chat_item_right_img);
 				holder.time=(TextView) convertView.findViewById(R.id.time_photochat_item_right_tv);
 				holder.timeLayout=(RelativeLayout) convertView.findViewById(R.id.time_photochat_item_right_rl);
+				holder.userHeadPhoto=(ImageView) convertView.findViewById(R.id.userHead_chat_item_photo_right_img);
+				holder.userName=(TextView) convertView.findViewById(R.id.userName_chat_item_photo_right_tv);
+				holder.resentLayout=(RelativeLayout) convertView.findViewById(R.id.fail_chat_item_photo_right_rl);
 				break;
 			case 13:
 				convertView=LayoutInflater.from(mContext).inflate(R.layout.chat_item_photo_left, null);
 				holder.photo=(ImageView) convertView.findViewById(R.id.photo_chat_item_left_img);
 				holder.time=(TextView) convertView.findViewById(R.id.time_photochat_item_left_tv);
 				holder.timeLayout=(RelativeLayout) convertView.findViewById(R.id.time_photochat_item_left_rl);
+				
+				holder.userHeadPhoto=(ImageView) convertView.findViewById(R.id.userHead_chat_item_photo_left_img);
+				holder.userName=(TextView) convertView.findViewById(R.id.userNamechat_item_photo_left_tv);
+				holder.resentLayout=(RelativeLayout) convertView.findViewById(R.id.fail_chat_item_photo_left_rl);
 				break;
 			default:
 				break;
@@ -216,15 +224,17 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 				
 			case 11:	
 		
-				String fileName=item.getImgMsgImageUrl();
-				log.e("lucifer1",fileName.toString());
-
-				BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 4;
-				Bitmap bmp = BitmapFactory.decodeFile(fileName, options);
-
-				 Bitmap bbmp=BitmapCut.getRadiusBitmap(bmp);
-				holder.photo.setImageBitmap(bbmp);			
+//				String fileName=item.getImgMsgImageUrl();
+//				log.e("lucifer1",fileName.toString());
+//
+//				BitmapFactory.Options options = new BitmapFactory.Options();
+//                options.inSampleSize = 4;
+//				Bitmap bmp = BitmapFactory.decodeFile(fileName, options);
+//
+//				 Bitmap bbmp=BitmapCut.getRadiusBitmap(bmp);
+//				holder.photo.setImageBitmap(bbmp);
+				finalBitmap.display(holder.photo, item.getImgMsgImageUrl());
+				
 				if(item.getIsShowTime()==1){
 					long time=Long.parseLong(item.getSendTimeStamp());
 					Date date=new Date(time);
@@ -237,6 +247,24 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 				if(item.getIsShowTime()==0){
 					holder.timeLayout.setVisibility(View.GONE);
 				}
+				ObjUserWrap.getObjUser(item.getClientId(), new ObjUserInfoCallback() {
+					
+					@Override
+					public void callback(ObjUser user, AVException e) {
+						// TODO Auto-generated method stub
+						if(e!=null){
+							log.e("zcq", e);
+							
+						}else if(user!=null){
+							
+							holder.userName.setText(user.getNameNick());
+							finalBitmap.display(holder.userHeadPhoto, user.getProfileClip().getUrl());
+							
+						}else{
+							log.e("zcq", "个人信息获取失败");
+						}
+					}
+				});
 
 				break;
 			case 13:
@@ -253,6 +281,24 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 				if(item.getIsShowTime()==0){
 					holder.timeLayout.setVisibility(View.GONE);
 				}
+				ObjUserWrap.getObjUser(item.getClientId(), new ObjUserInfoCallback() {
+					
+					@Override
+					public void callback(ObjUser user, AVException e) {
+						// TODO Auto-generated method stub
+						if(e!=null){
+							log.e("zcq", e);
+							
+						}else if(user!=null){
+							
+							holder.userName.setText(user.getNameNick());
+							finalBitmap.display(holder.userHeadPhoto, user.getProfileClip().getUrl());
+							
+						}else{
+							log.e("zcq", "个人信息获取失败");
+						}
+					}
+				});
 				
 				
 				break;
@@ -279,7 +325,7 @@ public class ChatmsgsListViewAdapter  extends BaseAdapter implements OnClickList
 		private ImageView userHeadPhoto;
 		private TextView userName;
 		private ImageView failPhoto;
-		
+		private RelativeLayout resentLayout;
 	}
 
 

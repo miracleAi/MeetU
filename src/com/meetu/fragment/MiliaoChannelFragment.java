@@ -116,7 +116,10 @@ public class MiliaoChannelFragment extends Fragment {
 			@Override
 			public void callback(ObjUser user, AVException e) {
 				
-				finalBitmap.display(photoManager, user.getProfileClip().getUrl());
+				if(user.getProfileClip()!=null){
+					finalBitmap.display(photoManager, user.getProfileClip().getUrl());
+				}
+				
 			}
 		});
 	}

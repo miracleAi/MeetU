@@ -30,11 +30,13 @@ public class ChatmsgsDao {
 				"?,?,?,?,?," +
 				"?,?,?,?,?," +
 				"?,?,?,?,?," +
-				"?,?,?,?,?,?,?)",
-				new Object[]{chatmsgs.getUid(),chatmsgs.getMessageId(),chatmsgs.getClientId(),chatmsgs.getConversationId(),chatmsgs.getChatMsgType(),chatmsgs.getChatMsgDirection(),
-				chatmsgs.getChatMsgStatus(),chatmsgs.getIsShowTime(),chatmsgs.getSendTimeStamp(),chatmsgs.getDeliveredTimeStamp(),chatmsgs.getContent(),
-				chatmsgs.getImgMsgImageUrl(),chatmsgs.getImgMsgImageWidth(),chatmsgs.getImgMsgImageHeight(),chatmsgs.getNowJoinUserId(),chatmsgs.getNotificationBaseContent(),
-				chatmsgs.getNotificationActyContent(),chatmsgs.getNotificationActyTitle(),chatmsgs.getNotificationActyTitleSub(),chatmsgs.getScriptId(),chatmsgs.getScripX(),chatmsgs.getScripY()});
+				"?,?,?,?,?," +
+				"?,?)",
+				new Object[]{chatmsgs.getUid(),chatmsgs.getMessageId(),chatmsgs.getClientId(),chatmsgs.getConversationId(),chatmsgs.getChatMsgType(),
+				chatmsgs.getChatMsgDirection(),chatmsgs.getChatMsgStatus(),chatmsgs.getIsShowTime(),chatmsgs.getSendTimeStamp(),chatmsgs.getDeliveredTimeStamp(),
+				chatmsgs.getContent(),chatmsgs.getImgMsgImageUrl(),chatmsgs.getImgMsgImageWidth(),chatmsgs.getImgMsgImageHeight(),chatmsgs.getNowJoinUserId(),
+				chatmsgs.getNotificationBaseContent(),chatmsgs.getNotificationActyContent(),chatmsgs.getNotificationActyTitle(),chatmsgs.getNotificationActyTitleSub(),chatmsgs.getScriptId(),
+				chatmsgs.getScripX(),chatmsgs.getScripY()});
 		db.close();
 		
 	}
@@ -122,7 +124,9 @@ public class ChatmsgsDao {
 			chatmsgs.setNotificationActyTitle(c.getString(c.getColumnIndex("_notification_acty_title")));
 			chatmsgs.setNotificationActyTitleSub(c.getString(c.getColumnIndex("_notification_acty_title_sub")));
 			
-			
+			chatmsgs.setScriptId(c.getString(c.getColumnIndex("_scrip_id")));
+			chatmsgs.setScripX(c.getInt(c.getColumnIndex("_scrip_x")));
+			chatmsgs.setScripY(c.getInt(c.getColumnIndex("_scrip_y")));		
 			list.add(chatmsgs);			
 		}
 		c.close();
