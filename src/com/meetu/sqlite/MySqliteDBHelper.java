@@ -145,7 +145,6 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		//sb4.append(TBL_MESSAGES_CACHEID+ " integer primary key autoincrement ,");
 		sb4.append(Constants.USERID+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_CONVERSATION_ID+ " varchar(100) ,");
-		sb4.append("constraint "+TBL_MESSAGES_CACHEID+" primary key ("+Constants.USERID+","+TBL_MESSAGES_CONVERSATION_ID+") ,");
 		sb4.append(TBL_MESSAGES_CONVERSATION_TYPE+ " Integer ,");
 		sb4.append(TBL_MESSAGES_TI_STATUS+ " Integer ,");
 		sb4.append(TBL_MESSAGES_CREATOR_ID+ " varchar(100) ,");
@@ -154,7 +153,8 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		sb4.append(TBL_MESSAGES_ACTY_NAME+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_CHAT_ID+ " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_CHAT_NAME+ " varchar(100) ,");
-		sb4.append(TBL_MESSAGES_UNREAD_COUNT+ " Integer ");
+		sb4.append(TBL_MESSAGES_UNREAD_COUNT+ " Integer ,");
+		sb4.append("constraint "+TBL_MESSAGES_CACHEID+" primary key ("+Constants.USERID+","+TBL_MESSAGES_CONVERSATION_ID+") ");
 		sb4.append(")");
 		db.execSQL(sb4.toString());
 		
