@@ -116,7 +116,37 @@ public class MessagesDao {
 	 */
 	public ArrayList<Messages> getMessages(String uid){
 		SQLiteDatabase db=helper.getReadableDatabase();
-		Cursor c=db.rawQuery("select * from messages where "+Constants.USERID +"=?", new String[]{uid});
+		Cursor c=db.rawQuery("select * from messages where "+Constants.USERID +"=? and _conversation_type=1 or _conversation_type=2", new String[]{uid});
+		ArrayList<Messages> list=new ArrayList<Messages>();
+		while(c.moveToNext()){
+			Messages messages=new Messages();
+
+			messages.setConversationID(c.getString(c.getColumnIndex("_conversation_id")));
+			messages.setConversationType(c.getInt(c.getColumnIndex("_conversation_type")));
+			messages.setCreatorID(c.getString(c.getColumnIndex("_creator_id")));
+			messages.setTimeOver(c.getLong(c.getColumnIndex("_time_over")));
+			messages.setActyId(c.getString(c.getColumnIndex("_acty_id")));
+			messages.setActyName(c.getString(c.getColumnIndex("_acty_name")));
+			messages.setChatId(c.getString(c.getColumnIndex("_chat_id")));
+			messages.setChatName(c.getString(c.getColumnIndex("_chat_name")));
+			messages.setUserId(c.getString(c.getColumnIndex(Constants.USERID)));
+			messages.setTiStatus(c.getInt(c.getColumnIndex("_ti_status")));
+			messages.setUnreadMsgCount(c.getInt(c.getColumnIndex("_unread_count")));
+			list.add(messages);			
+		}
+		c.close();
+		db.close();
+
+		return list;
+	}
+	/**
+	 * *获取纸条箱列表数据
+	 * @param uid
+	 * @return
+	 */
+	public ArrayList<Messages> getScripBox(String uid){
+		SQLiteDatabase db=helper.getReadableDatabase();
+		Cursor c=db.rawQuery("select * from messages where "+Constants.USERID +"=? and _conversation_type=3", new String[]{uid});
 		ArrayList<Messages> list=new ArrayList<Messages>();
 		while(c.moveToNext()){
 			Messages messages=new Messages();

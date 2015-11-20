@@ -119,7 +119,7 @@ public class ObjFollowWrap {
 	}
 	/**
 	 * 取消关注
-	 * */
+	 * */  
 	public static void unFollow(ObjUser user,final ObjFunBooleanCallback callback){
 		user.unfollowInBackground(user.getObjectId(), new FollowCallback<AVObject>() {
 

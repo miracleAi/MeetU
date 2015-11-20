@@ -431,7 +431,7 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 			@Override
 			public boolean onTouch(View arg0, MotionEvent event) {
 
-				if(scrollY<topHight) {
+				if(scrollY<topHight) { 
 					return false;
 				} else {					
 					switch (event.getAction()) {
