@@ -1,6 +1,8 @@
 package com.meetu.myapplication;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -41,6 +43,8 @@ public class DefaultMessageHandler extends AVIMMessageHandler{
 			createChatPicMsg(conversation,message,msgDao,chatDao);
 			return ;
 		}
+		Intent intent = new Intent(Constants.RECEIVE_MSG);
+		context.sendBroadcast(intent);
 	}
 	@Override
 	public void onMessageReceipt(AVIMMessage message,

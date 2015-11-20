@@ -21,6 +21,7 @@ import com.meetu.adapter.MessagesListAdapter;
 import com.meetu.cloud.callback.ObjConversationListCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjChatMessage;
+import com.meetu.common.Constants;
 import com.meetu.entity.ChatEmoji;
 import com.meetu.entity.Messages;
 import com.meetu.myapplication.MyApplication;
@@ -28,8 +29,10 @@ import com.meetu.sqlite.EmojisDao;
 import com.meetu.sqlite.MessagesDao;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -60,8 +63,10 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
     private static List<ChatEmoji> chatEmojis; 
 	private static EmojisDao emojisDao;
 	
+	
 	//网络相关
 	ObjUser user = null;
+	MyReceiver mr = null;
 	
 	@Override
 	public void onAttach(Activity activity) {
@@ -90,7 +95,15 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 	    return view;
 	    
 	  }
-	
+	class MyReceiver extends BroadcastReceiver{
+
+		@Override
+		public void onReceive(Context arg0, Intent arg1) {
+			// TODO Auto-generated method stub
+			handler.sendEmptyMessage(1);
+		}
+		
+	}
 	private static void loadEmoji(Context context) {
 		 
 //		try {
@@ -176,6 +189,11 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 		
 		littleNoteLayout=(RelativeLayout) view.findViewById(R.id.litter_notes_fragment_messages_rl);
 		littleNoteLayout.setOnClickListener(this);
+		
+		mr = new MyReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Constants.RECEIVE_MSG);
+		getActivity().registerReceiver(mr, filter);
 		
 	}
 

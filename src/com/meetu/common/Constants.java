@@ -1,6 +1,8 @@
 package com.meetu.common;
 
 public class Constants {
+	//消息接收广播
+	public static final String RECEIVE_MSG = "receive_msg";
 	/**
 	 * 上传头像相关
 	 */
