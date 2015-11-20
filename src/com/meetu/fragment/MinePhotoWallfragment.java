@@ -60,40 +60,40 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBack{
-	
+
 
 	private PullToRefreshGridView pview;
-//	private PhotoWallAdapter adapter;
-//	private List<PhotoWall> data=new ArrayList<PhotoWall>();
+	//	private PhotoWallAdapter adapter;
+	//	private List<PhotoWall> data=new ArrayList<PhotoWall>();
 
 	private View view;
 	private LinearLayout newsList;
-	
+
 	private RecyclerView mRecyclerView;
-	
+
 	private StaggeredHomeAdapter mAdapter;
 	private GridViewHeightaListener gridViewHeightaListener;
-	
+
 	//网络数据 相关
 	private AVUser currentUser = AVUser.getCurrentUser();
-	 //当前用户
+	//当前用户
 	private ObjUser user = new ObjUser();
 	//网络请求下来的 图片信息
 	private List<ObjUserPhoto> objUserPhotos=new ArrayList<ObjUserPhoto>();
-	
+
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
-//		afinal=new FinalHttp(); 
+		//		afinal=new FinalHttp(); 
 	}
 
 	@Override 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+
 		if(view==null){
-			
+
 			if (currentUser != null) {
 				//强制类型转换
 				user = AVUser.cast(currentUser, ObjUser.class);
@@ -101,19 +101,19 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 
 			view=inflater.inflate(R.layout.fragment_mine_photo_wall, null);
 			mRecyclerView=(RecyclerView) view.findViewById(R.id.id_RecyclerView);
-			
+
 			mAdapter=new StaggeredHomeAdapter(getActivity(), objUserPhotos);			
 			mAdapter.setOnItemClickLitener(this);
-			
+
 			mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager
 					(2,StaggeredGridLayoutManager.VERTICAL));
 			mRecyclerView.setAdapter(mAdapter);
 			loaddata();
-			
+
 			//计算recycleview 的滑动距离
 
-			
-			
+
+
 		}
 		ViewGroup parent=(ViewGroup)view.getParent();
 		if(parent!=null){
@@ -124,14 +124,14 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 
 	private void initView() {
 		// TODO Auto-generated method stub
-	
-		
+
+
 	}
 
 	public void setGridViewHeightaListener(GridViewHeightaListener gridViewHeightaListener) {
 		this.gridViewHeightaListener = gridViewHeightaListener;
 	}
-//	
+	//	
 	@Override
 	public void setArguments(Bundle args) {
 		// TODO Auto-generated method stub
@@ -139,13 +139,13 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 	}
 	private void loaddata(){
 
-		
+
 		ObjUserPhotoWrap.queryUserPhoto(user, new ObjUserPhotoCallback() {
-			
+
 			@Override
 			public void callback(List<ObjUserPhoto> objects, AVException e) {
 				// TODO Auto-generated method stub
-				
+
 				objUserPhotos.addAll(objects);
 				//mAdapter=new StaggeredHomeAdapter(getActivity(), objUserPhotos);
 				//mRecyclerView.setAdapter(mAdapter);
@@ -160,15 +160,15 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 	@Override
 	public void onItemClick(int id) {
 		// TODO Auto-generated method stub
-//		Toast.makeText(getActivity(), "点击了某个位置"+id, Toast.LENGTH_SHORT).show();
+		//		Toast.makeText(getActivity(), "点击了某个位置"+id, Toast.LENGTH_SHORT).show();
 		Intent intent =new Intent(super.getActivity(),MinephotoActivity.class);
-//		Bundle bundle = new Bundle();
-//		bundle.putSerializable("PhotoWall",id);
-//		
-//		intent.putExtras(bundle);
+		//		Bundle bundle = new Bundle();
+		//		bundle.putSerializable("PhotoWall",id);
+		//		
+		//		intent.putExtras(bundle);
 		intent.putExtra("photolist", (Serializable)objUserPhotos);
 		intent.putExtra("id", ""+id);
-	
+
 		log.e("lucifer", "id=="+id);
 		startActivity(intent);
 		getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
@@ -177,9 +177,9 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 	@Override
 	public void onItemLongClick(View view, int position) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	Handler handler=new Handler(){
 
 		@Override
@@ -188,22 +188,22 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 			switch(msg.what){
 			case 1:
 				mAdapter.notifyDataSetChanged();
-		//		refreshComplete();
+				//		refreshComplete();
 				log.e("zcq", "刷新了");
 				break;
 			}
 		}
-	
+
 	};
 	private void refreshComplete(){
 		mRecyclerView.postDelayed(new Runnable() {
-	
-	            @Override
-	            public void run() {
-	      //      	mRecyclerView.onRefreshComplete();
-	            	
-	            }
-	    }, 500);
+
+			@Override
+			public void run() {
+				//      	mRecyclerView.onRefreshComplete();
+
+			}
+		}, 500);
 	}
 	/**
 	 * 刷新数据列表重新加载
@@ -215,15 +215,15 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 		mAdapter.notifyDataSetChanged();
 	}
 
-	
-
-	
-	
-	
 
 
-	
 
-	
+
+
+
+
+
+
+
 
 }

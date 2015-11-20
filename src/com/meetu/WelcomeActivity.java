@@ -10,6 +10,7 @@ import java.util.TimerTask;
 
 
 
+
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -38,6 +39,7 @@ import com.meetu.activity.miliao.EmojiParser;
 import com.meetu.activity.miliao.MiLiaoInfoActivity;
 import com.meetu.activity.miliao.MiLiaoUsersListActivity;
 import com.meetu.activity.miliao.XmlEmojifPullHelper;
+import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.adapter.JoinUserAdapter;
 import com.meetu.adapter.MiLiaoUsersListAdapter;
 import com.meetu.baidumapdemo.BaiduMapMainActivity;
@@ -135,7 +137,7 @@ public class WelcomeActivity extends Activity {
 		AVUser currentUser = AVUser.getCurrentUser();
 		if (currentUser != null) {
 			// 允许用户使用应用
-			Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
+			Intent intent = new Intent(WelcomeActivity.this,UserPagerActivity.class);
 			WelcomeActivity.this.startActivity(intent);
 			finish();
 		} else {

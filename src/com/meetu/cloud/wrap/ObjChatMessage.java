@@ -257,6 +257,7 @@ public class ObjChatMessage {
 		numbers.add(1);
 		numbers.add(2);
 		//query.whereContainsIn("attr.cType", numbers);
+		query.setLimit(100);
 		query.whereGreaterThan("attr.overTime", System.currentTimeMillis());
 		query.findInBackground(new AVIMConversationQueryCallback(){
 			@Override

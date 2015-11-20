@@ -25,7 +25,7 @@
                     android:layout_height="44dp" >
 
                     <ImageView
-                        android:id="@+id/back_imv"
+                        android:id="@+id/user_back_imv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -34,6 +34,7 @@
                         android:src="@drawable/mine_btn_setting" />
 
                     <ImageView
+                        android:id="@+id/user_set_imv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -62,14 +63,14 @@
                         android:layout_marginLeft="25dp" >
 
                         <ImageView
-                            android:id="@+id/mine_btn_profile_iv"
+                            android:id="@+id/user_profile_iv"
                             android:layout_width="85dp"
                             android:layout_height="85dp"
                             android:layout_centerHorizontal="true"
                             android:src="@drawable/mine_btn_profile" />
 
                         <ImageView
-                            android:id="@+id/mine_img_gender_m"
+                            android:id="@+id/user_gender_imv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignRight="@+id/mine_btn_profile_iv"
@@ -87,7 +88,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/mine_btn_name_tv"
+                    android:id="@+id/user_name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/mine_btn_profile_iv"
@@ -104,13 +105,13 @@
                     android:orientation="horizontal" >
 
                     <ImageView
-                        android:id="@+id/mine_btn_vip_dis"
+                        android:id="@+id/user_vip_dis"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/mine_btn_vip_dis" />
 
                     <ImageView
-                        android:id="@+id/mine_btn_approve_dis"
+                        android:id="@+id/user_approve_dis"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
@@ -119,7 +120,7 @@
             </LinearLayout>
 
             <RadioGroup
-                android:id="@+id/group_va_tab"
+                android:id="@+id/user_group_tab"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal" >
@@ -153,7 +154,7 @@
                 android:background="#cccccc" />
 
             <android.support.v4.view.ViewPager
-                android:id="@+id/mine_viewpager_va"
+                android:id="@+id/user_viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
             </android.support.v4.view.ViewPager>
