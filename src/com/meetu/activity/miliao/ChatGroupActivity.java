@@ -43,6 +43,7 @@ import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.common.Constants;
 import com.meetu.entity.ChatEmoji;
 import com.meetu.entity.Chatmsgs;
+import com.meetu.entity.Messages;
 import com.meetu.fragment.ChatFragment;
 import com.meetu.fragment.HomePagefragment;
 import com.meetu.myapplication.MyApplication;
@@ -176,9 +177,10 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	private AVFile chatPhoto = null;//用来发送照片
 	private MessagesDao messagesDao;//用来操作未读消息
 	
-	private Message message;//用来接收 消息列表传过来 消息
+	private Messages message;//用来接收 消息列表传过来 消息
 	private ObjChat objChat;//用来接收 觅聊列表传过来 觅聊
 	
+	private TextView title;//标题
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -200,14 +202,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		conversationStyle=intent.getStringExtra("ConversationStyle");
 		conversationId=intent.getStringExtra("ConversationId");
 		conversation = MyApplication.chatClient.getConversation(""+conversationId);
-		if(conversationStyle.equals("1")){
-			//表示 的是活动群聊
-			
-		}
-		if(conversationStyle.equals("2")){
-			//表示 的是觅聊
-			
-		}
+		
 		log.e("lucifer", "conversationStyle=="+conversationStyle+" conversationId=="+conversationId);
 		/**
 		 * 删除所有本地聊天数据
@@ -223,7 +218,26 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		 * 
 		 */	
 		InitViewPager();
-
+		
+		if(conversationStyle.equals("1")){
+			//表示 的是活动群聊
+			message=(Messages) intent.getExtras().getSerializable("Message");
+			
+			title.setText(message.getActyName());
+			
+		}
+		if(conversationStyle.equals("2")){
+			//表示 的是觅聊
+			objChat=(ObjChat) intent.getExtras().getSerializable("ObjChat");
+			message=(Messages) intent.getExtras().getSerializable("Message");
+			
+			if(objChat==null){
+				title.setText(""+message.getActyName());
+			}else{
+				title.setText(objChat.getChatTitle());
+			}
+			
+		}
 		
 	}
 	@Override
@@ -363,6 +377,9 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		photo.setOnClickListener(this);
 		camera=(ImageView) super.findViewById(R.id.chat_camera_container_img);
 		camera.setOnClickListener(this);
+		
+		title=(TextView) super.findViewById(R.id.title_fragment_chat_tv);
+		
 	}
 	
 	private void showDialog(final Chatmsgs item) {
