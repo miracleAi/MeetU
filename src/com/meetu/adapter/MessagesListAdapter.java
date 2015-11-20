@@ -3,6 +3,7 @@ package com.meetu.adapter;
 import java.util.List;
 
 
+import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 
 import com.meetu.activity.miliao.ChatGroupActivity;
@@ -48,7 +49,9 @@ public class MessagesListAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
+		log.e("zcq", "messagesList.size()=="+messagesList.size());
 		return messagesList.size();
+		
 	}
 
 	@Override
@@ -84,11 +87,11 @@ public class MessagesListAdapter extends BaseAdapter {
 		
 		
 		//根据对话id拿到聊天对话的最后一条消息
-		if(chatmsgsDao.getChatmsgsList("1","1").size()!=0){
-			 chatmsgs=chatmsgsDao.getChatmsgsList("1","1").get(chatmsgsDao.getChatmsgsList("1","1").size()-1);
+		if(chatmsgsDao.getChatmsgsList(item.getConversationID(),item.getUserId()).size()!=0){
+			 chatmsgs=chatmsgsDao.getChatmsgsList(item.getConversationID(),item.getUserId()).get(chatmsgsDao.getChatmsgsList(item.getConversationID(),item.getUserId()).size()-1);
 //TODO			 
 			 //  如果 是 文本消息    如果有表情的话显示表情   
-			 if(chatmsgs.getChatMsgType()==0||chatmsgs.getChatMsgType()==1){
+			 if(chatmsgs.getChatMsgType()==10||chatmsgs.getChatMsgType()==12){
 				 SpannableString spannableString= EmojisRelevantUtils.getExpressionString(mContext, chatmsgs.getContent(), chatEmojis);
 				 
 				 holder.tvContent.setText(spannableString);
@@ -99,7 +102,7 @@ public class MessagesListAdapter extends BaseAdapter {
 				 
 //					holder.tvNoReadMessages.setText(item.getUnreadMsgCount());
 			 }
-			 if(chatmsgs.getChatMsgType()==2||chatmsgs.getChatMsgType()==3){
+			 if(chatmsgs.getChatMsgType()==11||chatmsgs.getChatMsgType()==13){
 				 holder.tvContent.setText("[图片]");
 			 }
  
@@ -113,12 +116,7 @@ public class MessagesListAdapter extends BaseAdapter {
 		}else{
 			holder.tvNoReadMessages.setText(""+item.getUnreadMsgCount());
 		}
-		
-		
-//		holder.tvName.setText(chatmsgs.);
-		
-		
-		
+		holder.tvName.setText(item.getActyName());
 		
 		return convertView;
 	}

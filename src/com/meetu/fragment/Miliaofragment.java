@@ -151,7 +151,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 		
 		adapter=new BoardPageFragmentAdapter(super.getActivity().getSupportFragmentManager(), fragmentList);
 		viewPager.setAdapter(adapter);
-		viewPager.setOffscreenPageLimit(3);
+		viewPager.setOffscreenPageLimit(1);
 		viewPager.setCurrentItem(0);
 		 
 		

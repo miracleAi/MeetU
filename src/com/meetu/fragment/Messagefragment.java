@@ -8,15 +8,22 @@ import java.util.List;
 
 import junit.framework.Test;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.meetu.R;
 import com.meetu.activity.messages.LitterNoteActivity;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.activity.miliao.EmojiParser;
 import com.meetu.activity.miliao.XmlEmojifPullHelper;
 import com.meetu.adapter.MessagesListAdapter;
+import com.meetu.cloud.callback.ObjConversationListCallback;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.entity.ChatEmoji;
 import com.meetu.entity.Messages;
+import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.EmojisDao;
 import com.meetu.sqlite.MessagesDao;
 
@@ -53,24 +60,33 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
     private static List<ChatEmoji> chatEmojis; 
 	private static EmojisDao emojisDao;
 	
+	//网络相关
+	ObjUser user = null;
+	
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
+		
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	    view = inflater.inflate(R.layout.fragment_messages, container, false);
-	    //TODO 测试	   
-	    testMessages();
+	    if(ObjUser.getCurrentUser() != null){
+			AVUser currentUser = ObjUser.getCurrentUser();
+			user = AVUser.cast(currentUser, ObjUser.class);
+		}
+	    messagesDao=new MessagesDao(getActivity());
+//	    //TODO 测试	   
+//	    testMessages();
 	    
 	    loadEmoji(getActivity());
 	    
 	    loadData();
 	    initView();
 	    
-	    
+	    getConversation();
 	    return view;
 	    
 	  }
@@ -110,35 +126,43 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 	 */
 	private void testMessages() {
 		// TODO Auto-generated method stub
-		 messagesDao=new MessagesDao(getActivity());
-		 Messages messages=new Messages();
-		 messages.setConversationID("1");
-		 messages.setConversationType(1);//1 表示觅聊 0表示 单聊 2表示  活动群聊
-		 messages.setTimeOver((new Date()).getTime());
-	 
-		 messages.setUnreadMsgCount(200);
-		 
-
-		 messagesDao.insert(messages);
-		 
-		 mdataListCache=messagesDao.getMessages("");
-		
+//		 messagesDao=new MessagesDao(getActivity());
+//		 Messages messages=new Messages();
+//		 messages.setConversationID("1");
+//		 messages.setConversationType(1);//1 表示觅聊 0表示 单聊 2表示  活动群聊
+//		 messages.setTimeOver((new Date()).getTime());
+//	 
+//		 messages.setUnreadMsgCount(200);
+//		 
+//
+//		 messagesDao.insert(messages);
+//		 
+//		 mdataListCache=messagesDao.getMessages("");
+//		
 	}
 
 	private void loadData() {
-		// TODO Auto-generated method stub
-		mdataList=new ArrayList<Messages>();
-		Messages item=new Messages();
-		mdataList.add(item);
+//		// TODO Auto-generated method stub
+//		mdataList=new ArrayList<Messages>();
+//		Messages item=new Messages();
+//		mdataList.add(item);
+//		
+//		Messages item2=new Messages();
+//		mdataList.add(item2);
+//		
+//		Messages item3=new Messages();
+//		mdataList.add(item3);
+//		
+//		Messages item4=new Messages();
+//		mdataList.add(item4);
 		
-		Messages item2=new Messages();
-		mdataList.add(item2);
-		
-		Messages item3=new Messages();
-		mdataList.add(item3);
-		
-		Messages item4=new Messages();
-		mdataList.add(item4);
+		ArrayList<Messages> list = messagesDao.getMessages(user.getObjectId());
+		if(list != null && list.size()>0){
+			mdataListCache.clear();
+			mdataListCache.addAll(list);		
+		}else{
+			//重新加载
+		}
 		
 	}
 
@@ -165,6 +189,9 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		// TODO Auto-generated method stub
 		Intent intent=new Intent(getActivity(),ChatGroupActivity.class);
+		intent.putExtra("ConversationId", ""+mdataListCache.get(position).getConversationID());
+		//传对话的类型   1 表示活动群聊 2 表示觅聊  3 表示单聊
+		intent.putExtra("ConversationStyle", ""+mdataListCache.get(position).getConversationType());
 		startActivity(intent);
 		
 	}
@@ -185,7 +212,15 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 			
 			
 			switch(msg.what){
-			case 1:		
+			case 1:	
+				log.e("zcq", "刷新了");
+				ArrayList<Messages> list = messagesDao.getMessages(user.getObjectId());
+				if(list != null && list.size()>0){
+					mdataListCache.clear();
+					mdataListCache.addAll(list);		
+				}else{
+					//重新加载
+				}
 				mAdapter.notifyDataSetChanged();
 		
 				break;
@@ -208,6 +243,77 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 			break;
 		}
 		
+	}
+	
+	
+	/**
+	 * 获取所有会话,保存至数据库
+	 *   
+	 * @author lucifer
+	 * @date 2015-11-20
+	 */
+	public void getConversation(){
+		ObjChatMessage.getConversation(MyApplication.chatClient, new ObjConversationListCallback() {
+
+			@Override
+			public void callback(List<AVIMConversation> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					log.e("zcq", e);
+					return;  
+				}
+//				clickBtn.setText(QUERYLOCALCOVERSATION);
+				ArrayList<AVIMConversation> convList = new ArrayList<AVIMConversation>();
+				for(AVIMConversation conversation:objects){
+					convList.add(conversation);
+				}
+				if(convList.size()>0){
+					//用第一条测试修改
+//					conversationId = convList.get(0).getConversationId();
+					//保存到数据库
+					ArrayList<Messages> list = new ArrayList<Messages>();
+					for(int i=0;i<convList.size();i++){
+						AVIMConversation conversation = convList.get(i);
+						Messages msg = new Messages();
+						msg.setUserId(user.getObjectId());
+						msg.setConversationID(conversation.getConversationId());
+						int type = (Integer) conversation.getAttribute("cType");
+						msg.setConversationType(type);
+						String id = (String) conversation.getAttribute("appendId");
+						String title = (String) conversation.getAttribute("title");
+						long overTime = (Long) conversation.getAttribute("overTime");
+						if(type == 1){
+							msg.setActyId(id);
+							msg.setActyName(title);
+						}else{
+							log.e("zcq", "觅聊觅聊");
+							msg.setChatId(id);
+							msg.setChatName(title);
+						}
+						msg.setTimeOver(overTime);
+						msg.setCreatorID(convList.get(i).getCreator());
+						//插入时所有标记为未踢出
+						msg.setTiStatus(0);
+						list.add(msg);
+					}
+					log.e("zcq", "list.size()=="+list.size());
+					messagesDao.insertList(list);
+				}
+				log.e("zcq", "list.size()=="+convList.size());
+				handler.sendEmptyMessage(1);
+			}
+		});
+
+	}
+	
+	//查询数据库会话
+	public void queryLocalCinv(){
+		ArrayList<Messages> list = messagesDao.getMessages(user.getObjectId());
+		if(list != null && list.size()>0){
+			mdataListCache.clear();
+			mdataListCache.addAll(list);		
+		}
+
 	}
 	
 	
