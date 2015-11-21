@@ -197,7 +197,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 		//加入觅聊
 		case R.id.join_miliao_rl:
 			//TODO 使用测试 clientId  ConversationId  进行对话
-//			
+//					
 			if(isJoin(objChatsList.get(positonNow).getConversationId())==true){
 				log.e("zcq","已经加入过当前觅聊");
 				
@@ -205,6 +205,10 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 				intent2.putExtra("ConversationId", ""+objChatsList.get(positonNow).getConversationId());
 				//传对话的类型   1 表示活动群聊 2 表示觅聊  3 表示单聊
 				intent2.putExtra("ConversationStyle", ""+2);
+				intent2.putExtra("title", ""+objChatsList.get(positonNow).getChatTitle());
+				Bundle bundle=new Bundle();
+				bundle.putSerializable("ObjChat", objChatsList.get(positonNow));
+				intent2.putExtras(bundle);
 				startActivity(intent2);
 				
 			}else{
@@ -414,6 +418,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 							intent2.putExtra("ConversationId", ""+objChatsList.get(positonNow).getConversationId());
 							//传对话的类型   1 表示活动群聊 2 表示觅聊  3 表示单聊
 							intent2.putExtra("ConversationStyle", ""+2);
+							intent2.putExtra("title", ""+objChatsList.get(positonNow).getChatTitle());
 							Bundle bundle=new Bundle();
 							bundle.putSerializable("ObjChat", objChatsList.get(positonNow));
 							intent2.putExtras(bundle);

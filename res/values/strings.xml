@@ -45,8 +45,8 @@
     <string name="system_setting_share_meetu_tip">分享改变世界</string>
     <string name="system_setting_evaluation_meetu">评价MeetU</string>
     <string name="system_setting_evaluation_meetu_tip">好评哦</string>
-    <string name="system_setting_clear_meetu">清楚缓存</string>
-    <string name="system_setting_clear_meetu_tip">清楚</string>
+    <string name="system_setting_clear_meetu">清除缓存</string>
+    <string name="system_setting_clear_meetu_tip">清除</string>
     <string name="system_setting_Checkforupdates">检查更新</string>
     <string name="system_setting_Checkforupdates_tip">V1.0</string>
     <string name="system_setting_sign_out">退出登录</string>

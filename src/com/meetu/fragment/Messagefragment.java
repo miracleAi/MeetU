@@ -210,6 +210,11 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 		intent.putExtra("ConversationId", ""+mdataListCache.get(position).getConversationID());
 		//传对话的类型   1 表示活动群聊 2 表示觅聊  3 表示单聊
 		intent.putExtra("ConversationStyle", ""+mdataListCache.get(position).getConversationType());
+		if(mdataListCache.get(position).getConversationType()==1){
+			intent.putExtra("title",mdataListCache.get(position).getActyName());
+		}else{
+			intent.putExtra("title",mdataListCache.get(position).getChatName());
+		}
 		Bundle bundle=new Bundle();
 		bundle.putSerializable("Messages", mdataListCache.get(position));
 		startActivity(intent);
