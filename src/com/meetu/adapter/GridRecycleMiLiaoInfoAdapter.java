@@ -2,12 +2,16 @@ package com.meetu.adapter;
 
 import java.util.List;
 
+import net.tsz.afinal.FinalBitmap;
+
 import com.meetu.R;
 import com.meetu.activity.miliao.MiLiaoInfoActivity;
 import com.meetu.adapter.StaggeredMemoryWallAdapter.MyViewHolder;
 import com.meetu.adapter.StaggeredMemoryWallAdapter.OnItemClickCallBack;
 import com.meetu.entity.PhotoWall;
 import com.meetu.entity.User;
+import com.meetu.entity.UserAbout;
+import com.meetu.myapplication.MyApplication;
 import com.meetu.tools.DisplayUtils;
 
 import android.app.Activity;
@@ -27,10 +31,11 @@ import android.widget.TextView;
 
 public class GridRecycleMiLiaoInfoAdapter extends RecyclerView.Adapter<GridRecycleMiLiaoInfoAdapter.MyViewHolder>{
 
-	private List<User> list;
+	private List<UserAbout> list;
 	private LayoutInflater mInflater;
 	private Context mContext;
-	
+	//网络数据处理
+	private FinalBitmap finalBitmap;
 	
 	/**
 	 * 单击 和长按接口
@@ -51,21 +56,29 @@ public class GridRecycleMiLiaoInfoAdapter extends RecyclerView.Adapter<GridRecyc
 	}
 	
 	
-public GridRecycleMiLiaoInfoAdapter(Context context, List<User> list) {
+public GridRecycleMiLiaoInfoAdapter(Context context, List<UserAbout> list) {
 		
 		mInflater = LayoutInflater.from(context);
 		this.list = list;
 		this.mContext=context;
-
+		MyApplication app=(MyApplication) context.getApplicationContext();
+		finalBitmap=app.getFinalBitmap();
 	}
 
 	@Override
 	public void onBindViewHolder(MyViewHolder holder,final int position) {
 		if (list!=null && list.size()>0){
 			
-			User item = list.get(position);
-			holder.tvName.setText(item.getName());
-			holder.ivImg.setImageResource(item.getHeadPhoto());
+			UserAbout item = list.get(position);
+			holder.tvName.setText(item.getUserName());
+	//		holder.ivImg.setImageResource(item.getHeadPhoto());
+			if(position==list.size()-1){
+				holder.ivImg.setImageResource(item.getDeleteImg());
+			}else{
+				if(item.getUserHeadPhotoUrl()!=null||item.getUserHeadPhotoUrl()!=""){
+					finalBitmap.display(holder.ivImg, item.getUserHeadPhotoUrl());
+				}
+			}
 			
 
 			if(item.getIsDetele()==false){

@@ -250,7 +250,10 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 //			
 //		}
 		title.setText(""+jstitle);
-//		userNumber.setText(""+userAboutDao.queryUserAbout(""+user.getObjectId(), Integer.valueOf(conversationStyle), conversationId).size());
+		
+		int number=userAboutDao.queryUserAbout(""+user.getObjectId(), Integer.valueOf(conversationStyle), conversationId).size();
+		log.e("lucifer","number=="+ number+" conversationStyle=="+conversationStyle);
+		userNumber.setText(""+"("+number+")");
 
 		
 	}
@@ -393,6 +396,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		camera.setOnClickListener(this);
 		
 		title=(TextView) super.findViewById(R.id.title_fragment_chat_tv);
+		userNumber=(TextView) super.findViewById(R.id.number_user_fragment_chat_tv);
 		
 	}
 	
@@ -560,7 +564,11 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 			sendChatCameraMessage();
 			break;
 		case R.id.userList_miliao_chat_rl:
+			
 			Intent intent=new Intent(this,MiLiaoInfoActivity.class);
+			intent.putExtra("ConversationStyle", conversationStyle);
+			intent.putExtra("ConversationId", conversationId);
+			
 			startActivity(intent);
 		
 		default:
@@ -680,16 +688,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 //
 //		isShowTime(item);
 //		chatmsgsDao.insert(item);
-		
-		
-		
-		
 	
-	
-		
-		
-		
-		
 	}
 	/**
 	 * 发送普通文本消息 然后通知线程更新UI

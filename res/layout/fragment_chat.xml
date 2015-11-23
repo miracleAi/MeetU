@@ -48,7 +48,7 @@
                 android:id="@+id/number_user_fragment_chat_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="(10)"
+                android:text=""
                 android:textColor="#a0a0a0"
                 android:textSize="17sp" />
         </LinearLayout>

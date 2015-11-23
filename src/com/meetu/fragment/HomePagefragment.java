@@ -3,6 +3,8 @@ package com.meetu.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.tsz.afinal.FinalBitmap;
+
 import com.meetu.R;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
@@ -17,10 +19,13 @@ import com.meetu.activity.homepage.JoinUsersActivity;
 import com.meetu.adapter.NewsListViewAdapter;
 import com.meetu.adapter.NewsListViewAdapter.OnItemImageFavorClickCallBack;
 import com.meetu.bean.ActivityBean;
+import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjActivityCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjUserCallback;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjActivityOrderWrap;
 import com.meetu.cloud.wrap.ObjActivityWrap;
 import com.meetu.cloud.wrap.ObjPraiseWrap;
 import com.meetu.common.Constants;
@@ -30,6 +35,7 @@ import com.meetu.entity.Huodong;
 
 
 import com.meetu.sqlite.ActivityDao;
+import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
 import com.meetu.view.ListScrollDistanceCalculator;
@@ -96,6 +102,8 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 	private List<ActivityBean> actyListCache=new ArrayList<ActivityBean>();
 	
 	private ObjActivity objActivity= null;
+	private UserAboutDao userAboutDao;
+	private ArrayList<UserAboutBean> userAboutBeanList=new ArrayList<UserAboutBean>();
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -114,6 +122,7 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 					//强制类型转换
 					user = AVUser.cast(currentUser, ObjUser.class);
 			 }
+			 userAboutDao=new UserAboutDao(getActivity());
 			 lvNewsList=(PullToRefreshListView)view.findViewById(R.id.newsList);
 //			 load(1,pageSize);
 			 
@@ -255,7 +264,12 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 							bean.setLocationLongtitude(""+activity.getLocationLongitude());
 							actyList.add(bean);
 							log.e("zcq", "objects=="+objects.size()+" ");
-						
+							
+							//用户相关缓存
+							
+							initLoadActivity(activity.getObjectId());
+							queryOrderUsers(objActivity,activity.getObjectId());
+		
 					}
 					/**
 					 * 此处执行活动信息保存
@@ -269,18 +283,9 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 					log.e("zcq", "actyList=="+actyList.size());
 					actyListCache.addAll(actyDao.queryActys(user.getObjectId()));
 					log.e("zcq", "actyListCache=="+actyListCache.size());
-					handler.sendEmptyMessage(1);
-//					SharedPreferences sp = getSharedPreferences(Constants.ACTIVITY_CACHE_SP,MODE_PRIVATE);
-//					Editor editor = sp.edit();
-//					editor.putString(Constants.ACTIVITY_CACHE_TIME, String.valueOf(System.currentTimeMillis()));
-//					editor.commit();
-					//查询是否点赞（因测试活动照片，注释此行）
-//					queryFavor(activityItem);
-//					//轮播封面展示图片列表
-//					queryActyCovers(activityItem);
-//					//参与用户列表 参与并且我关注的人数
-//					queryOrderUsers(activityItem);
 					
+					handler.sendEmptyMessage(1);
+
 				}
 			}
 		});
@@ -449,9 +454,49 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 			} catch (AVException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return;
 			}
 			
 		}
+	
+	/**
+	 * //查询参加活动列表   缓存活动成员
+	 * @param activity
+	 * @param conversitionId  
+	 * @author lucifer
+	 * @date 2015-11-23
+	 */
+		public void queryOrderUsers(final ObjActivity activity,final String conversitionId){
+			 
+					ObjActivityOrderWrap.queryActivitySignUp(activity, new ObjUserCallback() {
+						
+						@Override
+						public void callback(List<ObjUser> objects, AVException e) {
+							if(e!=null){
+								log.e("zcq", e);
+								return ;
+							}else if(objects!=null){
+								userAboutBeanList=new ArrayList<UserAboutBean>();
+								for(ObjUser objUser: objects){
+									UserAboutBean item=new UserAboutBean();
+									item.setUserId(user.getObjectId());
+									item.setAboutType(3);
+									item.setAboutColetctionId(conversitionId);
+									item.setAboutUserId(objUser.getObjectId());
+									
+									userAboutBeanList.add(item);
+									
+								}
+								userAboutDao.deleteByType(user.getObjectId(), Constants.ACTIVITY_TYPE, conversitionId);
+								
+								log.e("zcq", "userAboutBeanList=="+userAboutBeanList.size());
+								userAboutDao.saveUserAboutList(userAboutBeanList);  
+							}
+							
+						}
+					});
+
+				}
 	 
 
 }

@@ -159,6 +159,7 @@ public class MiliaoChannelFragment extends Fragment {
 						userAboutDao.deleteByType(user.getObjectId(), Constants.CONVERSATION_TYPE, objChat.getConversationId());
 						
 						userAboutDao.saveUserAboutList(userAboutBeanList);  
+						
 						log.e("zcq", "插入数据成功");
 				
 					}
@@ -190,15 +191,30 @@ public class MiliaoChannelFragment extends Fragment {
 							if(memberUserList.size()==list.size()){
 								log.e("zcq", "设置头像");
 								if(list.size()>=5){
-									finalBitmap.display(fiveUser, memberUserList.get(4).getProfileClip().getUrl());
+									if(memberUserList.get(4).getProfileClip().getUrl()!=null){
+										finalBitmap.display(fiveUser, memberUserList.get(4).getProfileClip().getUrl());
+									}
+									
 								} if(list.size()>=4){
-									finalBitmap.display(fourUser, memberUserList.get(3).getProfileClip().getUrl());
+									if(memberUserList.get(3).getProfileClip().getUrl()!=null){
+										finalBitmap.display(fourUser, memberUserList.get(3).getProfileClip().getUrl());
+									}
+									
 								}if(list.size()>=3){
-									finalBitmap.display(threeUser, memberUserList.get(2).getProfileClip().getUrl());
+									if(memberUserList.get(2).getProfileClip().getUrl()!=null){
+										finalBitmap.display(threeUser, memberUserList.get(2).getProfileClip().getUrl());
+									}
+									
 								}if(list.size()>=2){
-									finalBitmap.display(twoUser, memberUserList.get(1).getProfileClip().getUrl());
+									if(memberUserList.get(1).getProfileClip().getUrl()!=null){
+										finalBitmap.display(twoUser, memberUserList.get(1).getProfileClip().getUrl());
+									}
+									
 								}if(list.size()>=1){
-									finalBitmap.display(oneUser, memberUserList.get(0).getProfileClip().getUrl());
+									if(memberUserList.get(0).getProfileClip().getUrl()!=null){
+										finalBitmap.display(oneUser, memberUserList.get(0).getProfileClip().getUrl());
+									}
+									
 								}
 							}
 							
