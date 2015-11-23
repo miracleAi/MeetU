@@ -39,6 +39,7 @@ import com.meetu.cloud.callback.ObjConversationListCallback;
 import com.meetu.cloud.callback.ObjCoversationCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunCountCallback;
+import com.meetu.cloud.callback.ObjFunStringCallback;
 import com.meetu.cloud.callback.ObjListCallback;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
 import com.meetu.cloud.object.ObjTableName;
@@ -158,6 +159,24 @@ public class ObjChatMessage {
 					callback.callback(count, null);
 				}else{
 					callback.callback(0, new AVException(0, "获取成员数量失败"));
+				}
+			}
+		});
+	}
+	/**
+	 * 查询创建者ID
+	 * */
+	public static void getChatCreater(final AVIMConversation conv,final ObjFunStringCallback callback){
+		conv.fetchInfoInBackground(new AVIMConversationCallback() {
+
+			@Override
+			public void done(AVIMException e) {
+				// TODO Auto-generated method stub
+				if(e == null){
+					String s = conv.getCreator();
+					callback.callback(s, null);
+				}else{
+					callback.callback(null, e);
 				}
 			}
 		});

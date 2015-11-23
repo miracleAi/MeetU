@@ -28,6 +28,7 @@ import com.meetu.entity.Middle;
 import com.meetu.entity.PhotoWall;
 import com.meetu.tools.BitmapCut;
 import com.meetu.view.MyRecyclerView.OnScrollListener;
+
 import android.R.raw;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -80,6 +81,15 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 	private ObjUser user = new ObjUser();
 	//网络请求下来的 图片信息
 	private List<ObjUserPhoto> objUserPhotos=new ArrayList<ObjUserPhoto>();
+
+	private static final String ARG_POSITION = "position";
+	public static Fragment newInstance(int position) {
+		MinePhotoWallfragment fragment = new MinePhotoWallfragment();
+		Bundle args = new Bundle();
+		args.putInt(ARG_POSITION, position);
+		fragment.setArguments(args);
+		return fragment;
+	}
 
 	@Override
 	public void onAttach(Activity activity) {

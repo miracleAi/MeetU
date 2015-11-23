@@ -52,8 +52,8 @@ public class ObjActivityTicket extends AVObject{
 	public String getTicketDescription() {
 		return this.getString(TICKETDESCRIPTION);
 	}
-	public String getPrice() {
-		return this.getString(PRICE);
+	public int getPrice() {
+		return this.getInt(PRICE);
 	}
 	public String getPriceVip() {
 		return this.getString(PRICEVIP);

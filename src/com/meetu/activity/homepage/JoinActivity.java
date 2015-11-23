@@ -234,7 +234,7 @@ public class JoinActivity extends Activity implements OnClickListener,
 		// Toast.LENGTH_SHORT).show();
 		adapter.setSelectedPosition(position);
 		selectedPosition = position;
-		if (tickets.get(position).getPrice().equals("0")) {
+		if (tickets.get(position).getPrice() == 0) {
 			payLayout.setVisibility(View.INVISIBLE);
 			paylRelativeLayout.setVisibility(View.VISIBLE);
 			visibleCenten4.setVisibility(View.INVISIBLE);
