@@ -35,6 +35,7 @@ import com.meetu.R;
 import com.meetu.R.layout;
 import com.meetu.TestReceiveMsg.MemberChangeHandler;
 import com.meetu.adapter.ChatmsgsListViewAdapter;
+import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjChat;
 import com.meetu.cloud.object.ObjUser;
@@ -50,6 +51,7 @@ import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.ChatmsgsDao;
 import com.meetu.sqlite.EmojisDao;
 import com.meetu.sqlite.MessagesDao;
+import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.BitmapCut;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
@@ -179,8 +181,11 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	
 	private Messages message;//用来接收 消息列表传过来 消息
 	private ObjChat objChat;//用来接收 觅聊列表传过来 觅聊
-	
+	private String jstitle ;//用来接收标题title
 	private TextView title;//标题
+	private TextView userNumber;
+	private UserAboutDao userAboutDao;
+	private List<UserAboutBean> userAboutBeans=new ArrayList<UserAboutBean>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -195,6 +200,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		msgHandler=new MessageHandler();
 		emojisDao=new EmojisDao(this);
 		messagesDao=new MessagesDao(this);
+		userAboutDao=new UserAboutDao(this);
 		chatEmojis=emojisDao.getChatEmojisList();
 		columns=DisplayUtils.getWindowWidth(this)/DensityUtil.dip2px(this, 45);
 		
@@ -202,7 +208,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		conversationStyle=intent.getStringExtra("ConversationStyle");
 		conversationId=intent.getStringExtra("ConversationId");
 		conversation = MyApplication.chatClient.getConversation(""+conversationId);
-		
+		jstitle=intent.getStringExtra("title");
 		log.e("lucifer", "conversationStyle=="+conversationStyle+" conversationId=="+conversationId);
 		/**
 		 * 删除所有本地聊天数据
@@ -219,25 +225,33 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		 */	
 		InitViewPager();
 		
-		if(conversationStyle.equals("1")){
-			//表示 的是活动群聊
-			message=(Messages) intent.getExtras().getSerializable("Message");
-			
-			title.setText(message.getActyName());
-			
-		}
-		if(conversationStyle.equals("2")){
-			//表示 的是觅聊
-			objChat=(ObjChat) intent.getExtras().getSerializable("ObjChat");
-			message=(Messages) intent.getExtras().getSerializable("Message");
-			
+
+
+//		if(conversationStyle.equals("1")){
+//			//表示 的是活动群聊
+//			message=(Messages) intent.getExtras().getSerializable("Messages");
+//			
+//			title.setText(message.getActyName());
+//			
+//		}
+//		if(conversationStyle.equals("2")){
+//			//表示 的是觅聊
+//			objChat=(ObjChat) intent.getExtras().getSerializable("ObjChat");
+//			message=(Messages) intent.getExtras().getSerializable("Messages");
+//			
+
 //			if(objChat==null){
 //				title.setText(""+message.getActyName());
 //			}else{
 //				title.setText(objChat.getChatTitle());
 //			}
-			
-		}
+
+
+//			
+//		}
+		title.setText(""+jstitle);
+//		userNumber.setText(""+userAboutDao.queryUserAbout(""+user.getObjectId(), Integer.valueOf(conversationStyle), conversationId).size());
+
 		
 	}
 	@Override

@@ -21,7 +21,7 @@ import android.widget.Toast;
  */
 public class SystemSettingsActivity extends Activity implements OnClickListener{
 	private RelativeLayout sharelayout,evaluationlayout,clearlayout,checkForUpdatelayout,signOutlayout;
-
+	private RelativeLayout backLayout;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,7 +46,8 @@ public class SystemSettingsActivity extends Activity implements OnClickListener{
 		clearlayout.setOnClickListener(this);
 		checkForUpdatelayout.setOnClickListener(this);
 		signOutlayout.setOnClickListener(this);
-		
+		backLayout=(RelativeLayout) super.findViewById(R.id.back_systemSettings_rl);
+		backLayout.setOnClickListener(this);
 	}
 
 	@Override
@@ -77,6 +78,9 @@ public class SystemSettingsActivity extends Activity implements OnClickListener{
 			Intent intent=new Intent(this,LoginActivity.class);
 			startActivity(intent);
 			
+			break;
+		case R.id.back_systemSettings_rl:
+			finish();
 			break;
 
 		default:
