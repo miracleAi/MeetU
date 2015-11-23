@@ -251,11 +251,17 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 //		}
 		title.setText(""+jstitle);
 		
-		int number=userAboutDao.queryUserAbout(""+user.getObjectId(), Integer.valueOf(conversationStyle), conversationId).size();
-		log.e("lucifer","number=="+ number+" conversationStyle=="+conversationStyle);
-		userNumber.setText(""+"("+number+")");
-
-		
+		if(conversationStyle.equals("1")){
+			int number=userAboutDao.queryUserAbout(""+user.getObjectId(), 3, conversationId).size();
+			log.e("lucifer","number=="+ number+" conversationStyle=="+conversationStyle);
+			userNumber.setText(""+"("+number+")");
+			
+		}else if(conversationStyle.equals("2")){
+			int number=userAboutDao.queryUserAbout(""+user.getObjectId(), Integer.valueOf(conversationStyle), conversationId).size();
+			log.e("lucifer","number=="+ number+" conversationStyle=="+conversationStyle);
+			userNumber.setText(""+"("+number+")");
+		}
+			
 	}
 	@Override
 	protected void onResume() {

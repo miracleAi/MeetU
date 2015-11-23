@@ -268,7 +268,7 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 							//用户相关缓存
 							
 							initLoadActivity(activity.getObjectId());
-							queryOrderUsers(objActivity,activity.getObjectId());
+							queryOrderUsers(objActivity,activity.getConversationId());
 		
 					}
 					/**

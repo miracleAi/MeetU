@@ -65,8 +65,8 @@
 
                 <RelativeLayout
                     android:id="@+id/imageView1rl"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="53dp"
+                    android:layout_height="53dp"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
@@ -74,18 +74,19 @@
 
                     <ImageView
                         android:id="@+id/imageView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
+                        android:layout_width="53dp"
+                        android:layout_height="53dp"
+                       
+                        
                         android:src="@drawable/massage_groupchatmember_img_profiles_stroke" />
 
                     <ImageView
-                        android:id="@+id/imageView1"
-                        android:layout_width="53dp"
-                        android:layout_height="53dp"
-                        android:layout_alignParentTop="true"
+                        android:id="@+id/userHead_miliao_info_img"
+                        android:layout_width="51dp"
+                        android:layout_height="51dp"
                         android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        
                         android:src="@drawable/massage_groupchatmember_img_profiles_default" />
                 </RelativeLayout>
 
@@ -100,7 +101,7 @@
                     android:id="@+id/name_miliao_info_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"                   
-                    android:text="张三丰"
+                    android:text=""
                     android:textColor="#ffffff"
                     android:textSize="15sp" />
                   <TextView
@@ -255,7 +256,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:text="解散群聊"
+                    android:text="退出群聊"
                     android:textColor="#ffffff"
                     android:textSize="16sp" />
             </RelativeLayout>

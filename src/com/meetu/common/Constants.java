@@ -185,9 +185,9 @@ public class Constants {
 	/**
 	 * 用户集合类型
 	 * */
-	public static final int FOLLOW_TYPE = 1;//我关注的人
-	public static final int CONVERSATION_TYPE = 2;//觅聊回话成员
-	public static final int ACTIVITY_TYPE = 3;//活动成员
+	public static final int FOLLOW_TYPE =1;//我关注的人
+	public static final int CONVERSATION_TYPE =2;//觅聊回话成员
+	public static final int ACTIVITY_TYPE =3;//活动成员
 	/**
 	 * 用户集合相关
 	 * */

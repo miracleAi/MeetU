@@ -3,9 +3,13 @@ package com.meetu.activity.miliao;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.tsz.afinal.FinalBitmap;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
 
 import com.meetu.R;
 import com.meetu.R.drawable;
@@ -14,13 +18,16 @@ import com.meetu.R.layout;
 import com.meetu.adapter.GridRecycleMiLiaoInfoAdapter;
 import com.meetu.adapter.GridRecycleMiLiaoInfoAdapter.OnMiLiaoInfoItemClickCallBack;
 import com.meetu.bean.UserAboutBean;
+import com.meetu.cloud.callback.ObjFunStringCallback;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
 
 import com.meetu.entity.User;
 import com.meetu.entity.UserAbout;
+import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DensityUtil;
 
@@ -41,6 +48,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -60,6 +68,9 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 	private int mHight;//reclycle 高度
 	private Boolean detele=false;//记录是否是删除状态
 	
+	private ImageView userCreator;
+	private TextView userCreatorName;
+	private RelativeLayout reportLayout;
 	//网络数据相关
 	
 	private String conversationStyle;//对话类型，1 表示活动群聊  2表示觅聊    3表示单聊 暂时没有
@@ -72,6 +83,8 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 	//当前用户
 	private	ObjUser user = new ObjUser();
 	AVUser currentUser = AVUser.getCurrentUser();
+	private AVIMConversation conv;
+	FinalBitmap finalBitmap;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +94,8 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 		//全屏
 		super.getWindow();
 		setContentView(R.layout.activity_mi_liao_info);
+		MyApplication app=(MyApplication) this.getApplicationContext();
+		finalBitmap=app.getFinalBitmap();
 		Intent intent=getIntent();
 		conversationStyle=intent.getStringExtra("ConversationStyle");
 		conversationId=intent.getStringExtra("ConversationId");
@@ -91,10 +106,35 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 		}else{
 			return;
 		}
+		conv = MyApplication.chatClient.getConversation(""+conversationId);
+		
 		loadData();
 		
 //		loadData2();
 		initView();
+		
+		if(conversationStyle.equals(""+Constants.CONVERSATION_TYPE)){
+			ObjChatMessage.getChatCreater(conv, new ObjFunStringCallback() {
+				
+				@Override
+				public void callback(String s, AVIMException e) {
+					if(e!=null){
+						log.e("zcq", e);
+						return;
+					}else if(s!=null||s!=""){
+						
+						getUserInfo(s);
+					}
+					
+				}
+			});
+		}else if(conversationStyle.equals("1")){
+			if(user.getProfileClip()!=null){
+				finalBitmap.display(userCreator, user.getProfileClip().getUrl());
+			}
+			
+		userCreatorName.setText(user.getNameNick());
+		}
 	}
 
 	private void loadData2() {
@@ -103,6 +143,9 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 //			user.setIsDetele(false);
 //			mList2.add(user);
 //		}
+		if(conversationStyle.equals("2")){
+		
+		numberAll.setText(""+mlist.size());
 		if(mlist!=null){
 			mList2.addAll(mlist);
 		}
@@ -111,7 +154,11 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 		item.setIsDetele(false);
 		item.setDeleteImg(R.drawable.massage_groupchatmember_btn_remove);
 		mList2.add(item);
-		
+		}else if(conversationStyle.equals("1")){
+			if(mlist!=null){
+				mList2.addAll(mlist);
+			}
+		}
 		
 	}
 
@@ -159,9 +206,10 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 		
 		if(beanList!=null){
 			getUsersListInfo(beanList);
+			
 		}
 		
-		numberAll.setText(""+beanList.size());
+		
 		
 		
 	}
@@ -213,8 +261,10 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 		mAdapter.setOnItemClickLitenerBack(this);
 		
 		numberAll=(TextView) super.findViewById(R.id.numberAll_user_miliao_info);
-		
-		
+		userCreator=(ImageView) super.findViewById(R.id.userHead_miliao_info_img);
+		userCreatorName=(TextView) super.findViewById(R.id.name_miliao_info_tv);
+		reportLayout=(RelativeLayout) super.findViewById(R.id.center4_miliao_info_rl);
+		reportLayout.setOnClickListener(this);
 	}
 
 	@Override
@@ -224,7 +274,10 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 		case R.id.back_miliao_info_img_rl:
 			finish();
 			break;
-		
+		//举报觅聊
+		case R.id.center4_miliao_info_rl:
+			
+			break;
 		
 		}
 		
@@ -232,52 +285,59 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 
 	@Override
 	public void onItemClick(int position) {
-		// TODO Auto-generated method stub
-		if(detele==false){
+		if(conversationStyle.equals("2")){
+			//2表示觅聊 1表示活动群聊
+
+			if(detele==false){
+				
+				if(position==mList2.size()-1){
+					Toast.makeText(this, "点击了删除。进入删除模式"+position, Toast.LENGTH_SHORT).show();
+					detele=true;
+					mList2.remove(mList2.size()-1);
+					for(UserAbout user:mList2){
+						user.setIsDetele(true);
+					}
 			
-			if(position==mList2.size()-1){
-				Toast.makeText(this, "点击了删除。进入删除模式"+position, Toast.LENGTH_SHORT).show();
-				detele=true;
-				mList2.remove(mList2.size()-1);
-				for(UserAbout user:mList2){
-					user.setIsDetele(true);
+					UserAbout item=new UserAbout();				
+					item.setUserName("取消");
+					item.setIsDetele(false);
+					item.setDeleteImg(R.drawable.massage_groupchatmember_btn_cancel);
+					mList2.add(item);
+					
+					
+				}else{
+					
+					Toast.makeText(this, "点击了位置"+position, Toast.LENGTH_SHORT).show();
 				}
-		
-				UserAbout item=new UserAbout();				
-				item.setUserName("取消");
-				item.setIsDetele(false);
-				item.setDeleteImg(R.drawable.massage_groupchatmember_btn_cancel);
-				mList2.add(item);
-				
-				
 			}else{
-				
-				Toast.makeText(this, "点击了位置"+position, Toast.LENGTH_SHORT).show();
-			}
-		}else{
-			if(position==mList2.size()-1){
-				//取消删除
-				detele=false;
-				
-				mList2.remove(mList2.size()-1);
-				for(UserAbout user:mList2){
-					user.setIsDetele(false);
+				if(position==mList2.size()-1){
+					//取消删除
+					detele=false;
+					
+					mList2.remove(mList2.size()-1);
+					for(UserAbout user:mList2){
+						user.setIsDetele(false);
+					}
+					UserAbout item=new UserAbout();
+					item.setUserName("移除");
+					item.setIsDetele(false);
+					item.setDeleteImg(R.drawable.massage_groupchatmember_btn_remove);
+					mList2.add(item);
+					
+				}else{
+					mList2.remove(position);
 				}
-				UserAbout item=new UserAbout();
-				item.setUserName("移除");
-				item.setIsDetele(false);
-				item.setDeleteImg(R.drawable.massage_groupchatmember_btn_remove);
-				mList2.add(item);
 				
-			}else{
-				mList2.remove(position);
 			}
 			
+			
+			
+			handler.sendEmptyMessage(1);
+		}else if(conversationStyle.equals("1")){
+			Toast.makeText(this, "点击了位置"+position, Toast.LENGTH_SHORT).show();
 		}
 		
 		
-		
-		handler.sendEmptyMessage(1);
 	}
 
 	@Override
@@ -368,6 +428,27 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 		}
 
 		
+	}
+	
+	/**
+	 * 根据创建者用户id 获取用户相关信息
+	 * @param objId  
+	 * @author lucifer
+	 * @date 2015-11-17
+	 */
+	private void getUserInfo(String objId){
+		ObjUserWrap.getObjUser(objId, new ObjUserInfoCallback() {
+			
+			@Override
+			public void callback(ObjUser user, AVException e) {
+				
+				if(user.getProfileClip()!=null){
+					finalBitmap.display(userCreator, user.getProfileClip().getUrl());
+				}
+				userCreatorName.setText(user.getNameNick());
+				
+			}
+		});
 	}
 	
 
