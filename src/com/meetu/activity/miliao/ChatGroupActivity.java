@@ -231,11 +231,11 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 			objChat=(ObjChat) intent.getExtras().getSerializable("ObjChat");
 			message=(Messages) intent.getExtras().getSerializable("Message");
 			
-			if(objChat==null){
-				title.setText(""+message.getActyName());
-			}else{
-				title.setText(objChat.getChatTitle());
-			}
+//			if(objChat==null){
+//				title.setText(""+message.getActyName());
+//			}else{
+//				title.setText(objChat.getChatTitle());
+//			}
 			
 		}
 		
