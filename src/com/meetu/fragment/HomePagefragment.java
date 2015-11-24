@@ -65,6 +65,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class HomePagefragment extends Fragment implements OnRefreshListener2<ListView> ,ScrollDistanceListener,OnItemClickListener,OnClickListener {
@@ -86,6 +87,8 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 	private int number;//item的数量
 	private int maginTop;//item 最初距离top的高度
 	
+	private TextView numberAll,numberFavor;//活动报名总人数
+	private int itemNow=0;//现在标签在第几个item
 	//网络数据相关
 	AVUser currentUser = AVUser.getCurrentUser();
 	private List<ObjActivity> objactyList=new ArrayList<ObjActivity>();
@@ -199,6 +202,8 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 			 lvNewsList.setOnScrollListener(listScrollDistanceCalculator);
 			 usernumber=(RelativeLayout) view.findViewById(R.id.usernumber_homepage_rl);
 			 usernumber.setOnClickListener(this);
+			 numberAll=(TextView) view.findViewById(R.id.zongnumber_homepage_tv);
+			 numberFavor=(TextView) view.findViewById(R.id.woguanzhunumber_homepage_tv);
 			// loadData(1,pageSize);
 			
 			
@@ -415,8 +420,30 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 		int a=lp.topMargin;			
 		lp.topMargin=(int) (-total*maginY/HightY)+maginTop;		
         int i=lp.topMargin;
-        Log.e("e", "total "+total +" delta "+delta +" i  "+i +" HightY "+HightY+" a="+a);
+ //       Log.e("e", "total "+total +" delta "+delta +" i  "+i +" HightY "+HightY+" a="+a);
         usernumber.setLayoutParams(lp);
+        
+        //TODO 实时更新活动标签里的内容
+        
+      
+//      int ii= (int) ((maginY/actyListCache.size()));//标签滑动一个item 滑动的距离
+//      log.e("lucifer"+"ii=="+ii+" i=="+i+" maginTop=="+maginTop);
+//      int aa=(i-maginTop)/ii;
+//      if(itemNow!=aa){
+//    	  log.e("lucifer", "total=="+total+" itemHight=="+itemHight);
+//    	  itemNow=aa;
+//    	  if(itemNow>=actyListCache.size()){
+//    		  itemNow=actyListCache.size()-1;
+//    		  int number=userAboutDao.queryUserAbout(user.getObjectId(), 3, actyListCache.get(itemNow).getConversationId()).size();
+//              numberAll.setText(""+number);
+//    	  }else{
+//    		  int number=userAboutDao.queryUserAbout(user.getObjectId(), 3, actyListCache.get(itemNow).getConversationId()).size();
+//              numberAll.setText(""+number);
+//    	  }
+//    	 
+//      }
+     
+      
 	}
 
 

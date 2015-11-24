@@ -3,10 +3,12 @@ package com.meetu.adapter;
 import java.util.List;
 
 
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 
 import com.meetu.activity.miliao.ChatGroupActivity;
+import com.meetu.cloud.object.ObjUser;
 import com.meetu.common.EmojisRelevantUtils;
 import com.meetu.common.Spanning;
 import com.meetu.entity.ChatEmoji;
@@ -36,7 +38,8 @@ public class MessagesListAdapter extends BaseAdapter {
 	private static List<ChatEmoji> chatEmojis; 
 	private ChatmsgsDao chatmsgsDao;
 	private Chatmsgs chatmsgs;
-	
+	//网络相关
+	ObjUser user = null;
 	
 	public MessagesListAdapter(Context context,List<Messages> messagesList,List<ChatEmoji> chatEmojis){
 		this.mContext=context;
@@ -44,6 +47,10 @@ public class MessagesListAdapter extends BaseAdapter {
 		chatmsgsDao=new ChatmsgsDao(context);
 		
 		this.chatEmojis=chatEmojis;
+		 if(ObjUser.getCurrentUser() != null){
+				AVUser currentUser = ObjUser.getCurrentUser();
+				user = AVUser.cast(currentUser, ObjUser.class);
+			}
 	}
 	
 
@@ -86,8 +93,8 @@ public class MessagesListAdapter extends BaseAdapter {
 			holder=(ViewHolder)convertView.getTag();
 		}	
 		//根据对话id拿到聊天对话的最后一条消息
-		if(chatmsgsDao.getChatmsgsList(item.getConversationID(),item.getUserId()).size()!=0){
-			 chatmsgs=chatmsgsDao.getChatmsgsList(item.getConversationID(),item.getUserId()).get(chatmsgsDao.getChatmsgsList(item.getConversationID(),item.getUserId()).size()-1);
+		if(chatmsgsDao.getChatmsgsList(item.getConversationID(),user.getObjectId()).size()!=0){
+			 chatmsgs=chatmsgsDao.getChatmsgsList(item.getConversationID(),user.getObjectId()).get(chatmsgsDao.getChatmsgsList(item.getConversationID(),user.getObjectId()).size()-1);
 //TODO			 
 			 //  如果 是 文本消息    如果有表情的话显示表情   
 			 if(chatmsgs.getChatMsgType()==10||chatmsgs.getChatMsgType()==12){

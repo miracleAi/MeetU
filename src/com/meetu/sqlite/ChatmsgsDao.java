@@ -61,10 +61,10 @@ public class ChatmsgsDao {
 	 * 删除操作
 	 * @param messageCacheId 消息的缓存id
 	 */
-	public void delete(String messageCacheId){
+	public void delete(String userId,String messageCacheId){
 		SQLiteDatabase db=helper.getReadableDatabase();
-		String sql="delete from chatmsgs where _message_cache_id=?";
-		db.execSQL(sql,new Object[]{messageCacheId});
+		String sql="delete from chatmsgs where _message_cache_id=? and "+Constants.USERID+"=?";
+		db.execSQL(sql,new Object[]{messageCacheId,userId});
 		db.close();
 		
 	}

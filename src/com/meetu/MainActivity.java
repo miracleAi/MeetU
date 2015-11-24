@@ -5,13 +5,16 @@ import java.util.ArrayList;
 
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.meetu.R;
 import com.meetu.activity.LoginActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.wrap.ObjChatMessage;
+import com.meetu.common.ChatConnection;
 import com.meetu.db.TabDb;
 import com.meetu.myapplication.MyApplication;
 
@@ -35,10 +38,7 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 
 public class MainActivity extends FragmentActivity implements OnTabChangeListener{
-	/**
-	 * 111
-	 */
-	
+
 	private FragmentTabHost tabHost;
 	//private ContentViewPager vpContent;
 	private FrameLayout contentLayout;
@@ -61,8 +61,8 @@ public class MainActivity extends FragmentActivity implements OnTabChangeListene
 		initTab();	
 		pageString=super.getIntent().getStringExtra("page");
 		
-		
-		
+	//	isConnection();
+		ChatConnection.isConnection();
 		
 	}
 	
@@ -123,5 +123,48 @@ public class MainActivity extends FragmentActivity implements OnTabChangeListene
 			System.exit(0);
 		}
 	}
+	
+	/**
+	 * 
+	 * 判断是否连接了长连接  
+	 * @author lucifer
+	 * @date 2015-11-24
+	 */
+//	private void isConnection(){
+//		chatClient = AVIMClient.getInstance(AVUser.getCurrentUser().getObjectId());
+//		ObjChatMessage.getClientStatus(MyApplication.chatClient, new ObjFunBooleanCallback() {
+//			
+//			@Override
+//			public void callback(boolean result, AVException e) {
+//				// TODO Auto-generated method stub
+//				if(e!=null){
+//					log.e("zcq", e);
+//					return;
+//				}else if(result){
+//					log.e("zcq", "已经建立过长连接");
+//				}else{
+//					ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
+//						
+//						@Override
+//						public void callback(AVIMClient client, AVException e) {							
+//							if(e != null){
+//								log.e("zcq", e);
+//								return ;
+//							}
+//							if(client != null){
+//								MyApplication.chatClient = client;
+//								log.e("zcq", "连接聊天长连接成功");
+//								
+//							}else{
+//								log.e("zcq", "连接聊天长连接失败");
+//								
+//							}
+//						}
+//					});
+//					
+//				}
+//			}
+//		});
+//	}
 
 }

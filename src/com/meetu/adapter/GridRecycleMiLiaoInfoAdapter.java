@@ -72,7 +72,7 @@ public GridRecycleMiLiaoInfoAdapter(Context context, List<UserAbout> list) {
 			UserAbout item = list.get(position);
 			holder.tvName.setText(item.getUserName());
 	//		holder.ivImg.setImageResource(item.getHeadPhoto());
-			if(position==list.size()-1){
+			if(position==list.size()-1&&item.getUserHeadPhotoUrl()==null){
 				holder.ivImg.setImageResource(item.getDeleteImg());
 			}else{
 				if(item.getUserHeadPhotoUrl()!=null||item.getUserHeadPhotoUrl()!=""){

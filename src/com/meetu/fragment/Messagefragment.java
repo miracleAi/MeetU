@@ -170,6 +170,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 //		mdataList.add(item4);
 		
 		ArrayList<Messages> list = messagesDao.getMessages(user.getObjectId());
+		log.e("zcq", "user.getObjectId()======"+user.getObjectId());
 		if(list != null && list.size()>0){
 			mdataListCache.clear();
 			mdataListCache.addAll(list);		
@@ -242,6 +243,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 			case 1:	
 				log.e("zcq", "刷新了");
 				ArrayList<Messages> list = messagesDao.getMessages(user.getObjectId());
+				
 				if(list != null && list.size()>0){
 					mdataListCache.clear();
 					mdataListCache.addAll(list);		
@@ -299,6 +301,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 //					conversationId = convList.get(0).getConversationId();
 					//保存到数据库
 					ArrayList<Messages> list = new ArrayList<Messages>();
+					log.e("zcq", "user.getObjectId()=="+user.getObjectId());
 					for(int i=0;i<convList.size();i++){
 						AVIMConversation conversation = convList.get(i);
 						Messages msg = new Messages();

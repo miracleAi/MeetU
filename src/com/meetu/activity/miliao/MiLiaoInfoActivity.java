@@ -69,7 +69,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 	private Boolean detele=false;//记录是否是删除状态
 	
 	private ImageView userCreator;
-	private TextView userCreatorName;
+	private TextView userCreatorName,xiaoUname;
 	private RelativeLayout reportLayout;
 	//网络数据相关
 	
@@ -85,6 +85,8 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 	AVUser currentUser = AVUser.getCurrentUser();
 	private AVIMConversation conv;
 	FinalBitmap finalBitmap;
+	private boolean isCreator=false;//用来标记是否是觅聊的创建者
+	private RelativeLayout miliaoLayout,qunliaoLayout;//用来 标记不同的view显示
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +110,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 		}
 		conv = MyApplication.chatClient.getConversation(""+conversationId);
 		
-		loadData();
+	
 		
 //		loadData2();
 		initView();
@@ -124,17 +126,29 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 					}else if(s!=null||s!=""){
 						
 						getUserInfo(s);
+						if(s.equals(user.getObjectId())){
+							//如果用户的id和创建者的id 相等 就是觅聊创建者
+							isCreator=true;
+						}
 					}
 					
 				}
 			});
+			qunliaoLayout.setVisibility(View.GONE);
+			miliaoLayout.setVisibility(View.VISIBLE);
+			reportLayout.setVisibility(View.VISIBLE);
 		}else if(conversationStyle.equals("1")){
 			if(user.getProfileClip()!=null){
 				finalBitmap.display(userCreator, user.getProfileClip().getUrl());
 			}
 			
-		userCreatorName.setText(user.getNameNick());
+			qunliaoLayout.setVisibility(View.VISIBLE);
+			miliaoLayout.setVisibility(View.GONE);
+			reportLayout.setVisibility(View.GONE);
+			xiaoUname.setText(user.getNameNick());
 		}
+		
+		loadData();
 	}
 
 	private void loadData2() {
@@ -143,7 +157,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 //			user.setIsDetele(false);
 //			mList2.add(user);
 //		}
-		if(conversationStyle.equals("2")){
+		if(conversationStyle.equals("2")&&isCreator==true){
 		
 		numberAll.setText(""+mlist.size());
 		if(mlist!=null){
@@ -154,7 +168,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 		item.setIsDetele(false);
 		item.setDeleteImg(R.drawable.massage_groupchatmember_btn_remove);
 		mList2.add(item);
-		}else if(conversationStyle.equals("1")){
+		}else{
 			if(mlist!=null){
 				mList2.addAll(mlist);
 			}
@@ -265,6 +279,9 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 		userCreatorName=(TextView) super.findViewById(R.id.name_miliao_info_tv);
 		reportLayout=(RelativeLayout) super.findViewById(R.id.center4_miliao_info_rl);
 		reportLayout.setOnClickListener(this);
+		miliaoLayout=(RelativeLayout) super.findViewById(R.id.name_miliao_info_rl);
+		qunliaoLayout=(RelativeLayout) super.findViewById(R.id.name_miliao_info_qunliao_rl);
+		xiaoUname=(TextView) super.findViewById(R.id.name_miliao_info_tv_huodong);
 	}
 
 	@Override
@@ -285,7 +302,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 
 	@Override
 	public void onItemClick(int position) {
-		if(conversationStyle.equals("2")){
+		if(conversationStyle.equals("2")&&isCreator==true){
 			//2表示觅聊 1表示活动群聊
 
 			if(detele==false){
@@ -333,7 +350,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 			
 			
 			handler.sendEmptyMessage(1);
-		}else if(conversationStyle.equals("1")){
+		}else {
 			Toast.makeText(this, "点击了位置"+position, Toast.LENGTH_SHORT).show();
 		}
 		
@@ -392,7 +409,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 	 */
 	private void getUsersListInfo(final List<UserAboutBean> list){
 		userList=new ArrayList<ObjUser>();
-		
+		mlist=new ArrayList<UserAbout>();
 		for(int i=0;i<list.size();i++){
 			ObjUserWrap.getObjUser(list.get(i).getAboutUserId(), new ObjUserInfoCallback() {
 				
@@ -413,8 +430,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 						}
 						
 						mlist.add(item);
-						
-						
+												
 						userList.add(user);	
 						if(list.size()==mlist.size()){
 							//所有的都加载过后刷新数据

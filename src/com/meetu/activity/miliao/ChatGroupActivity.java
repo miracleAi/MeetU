@@ -419,7 +419,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 				// TODO Auto-generated method stub
 				log.e("复制");
 				portraidlg.dismiss();
-				if(item.getChatMsgType()==0||item.getChatMsgType()==1){
+				if(item.getChatMsgType()==10||item.getChatMsgType()==12){
 					
 					CopyContent(item.getContent());
 				}		
@@ -434,7 +434,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 				// TODO Auto-generated method stub
 				log.e("删除");
 				portraidlg.dismiss();
-				deleteChatMessageCache(""+item.getMessageCacheId());				
+				deleteChatMessageCache(user.getObjectId(),""+item.getMessageCacheId());				
 			}
 		
 		});
@@ -464,9 +464,11 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	private void CopyContent(String content) {
 		// TODO Auto-generated method stub
 	//	Copy.copy(content,this);
+		log.e("lucifer", "content=="+content);
 		ClipboardManager clip = (ClipboardManager)getSystemService(this.CLIPBOARD_SERVICE);
 		
 		clip.setText(content); // 复制
+		
 	}
 	 
 	
@@ -474,9 +476,9 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	 * 删除本地缓存中本条信息
 	 * @param messageCacheId 消息缓存的id	 
 	 */
-	private void deleteChatMessageCache(String messageCacheId) {
+	private void deleteChatMessageCache(String userID,String messageCacheId) {
 		// TODO Auto-generated method stub
-		chatmsgsDao.delete(messageCacheId);
+		chatmsgsDao.delete(userID,messageCacheId);
 		handler.sendEmptyMessage(2);	
 	}
 
@@ -1071,6 +1073,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		spannable.setSpan(imageSpan, 0, spannableString.length(),
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		return spannable;
+	
 	}
 	
 	/**
@@ -1155,9 +1158,12 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 			//接收到自己发的消息
 			chatBean.setChatMsgType(10);
 		}
-
-		chatmsgsDao.insert(chatBean);
-		log.e("lucifer", "插入成功");
+		//接收到本人id 发送的消息 不插入到本地消息数据库
+		if(!user.getObjectId().equals(msg.getFrom())){
+			chatmsgsDao.insert(chatBean);
+			log.e("lucifer", "插入成功");
+		}
+	
 		if(conversation.getConversationId().equals(conversationId)){
 			//测试显示  刷新adapter
 			
