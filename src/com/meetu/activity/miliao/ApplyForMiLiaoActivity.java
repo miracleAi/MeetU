@@ -143,7 +143,7 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener{
 		}
 		//重新申请
 		public void updateApplyAuthorise(ObjAuthoriseApply aply,String argument){
-			aply.setLookStatus(0);
+			aply.setFreshStatus(false);
 			ObjAuthoriseWrap.updateApplyAuthorise(aply, argument,new ObjFunBooleanCallback() {
 
 				@Override

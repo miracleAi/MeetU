@@ -20,6 +20,7 @@ import com.meetu.R;
 import com.meetu.activity.SetPersonalInformation2Activity;
 import com.meetu.activity.SystemSettingsActivity;
 import com.meetu.activity.mine.UpdatepictureActivity;
+import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.adapter.PhotoWallAdapter.GridViewHeightaListener;
 import com.meetu.adapter.ViewPagerAdapter;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
@@ -32,6 +33,7 @@ import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
 import com.meetu.view.MyScrollView;
 import com.meetu.view.MyScrollView.OnScrollListener;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -149,7 +151,9 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
-					showDialog();
+					//showDialog();
+					Intent intent = new Intent(getActivity(),UserPagerActivity.class);
+					startActivity(intent);
 				}
 			});
 

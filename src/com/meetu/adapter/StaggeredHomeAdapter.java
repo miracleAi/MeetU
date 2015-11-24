@@ -81,13 +81,6 @@ public class StaggeredHomeAdapter extends
 		bitmapUtils=new BitmapUtils(mContext);
 		MyApplication app=(MyApplication) context.getApplicationContext();
 		finalBitmap=app.getFinalBitmap();
-//		 mHeights = new ArrayList<Integer>();
-//		 if(mDatas!=null && mDatas.size()>0){
-//		 for (int i = 0; i < mDatas.size(); i++)
-//		 {
-//		 mHeights.add( (int) (400+ Math.random() * 500));
-//		 }
-//	}
 	
 	}
 

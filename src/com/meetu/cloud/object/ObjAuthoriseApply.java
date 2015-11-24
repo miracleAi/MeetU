@@ -23,7 +23,7 @@ public class ObjAuthoriseApply extends AVObject{
 	/**
 	 *  管理员是否已查看
 	 */
-	public static final String LOOKSTATUS = "lookStatus";
+	public static final String FRESHSTATUS = "freshStatus";
 	/**
 	 *  请求答复内容
 	 */
@@ -54,11 +54,11 @@ public class ObjAuthoriseApply extends AVObject{
 	public void setArgument(String argument) {
 		this.put(ARGUMENT, argument);
 	}
-	public int getLookStatus() {
-		return this.getInt(LOOKSTATUS);
+	public boolean getFreshStatus() {
+		return this.getBoolean(FRESHSTATUS);
 	}
-	public void setLookStatus(int lookStatus) {
-		this.put(LOOKSTATUS, lookStatus);
+	public void setFreshStatus(boolean freshStatus) {
+		this.put(FRESHSTATUS, freshStatus);
 	}
 	public String getApplyReply() {
 		return this.getString(APPLYREPLY);

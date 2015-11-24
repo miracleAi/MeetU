@@ -1,10 +1,8 @@
 package com.meetu.activity.mine;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,33 +11,26 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.View.OnTouchListener;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.lidroid.xutils.BitmapUtils;
 import com.meetu.R;
-import com.meetu.adapter.ViewPagerAdapter;
 import com.meetu.cloud.object.ObjUser;
-import com.meetu.fragment.MinePersonalInformation;
-import com.meetu.fragment.MinePhotoWallfragment;
+import com.meetu.fragment.UserInfoFragment;
+import com.meetu.fragment.UserPhotoFragment;
 import com.meetu.view.CustomViewPager;
-import com.meetu.view.MyScrollView;
-import com.meetu.view.MyScrollView.OnScrollListener;
+import com.meetu.view.ScrollTabHolder;
 import com.meetu.view.SlidingTabLayout;
 
 public class UserPagerActivity extends FragmentActivity implements ScrollTabHolder{
@@ -86,6 +77,8 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		super.getWindow();
 		setContentView(R.layout.userpager_layout);
 		initValues();
 		initView();
@@ -109,13 +102,14 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 
 			}
 		});
+		setupAdapter();
 	}
 	private void initValues() {
 		int tabHeight = getResources().getDimensionPixelSize(R.dimen.tab_height);
 		minHeaderHeight = getResources().getDimensionPixelSize(R.dimen.min_header_height);
 		headerHeight = getResources().getDimensionPixelSize(R.dimen.header_height);
 		//头部滑动距离
-		minHeaderTranslation = -minHeaderHeight + tabHeight;//-250+50
+		minHeaderTranslation = -minHeaderHeight + tabHeight;//-335+50
 
 		numFragments = 2;
 	}
@@ -175,6 +169,8 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 					SparseArrayCompat<ScrollTabHolder> scrollTabHolders = adapter.getScrollTabHolders();
 
 					ScrollTabHolder fragmentContent;
+					log.d("mytest", "pager"+position);
+					log.d("mytest", "size"+scrollTabHolders.size());
 					if (position < currentItem) {
 						// Revealed the previous page
 						fragmentContent = scrollTabHolders.valueAt(position);
@@ -182,7 +178,6 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 						// Revealed the next page
 						fragmentContent = scrollTabHolders.valueAt(position + 1);
 					}
-
 					fragmentContent.adjustScroll((int) (headView.getHeight() + headView.getTranslationY()),
 							headView.getHeight());
 				}
@@ -215,7 +210,7 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 	}
 	@SuppressLint("NewApi")
 	private void scrollHeader(int scrollY) {
-		float translationY = Math.max(-scrollY, minHeaderHeight);
+		float translationY = Math.max(-scrollY,minHeaderTranslation);
 		headView.setTranslationY(translationY);
 		//imgView.setTranslationY(-translationY / 3);
 	}
@@ -238,6 +233,7 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 	public void onRecyclerViewScroll(RecyclerView view, int scrollY,
 			int pagePosition) {
 		if (userPager.getCurrentItem() == pagePosition) {
+			log.d("mytest", "zhixing2");
 			scrollHeader(scrollY);
 		}
 	}  
@@ -258,11 +254,11 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 			Fragment fragment;
 			switch (position) {
 			case 0:
-				fragment = MinePersonalInformation.newInstance(0);
+				fragment = UserInfoFragment.newInstance(0);
 				break;
 
 			case 1:
-				fragment = MinePhotoWallfragment.newInstance(1);
+				fragment = UserPhotoFragment.newInstance(1);
 				break;
 
 
@@ -278,10 +274,11 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 			return nums;
 		}
 		@Override
-		public Object instantiateItem(View container, int position) {
-			// TODO Auto-generated method stub
+		public Object instantiateItem(ViewGroup container, int position) {
 			Object object = super.instantiateItem(container, position);
+
 			mScrollTabHolders.put(position, (ScrollTabHolder) object);
+
 			return object;
 		}
 		@Override

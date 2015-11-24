@@ -704,7 +704,7 @@ public class TestMsgActivity extends Activity{
 	}
 	//重新申请
 	public void updateApplyAuthorise(ObjAuthoriseApply aply){
-		aply.setLookStatus(0);
+		aply.setFreshStatus(false);
 //		ObjAuthoriseWrap.updateApplyAuthorise(aply, new ObjFunBooleanCallback() {
 //
 //			@Override

@@ -1,4 +1,4 @@
-package com.meetu.activity.mine;
+package com.meetu.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.widget.AbsListView;

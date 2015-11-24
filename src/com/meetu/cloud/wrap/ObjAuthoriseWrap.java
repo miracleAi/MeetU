@@ -71,7 +71,7 @@ public class ObjAuthoriseWrap {
 		apply.setUser(user);
 		apply.setCategory(category);
 		apply.setArgument(argument);
-		apply.setLookStatus(0);
+		apply.setFreshStatus(false);
 		apply.saveInBackground(new SaveCallback() {
 
 			@Override
