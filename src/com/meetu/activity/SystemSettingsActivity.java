@@ -1,9 +1,14 @@
 package com.meetu.activity;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 import com.meetu.R.layout;
 import com.meetu.R.menu;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjUserWrap;
+import com.meetu.myapplication.MyApplication;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -72,11 +77,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener{
 			break;
 		case R.id.sign_out_system_settings_rl:
 			//TODO 清缓存 删除本地 信息
-			Toast.makeText(this, "退出", Toast.LENGTH_SHORT).show();
-			
-			ObjUserWrap.logOut();
-			Intent intent=new Intent(this,LoginActivity.class);
-			startActivity(intent);
+			signOut();
 			
 			break;
 		case R.id.back_systemSettings_rl:
@@ -86,6 +87,35 @@ public class SystemSettingsActivity extends Activity implements OnClickListener{
 		default:
 			break;
 		}
+		
+	}
+	/**
+	 * 注销登录需要做的操作，删除本地的用户对象 断开application的长连接
+	 *   
+	 * @author lucifer
+	 * @date 2015-11-25
+	 */
+	public void signOut(){
+		ObjChatMessage.logOutChat(MyApplication.chatClient, new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e!=null){
+					log.e("zcq", "退出"+e);
+					return;
+				}else if(result){
+					log.e("zcq", "长连接注销成功");
+					ObjUserWrap.logOut();
+					Toast.makeText(getApplicationContext(), "退出", Toast.LENGTH_SHORT).show();	
+					Intent intent=new Intent(SystemSettingsActivity.this,LoginActivity.class);
+					startActivity(intent);
+				}else{
+					log.e("zcq", "长连接注销失败");
+				}
+				
+			}
+		});
 		
 	}
 

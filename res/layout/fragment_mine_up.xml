@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.meetu.view.CustomViewPager
+        android:id="@+id/user_pager_mine_up_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </com.meetu.view.CustomViewPager>
+
+    <LinearLayout
+        android:id="@+id/head_view_mine_up_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/img_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/imageview_height"
+            android:background="@drawable/mine_img_bg"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                 >
+
+              <!--   <ImageView
+                    android:id="@+id/user_back_imv_mine_up_fragment_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="9dp"
+                    android:src="@drawable/mine_btn_setting" />
+ -->
+ 
+ 				<!-- 
+                <ImageView
+                    android:id="@+id/user_set_imv_mine_up_fragment_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="9dp"
+                    android:src="@drawable/mine_btn_setting" /> -->
+                <RelativeLayout 
+                            android:id="@+id/setting_mine_up_fragment_rl"
+                            android:layout_width="44dp" 
+                            android:layout_height="44dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="9dp"
+                            android:gravity="center">
+                        <ImageView
+                            android:id="@+id/user_set_imv_mine_up_fragment_img"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/mine_btn_setting" />
+                        </RelativeLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="44dp"
+                android:orientation="horizontal" >
+
+       <!--          <ImageView
+                    android:id="@+id/user_like_imv_mine_up_fragment_img"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mine_photoview_btn_like_nor2x" /> -->
+
+                <RelativeLayout
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                     >
+                    <ImageView
+                        android:id="@+id/user_profile_iv_mine_up_fragment_img"
+                        android:layout_width="85dp"
+                        android:layout_height="85dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/mine_btn_profile" />
+
+                    <ImageView
+                        android:id="@+id/user_gender_imv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/user_profile_iv_mine_up_fragment_img"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/mine_img_gender_m" />
+                </RelativeLayout>
+
+            <!--     <ImageView
+                    android:id="@+id/user_scrip_imv"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="25dp"
+                    android:src="@drawable/mine_photoview_btn_like_nor2x" /> -->
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/user_name_fragment_mine_up_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+              
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="18dp"
+                android:text="徐小曼"
+                android:textColor="#ffffff" />
+
+         <!--    <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="60dp"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/user_vip_dis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/mine_btn_vip_dis" />
+
+                <ImageView
+                    android:id="@+id/user_approve_dis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:src="@drawable/mine_btn_approve_dis" />
+            </LinearLayout> -->
+        </LinearLayout>
+
+        <com.meetu.view.SlidingTabLayout
+            android:id="@+id/user_tab_mine_up_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tab_height"
+            android:background="@color/white"
+            app:indicatorColor="#33c6e5"
+            app:shouldExpand="true"
+            app:tabBackground="@layout/sliding_tab_view"
+            app:tabBackgroundTextViewId="@+id/tab_textview" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#cccccc" />
+    </LinearLayout>
+    
+      <ImageView
+        android:id="@+id/update_mine_up_fragment_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/mine_photoview_btn_add"
+        android:visibility="gone" />
+
+</RelativeLayout>

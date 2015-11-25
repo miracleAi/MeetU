@@ -5,9 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -15,14 +12,12 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.LogUtil.log;
 import com.lidroid.xutils.BitmapUtils;
-import com.meetu.MainActivity;
 import com.meetu.R;
-import com.meetu.activity.SetPersonalInformation2Activity;
 import com.meetu.activity.SystemSettingsActivity;
 import com.meetu.activity.mine.UpdatepictureActivity;
 import com.meetu.activity.mine.UserPagerActivity;
-import com.meetu.adapter.PhotoWallAdapter.GridViewHeightaListener;
-import com.meetu.adapter.ViewPagerAdapter;
+
+
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjUserWrap;
@@ -31,9 +26,12 @@ import com.meetu.entity.Middle;
 import com.meetu.tools.BitmapCut;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
+import com.meetu.view.CustomViewPager;
 import com.meetu.view.MyScrollView;
-import com.meetu.view.MyScrollView.OnScrollListener;
+import com.meetu.view.ScrollTabHolder;
+import com.meetu.view.SlidingTabLayout;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -47,128 +45,103 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
+import android.view.View.OnTouchListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.LinearLayout.LayoutParams;
 
-public class Minefragment extends Fragment implements OnPageChangeListener,OnCheckedChangeListener,OnClickListener,OnScrollListener{
-
-	private RadioGroup group=null;
-	private ViewPager viewPager;
-	private View view;
-	private int viewpagerHight;
-	private ImageView updateImageView,ivTouxiang;
-
-	private MyScrollView myScrollView;
-	private int mHightping;
-	private int mscrollY;
-
-	private float positionY;
-
-	private LinearLayout ll; 
-
-	private int topHight;//向上滑动的绝对高度。滑到此高度 悬浮
-	//fragment 滑动
-	private List<Fragment> list = new ArrayList<Fragment>();
+/** 
+ * @author  lucifer 
+ * @date 2015-11-25
+ * @return  
+ */
+public class MineUpfragment extends Fragment implements ScrollTabHolder,OnClickListener{
+	
+	
+	private CustomViewPager userPager;
+	private SlidingTabLayout userTab;
+	private LinearLayout headView;
+	
 	private ViewPagerAdapter adapter=null;
+	private static final String IMAGE_TRANSLATION_Y = "image_translation_y";
+	private static final String HEADER_TRANSLATION_Y = "header_translation_y";
+	private int minHeaderHeight;
+	//头部高度
+	private int headerHeight;
+	//头部划出屏幕高度
+	private int minHeaderTranslation;
+	private int numFragments;
 
+	private int mScrollState;
+	//头部是否滑动
+	private boolean isTopScroll=true;
+	//滑动距离
+	private float tempA=285;
+	
+	private View view;
 	//控件相关
-	private RelativeLayout setting;
-	private boolean isMyserf=true;//是否是我自己进入这个页面  默认是我自己true
-
-	//网络 数据相关
+	private RelativeLayout settingLayout;
+	private ImageView updateImageView,ivTouxiang;
+	private TextView userName;
+	//网络相关
 	private BitmapUtils bitmapUtils; 
 	private String headURl="";//头像的URL
 	//拿本地的  user 
 	private AVUser currentUser = AVUser.getCurrentUser();
-
+	private ObjUser user;
 	// 上传 信息   头像相关
 	private	String fHeadPath = "";
 	private String yHeadPath = "";
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-
-	}
-
-	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		if(view==null){
-			view=inflater.inflate(R.layout.fragment_mine, null);
-
+			view=inflater.inflate(R.layout.fragment_mine_up, null);
 			bitmapUtils=new BitmapUtils(getActivity());
 			if(currentUser!=null){
 				//强制类型转换
-				ObjUser user = AVUser.cast(currentUser, ObjUser.class);
+				user = AVUser.cast(currentUser, ObjUser.class);
 
 				headURl=user.getProfileClip().getUrl();
 				log.e("lucifer","url"+headURl);
 			}
-
-
-			group=(RadioGroup)view.findViewById(R.id.group_va_tab);			
-			group.setOnCheckedChangeListener(this);
-			viewPager=(ViewPager)view.findViewById(R.id.mine_viewpager_va);
-			viewPager.setOnPageChangeListener(this);
-			initPageView();
-			getBackHeight();
-			group.check(1);
-			updateImageView=(ImageView) view.findViewById(R.id.update_mine_img);
-			updateImageView.setOnClickListener(this);
-			myScrollView=(MyScrollView) view.findViewById(R.id.scroll_content);
-
-			//			//动态设置myScrollView高度
-			//			RelativeLayout.LayoutParams params=(android.widget.RelativeLayout.LayoutParams) myScrollView.getLayoutParams();
-			//			params.height=DensityUtil.dip2px(getActivity(), 275)+DisplayUtils.getWindowHeight(getActivity());
-			//			myScrollView.setLayoutParams(params);
-
-			mHightping=DisplayUtils.getWindowHeight(getActivity());
-			ivTouxiang=(ImageView) view.findViewById(R.id.mine_btn_profile_iv);
-
-			//			Bitmap head=readHead();
-			if(headURl!=null){
-				//				ivTouxiang.setImageBitmap(head);
-				// 加载网络图片
-				bitmapUtils.display(ivTouxiang, headURl);
-			}
-			ivTouxiang.setOnClickListener(new OnClickListener() {
+			initView();
+			initValues();
+			
+			userPager.setOnTouchListener(new OnTouchListener() {
 
 				@Override
-				public void onClick(View arg0) {
+				public boolean onTouch(View v, MotionEvent event) {
 					// TODO Auto-generated method stub
-					//showDialog();
-					Intent intent = new Intent(getActivity(),UserPagerActivity.class);
-					startActivity(intent);
+					//触摸位于头部，禁止横向滑动
+					if(px2dip(getActivity().getApplicationContext(), event.getY())<tempA){
+						userPager.setScanScroll(false);
+						return true;
+					}else{
+						userPager.setScanScroll(true);
+						return false;
+					}
+
 				}
 			});
-
-
-			ll=(LinearLayout) view.findViewById(R.id.button_ll_mine);
-			LinearLayout.LayoutParams params2=(LayoutParams) ll.getLayoutParams();
-			int h=params2.height;
-			log.e("lucifer", "h="+h);
-			ll.setLayoutParams(params2);
-
-			topHight=DensityUtil.dip2px(getActivity(), 285);
-
-			setting=(RelativeLayout) view.findViewById(R.id.setting_mine_fragment_rl);
-			setting.setOnClickListener(this);
-
+			setupAdapter();
 
 		}
 		ViewGroup parent=(ViewGroup)view.getParent();
@@ -178,126 +151,238 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 		return view;
 	}
 
-
-
-	private void initPageView(){
-		//个人信息fragment 并且把url传过去
-		MinePersonalInformation personalInformation=new MinePersonalInformation();
-		Bundle bundle1=new Bundle();
-		bundle1.putString("personalInformationUrl", "");
-		personalInformation.setArguments(bundle1);
-
-		//照片墙fragment 并且把url传过去
-		MinePhotoWallfragment photoWall=new MinePhotoWallfragment();
-		//		photoWall.setGridViewHeightaListener(this);
-
-		Bundle bundle2=new Bundle();
-		bundle2.putString("photoWallUrl", "");
-		photoWall.setArguments(bundle2);
-
-//		list.add(personalInformation);
-//		list.add(photoWall);
-
-		adapter = new ViewPagerAdapter(super.getActivity().getSupportFragmentManager(), list);
-		viewPager.setAdapter(adapter);
-		viewPager.setOffscreenPageLimit(1);
-		//			viewPager.setCurrentItem(0); 
-
-	}
-
-	private void setTag(int idx){
-
-		RadioButton rb=(RadioButton)group.getChildAt(idx);
-		rb.setChecked(true);
-		if(idx==0) 
-		{
-			//设置上传图片 图片隐藏
-			updateImageView.setVisibility(View.INVISIBLE);
-
-
+	
+	private void initView() {
+		// TODO Auto-generated method stub
+		userPager=(CustomViewPager) view.findViewById(R.id.user_pager_mine_up_fragment);
+		userTab = (SlidingTabLayout)view.findViewById(R.id.user_tab_mine_up_fragment);
+		headView = (LinearLayout) view.findViewById(R.id.head_view_mine_up_fragment);
+		
+		settingLayout=(RelativeLayout) view.findViewById(R.id.setting_mine_up_fragment_rl);
+		settingLayout.setOnClickListener(this);
+		ivTouxiang=(ImageView) view.findViewById(R.id.user_profile_iv_mine_up_fragment_img);
+		 
+		if(headURl!=null){
+			//				ivTouxiang.setImageBitmap(head);
+			// 加载网络图片
+			bitmapUtils.display(ivTouxiang, headURl);
 		}
-		if(idx == 1) {
-			//设置上传图片 图片显示
-			updateImageView.setVisibility(View.VISIBLE);
+		ivTouxiang.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				showDialog();
+				
+			}
+		});  
+		userName=(TextView) view.findViewById(R.id.user_name_fragment_mine_up_tv);
+		userName.setText(""+user.getNameNick());
+		updateImageView=(ImageView) view.findViewById(R.id.update_mine_up_fragment_img);
+		updateImageView.setOnClickListener(this);
+	}
 
-			myScrollView.setOnScrollListener(this);
+
+	private void initValues() {
+		int tabHeight = getResources().getDimensionPixelSize(R.dimen.tab_height);
+		minHeaderHeight = getResources().getDimensionPixelSize(R.dimen.min_header_height);
+		headerHeight = getResources().getDimensionPixelSize(R.dimen.header_height);
+		//头部滑动距离
+		minHeaderTranslation = -minHeaderHeight + tabHeight;//-335+50
+
+		numFragments = 2;
+	}
+
+	private void setupAdapter() {
+		if (adapter == null) {
+			adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(), numFragments);
+		}
+
+		userPager.setAdapter(adapter);
+		userPager.setOffscreenPageLimit(numFragments);
+		userTab.setOnPageChangeListener(getViewPagerPageChangeListener());
+		userTab.setViewPager(userPager);
+
+	}
+	//viewpager滑动时间监听
+		private ViewPager.OnPageChangeListener getViewPagerPageChangeListener () {
+			ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener() {
+				@SuppressLint("NewApi")
+				@Override
+				public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+					int currentItem = userPager.getCurrentItem();
+					if (positionOffsetPixels > 0) {
+						SparseArrayCompat<ScrollTabHolder> scrollTabHolders = adapter.getScrollTabHolders();
+
+						ScrollTabHolder fragmentContent;
+						log.d("mytest", "pager"+position);
+						log.d("mytest", "size"+scrollTabHolders.size());
+						if (position < currentItem) {
+							// Revealed the previous page
+							fragmentContent = scrollTabHolders.valueAt(position);
+						} else {
+							// Revealed the next page
+							fragmentContent = scrollTabHolders.valueAt(position + 1);
+						}
+						fragmentContent.adjustScroll((int) (headView.getHeight() + headView.getTranslationY()),
+								headView.getHeight());
+					}
+				}
+
+				@SuppressLint("NewApi")
+				@Override
+				public void onPageSelected(int position) {
+					userPager.setScanScroll(true);
+					SparseArrayCompat<ScrollTabHolder> scrollTabHolders = adapter.getScrollTabHolders();
+
+					if (scrollTabHolders == null || scrollTabHolders.size() != numFragments) {
+						return;
+					}
+
+					ScrollTabHolder currentHolder = scrollTabHolders.valueAt(position);
+					//记录滑动位置，切换后纵向仍停留在原位置
+					currentHolder.adjustScroll(
+							(int) (headView.getHeight() + headView.getTranslationY()),
+							headView.getHeight());
+				}
+
+				@Override
+				public void onPageScrollStateChanged(int state) {
+					mScrollState = state;
+				}
+			};
+
+			return listener;
+		}
+		
+		@SuppressLint("NewApi")
+		private void scrollHeader(int scrollY) {
+			float translationY = Math.max(-scrollY,minHeaderTranslation);
+			headView.setTranslationY(translationY);
+			//imgView.setTranslationY(-translationY / 3);
+		}
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+	}
+
+	@Override
+	public void adjustScroll(int scrollHeight, int headerHeight) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onScrollViewScroll(ScrollView view, int x, int y, int oldX,
+			int oldY, int pagePosition) {
+		// TODO Auto-generated method stub
+		tempA=285-px2dip(getActivity().getApplicationContext(),y);
+		if (userPager.getCurrentItem() == pagePosition){
+			scrollHeader(view.getScrollY());
 		}
 	}
 
 	@Override
-	public void setArguments(Bundle args) { 
-		// TODO Auto-generated method stub
-		super.setArguments(args);
-	}
-	private Intent intent;
-	@Override
-	public void onCheckedChanged(RadioGroup group, int position) {
-
-		//		Toast.makeText(getActivity(), ""+position, Toast.LENGTH_SHORT).show();
-		if(position==1){
-
-			intent=new Intent();
-
-		}else if(position==2){
-
+	public void onRecyclerViewScroll(RecyclerView view, int scrollY,
+			int pagePosition) {
+		if (userPager.getCurrentItem() == pagePosition) {
+			log.d("mytest", "zhixing2");
+			scrollHeader(scrollY);
 		}
-		viewPager.setCurrentItem(position-1);
+	}  
+	
+	class ViewPagerAdapter extends FragmentPagerAdapter{
+		private SparseArrayCompat<ScrollTabHolder> mScrollTabHolders;
+		private int nums;
+
+		public ViewPagerAdapter(FragmentManager fm, int numFragments) {
+			super(fm);
+			// TODO Auto-generated constructor stub
+			mScrollTabHolders = new SparseArrayCompat<ScrollTabHolder>();
+			nums = numFragments;
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			Fragment fragment;
+			switch (position) {
+			case 0:
+			//	fragment = UserInfoFragment.newInstance(0);
+				fragment=MinePersonalInformation.newInstance(0);
+				break;
+
+			case 1:
+			//	fragment = UserPhotoFragment.newInstance(1);
+				fragment=MinePhotoWallfragment.newInstance(1);
+				break;
+
+
+			default:
+				throw new IllegalArgumentException("Wrong page given " + position);
+			}
+			return fragment;
+		}
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return nums;
+		}
+		@Override
+		public Object instantiateItem(ViewGroup container, int position) {
+			Object object = super.instantiateItem(container, position);
+
+			mScrollTabHolders.put(position, (ScrollTabHolder) object);
+
+			return object;
+		}
+		@Override
+		public CharSequence getPageTitle(int position) {
+			switch (position) {
+			case 0:
+				return "个人信息";
+
+			case 1:
+				return "UU秀墙";
+
+			default:
+				throw new IllegalArgumentException("wrong position for the fragment in vehicle page");
+			}
+		}
+		@Override
+		public int getItemPosition(Object object) {
+			// TODO Auto-generated method stub
+			return POSITION_NONE;
+		}
+		//获取fragmentHolder列表
+		public SparseArrayCompat<ScrollTabHolder> getScrollTabHolders() {
+			return mScrollTabHolders;
+		}
+	}
+	
+	/** 
+	 * 根据手机的分辨率从 px(像素) 的单位 转成为 dp 
+	 */  
+	public static int px2dip(Context context, float pxValue) {  
+		final float scale = context.getResources().getDisplayMetrics().density;  
+		return (int) (pxValue / scale + 0.5f);  
 	}
 
-	@Override
-	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onPageSelected(int position) {
-		// TODO Auto-generated method stub
-		setTag(position);
-
-	}
-
-	//	/**
-	//	 * 照片墙当高度变化的时候就会响应这个监听
-	//	 */
-	//	@Override
-	//	public void callBackHeight(int height) {
-	//		viewpagerHight = height;
-	//		LinearLayout.LayoutParams params = (LayoutParams) viewPager.getLayoutParams();
-	//		params.height = viewpagerHight;	
-	//		viewPager.setLayoutParams(params);
-	//	}
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		//上传照片：
-		case R.id.update_mine_img :
-			//Toast.makeText(getActivity(), "s", Toast.LENGTH_SHORT).show();			
-			Intent intent=new Intent(Intent.ACTION_PICK,null);
-			intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-			startActivityForResult(intent, 00);	
-			break;
-		case R.id.mine_btn_profile_iv:
-
-			break;
-			//点击设置
-		case R.id.setting_mine_fragment_rl:
-
+		case R.id.setting_mine_up_fragment_rl:
 			Intent intent2=new Intent(getActivity(),SystemSettingsActivity.class);
 			startActivity(intent2);
 			break;
-		default :
+		case R.id.update_mine_up_fragment_img:
+			break;
+		default:
 			break;
 		}
+		
 	}
+	
 	/**
 	 * 接收相册返回的图片并处理
 	 */
@@ -374,7 +459,7 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 				//TODO  刷新 照片列表
 				log.e("lucifer", "上传照片成功刷新照片列表");
 
-				((MinePhotoWallfragment)list.get(1)).reflesh();
+			//((MinePhotoWallfragment)list.get(1)).reflesh();
 			}
 			break;
 
@@ -383,100 +468,7 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-
-	public Bitmap getThumbnail(Uri uri,int size) throws FileNotFoundException, IOException{
-		InputStream input = getActivity().getContentResolver().openInputStream(uri);
-		BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
-		onlyBoundsOptions.inJustDecodeBounds = true;
-		onlyBoundsOptions.inDither=true;//optional
-		onlyBoundsOptions.inPreferredConfig=Bitmap.Config.ARGB_8888;//optional
-		BitmapFactory.decodeStream(input, null, onlyBoundsOptions);
-		input.close();
-		if ((onlyBoundsOptions.outWidth == -1) || (onlyBoundsOptions.outHeight == -1))
-			return null;
-		int originalSize = (onlyBoundsOptions.outHeight > onlyBoundsOptions.outWidth) ? onlyBoundsOptions.outHeight : onlyBoundsOptions.outWidth;
-		double ratio = (originalSize > size) ? (originalSize / size) : 1.0;
-		BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-		bitmapOptions.inSampleSize = getPowerOfTwoForSampleRatio(ratio);
-		bitmapOptions.inDither=true;//optional
-		bitmapOptions.inPreferredConfig=Bitmap.Config.ARGB_8888;//optional
-		input = getActivity().getContentResolver().openInputStream(uri);
-		Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
-		input.close();
-		return bitmap;
-	}
-	private static int getPowerOfTwoForSampleRatio(double ratio){
-		int k = Integer.highestOneBit((int)Math.floor(ratio));
-		if(k==0) return 1;
-		else return k;
-	}
-
-	/**
-	 * 动态设置viewpager的高度
-	 */
-	public void getBackHeight() {
-
-		viewpagerHight = DisplayUtils.getWindowHeight(getActivity())-DensityUtil.dip2px(getActivity(), 50+79)-1;
-		LinearLayout.LayoutParams params = (LayoutParams) viewPager.getLayoutParams();
-		params.height = viewpagerHight;	
-		viewPager.setLayoutParams(params);
-		log.e("lucifer", "viewpagerHight="+viewpagerHight);
-	}
-	/**
-	 * 根据scrollview滑动进行判断
-	 */
-	@Override
-	public void onScroll(final int scrollY) {
-
-		Log.e("lucifer", "滑动距离scrollY "+scrollY);
-		mscrollY=scrollY;
-		myScrollView.setOnTouchListener(new View.OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View arg0, MotionEvent event) {
-
-				if(scrollY<topHight) { 
-					return false;
-				} else {					
-					switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:
-						//按下了屏幕
-						positionY = event.getY();	
-						break;
-					case MotionEvent.ACTION_MOVE:
-						//移动了
-						float y=event.getY();
-						//判断下滑
-						if(y>positionY) {
-							//							Toast.makeText(getActivity(), "下移动了", Toast.LENGTH_LONG).show();
-							log.e("判断移动方向", "下移动了");
-							positionY = y;
-							return false;
-						}
-						Log.e("判断移动距离", "positionY "+positionY+" y "+y);
-						break;
-					default:
-						break;
-					}
-					return true;
-				}
-			}
-		});
-
-
-
-
-	}
-
-	/**
-	 * 从内存卡读缓存
-	 * @return
-	 */
-	public Bitmap readHead(){
-		String file=Environment.getExternalStorageDirectory()+"/user_header.png";
-		return BitmapFactory.decodeFile(file);
-	}
-
+	
 	private void showDialog(){
 		final  AlertDialog portraidlg=new AlertDialog.Builder(getActivity()).create();
 		portraidlg.show();
@@ -529,6 +521,7 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 
 
 	}
+	
 	/**
 	 * 调用系统的裁剪功能
 	 * @param uri
@@ -547,7 +540,7 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 		intent.putExtra("return-data",true);
 		startActivityForResult(intent,33);
 	}
-
+	
 	public String saveHeadImg(Bitmap head,boolean isY){
 		FileOutputStream fos=null;
 		String path = "";
@@ -642,5 +635,32 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 		}
 
 	}	
+	
+	public Bitmap getThumbnail(Uri uri,int size) throws FileNotFoundException, IOException{
+		InputStream input = getActivity().getContentResolver().openInputStream(uri);
+		BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
+		onlyBoundsOptions.inJustDecodeBounds = true;
+		onlyBoundsOptions.inDither=true;//optional
+		onlyBoundsOptions.inPreferredConfig=Bitmap.Config.ARGB_8888;//optional
+		BitmapFactory.decodeStream(input, null, onlyBoundsOptions);
+		input.close();
+		if ((onlyBoundsOptions.outWidth == -1) || (onlyBoundsOptions.outHeight == -1))
+			return null;
+		int originalSize = (onlyBoundsOptions.outHeight > onlyBoundsOptions.outWidth) ? onlyBoundsOptions.outHeight : onlyBoundsOptions.outWidth;
+		double ratio = (originalSize > size) ? (originalSize / size) : 1.0;
+		BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+		bitmapOptions.inSampleSize = getPowerOfTwoForSampleRatio(ratio);
+		bitmapOptions.inDither=true;//optional
+		bitmapOptions.inPreferredConfig=Bitmap.Config.ARGB_8888;//optional
+		input = getActivity().getContentResolver().openInputStream(uri);
+		Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
+		input.close();
+		return bitmap;
+	}
+	private static int getPowerOfTwoForSampleRatio(double ratio){
+		int k = Integer.highestOneBit((int)Math.floor(ratio));
+		if(k==0) return 1;
+		else return k;
+	}
 
 }

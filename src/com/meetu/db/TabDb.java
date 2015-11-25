@@ -4,6 +4,7 @@ package com.meetu.db;
 
 import com.meetu.R;
 import com.meetu.fragment.Miliaofragment;
+import com.meetu.fragment.MineUpfragment;
 import com.meetu.fragment.Minefragment;
 import com.meetu.fragment.HomePagefragment;
 import com.meetu.fragment.Messagefragment;
@@ -24,7 +25,7 @@ public class TabDb {
 		return ids;
 	}
 	public static Class[] getFragments(){
-		Class[] clz={HomePagefragment.class,Miliaofragment.class,Messagefragment.class,Minefragment.class};
+		Class[] clz={HomePagefragment.class,Miliaofragment.class,Messagefragment.class,MineUpfragment.class};
 		return clz;
 	}
 

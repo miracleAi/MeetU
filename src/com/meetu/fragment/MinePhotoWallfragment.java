@@ -17,6 +17,7 @@ import com.avos.avoscloud.LogUtil.log;
 import com.meetu.activity.mine.MinephotoActivity;
 import com.meetu.activity.mine.UpdatepictureActivity;
 import com.meetu.adapter.PhotoWallAdapter;
+import com.meetu.adapter.UserPhotoWallAdapter;
 import com.meetu.adapter.PhotoWallAdapter.GridViewHeightaListener;
 import com.meetu.adapter.StaggeredHomeAdapter;
 import com.meetu.adapter.StaggeredHomeAdapter.OnItemClickCallBack;
@@ -28,6 +29,7 @@ import com.meetu.entity.Middle;
 import com.meetu.entity.PhotoWall;
 import com.meetu.tools.BitmapCut;
 import com.meetu.view.MyRecyclerView.OnScrollListener;
+import com.meetu.view.ScrollTabHolderMineupFragment;
 
 import android.R.raw;
 import android.app.Activity;
@@ -60,19 +62,15 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBack{
-
-
-	private PullToRefreshGridView pview;
-	//	private PhotoWallAdapter adapter;
-	//	private List<PhotoWall> data=new ArrayList<PhotoWall>();
+public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment implements OnItemClickCallBack{
+	
 
 	private View view;
 	private LinearLayout newsList;
 
 	private RecyclerView mRecyclerView;
 
-	private StaggeredHomeAdapter mAdapter;
+	private UserPhotoWallAdapter mAdapter;
 	private GridViewHeightaListener gridViewHeightaListener;
 
 	//网络数据 相关
@@ -82,15 +80,26 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 	//网络请求下来的 图片信息
 	private List<ObjUserPhoto> objUserPhotos=new ArrayList<ObjUserPhoto>();
 
+	private StaggeredGridLayoutManager mLayoutMgr;
+	private int mScrollY;
+	private int mPosition;
 	private static final String ARG_POSITION = "position";
+	
 	public static Fragment newInstance(int position) {
-		MinePhotoWallfragment fragment = new MinePhotoWallfragment();
+		UserPhotoFragment fragment = new UserPhotoFragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_POSITION, position);
 		fragment.setArguments(args);
 		return fragment;
 	}
+	@Override
+	public void adjustScroll(int scrollHeight, int headerHeight) {
+		if (mRecyclerView == null) return;
 
+		mScrollY = headerHeight - scrollHeight;
+		//滑块偏移某值之后为零点，滑块偏移量与view运动方向相反
+		mLayoutMgr.scrollToPositionWithOffset(0, -mScrollY);   
+	}
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -101,29 +110,15 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 	@Override 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
 		if(view==null){
-
 			if (currentUser != null) {
 				//强制类型转换
 				user = AVUser.cast(currentUser, ObjUser.class);
 			}
-
 			view=inflater.inflate(R.layout.fragment_mine_photo_wall, null);
-			mRecyclerView=(RecyclerView) view.findViewById(R.id.id_RecyclerView);
-
-			mAdapter=new StaggeredHomeAdapter(getActivity(), objUserPhotos);			
-			mAdapter.setOnItemClickLitener(this);
-
-			mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager
-					(2,StaggeredGridLayoutManager.VERTICAL));
-			mRecyclerView.setAdapter(mAdapter);
+			mPosition = getArguments().getInt(ARG_POSITION);
+			initView();
 			loaddata();
-
-			//计算recycleview 的滑动距离
-
-
-
 		}
 		ViewGroup parent=(ViewGroup)view.getParent();
 		if(parent!=null){
@@ -133,11 +128,27 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 	}
 
 	private void initView() {
-		// TODO Auto-generated method stub
+		mRecyclerView=(RecyclerView) view.findViewById(R.id.id_RecyclerView);
+		mAdapter=new UserPhotoWallAdapter(getActivity(), objUserPhotos);			
+//		mAdapter.setOnItemClickLitener(this);
+		
+		mLayoutMgr = new StaggeredGridLayoutManager
+				(2,StaggeredGridLayoutManager.VERTICAL); 
+		mRecyclerView.setLayoutManager(mLayoutMgr);
+		mRecyclerView.setAdapter(mAdapter);
+		mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
-
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				super.onScrolled(recyclerView, dx, dy);
+				mScrollY += dy;
+				if (mScrollTabHolder != null) {
+					log.d("mytest", "zhixing");
+					mScrollTabHolder.onRecyclerViewScroll(recyclerView, mScrollY, mPosition);
+				}
+			}
+		});
 	}
-
 	public void setGridViewHeightaListener(GridViewHeightaListener gridViewHeightaListener) {
 		this.gridViewHeightaListener = gridViewHeightaListener;
 	}
@@ -148,14 +159,11 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 		super.setArguments(args);
 	}
 	private void loaddata(){
-
-
 		ObjUserPhotoWrap.queryUserPhoto(user, new ObjUserPhotoCallback() {
 
 			@Override
 			public void callback(List<ObjUserPhoto> objects, AVException e) {
 				// TODO Auto-generated method stub
-
 				objUserPhotos.addAll(objects);
 				//mAdapter=new StaggeredHomeAdapter(getActivity(), objUserPhotos);
 				//mRecyclerView.setAdapter(mAdapter);
@@ -169,16 +177,9 @@ public class MinePhotoWallfragment extends Fragment implements OnItemClickCallBa
 
 	@Override
 	public void onItemClick(int id) {
-		// TODO Auto-generated method stub
-		//		Toast.makeText(getActivity(), "点击了某个位置"+id, Toast.LENGTH_SHORT).show();
 		Intent intent =new Intent(super.getActivity(),MinephotoActivity.class);
-		//		Bundle bundle = new Bundle();
-		//		bundle.putSerializable("PhotoWall",id);
-		//		
-		//		intent.putExtras(bundle);
 		intent.putExtra("photolist", (Serializable)objUserPhotos);
 		intent.putExtra("id", ""+id);
-
 		log.e("lucifer", "id=="+id);
 		startActivity(intent);
 		getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);

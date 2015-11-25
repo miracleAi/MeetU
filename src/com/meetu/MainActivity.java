@@ -1,6 +1,7 @@
 package com.meetu;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -16,7 +17,9 @@ import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.common.ChatConnection;
 import com.meetu.db.TabDb;
+import com.meetu.fragment.MineUpfragment;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.view.ScrollTabHolder;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -25,12 +28,14 @@ import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +50,8 @@ public class MainActivity extends FragmentActivity implements OnTabChangeListene
 	private ArrayList<Fragment> fragList=null;
 	private BoardPageFragmentAdapter adapter;
 	private String pageString;
+	
+	public static MineUpfragment fMineUpfragment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,17 +68,35 @@ public class MainActivity extends FragmentActivity implements OnTabChangeListene
 		initTab();	
 		pageString=super.getIntent().getStringExtra("page");
 		
-	//	isConnection();
+	//	fMineUpfragment=(MineUpfragment) MainActivity.this.getSupportFragmentManager().getFragments().get(3);
+		
+	//	fMineUpfragment=new MineUpfragment();
+		
+
 		ChatConnection.isConnection();
 		
 	}
 	
+	@Override
+	public void onAttachFragment(Fragment fragment) {
+		// 获得fragment实例
+		log.e("zcq", "fragment.toString()=="+fragment.toString().subSequence(0, 6));
+		super.onAttachFragment(fragment);
+		if(fragment.toString().subSequence(0, 6).equals("MineUp")){
+			log.e("zcq", "实例化fragment成功");
+			fMineUpfragment=(MineUpfragment)fragment;
+			return;
+		}
+		
+		
+	}
+
 	private void initTab(){
 		String tabs[]=TabDb.getTabsTxt();
 		for(int i=0;i<tabs.length;i++){
 			TabSpec tabSpec=tabHost.newTabSpec(tabs[i]).setIndicator(getTabView(i));
 			tabHost.addTab(tabSpec,TabDb.getFragments()[i],null);
-			tabHost.setTag(i);		
+			tabHost.setTag(""+i);		
 		}
 	}
 	private View getTabView(int idx){
@@ -124,47 +149,15 @@ public class MainActivity extends FragmentActivity implements OnTabChangeListene
 		}
 	}
 	
-	/**
-	 * 
-	 * 判断是否连接了长连接  
-	 * @author lucifer
-	 * @date 2015-11-24
-	 */
-//	private void isConnection(){
-//		chatClient = AVIMClient.getInstance(AVUser.getCurrentUser().getObjectId());
-//		ObjChatMessage.getClientStatus(MyApplication.chatClient, new ObjFunBooleanCallback() {
-//			
-//			@Override
-//			public void callback(boolean result, AVException e) {
-//				// TODO Auto-generated method stub
-//				if(e!=null){
-//					log.e("zcq", e);
-//					return;
-//				}else if(result){
-//					log.e("zcq", "已经建立过长连接");
-//				}else{
-//					ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
-//						
-//						@Override
-//						public void callback(AVIMClient client, AVException e) {							
-//							if(e != null){
-//								log.e("zcq", e);
-//								return ;
-//							}
-//							if(client != null){
-//								MyApplication.chatClient = client;
-//								log.e("zcq", "连接聊天长连接成功");
-//								
-//							}else{
-//								log.e("zcq", "连接聊天长连接失败");
-//								
-//							}
-//						}
-//					});
-//					
-//				}
-//			}
-//		});
-//	}
+	public static Fragment  getFragment(){
+//		List<Fragment> list=MainActivity.this.getSupportFragmentManager().getFragments();
+//		return list.get(3);
+		
+		return fMineUpfragment;
+	}
+
+	
+	
+
 
 }

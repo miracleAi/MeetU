@@ -15,6 +15,8 @@ import com.meetu.common.SchoolDao;
 import com.meetu.entity.Schools;
 import com.meetu.sqlite.CityDao;
 import com.meetu.tools.DateUtils;
+import com.meetu.view.NotifyingScrollView;
+import com.meetu.view.ScrollTabHolderMineupFragment;
 
 import android.R.raw;
 import android.app.Activity;
@@ -34,12 +36,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MinePersonalInformation extends Fragment implements OnClickListener{
+public class MinePersonalInformation extends ScrollTabHolderMineupFragment implements OnClickListener{
 	//控件相关
 	private View view;
+	NotifyingScrollView mScrollView;
 	private ImageView ivman_selector,ivwoman_selector;
 	private TextView username,usersex,userbirthday,userConstellation;
 	private TextView userschool,usergrade,usermajor,userhometown;
@@ -54,6 +58,7 @@ public class MinePersonalInformation extends Fragment implements OnClickListener
 	private SchoolDao schoolDao=new SchoolDao();
 	
 	private static final String ARG_POSITION = "position";
+	private int mPosition;
 	public static Fragment newInstance(int position) {
 		MinePersonalInformation fragment = new MinePersonalInformation();
         Bundle args = new Bundle();
@@ -61,6 +66,13 @@ public class MinePersonalInformation extends Fragment implements OnClickListener
         fragment.setArguments(args);
         return fragment;
     }
+	//滑动相关，调整view位置
+		@Override
+		public void adjustScroll(int scrollHeight, int headerHeight) {
+			if (mScrollView == null) return;
+			mScrollView.scrollTo(0, headerHeight - scrollHeight);
+		}
+		
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -81,6 +93,15 @@ public class MinePersonalInformation extends Fragment implements OnClickListener
 		if(parent!=null){
 			parent.removeView(view);
 		}
+		mScrollView.setOnScrollChangedListener(new NotifyingScrollView.OnScrollChangedListener() {
+			@Override
+			public void onScrollChanged(ScrollView view, int l, int t, int oldl, int oldt) {
+				if (mScrollTabHolder != null) {
+					mScrollTabHolder.onScrollViewScroll(view, l, t, oldl, oldt, mPosition);
+				}
+			}
+		});
+		mPosition = getArguments().getInt(ARG_POSITION);
 		return view;
 	}
 	private void initView(){
@@ -89,7 +110,7 @@ public class MinePersonalInformation extends Fragment implements OnClickListener
 			//强制类型转换
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
-
+		mScrollView = (NotifyingScrollView) view.findViewById(R.id.scrollview_mine_fragment);
 		username=(TextView) view.findViewById(R.id.minesetting_username_tv);
 		usersex=(TextView) view.findViewById(R.id.minesetting_sex_tv);
 		userbirthday=(TextView) view.findViewById(R.id.minesetting_birthday_tv);

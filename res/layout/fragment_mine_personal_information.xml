@@ -1,252 +1,273 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.meetu.view.NotifyingScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollview_mine_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:background="#80eeeeee">
- <ScrollView android:layout_width="match_parent"
-     android:layout_height="wrap_content">
-<LinearLayout 
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-   
+    android:fillViewport="true"
+    android:scrollbars="none" >
+
     <LinearLayout
-        android:id="@+id/minesetting_username_ll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/item_bg"
+        android:layout_height="match_parent"
         android:orientation="vertical" >
-        <View
+
+        <include layout="@layout/header_placeholder" />
+
+        <LinearLayout
+            android:id="@+id/minesetting_username_ll"
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginBottom="5dp"
-            android:background="#cccccc" />
-        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/item_bg"
+            android:orientation="vertical" >
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginBottom="5dp"
+                android:background="#cccccc" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="昵称"
+                    android:textColor="@color/textColor_setting_Tip"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/minesetting_username_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/textView1"
+                    android:background="@null"
+                    android:text="lucifer"
+                    android:textColor="@color/textColor_setting" />
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/mine_tvcell_img_next" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="5dp"
+                android:background="#cccccc" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/minesetting_sex_ll"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical" >
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="20dp"
-                android:text="昵称"
-                android:textSize="14dp"
-                android:textColor="@color/textColor_setting_Tip" />
-            <TextView
-                android:id="@+id/minesetting_username_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="5dp"
-                android:background="@null"
-                android:layout_toRightOf="@+id/textView1"
-                android:textColor="@color/textColor_setting"
-                android:text="lucifer" />
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/mine_tvcell_img_next" />
-        </RelativeLayout>
-        <View
+            android:layout_height="wrap_content"
+            android:background="@drawable/item_bg"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:id="@+id/sex_tag_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="性别"
+                    android:textColor="@color/textColor_setting_Tip" />
+
+                <TextView
+                    android:id="@+id/minesetting_sex_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/sex_tag_tv"
+                    android:text="男"
+                    android:textColor="@color/textColor_setting" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="5dp"
+                android:background="#cccccc" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/minesetting_birthday_ll"
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="5dp"
-            android:background="#cccccc" />
-    </LinearLayout>
-    
+            android:layout_height="wrap_content"
+            android:background="@drawable/item_bg"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:id="@+id/birth_tag_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="生日"
+                    android:textColor="@color/textColor_setting_Tip" />
+
+                <TextView
+                    android:id="@+id/minesetting_birthday_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/birth_tag_tv"
+                    android:text="1995-06-06"
+                    android:textColor="@color/textColor_setting" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/mine_tvcell_img_next" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="5dp"
+                android:background="#cccccc" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/minesetting_Constellation_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/item_bg"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:id="@+id/conste_tag_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="星座"
+                    android:textColor="@color/textColor_setting_Tip" />
+
+                <TextView
+                    android:id="@+id/minesetting_Constellation_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/conste_tag_tv"
+                    android:text="双鱼座"
+                    android:textColor="@color/textColor_setting" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/mine_tvcell_img_next" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="5dp"
+                android:background="#cccccc" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/minesetting_school_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/item_bg"
+            android:orientation="vertical" >
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="#cccccc" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:id="@+id/school_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="学校"
+                    android:textColor="@color/textColor_setting_Tip" />
+
+                <TextView
+                    android:id="@+id/minesetting_school_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/school_tv"
+                    android:text="北京大学"
+                    android:textColor="@color/textColor_setting" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/mine_tvcell_img_next" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="5dp"
+                android:background="#cccccc" />
+        </LinearLayout>
+<!--
     <LinearLayout
-        android:id="@+id/minesetting_sex_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:background="@drawable/item_bg"      
-        android:orientation="vertical" >
-      
-        <RelativeLayout           
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center_vertical" >
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="20dp"
-                android:text="性别"
-                 android:textColor="@color/textColor_setting_Tip"/>
-            <TextView
-                android:id="@+id/minesetting_sex_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/textView1"
-                 android:textColor="@color/textColor_setting"
-                android:text="男" />
-            
-        </RelativeLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="5dp"
-            android:background="#cccccc" />
-    </LinearLayout>
-    
-    <LinearLayout
-        android:id="@+id/minesetting_birthday_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:background="@drawable/item_bg"      
-        android:orientation="vertical" >
-      
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center_vertical" >
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="20dp"
-                android:text="生日"
-                 android:textColor="@color/textColor_setting_Tip" />
-            <TextView
-                android:id="@+id/minesetting_birthday_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/textView1"
-                 android:textColor="@color/textColor_setting"
-                android:text="1995-06-06" />
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-               android:layout_marginRight="10dp"
-                android:src="@drawable/mine_tvcell_img_next" />
-        </RelativeLayout>
-        <View
-            android:layout_width="match_parent"
-           android:layout_height="1px"
-            android:layout_marginTop="5dp"
-            android:background="#cccccc" />
-    </LinearLayout>
-    
-    <LinearLayout
-        android:id="@+id/minesetting_Constellation_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:background="@drawable/item_bg"      
-        android:orientation="vertical" >
-      
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center_vertical" >
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="20dp"
-                android:text="星座"
-                 android:textColor="@color/textColor_setting_Tip" />
-            <TextView
-                android:id="@+id/minesetting_Constellation_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/textView1"
-                 android:textColor="@color/textColor_setting"
-                android:text="双鱼座" />
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/mine_tvcell_img_next" />
-        </RelativeLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="5dp"
-            android:background="#cccccc" />
-    </LinearLayout>
-    
-    
-    <LinearLayout
-        android:id="@+id/minesetting_school_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:layout_marginTop="20dp"  
-        android:background="@drawable/item_bg"    
-        android:orientation="vertical" >
-        
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="#cccccc" />
-      
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center_vertical" >
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="20dp"
-                android:text="学校"
-                 android:textColor="@color/textColor_setting_Tip" />
-            <TextView
-                android:id="@+id/minesetting_school_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/textView1"
-                 android:textColor="@color/textColor_setting"
-                android:text="北京大学" />
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/mine_tvcell_img_next" />
-        </RelativeLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="5dp"
-            android:background="#cccccc" />
-    </LinearLayout>
-  <!--   <LinearLayout
         android:id="@+id/minesetting_grade_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
@@ -289,134 +310,147 @@
             android:layout_height="1dp"
             android:layout_marginTop="5dp"
             android:background="#cccccc" />
-    </LinearLayout> -->
-    <LinearLayout
-        android:id="@+id/minesetting_major_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:background="@drawable/item_bg"      
-        android:orientation="vertical" >
-      
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center_vertical" >
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="20dp"
-                android:text="专业"
-                 android:textColor="@color/textColor_setting_Tip" />
-            <TextView
-                android:id="@+id/minesetting_major_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/textView1"
-                 android:textColor="@color/textColor_setting"
-                android:text="美术" />
-            <ImageView
-                android:id="@+id/minesetting_major_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/mine_tvcell_img_next" />
-        </RelativeLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="5dp"
-            android:background="#cccccc" />
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/minesetting_hometown_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:background="@drawable/item_bg"      
-        android:orientation="vertical" >
-      
-        <RelativeLayout
+-->
+
+
+        <LinearLayout
+            android:id="@+id/minesetting_major_ll"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center_vertical" >
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="20dp"
-                android:text="家乡"
-                 android:textColor="@color/textColor_setting_Tip" />
-            <TextView
-                android:id="@+id/minesetting_hometown_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/textView1"
-                 android:textColor="@color/textColor_setting"
-                android:text="北京 北京" />
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/mine_tvcell_img_next" />
-        </RelativeLayout>
-        <View
+            android:layout_height="wrap_content"
+            android:background="@drawable/item_bg"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:id="@+id/major_tag_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="专业"
+                    android:textColor="@color/textColor_setting_Tip" />
+
+                <TextView
+                    android:id="@+id/minesetting_major_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/major_tag_tv"
+                    android:text="美术"
+                    android:textColor="@color/textColor_setting" />
+
+                <ImageView
+                    android:id="@+id/minesetting_major_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/mine_tvcell_img_next" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="5dp"
+                android:background="#cccccc" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/minesetting_hometown_ll"
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="5dp"
-            android:background="#cccccc" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/item_bg"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:id="@+id/home_tag_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="家乡"
+                    android:textColor="@color/textColor_setting_Tip" />
+
+                <TextView
+                    android:id="@+id/minesetting_hometown_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/home_tag_tv"
+                    android:text="北京 北京"
+                    android:textColor="@color/textColor_setting" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/mine_tvcell_img_next" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="5dp"
+                android:background="#cccccc" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="真诚以待 以个人信息开始"
+                    android:textColor="#bfbfbf"
+                    android:textSize="10dp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" 
+                android:layout_marginBottom="150dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Meet U致力于打造轻松健康有趣的交友平台"
+                    android:textColor="#bfbfbf"
+                    android:textSize="10dp" />
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
-    <LinearLayout 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        >
-        <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        >
-            <TextView 
-                android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="10dp"
-        android:textColor="#bfbfbf"
-        android:text="真诚以待 以个人信息开始"/>          
-        </RelativeLayout>      
-    </LinearLayout>
-    
-    <LinearLayout 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        >
-        <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        >
-            <TextView 
-                android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="10dp"
-        android:textColor="#bfbfbf"
-        android:text="Meet U致力于打造轻松健康有趣的交友平台"/>          
-        </RelativeLayout>      
-    </LinearLayout>
-</LinearLayout>
-</ScrollView>
-</LinearLayout>
+
+</com.meetu.view.NotifyingScrollView>

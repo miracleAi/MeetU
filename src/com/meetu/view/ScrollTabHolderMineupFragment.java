@@ -12,7 +12,7 @@ import android.widget.ScrollView;
  * Created by desmond on 12/4/15.
  */
 //我的板块，fragment父类
-public class ScrollTabHolderFragment extends Fragment implements ScrollTabHolder {
+public class ScrollTabHolderMineupFragment extends Fragment implements ScrollTabHolder {
 
     protected ScrollTabHolder mScrollTabHolder;
 

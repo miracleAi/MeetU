@@ -106,28 +106,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 	}
 	private static void loadEmoji(Context context) {
 		 
-//		try {
-//			 InputStream is = context.getAssets().open("expressionImage_custom.xml");
-//			  parser = new XmlEmojifPullHelper();  
-////			 parser=new XmlEmojiSaxBookParser();
-//				chatEmojis = parser.parse(is);
-//				 for (ChatEmoji emoji : chatEmojis) {
-//              //根据String类型id获取对应资源id
-//		              int resID = context.getResources().getIdentifier(emoji.getFaceName(),
-//								"drawable", context.getPackageName());
-//		              log.e("lucifer222222","name"+emoji.getFaceName()+" resID=="+resID);		              
-//		              emoji.setId(resID);
-//		                
-//		          }  
-//		} catch (IOException e1) {
-//			log.e("2",e1);
-//			e1.printStackTrace();
-//		} 
-//		 catch (Exception e) {
-//			
-//			 log.e("3", e);
-//			e.printStackTrace();
-//		}  
+
 		
 		emojisDao=new EmojisDao(context);
          
@@ -138,36 +117,11 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 	 * 测试
 	 */
 	private void testMessages() {
-		// TODO Auto-generated method stub
-//		 messagesDao=new MessagesDao(getActivity());
-//		 Messages messages=new Messages();
-//		 messages.setConversationID("1");
-//		 messages.setConversationType(1);//1 表示觅聊 0表示 单聊 2表示  活动群聊
-//		 messages.setTimeOver((new Date()).getTime());
-//	 
-//		 messages.setUnreadMsgCount(200);
-//		 
-//
-//		 messagesDao.insert(messages);
-//		 
-//		 mdataListCache=messagesDao.getMessages("");
-//		
+
 	}
 
 	private void loadData() {
-//		// TODO Auto-generated method stub
-//		mdataList=new ArrayList<Messages>();
-//		Messages item=new Messages();
-//		mdataList.add(item);
-//		
-//		Messages item2=new Messages();
-//		mdataList.add(item2);
-//		
-//		Messages item3=new Messages();
-//		mdataList.add(item3);
-//		
-//		Messages item4=new Messages();
-//		mdataList.add(item4);
+
 		
 		ArrayList<Messages> list = messagesDao.getMessages(user.getObjectId());
 		log.e("zcq", "user.getObjectId()======"+user.getObjectId());
@@ -200,7 +154,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 
 	@Override
 	public void setArguments(Bundle args) {
-		// TODO Auto-generated method stub
+		
 		super.setArguments(args);
 	}
 
@@ -291,15 +245,13 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 					log.e("zcq", e);
 					return;  
 				}
-//				clickBtn.setText(QUERYLOCALCOVERSATION);
+
 				ArrayList<AVIMConversation> convList = new ArrayList<AVIMConversation>();
 				for(AVIMConversation conversation:objects){
 					convList.add(conversation);
 				}
 				if(convList.size()>0){
-					//用第一条测试修改
-//					conversationId = convList.get(0).getConversationId();
-					//保存到数据库
+
 					ArrayList<Messages> list = new ArrayList<Messages>();
 					log.e("zcq", "user.getObjectId()=="+user.getObjectId());
 					for(int i=0;i<convList.size();i++){

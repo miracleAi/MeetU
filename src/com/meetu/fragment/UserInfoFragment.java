@@ -31,7 +31,7 @@ import com.meetu.tools.DateUtils;
 import com.meetu.view.NotifyingScrollView;
 import com.meetu.view.ScrollTabHolderFragment;
 
-public class UserInfoFragment extends ScrollTabHolderFragment implements OnClickListener{
+public class UserInfoFragment extends ScrollTabHolderFragment implements OnClickListener {
 	//控件相关
 	private View view;
 	NotifyingScrollView mScrollView;
