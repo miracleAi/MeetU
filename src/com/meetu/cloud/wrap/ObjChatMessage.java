@@ -143,6 +143,48 @@ public class ObjChatMessage {
 
 	}
 	/**
+	 * 自身退出会话
+	 * */
+	public static void userQuitConv(AVIMConversation conv,final ObjFunBooleanCallback callback){
+		conv.quit(new AVIMConversationCallback() {
+			
+			@Override
+			public void done(AVIMException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					callback.callback(false, e);
+					return ;
+				}else{
+					//退出成功
+					callback.callback(true, null);
+				}
+			}
+		});
+	}
+	/***
+	 * 踢出成员
+	 * @param memberId 被踢出者ID
+	 * @param conv 会话
+	 * @param callback
+	 */
+	 
+	public static void deleteMember(String memberId,AVIMConversation conv,final ObjFunBooleanCallback callback){
+		conv.kickMembers(Arrays.asList(memberId), new AVIMConversationCallback() {
+			
+			@Override
+			public void done(AVIMException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					callback.callback(false, e);
+					return ;
+				}else{
+					//踢出成功
+					callback.callback(true, null);
+				}
+			}
+		});
+	}
+	/**
 	 * 查询会话成员数量
 	 * */
 	public static void getChatCount(AVIMConversation conv,final ObjFunCountCallback callback){

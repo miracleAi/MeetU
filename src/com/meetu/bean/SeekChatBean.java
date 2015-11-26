@@ -2,6 +2,8 @@ package com.meetu.bean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.meetu.cloud.object.ObjUser;
 
@@ -10,13 +12,13 @@ public class SeekChatBean {
 	//会话ID
 	private String conversationId;
 	//创建日期
-	private String createAt;
+	private long createAt;
 	//创建者
 	private ObjUser creator;
 	//我关注的人数
 	private int followeeCount;
-	//觅聊成员
-	private ArrayList<HashMap<String, Object>> members;
+	//觅聊成员（isAttention:int,userId:String）是否关注，成员ID
+	private List<Map<String, Object>> members;
 	//觅聊ID
 	private String objectId;
 	//图片URL
@@ -31,10 +33,10 @@ public class SeekChatBean {
 	public void setConversationId(String conversationId) {
 		this.conversationId = conversationId;
 	}
-	public String getCreateAt() {
+	public long getCreateAt() {
 		return createAt;
 	}
-	public void setCreateAt(String createAt) {
+	public void setCreateAt(long createAt) {
 		this.createAt = createAt;
 	}
 	public ObjUser getCreator() {
@@ -49,10 +51,10 @@ public class SeekChatBean {
 	public void setFolloweeCount(int followeeCount) {
 		this.followeeCount = followeeCount;
 	}
-	public ArrayList<HashMap<String, Object>> getMembers() {
+	public List<Map<String, Object>> getMembers() {
 		return members;
 	}
-	public void setMembers(ArrayList<HashMap<String, Object>> members) {
+	public void setMembers(List<Map<String, Object>> members) {
 		this.members = members;
 	}
 	public String getObjectId() {

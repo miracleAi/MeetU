@@ -1,5 +1,7 @@
 package com.meetu;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,7 @@ import com.meetu.cloud.callback.ObjFunObjectCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjChatWrap;
 
+import android.R.array;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -28,6 +31,7 @@ public class TestSeekChat extends Activity{
 	TextView infoTv;
 	ObjUser user = null;
 	SeekChatInfoBean chatBean = null;
+	ArrayList<SeekChatBean> seekList = new ArrayList<SeekChatBean>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -90,11 +94,35 @@ public class TestSeekChat extends Activity{
 						//有觅聊 
 						chatBean.setSeekChatCount((Integer) object.get("seekChatCount"));
 						log.d("mytest", "seekChatCount"+chatBean.getSeekChatCount());
-						if(chatBean.getSeekChatCount() >0){
-							chatBean.setChatList((List<Map<String, Object>>)object.get("seekChats"));
-							log.d("mytest", "seekChats="+chatBean.getChatList());
-							List<Map<String, Object>> members = (List<Map<String, Object>>) chatBean.getChatList().get(0).get("members");
-							//log.d("mytest", "members"+members);
+						if(chatBean.getSeekChatCount() == 0){
+							return;
+						}
+						//createAt是Date类型，timeChatStop为long类型，取值是注意
+						chatBean.setChatList((List<Map<String, Object>>)object.get("seekChats"));
+						log.d("mytest", "seekChats="+chatBean.getChatList());
+						for(int i=0;i<chatBean.getSeekChatCount();i++){
+							SeekChatBean bean = new SeekChatBean();
+							List<Map<String,Object>> members = (List<Map<String, Object>>) chatBean.getChatList().get(i).get("members");
+							bean.setMembers(members);
+							log.d("mytest", "members"+members);
+							bean.setConversationId((String) object.get("conversationId"));
+							log.d("mytest", "conversationId"+bean.getConversationId());
+							AVUser avUser = (AVUser) object.get("creator");
+							bean.setCreator(AVUser.cast(avUser, ObjUser.class));
+							log.d("mytest", "creator"+bean.getCreator());
+							bean.setFolloweeCount((Integer) object.get("followeeCount"));
+							log.d("mytest", "followeeCount"+bean.getFolloweeCount());
+							Date date = (Date) object.get("createdAt");
+							bean.setCreateAt(date.getTime());
+							log.d("mytest", "createdAt"+bean.getCreateAt());
+							bean.setObjectId((String) object.get("objectId"));
+							log.d("mytest", "objectId"+bean.getObjectId());
+							bean.setPictureUrl((String) object.get("pictureUrl"));
+							log.d("mytest", "pictureUrl"+bean.getPictureUrl()); 
+							bean.setTitle((String) object.get("title"));
+							log.d("mytest", "title"+bean.getTitle());
+							bean.setTimeChatStop((Long) object.get("timeChatStop"));
+							log.d("mytest", "timeChatStop"+bean.getTimeChatStop());
 						}
 					
 					}
