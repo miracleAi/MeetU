@@ -195,7 +195,9 @@
         android:inputType="number"
         android:background="@null"
         android:visibility="visible"
+        android:cursorVisible="false"
         android:maxLength="6"
+        android:textColor="@color/white"
          >
 
         <requestFocus />

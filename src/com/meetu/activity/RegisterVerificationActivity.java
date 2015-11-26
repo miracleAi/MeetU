@@ -303,13 +303,13 @@ public class RegisterVerificationActivity extends Activity implements OnClickLis
 		case R.id.four_yanzheng_wangji_et:
 		case R.id.five_yanzheng_wangji_et:
 		case R.id.six_yanzheng_wangji_et:
-			allEditText.setFocusable(true);
+			//allEditText.setFocusable(true);
 			allEditText.requestFocus();
 			InputMethodManager inputManager = (InputMethodManager)allEditText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);    
 			inputManager.showSoftInput(allEditText, 0); 
-			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-			allEditText.requestFocusFromTouch();
+			/*InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+			inputManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+			allEditText.requestFocusFromTouch();*/
 			log.e("lucifer","dianji");
 			break;
 

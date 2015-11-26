@@ -223,6 +223,21 @@ public class ObjChatMessage {
 			}
 		});
 	}
+	//会话同步
+	public static void fatchConversation(AVIMConversation conv,final ObjFunBooleanCallback callback){
+		conv.fetchInfoInBackground(new AVIMConversationCallback() {
+			
+			@Override
+			public void done(AVIMException e) {
+				// TODO Auto-generated method stub
+				if(e == null){
+					callback.callback(true, null);
+				}else{
+					callback.callback(false, e);
+				}
+			}
+		});
+	}
 	/**
 	 *获取会话成员
 	 * */

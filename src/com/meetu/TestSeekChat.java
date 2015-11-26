@@ -111,7 +111,7 @@ public class TestSeekChat extends Activity{
 							bean.setCreator(AVUser.cast(avUser, ObjUser.class));
 							log.d("mytest", "creator"+bean.getCreator());
 							bean.setFolloweeCount((Integer) object.get("followeeCount"));
-							log.d("mytest", "followeeCount"+bean.getFolloweeCount());
+							 log.d("mytest", "followeeCount"+bean.getFolloweeCount());
 							Date date = (Date) object.get("createdAt");
 							bean.setCreateAt(date.getTime());
 							log.d("mytest", "createdAt"+bean.getCreateAt());
