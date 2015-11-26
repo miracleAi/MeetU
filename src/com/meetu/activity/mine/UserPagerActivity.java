@@ -17,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnTouchListener;
@@ -24,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
@@ -153,9 +155,7 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 			//此处为测试，应为对应用户头像
 			headURl=user.getProfileClip().getUrl();
 		}
-		
-		
-		
+
 	}
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -177,7 +177,7 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 	//viewpager滑动时间监听
 	private ViewPager.OnPageChangeListener getViewPagerPageChangeListener () {
 		ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener() {
-			@SuppressLint("NewApi")
+			@SuppressLint("NewApi") 
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 				int currentItem = userPager.getCurrentItem();

@@ -2,6 +2,7 @@ package com.meetu.cloud.object;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import com.avos.avoscloud.AVClassName;
 import com.avos.avoscloud.AVFile;
@@ -33,6 +34,14 @@ public class ObjChat extends AVObject implements Serializable{
 	 *  觅聊结束时间（前台计算所得）
 	 */
 	private static final String TIMECHATSTOP = "timeChatStop";
+	/**
+	 * 觅聊成员列表
+	 * */
+	private static final String MEMBER = "member";
+	/**
+	 * 觅聊成员数
+	 * */
+	private static final String MEMBERCOUNT = "memberCount";
 	public ObjChat() {
 		// TODO Auto-generated constructor stub
 	}
@@ -41,6 +50,18 @@ public class ObjChat extends AVObject implements Serializable{
 	}
 	public void setUser(ObjUser user) {
 		this.put(USER, user);;
+	}
+	public int getMember() {
+		return this.getInt(MEMBER);
+	}
+	public void setMember(ArrayList<String> members) {
+		this.put(MEMBER, members);;
+	}
+	public int getMemberCount() {
+		return this.getInt(MEMBERCOUNT);
+	}
+	public void setMemberCount(int memberCount) {
+		this.put(MEMBERCOUNT, memberCount);
 	}
 	public int getChatStatus() {
 		return this.getInt(CHATSTATUS);

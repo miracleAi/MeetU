@@ -151,9 +151,9 @@ public class Minefragment extends Fragment implements OnPageChangeListener,OnChe
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
-					//showDialog();
-					Intent intent = new Intent(getActivity(),UserPagerActivity.class);
-					startActivity(intent);
+					showDialog();
+					/*Intent intent = new Intent(getActivity(),UserPagerActivity.class);
+					startActivity(intent);*/
 				}
 			});
 

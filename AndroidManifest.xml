@@ -95,6 +95,10 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name="com.meetu.TestSeekChat"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name="com.meetu.activity.mine.UserPagerActivity"
             android:label="@string/app_name" >
         </activity>
