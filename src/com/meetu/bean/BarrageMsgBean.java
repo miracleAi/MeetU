@@ -3,12 +3,19 @@ package com.meetu.bean;
 import com.meetu.cloud.object.ObjUser;
 
 public class BarrageMsgBean {
+	String id;
 	String content;
 	String userId;
 	ObjUser user;
 	String time;
 	long sendTime;
 	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public long getSendTime() {
 		return sendTime;
 	}
