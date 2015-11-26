@@ -2,8 +2,11 @@ package com.meetu.activity.mine;
 
 import java.util.ArrayList;
 
+import net.tsz.afinal.FinalBitmap;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -22,13 +25,17 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.lidroid.xutils.BitmapUtils;
 import com.meetu.R;
+import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.fragment.UserInfoFragment;
 import com.meetu.fragment.UserPhotoFragment;
+import com.meetu.myapplication.MyApplication;
 import com.meetu.view.CustomViewPager;
 import com.meetu.view.ScrollTabHolder;
 import com.meetu.view.SlidingTabLayout;
@@ -73,6 +80,8 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 	private boolean isTopScroll=true;
 	//滑动距离
 	private float tempA=285;
+	
+	private FinalBitmap finalBitmap;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -80,8 +89,16 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.getWindow();
 		setContentView(R.layout.userpager_layout);
+		
+		Intent intent=getIntent();
+		//取到用户的id
+		userId=intent.getStringExtra("userId");
+		
+		MyApplication app=(MyApplication) this.getApplicationContext();
+		finalBitmap=app.getFinalBitmap();
 		initValues();
 		initView();
+		getUserInfo(userId);
 		if (savedInstanceState != null) {
 			//imgView.setTranslationY(savedInstanceState.getFloat(IMAGE_TRANSLATION_Y));
 			headView.setTranslationY(savedInstanceState.getFloat(HEADER_TRANSLATION_Y));
@@ -136,10 +153,9 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 			//此处为测试，应为对应用户头像
 			headURl=user.getProfileClip().getUrl();
 		}
-		if(headURl!=null){
-			// 加载网络图片
-			bitmapUtils.display(userProfileImv, headURl);
-		}
+		
+		
+		
 	}
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -254,11 +270,11 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 			Fragment fragment;
 			switch (position) {
 			case 0:
-				fragment = UserInfoFragment.newInstance(0);
+				fragment = UserInfoFragment.newInstance(0,userId);
 				break;
 
 			case 1:
-				fragment = UserPhotoFragment.newInstance(1);
+				fragment = UserPhotoFragment.newInstance(1,userId);
 				break;
 
 
@@ -310,5 +326,27 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 	public static int px2dip(Context context, float pxValue) {  
 		final float scale = context.getResources().getDisplayMetrics().density;  
 		return (int) (pxValue / scale + 0.5f);  
+	}
+	
+	
+	/**
+	 * 根据创建者用户id 获取用户相关信息
+	 * @param objId  
+	 * @author lucifer
+	 * @date 2015-11-17
+	 */
+	private void getUserInfo(String objId){
+		ObjUserWrap.getObjUser(objId, new ObjUserInfoCallback() {
+			
+			@Override
+			public void callback(ObjUser user, AVException e) {
+				
+				if(user.getProfileClip()!=null){
+					finalBitmap.display(userProfileImv, user.getProfileClip().getUrl());
+				}
+				userNameTv.setText(user.getNameNick());
+				
+			}
+		});
 	}
 }

@@ -161,10 +161,15 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment imple
 		userConstellation.setText(user.getConstellation());
 		userschool.setText(user.getSchool());
 		usermajor.setText(user.getDepartment());
-		String homeString=""+cityDao.getCity(user.getHometown()).get(0).getPrivance()+
-				cityDao.getCity(user.getHometown()).get(0).getCity()+
-				cityDao.getCity(user.getHometown()).get(0).getTown();
-		userhometown.setText(homeString);
+		if(user.getHometown()!=null||!user.getHometown().equals("")){
+			String homeString=""+cityDao.getCity(user.getHometown()).get(0).getPrivance()+
+					cityDao.getCity(user.getHometown()).get(0).getCity()+
+					cityDao.getCity(user.getHometown()).get(0).getTown();
+			userhometown.setText(homeString);
+		}else{
+			userhometown.setText("");
+		}
+		
 	}
 
 	@Override

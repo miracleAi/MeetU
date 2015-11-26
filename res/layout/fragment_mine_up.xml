@@ -165,6 +165,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
         android:src="@drawable/mine_photoview_btn_add"
-        android:visibility="gone" />
+        android:visibility="gone"
+         />
 
 </RelativeLayout>

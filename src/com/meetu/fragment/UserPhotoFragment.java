@@ -32,8 +32,9 @@ import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.cloud.wrap.ObjUserPhotoWrap;
 import com.meetu.view.ScrollTabHolderFragment;
+import com.meetu.view.ScrollTabHolderMineupFragment;
 
-public class UserPhotoFragment extends ScrollTabHolderFragment implements OnItemClickCallBack{
+public class UserPhotoFragment extends ScrollTabHolderMineupFragment implements OnItemClickCallBack{
 
 
 	private View view;
@@ -55,14 +56,16 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements OnItem
 	private int mScrollY;
 	private int mPosition;
 	private static final String ARG_POSITION = "position";
+	private static String userId;
 	public UserPhotoFragment() {
 		// TODO Auto-generated constructor stub
 	}
-	public static Fragment newInstance(int position) {
+	public static Fragment newInstance(int position,String userID) {
 		UserPhotoFragment fragment = new UserPhotoFragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_POSITION, position);
 		fragment.setArguments(args);
+		userId=userID;
 		return fragment;
 	}
 	@Override

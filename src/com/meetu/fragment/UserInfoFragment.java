@@ -47,15 +47,16 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 	private ObjUser user;
 	private CityDao cityDao=new CityDao();
 	private SchoolDao schoolDao=new SchoolDao();
-
+	private static String userId;
 	//pager滑动相关
 	private static final String ARG_POSITION = "position";
 	private int mPosition;
-	public static Fragment newInstance(int position) {
+	public static Fragment newInstance(int position,String userID) {
 		UserInfoFragment fragment = new UserInfoFragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_POSITION, position);
 		fragment.setArguments(args);
+		userId=userID;
 		return fragment;
 	}
 	//滑动相关，调整view位置
@@ -79,6 +80,7 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 		if(view==null){
 			view=inflater.inflate(R.layout.userinfo_fragment_layout, null);
 			initView();
+			log.e("zcq", "userId=="+userId);
 		}
 		ViewGroup parent=(ViewGroup)view.getParent();
 		if(parent!=null){
@@ -153,10 +155,16 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 		userConstellation.setText(user.getConstellation());
 		userschool.setText(user.getSchool());
 		usermajor.setText(user.getDepartment());
-		String homeString=""+cityDao.getCity(user.getHometown()).get(0).getPrivance()+
-				cityDao.getCity(user.getHometown()).get(0).getCity()+
-				cityDao.getCity(user.getHometown()).get(0).getTown();
-		userhometown.setText(homeString);
+		
+		if(user.getHometown()!=null||!user.getHometown().equals("")){
+			String homeString=""+cityDao.getCity(user.getHometown()).get(0).getPrivance()+
+					cityDao.getCity(user.getHometown()).get(0).getCity()+
+					cityDao.getCity(user.getHometown()).get(0).getTown();
+			userhometown.setText(homeString);
+		}else{
+			userhometown.setText("");
+		}
+		
 	}
 
 	@Override
@@ -169,7 +177,8 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		//修改名字
+		
+		/*//修改名字
 		case R.id.minesetting_username_ll :
 
 			Intent intent=new Intent(getActivity(),ChangeNameActivity.class);
@@ -211,7 +220,7 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 			Intent intent4=new Intent(getActivity(),ChangeCityActivity.class);
 			intent4.putExtra("hometown", userhometown.getText());
 			startActivityForResult(intent4,4);
-			break;
+			break;*/
 		default :
 			break;
 		}

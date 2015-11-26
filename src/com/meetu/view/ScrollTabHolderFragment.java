@@ -19,7 +19,7 @@ public class ScrollTabHolderFragment extends Fragment implements ScrollTabHolder
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mScrollTabHolder = (ScrollTabHolder)MainActivity.getFragment();
+            mScrollTabHolder = (ScrollTabHolder)activity;
         }
         catch (final ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement ScrollTabHolder");

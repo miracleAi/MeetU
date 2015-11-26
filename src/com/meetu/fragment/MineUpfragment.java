@@ -226,11 +226,18 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,OnClickL
 						fragmentContent.adjustScroll((int) (headView.getHeight() + headView.getTranslationY()),
 								headView.getHeight());
 					}
+					if(position==0){
+						updateImageView.setVisibility(View.GONE);
+					}else if(position==1){
+						updateImageView.setVisibility(View.VISIBLE);
+					}
 				}
 
 				@SuppressLint("NewApi")
 				@Override
 				public void onPageSelected(int position) {
+					log.e("zcq", "position=="+position);
+					
 					userPager.setScanScroll(true);
 					SparseArrayCompat<ScrollTabHolder> scrollTabHolders = adapter.getScrollTabHolders();
 
@@ -308,11 +315,13 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,OnClickL
 			case 0:
 			//	fragment = UserInfoFragment.newInstance(0);
 				fragment=MinePersonalInformation.newInstance(0);
+				
 				break;
 
 			case 1:
 			//	fragment = UserPhotoFragment.newInstance(1);
 				fragment=MinePhotoWallfragment.newInstance(1);
+				
 				break;
 
 
@@ -330,7 +339,7 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,OnClickL
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
 			Object object = super.instantiateItem(container, position);
-
+			log.e("zcq", "position=="+position);
 			mScrollTabHolders.put(position, (ScrollTabHolder) object);
 
 			return object;
@@ -376,6 +385,9 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,OnClickL
 			startActivity(intent2);
 			break;
 		case R.id.update_mine_up_fragment_img:
+			Intent intent=new Intent(Intent.ACTION_PICK,null);
+			intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+			startActivityForResult(intent, 00);	
 			break;
 		default:
 			break;

@@ -19,8 +19,7 @@ import com.meetu.activity.mine.UpdatepictureActivity;
 import com.meetu.adapter.PhotoWallAdapter;
 import com.meetu.adapter.UserPhotoWallAdapter;
 import com.meetu.adapter.PhotoWallAdapter.GridViewHeightaListener;
-import com.meetu.adapter.StaggeredHomeAdapter;
-import com.meetu.adapter.StaggeredHomeAdapter.OnItemClickCallBack;
+
 import com.meetu.cloud.callback.ObjUserPhotoCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.object.ObjUserPhoto;
@@ -62,7 +61,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment implements OnItemClickCallBack{
+public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment implements com.meetu.adapter.UserPhotoWallAdapter.OnItemClickCallBack{
 	
 
 	private View view;
@@ -86,7 +85,7 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment impleme
 	private static final String ARG_POSITION = "position";
 	
 	public static Fragment newInstance(int position) {
-		UserPhotoFragment fragment = new UserPhotoFragment();
+		MinePhotoWallfragment fragment = new MinePhotoWallfragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_POSITION, position);
 		fragment.setArguments(args);
@@ -131,7 +130,7 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment impleme
 		mRecyclerView=(RecyclerView) view.findViewById(R.id.id_RecyclerView);
 		mAdapter=new UserPhotoWallAdapter(getActivity(), objUserPhotos);			
 //		mAdapter.setOnItemClickLitener(this);
-		
+		mAdapter.setOnItemClickLitener(this);
 		mLayoutMgr = new StaggeredGridLayoutManager
 				(2,StaggeredGridLayoutManager.VERTICAL); 
 		mRecyclerView.setLayoutManager(mLayoutMgr);

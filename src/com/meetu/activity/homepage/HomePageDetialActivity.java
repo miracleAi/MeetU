@@ -14,6 +14,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
+import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.adapter.PhotoPagerAdapter;
 import com.meetu.baidumapdemo.BaiduMapMainActivity;
 import com.meetu.bean.ActivityBean;
@@ -322,6 +323,13 @@ OnClickListener ,OnScrollListener{
 
 			startActivity(intent5);
 			break;
+			
+		case R.id.userhead_one_heomePageDetial_img:
+			Intent one=new Intent(this,UserPagerActivity.class);
+			log.e("lucifer", "userList.get(0).getObjectId()=="+userList.get(0).getObjectId());
+			one.putExtra("userId", userList.get(0).getObjectId());
+			startActivity(one);
+			break;
 		default :
 			break;
 		}
@@ -549,6 +557,8 @@ OnClickListener ,OnScrollListener{
 						finalBitmap.display(twoUser, userList.get(1).getProfileClip().getUrl());
 					}if(userList.size()>=1){
 						finalBitmap.display(oneUser, userList.get(0).getProfileClip().getUrl());
+						
+						oneUser.setOnClickListener(HomePageDetialActivity.this);
 					}
 
 				}
