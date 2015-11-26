@@ -78,6 +78,8 @@ public class SystemSettingsActivity extends Activity implements OnClickListener{
 		case R.id.sign_out_system_settings_rl:
 			//TODO 清缓存 删除本地 信息
 			signOut();
+			finish();
+		
 			
 			break;
 		case R.id.back_systemSettings_rl:

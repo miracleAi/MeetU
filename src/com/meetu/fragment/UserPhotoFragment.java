@@ -38,7 +38,6 @@ import com.meetu.view.ScrollTabHolderMineupFragment;
 
 public class UserPhotoFragment extends ScrollTabHolderFragment implements OnItemClickCallBack{
 
-
 	private View view;
 	private LinearLayout newsList;
 
@@ -120,6 +119,10 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements OnItem
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
 				mScrollY += dy;
+				if(mScrollY < 0){
+					mScrollY = 0;
+				}
+
 				if (mScrollTabHolder != null) {
 					log.d("mytest", "zhixing");
 					mScrollTabHolder.onRecyclerViewScroll(recyclerView, mScrollY, mPosition);

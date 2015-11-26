@@ -122,8 +122,9 @@ public class LoginActivity extends Activity implements OnClickListener{
 							//登陆成功
 							log.e("object", object.getClassName());
 							Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+							intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							startActivity(intent);
-							finish();
+							
 							
 //							if(MyApplication.isChatLogin){
 //								Intent intent=new Intent(LoginActivity.this,MainActivity.class);

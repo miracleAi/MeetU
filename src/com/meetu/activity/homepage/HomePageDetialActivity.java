@@ -330,6 +330,48 @@ OnClickListener ,OnScrollListener{
 			one.putExtra("userId", userList.get(0).getObjectId());
 			startActivity(one);
 			break;
+			
+		case R.id.userhead_two_heomePageDetial_img:
+			Intent two=new Intent(this,UserPagerActivity.class);
+			log.e("lucifer", "userList.get(1).getObjectId()=="+userList.get(1).getObjectId());
+			two.putExtra("userId", userList.get(1).getObjectId());
+			startActivity(two);
+			break;
+			
+		case R.id.userhead_three_heomePageDetial_img:
+			Intent three=new Intent(this,UserPagerActivity.class);
+			log.e("lucifer", "userList.get(2).getObjectId()=="+userList.get(2).getObjectId());
+			three.putExtra("userId", userList.get(2).getObjectId());
+			startActivity(three);
+			break;
+			
+		case R.id.userhead_four_heomePageDetial_img:
+			Intent four=new Intent(this,UserPagerActivity.class);
+			log.e("lucifer", "userList.get(3).getObjectId()=="+userList.get(3).getObjectId());
+			four.putExtra("userId", userList.get(3).getObjectId());
+			startActivity(four);
+			break;
+			
+		case R.id.userhead_five_heomePageDetial_img:
+			Intent five=new Intent(this,UserPagerActivity.class);
+			log.e("lucifer", "userList.get(4).getObjectId()=="+userList.get(4).getObjectId());
+			five.putExtra("userId", userList.get(4).getObjectId());
+			startActivity(five);
+			break;
+			
+		case R.id.userhead_six_heomePageDetial_img:
+			Intent six=new Intent(this,UserPagerActivity.class);
+			log.e("lucifer", "userList.get(5).getObjectId()=="+userList.get(5).getObjectId());
+			six.putExtra("userId", userList.get(5).getObjectId());
+			startActivity(six);
+			break;
+		case R.id.userhead_seven_heomePageDetial_img:
+			Intent seven=new Intent(this,UserPagerActivity.class);
+			log.e("lucifer", "userList.get(6).getObjectId()=="+userList.get(6).getObjectId());
+			seven.putExtra("userId", userList.get(6).getObjectId());
+			startActivity(seven);
+			break;
+		
 		default :
 			break;
 		}
@@ -545,16 +587,22 @@ OnClickListener ,OnScrollListener{
 					//TODO   点击进入个人主页   未完成
 					if(userList.size()>=7){						
 						finalBitmap.display(sevenUser, userList.get(6).getProfileClip().getUrl());
+						sevenUser.setOnClickListener(HomePageDetialActivity.this);
 					}if(userList.size()>=6){
 						finalBitmap.display(sixUser, userList.get(5).getProfileClip().getUrl());
+						sixUser.setOnClickListener(HomePageDetialActivity.this);
 					} if(userList.size()>=5){
 						finalBitmap.display(fiveUser, userList.get(4).getProfileClip().getUrl());
+						fiveUser.setOnClickListener(HomePageDetialActivity.this);
 					} if(userList.size()>=4){
 						finalBitmap.display(fourUser, userList.get(3).getProfileClip().getUrl());
+						fourUser.setOnClickListener(HomePageDetialActivity.this);
 					}if(userList.size()>=3){
 						finalBitmap.display(threeUser, userList.get(2).getProfileClip().getUrl());
+						threeUser.setOnClickListener(HomePageDetialActivity.this);
 					}if(userList.size()>=2){
 						finalBitmap.display(twoUser, userList.get(1).getProfileClip().getUrl());
+						twoUser.setOnClickListener(HomePageDetialActivity.this);
 					}if(userList.size()>=1){
 						finalBitmap.display(oneUser, userList.get(0).getProfileClip().getUrl());
 						

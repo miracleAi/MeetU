@@ -60,7 +60,7 @@ public class MinephotoActivity extends Activity implements OnClickListener ,OnPa
 
 		photoUrl=intent.getStringExtra("url");
 		
-		if(userId==null||userId.equals("")){
+		if(userId==null){
 			isMyself=false;
 		}
 		initView();
@@ -86,11 +86,16 @@ public class MinephotoActivity extends Activity implements OnClickListener ,OnPa
 //		favor.setOnClickListener(this);
 		viewPager=(ViewPager)super.findViewById(R.id.viewpager_photo);
 		load();
-		adapter=new MinePhotoAdapter(this, objUserPhotos);
+		adapter=new MinePhotoAdapter(this, objUserPhotos,userId);
 		viewPager.setAdapter(adapter);
 		viewPager.setOnPageChangeListener(this);
 		viewPager.setCurrentItem(id);
 		
+		if(isMyself==false){
+			delectLayout.setVisibility(View.GONE);
+		}else{
+			delectLayout.setVisibility(View.VISIBLE);
+		}
 
 	}
 
