@@ -27,14 +27,16 @@ import com.meetu.activity.mine.MinephotoActivity;
 import com.meetu.adapter.PhotoWallAdapter.GridViewHeightaListener;
 import com.meetu.adapter.UserPhotoWallAdapter;
 import com.meetu.adapter.UserPhotoWallAdapter.OnItemClickCallBack;
+import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.callback.ObjUserPhotoCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.cloud.wrap.ObjUserPhotoWrap;
+import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.view.ScrollTabHolderFragment;
 import com.meetu.view.ScrollTabHolderMineupFragment;
 
-public class UserPhotoFragment extends ScrollTabHolderMineupFragment implements OnItemClickCallBack{
+public class UserPhotoFragment extends ScrollTabHolderFragment implements OnItemClickCallBack{
 
 
 	private View view;
@@ -48,7 +50,7 @@ public class UserPhotoFragment extends ScrollTabHolderMineupFragment implements 
 	//网络数据 相关
 	private AVUser currentUser = AVUser.getCurrentUser();
 	//当前用户
-	private ObjUser user = new ObjUser();
+	private ObjUser userObjUser = new ObjUser();
 	//网络请求下来的 图片信息
 	private List<ObjUserPhoto> objUserPhotos=new ArrayList<ObjUserPhoto>();
 
@@ -87,10 +89,11 @@ public class UserPhotoFragment extends ScrollTabHolderMineupFragment implements 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		if(view==null){
-			if (currentUser != null) {
-				//强制类型转换
-				user = AVUser.cast(currentUser, ObjUser.class);
-			}
+			getUserInfo(userId);
+//			if (currentUser != null) {
+//				//强制类型转换
+//				user = AVUser.cast(currentUser, ObjUser.class);
+//			}
 			view=inflater.inflate(R.layout.fragment_mine_photo_wall, null);
 			mPosition = getArguments().getInt(ARG_POSITION);
 			initView();
@@ -134,17 +137,22 @@ public class UserPhotoFragment extends ScrollTabHolderMineupFragment implements 
 		super.setArguments(args);
 	}
 	private void loaddata(){
-		ObjUserPhotoWrap.queryUserPhoto(user, new ObjUserPhotoCallback() {
+		ObjUserPhotoWrap.queryUserPhoto(userObjUser, new ObjUserPhotoCallback() {
 
 			@Override
 			public void callback(List<ObjUserPhoto> objects, AVException e) {
 				// TODO Auto-generated method stub
-				objUserPhotos.addAll(objects);
-				//mAdapter=new StaggeredHomeAdapter(getActivity(), objUserPhotos);
-				//mRecyclerView.setAdapter(mAdapter);
-				log.e("lucifer", "我的照片数量"+objUserPhotos.size()+"url=="+objUserPhotos.get(0).getPhoto().getUrl());
-				log.e("zcq", ""+objUserPhotos.get(0).getPraiseCount());
-				handler.sendEmptyMessage(1);
+				if(e!=null){
+					return;
+				}else if(objects!=null){
+					objUserPhotos.addAll(objects);
+					//mAdapter=new StaggeredHomeAdapter(getActivity(), objUserPhotos);
+					//mRecyclerView.setAdapter(mAdapter);
+					log.e("lucifer", "我的照片数量"+objUserPhotos.size()+"url=="+objUserPhotos.get(0).getPhoto().getUrl());
+					log.e("zcq", ""+objUserPhotos.get(0).getPraiseCount());
+					handler.sendEmptyMessage(1);
+				}
+				
 			}
 		});
 
@@ -155,6 +163,7 @@ public class UserPhotoFragment extends ScrollTabHolderMineupFragment implements 
 		Intent intent =new Intent(super.getActivity(),MinephotoActivity.class);
 		intent.putExtra("photolist", (Serializable)objUserPhotos);
 		intent.putExtra("id", ""+id);
+		intent.putExtra("userId", userId);
 		log.e("lucifer", "id=="+id);
 		startActivity(intent);
 		getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
@@ -199,5 +208,31 @@ public class UserPhotoFragment extends ScrollTabHolderMineupFragment implements 
 	 */
 	public  void reflesh(){
 		mAdapter.notifyDataSetChanged();
+	}
+	
+	/**
+	 * 根据创建者用户id 获取用户相关信息
+	 * @param objId  
+	 * @author lucifer
+	 * @date 2015-11-17
+	 */
+	private void getUserInfo(String objId){
+		ObjUserWrap.getObjUser(objId, new ObjUserInfoCallback() {
+			
+			@Override
+			public void callback(ObjUser user, AVException e) {
+				if(e!=null){
+					return;
+				}else if(user!=null){
+					userObjUser=user;
+					
+					loaddata();
+				}else{
+					return;
+				}
+				
+				
+			}
+		});
 	}
 }

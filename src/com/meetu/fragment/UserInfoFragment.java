@@ -14,6 +14,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
@@ -23,7 +24,9 @@ import com.meetu.activity.mine.ChangeMajorActivity;
 import com.meetu.activity.mine.ChangeNameActivity;
 import com.meetu.activity.mine.ChangeSchoolActivity;
 import com.meetu.activity.mine.ChangexingzuoActivity;
+import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.SchoolDao;
 import com.meetu.entity.Schools;
 import com.meetu.sqlite.CityDao;
@@ -44,7 +47,7 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 	//网络数据相关
 	//拿本地的  user 
 	private AVUser currentUser = AVUser.getCurrentUser();
-	private ObjUser user;
+	private ObjUser userObjUser;
 	private CityDao cityDao=new CityDao();
 	private SchoolDao schoolDao=new SchoolDao();
 	private static String userId;
@@ -79,7 +82,10 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 		// TODO Auto-generated method stub
 		if(view==null){
 			view=inflater.inflate(R.layout.userinfo_fragment_layout, null);
+			
 			initView();
+			
+			getUserInfo(userId);
 			log.e("zcq", "userId=="+userId);
 		}
 		ViewGroup parent=(ViewGroup)view.getParent();
@@ -99,11 +105,7 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 		return view;
 	}
 	private void initView(){
-		//拿到本地的缓存对象  user
-		if(currentUser!=null){
-			//强制类型转换
-			user = AVUser.cast(currentUser, ObjUser.class);
-		}
+
 		mScrollView = (NotifyingScrollView) view.findViewById(R.id.scrollview);
 		username=(TextView) view.findViewById(R.id.minesetting_username_tv);
 		usersex=(TextView) view.findViewById(R.id.minesetting_sex_tv);
@@ -138,32 +140,7 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 
 		hometownLayout.setOnClickListener(this);
 
-		//设置 属性数据
-		username.setText(user.getNameNick());
-
-		if(user.getGender()==1){
-			usersex.setText("男生");
-		}else if(user.getGender()==2){
-			usersex.setText("女生");
-		}else{
-			usersex.setText("未知");
-		}
-		Long birthLong=user.getBirthday();
-		String birthString=DateUtils.getDateToString(birthLong);
-		log.e("zcq", "birthString"+birthString);
-		userbirthday.setText(birthString);
-		userConstellation.setText(user.getConstellation());
-		userschool.setText(user.getSchool());
-		usermajor.setText(user.getDepartment());
-		
-		if(user.getHometown()!=null||!user.getHometown().equals("")){
-			String homeString=""+cityDao.getCity(user.getHometown()).get(0).getPrivance()+
-					cityDao.getCity(user.getHometown()).get(0).getCity()+
-					cityDao.getCity(user.getHometown()).get(0).getTown();
-			userhometown.setText(homeString);
-		}else{
-			userhometown.setText("");
-		}
+	
 		
 	}
 
@@ -266,7 +243,7 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 			if(resultCode==getActivity().RESULT_OK){
 				Toast.makeText(getActivity(), "专业修改成功", Toast.LENGTH_SHORT).show();
 				String major=data.getExtras().getString("department");
-				usermajor.setText(schoolDao.getDepartmentsName(""+user.getSchoolNum(), major).get(0).getDepartmentName());
+				usermajor.setText(schoolDao.getDepartmentsName(""+userObjUser.getSchoolNum(), major).get(0).getDepartmentName());
 			}
 
 			break;
@@ -287,6 +264,57 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 			break;
 		}
 
+	}
+	
+	/**
+	 * 根据创建者用户id 获取用户相关信息
+	 * @param objId  
+	 * @author lucifer
+	 * @date 2015-11-17
+	 */
+	private void getUserInfo(String objId){
+		ObjUserWrap.getObjUser(objId, new ObjUserInfoCallback() {
+			
+			@Override
+			public void callback(ObjUser user, AVException e) {
+				if(e!=null){
+					return;
+				}else if(user!=null){
+					userObjUser=user;
+					
+					//设置 属性数据
+					username.setText(userObjUser.getNameNick());
+
+					if(userObjUser.getGender()==1){
+						usersex.setText("男生");
+					}else if(userObjUser.getGender()==2){
+						usersex.setText("女生");
+					}else{
+						usersex.setText("未知");
+					}
+					Long birthLong=userObjUser.getBirthday();
+					String birthString=DateUtils.getDateToString(birthLong);
+					log.e("zcq", "birthString"+birthString);
+					userbirthday.setText(birthString);
+					userConstellation.setText(userObjUser.getConstellation());
+					userschool.setText(userObjUser.getSchool());
+					usermajor.setText(userObjUser.getDepartment());
+					
+					if(userObjUser.getHometown()!=null||!userObjUser.getHometown().equals("")){
+						String homeString=""+cityDao.getCity(userObjUser.getHometown()).get(0).getPrivance()+
+								cityDao.getCity(userObjUser.getHometown()).get(0).getCity()+
+								cityDao.getCity(userObjUser.getHometown()).get(0).getTown();
+						userhometown.setText(homeString);
+					}else{
+						userhometown.setText("");
+					}
+				}else{
+					return;
+				}
+				
+				
+			}
+		});
 	}
 
 

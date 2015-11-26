@@ -38,6 +38,8 @@ public class MinephotoActivity extends Activity implements OnClickListener ,OnPa
 	// 网络数据相关
 	private String photoUrl;
 	private List<ObjUserPhoto> objUserPhotos=new ArrayList<ObjUserPhoto>();
+	private String userId;//用户的id
+	private boolean isMyself=true;//用来标记是否从我自己的页面跳过来的
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +49,20 @@ public class MinephotoActivity extends Activity implements OnClickListener ,OnPa
 		// 全屏
 		super.getWindow();
 		setContentView(R.layout.activity_minephoto);
+		userId=super.getIntent().getStringExtra("userId");
 		itemid = super.getIntent().getStringExtra("id");
 		pid = super.getIntent().getStringExtra("id");
 		id=Integer.parseInt(itemid);
 		log.e("zcq", "id=="+itemid);
 		objUserPhotos=(List<ObjUserPhoto>) this.getIntent().getSerializableExtra("photolist");
-	//	Toast.makeText(MinephotoActivity.this, itemid,Toast.LENGTH_SHORT).show();
+
 		Intent intent = this.getIntent();
-	//	dataPhotoWall = (PhotoWall) intent.getSerializableExtra("PhotoWall");
+
 		photoUrl=intent.getStringExtra("url");
+		
+		if(userId==null||userId.equals("")){
+			isMyself=false;
+		}
 		initView();
 	}
 	/*

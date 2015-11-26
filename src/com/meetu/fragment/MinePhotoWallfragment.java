@@ -162,13 +162,19 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment impleme
 
 			@Override
 			public void callback(List<ObjUserPhoto> objects, AVException e) {
-				// TODO Auto-generated method stub
-				objUserPhotos.addAll(objects);
-				//mAdapter=new StaggeredHomeAdapter(getActivity(), objUserPhotos);
-				//mRecyclerView.setAdapter(mAdapter);
-				log.e("lucifer", "我的照片数量"+objUserPhotos.size()+"url=="+objUserPhotos.get(0).getPhoto().getUrl());
-				log.e("zcq", ""+objUserPhotos.get(0).getPraiseCount());
-				handler.sendEmptyMessage(1);
+
+
+				if(e!=null){
+					return;
+				}else if(objects!=null){
+					objUserPhotos.addAll(objects);
+					//mAdapter=new StaggeredHomeAdapter(getActivity(), objUserPhotos);
+					//mRecyclerView.setAdapter(mAdapter);
+					log.e("lucifer", "我的照片数量"+objUserPhotos.size()+"url=="+objUserPhotos.get(0).getPhoto().getUrl());
+					log.e("zcq", ""+objUserPhotos.get(0).getPraiseCount());
+					handler.sendEmptyMessage(1);
+				}
+				
 			}
 		});
 
