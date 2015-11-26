@@ -29,40 +29,52 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp" >
 
-                <RelativeLayout android:layout_width="44dp"
-                    android:layout_height="44dp"
-                     android:layout_alignParentLeft="true"
-                     android:background="@drawable/kongjianruoqu_bg"
-                     android:gravity="center">
-                <ImageView
-                    android:id="@+id/user_back_imv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                   
-                    android:layout_centerVertical="true"
-                    
-                    android:src="@drawable/navi_btn_back_white" />
-                </RelativeLayout>
-	
-                <RelativeLayout 
+                <RelativeLayout
+                    android:id="@+id/back_userpager_layout_rl"
                     android:layout_width="44dp"
                     android:layout_height="44dp"
-                     android:layout_alignParentRight="true"
-                     android:gravity="center"
-                    >
-                <ImageView
-                    android:id="@+id/user_set_imv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"                  
-                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/kongjianruoqu_bg"
+                    android:gravity="center" >
+
+                    <ImageView
+                        android:id="@+id/user_back_imv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/navi_btn_back_white" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/setting_userpager_layout_rl"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_alignParentRight="true"
                     android:visibility="gone"
-                   	android:background="@drawable/kongjianruoqu_bg"
-                    android:src="@drawable/mine_btn_setting" />
-                <TextView android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
-                    android:text="更多"/>
+                    android:gravity="center" >
+
+                    <ImageView
+                        android:id="@+id/user_set_imv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/mine_btn_setting" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/addmore_userpager_layout_rl"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center" >
+
+                    <TextView
+                        android:id="@+id/addmore_userpager_layout_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="更多"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -96,8 +108,8 @@
                         android:id="@+id/user_gender_imv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/mine_btn_profile_iv"
                         android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/mine_btn_profile_iv"
                         android:src="@drawable/mine_img_gender_m" />
                 </RelativeLayout>
 
@@ -120,6 +132,7 @@
                 android:text="徐小曼"
                 android:textColor="#ffffff" />
 
+            <!--
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -140,6 +153,7 @@
                     android:layout_marginLeft="8dp"
                     android:src="@drawable/mine_btn_approve_dis" />
             </LinearLayout>
+            -->
         </LinearLayout>
 
         <com.meetu.view.SlidingTabLayout
@@ -157,5 +171,16 @@
             android:layout_height="1px"
             android:background="#cccccc" />
     </LinearLayout>
+     <ImageView
+        android:id="@+id/update_userpager_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/mine_photoview_btn_add"
+        android:visibility="gone"
+         />
 
 </RelativeLayout>

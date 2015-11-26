@@ -167,6 +167,7 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,OnClickL
 			// 加载网络图片
 			bitmapUtils.display(ivTouxiang, headURl);
 		}
+		
 		ivTouxiang.setOnClickListener(new OnClickListener() {
 			
 			@Override

@@ -47,9 +47,11 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements OnItem
 	private GridViewHeightaListener gridViewHeightaListener;
 
 	//网络数据 相关
-	private AVUser currentUser = AVUser.getCurrentUser();
+	private static AVUser currentUser = AVUser.getCurrentUser();
+	
 	//当前用户
 	private ObjUser userObjUser = new ObjUser();
+	private static ObjUser userMy;
 	//网络请求下来的 图片信息
 	private List<ObjUserPhoto> objUserPhotos=new ArrayList<ObjUserPhoto>();
 
@@ -58,6 +60,8 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements OnItem
 	private int mPosition;
 	private static final String ARG_POSITION = "position";
 	private static String userId;
+	private static Boolean isMyself=false;
+	
 	public UserPhotoFragment() {
 		// TODO Auto-generated constructor stub
 	}
@@ -67,6 +71,10 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements OnItem
 		args.putInt(ARG_POSITION, position);
 		fragment.setArguments(args);
 		userId=userID;
+		if(currentUser!=null){
+			userMy = AVUser.cast(currentUser, ObjUser.class);
+		}
+		
 		return fragment;
 	}
 	@Override
@@ -88,6 +96,9 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements OnItem
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		if(view==null){
+			if(userMy.getObjectId().equals(userId)){
+				isMyself=true;
+			}
 			getUserInfo(userId);
 //			if (currentUser != null) {
 //				//强制类型转换

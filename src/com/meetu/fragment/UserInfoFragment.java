@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+import com.baidu.location.e.t;
 import com.meetu.R;
 import com.meetu.activity.mine.ChangeBirthdayActivity;
 import com.meetu.activity.mine.ChangeCityActivity;
@@ -46,20 +47,29 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 
 	//网络数据相关
 	//拿本地的  user 
-	private AVUser currentUser = AVUser.getCurrentUser();
+	private static AVUser currentUser = AVUser.getCurrentUser();
 	private ObjUser userObjUser;
+	private static ObjUser userMy;
 	private CityDao cityDao=new CityDao();
 	private SchoolDao schoolDao=new SchoolDao();
 	private static String userId;
 	//pager滑动相关
 	private static final String ARG_POSITION = "position";
 	private int mPosition;
+	private static Boolean isMyself=false;
+	
 	public static Fragment newInstance(int position,String userID) {
 		UserInfoFragment fragment = new UserInfoFragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_POSITION, position);
 		fragment.setArguments(args);
 		userId=userID;
+		if(currentUser!=null){
+			userMy = AVUser.cast(currentUser, ObjUser.class);
+		}
+		if(userMy.getObjectId().equals(userId)){
+			isMyself=true;
+		}
 		return fragment;
 	}
 	//滑动相关，调整view位置
@@ -82,10 +92,41 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 		// TODO Auto-generated method stub
 		if(view==null){
 			view=inflater.inflate(R.layout.userinfo_fragment_layout, null);
+	
 			
 			initView();
 			
-			getUserInfo(userId);
+			if(isMyself){
+				//设置 属性数据
+				username.setText(userMy.getNameNick());
+
+				if(userMy.getGender()==1){
+					usersex.setText("男生");
+				}else if(userMy.getGender()==2){
+					usersex.setText("女生");
+				}else{
+					usersex.setText("未知");
+				}
+				Long birthLong=userMy.getBirthday();
+				String birthString=DateUtils.getDateToString(birthLong);
+				log.e("zcq", "birthString"+birthString);
+				userbirthday.setText(birthString);
+				userConstellation.setText(userMy.getConstellation());
+				userschool.setText(userMy.getSchool());
+				usermajor.setText(userMy.getDepartment());
+				
+				if(userMy.getHometown()!=null&&!userMy.getHometown().equals("")){
+					String homeString=""+cityDao.getCity(userMy.getHometown()).get(0).getPrivance()+
+							cityDao.getCity(userMy.getHometown()).get(0).getCity()+
+							cityDao.getCity(userMy.getHometown()).get(0).getTown();
+					userhometown.setText(homeString);
+				}else{
+					userhometown.setText("");
+				}
+			}else{
+				getUserInfo(userId);
+			}
+			
 			log.e("zcq", "userId=="+userId);
 		}
 		ViewGroup parent=(ViewGroup)view.getParent();
@@ -115,14 +156,14 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 
 		usermajor=(TextView) view.findViewById(R.id.minesetting_major_tv);
 		userhometown=(TextView) view.findViewById(R.id.minesetting_hometown_tv);
-		username.setOnClickListener(this);
-		usersex.setOnClickListener(this);
-		userbirthday.setOnClickListener(this);
-		userConstellation.setOnClickListener(this);
-		userschool.setOnClickListener(this);
-
-		usermajor.setOnClickListener(this);
-		userhometown.setOnClickListener(this);
+//		username.setOnClickListener(this);
+//		usersex.setOnClickListener(this);
+//		userbirthday.setOnClickListener(this);
+//		userConstellation.setOnClickListener(this);
+//		userschool.setOnClickListener(this);
+//
+//		usermajor.setOnClickListener(this);
+//		userhometown.setOnClickListener(this);
 		nameLayout=(LinearLayout) view.findViewById(R.id.minesetting_username_ll);
 		birthdayLayout=(LinearLayout) view.findViewById(R.id.minesetting_birthday_ll);
 		constellationLayout=(LinearLayout) view.findViewById(R.id.minesetting_Constellation_ll);
@@ -131,14 +172,19 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 		sexlLayout=(LinearLayout) view.findViewById(R.id.minesetting_sex_ll);
 		majorLayout=(LinearLayout) view.findViewById(R.id.minesetting_major_ll);
 		hometownLayout=(LinearLayout) view.findViewById(R.id.minesetting_hometown_ll);
-		nameLayout.setOnClickListener(this);
-		birthdayLayout.setOnClickListener(this);
-		constellationLayout.setOnClickListener(this);
-		schoolLayout.setOnClickListener(this);
-		sexlLayout.setOnClickListener(this);
-		majorLayout.setOnClickListener(this);
+		
+		//如果是我自己
+		if(isMyself){
+			nameLayout.setOnClickListener(this);
+			birthdayLayout.setOnClickListener(this);
+			constellationLayout.setOnClickListener(this);
+			schoolLayout.setOnClickListener(this);
+			sexlLayout.setOnClickListener(this);
+			majorLayout.setOnClickListener(this);
 
-		hometownLayout.setOnClickListener(this);
+			hometownLayout.setOnClickListener(this);
+		}
+		
 
 	
 		
@@ -155,7 +201,7 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		
-		/*//修改名字
+		//修改名字
 		case R.id.minesetting_username_ll :
 
 			Intent intent=new Intent(getActivity(),ChangeNameActivity.class);
@@ -184,8 +230,8 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 		case R.id.minesetting_major_ll:
 			//传个学校对象过去 和 完善信息保持一致
 			Schools schools=new Schools();
-			schools.setUnivsId(""+user.getSchoolNum());
-			schools.setUnivsNameString(schoolDao.getschoolName(""+user.getSchoolNum()).get(0).getUnivsNameString());
+			schools.setUnivsId(""+userMy.getSchoolNum());
+			schools.setUnivsNameString(schoolDao.getschoolName(""+userMy.getSchoolNum()).get(0).getUnivsNameString());
 			Intent intent3=new Intent(getActivity(),ChangeMajorActivity.class);
 			Bundle bundle=new Bundle();
 			bundle.putSerializable("schools",schools);
@@ -197,7 +243,7 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 			Intent intent4=new Intent(getActivity(),ChangeCityActivity.class);
 			intent4.putExtra("hometown", userhometown.getText());
 			startActivityForResult(intent4,4);
-			break;*/
+			break;
 		default :
 			break;
 		}
@@ -316,6 +362,8 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements OnClick
 			}
 		});
 	}
+	
+	
 
 
 }
