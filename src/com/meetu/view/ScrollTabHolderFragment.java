@@ -25,7 +25,6 @@ public class ScrollTabHolderFragment extends Fragment implements ScrollTabHolder
             throw new ClassCastException(activity.toString() + " must implement ScrollTabHolder");
         }
     }
-
     @Override
     public void onDetach() {
         mScrollTabHolder = null;

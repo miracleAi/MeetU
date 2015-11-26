@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnTouchListener;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
@@ -140,6 +142,14 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 			// 加载网络图片
 			bitmapUtils.display(userProfileImv, headURl);
 		}
+		userProfileImv.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Toast.makeText(getApplicationContext(), "hello", 1000).show();
+			}
+		});
 	}
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -161,7 +171,7 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 	//viewpager滑动时间监听
 	private ViewPager.OnPageChangeListener getViewPagerPageChangeListener () {
 		ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener() {
-			@SuppressLint("NewApi")
+			@SuppressLint("NewApi") 
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 				int currentItem = userPager.getCurrentItem();
