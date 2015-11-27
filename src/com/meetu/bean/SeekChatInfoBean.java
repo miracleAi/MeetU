@@ -1,10 +1,12 @@
 package com.meetu.bean;
 
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SeekChatInfoBean {
+public class SeekChatInfoBean implements Serializable{
 	//操作是否需要权限
 	private boolean needAuthorise;
 	//权限分类ID
@@ -25,6 +27,7 @@ public class SeekChatInfoBean {
 	private int seekChatCount;
 	//觅聊列表
 	private List<Map<String, Object>> chatList;
+	
 	public boolean getNeedAuthorise() {
 		return needAuthorise;
 	}

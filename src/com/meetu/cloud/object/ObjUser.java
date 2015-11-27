@@ -10,7 +10,7 @@ import com.avos.avoscloud.AVUser;
 /**
  * Created by mac on 15/8/14.
  */
-public class ObjUser extends AVUser{
+public class ObjUser extends AVUser implements Serializable{
 	//此处为我们的默认实现，当然你也可以自行实现
 	public static final Creator CREATOR = AVUser.CREATOR;
 	//用户类型

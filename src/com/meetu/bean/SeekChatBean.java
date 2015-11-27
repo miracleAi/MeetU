@@ -1,5 +1,6 @@
 package com.meetu.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.Map;
 
 import com.meetu.cloud.object.ObjUser;
 
-public class SeekChatBean {
+public class SeekChatBean implements Serializable {
 
 	//会话ID
 	private String conversationId;

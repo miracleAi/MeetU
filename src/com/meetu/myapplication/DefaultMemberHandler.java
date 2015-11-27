@@ -6,6 +6,7 @@ import android.content.Context;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMConversationEventHandler;
@@ -72,6 +73,9 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler{
 	//成员加入消息处理
 	public void handleMemberAdd(final AVIMClient client, final AVIMConversation conversation,
 			List<String> array, String str,final ObjUser user){
+		
+		log.e("zcq", "conversation"+conversation);
+		//TODO 空指针
 		int msgType = (Integer) conversation.getAttribute("cType");
 		if(msgType == Constants.ACTYSG){
 			//活动群，判断是否参加

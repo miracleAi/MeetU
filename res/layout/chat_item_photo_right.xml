@@ -22,7 +22,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="10dp"
-                android:text="昨天 23:16"
+                android:text=""
                 android:textColor="#a0a0a0"
                 android:textSize="11dp" />
         </RelativeLayout>
@@ -45,7 +45,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="15dp"
             android:layout_toLeftOf="@+id/userHead_chat_item_photo_right_img"
-            android:text="刘德华"
+            android:text=""
             android:textColor="#aaaaaa"
             android:textSize="11sp" />
 

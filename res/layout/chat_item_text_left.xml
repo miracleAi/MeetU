@@ -22,7 +22,7 @@
             android:layout_centerHorizontal="true"
             android:textSize="11dp"
             android:textColor="#a0a0a0"
-            android:text="昨天 23:16" />
+            android:text="" />
         </RelativeLayout>
 
         <ImageView
@@ -44,7 +44,7 @@
             android:layout_toRightOf="@+id/userHead_chat_item_left_img"
             android:textSize="11sp"
             android:textColor="#aaaaaa"
-            android:text="杨颖" />
+            android:text="" />
 
         <TextView
             android:id="@+id/content_chat_item_left_tv"

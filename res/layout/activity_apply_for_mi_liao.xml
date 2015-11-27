@@ -96,10 +96,11 @@
                 android:textSize="11sp" />
 
             <LinearLayout
+                android:id="@+id/apply_no_miliao_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                
+                android:visibility="gone"
                 android:orientation="vertical" >
 
                 <TextView
@@ -145,6 +146,13 @@
                     android:textColor="#a0a0a0"
                     android:textSize="12sp" />
             </LinearLayout>
+            <TextView 
+                android:id="@+id/apply_result_miliao_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+              	android:layout_margin="20dp"
+                android:text=""/>
         </LinearLayout>
         
         <View 
