@@ -5,12 +5,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-
-
-
-
-
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -137,7 +131,7 @@ public class WelcomeActivity extends Activity {
 		AVUser currentUser = AVUser.getCurrentUser();
 		if (currentUser != null) {
 			// 允许用户使用应用
-			Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
+			Intent intent = new Intent(WelcomeActivity.this,BarrageActivity.class);
 			WelcomeActivity.this.startActivity(intent);
 			finish();
 		} else {

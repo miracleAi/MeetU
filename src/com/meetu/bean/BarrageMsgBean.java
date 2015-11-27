@@ -9,7 +9,21 @@ public class BarrageMsgBean {
 	ObjUser user;
 	String time;
 	long sendTime;
+	String userAvator;
+	String nickName;
 	
+	public String getUserAvator() {
+		return userAvator;
+	}
+	public void setUserAvator(String userAvator) {
+		this.userAvator = userAvator;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 	public String getId() {
 		return id;
 	}

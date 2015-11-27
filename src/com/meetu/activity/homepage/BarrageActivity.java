@@ -39,12 +39,15 @@ import com.meetu.tools.DisplayUtils;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -94,7 +97,6 @@ public class BarrageActivity extends Activity{
 	private RelativeLayout back,userJoinList;
 
 	private int viewHight;//动态生成的view的高度 。考虑到上下间距。要稍大点
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -112,6 +114,8 @@ public class BarrageActivity extends Activity{
 		initChange();
 		isChatLogin();
 		initDefData();
+		//启动弹幕
+		handler.post(myRunnable);
 	}
 	private void initView() {
 		barrarylayout=(AbsoluteLayout) super.findViewById(R.id.top_barrage_rl);
@@ -131,12 +135,10 @@ public class BarrageActivity extends Activity{
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		//启动弹幕
-		handler.post(myRunnable);
 		AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
-	}
+	} 
 	@Override
-	protected void onPause() {
+	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
 		ObjChatMessage.logOutChat(uClient, new ObjFunBooleanCallback() {
@@ -156,7 +158,7 @@ public class BarrageActivity extends Activity{
 		});
 		//停止弹幕
 		handler.removeCallbacks(myRunnable);
-		super.onPause();
+		super.onDestroy();
 	}
 	//检查本人客户端是否登录
 	private void isChatLogin() {
@@ -199,20 +201,8 @@ public class BarrageActivity extends Activity{
 	/**
 	 * 创建一个新的view布局
 	 */
-	ObjUser barrageUser ;
 	@SuppressLint("ResourceAsColor")
 	private void initAdd( final BarrageMsgBean barrage) {
-		barrageUser = new ObjUser();
-		ObjUserWrap.getObjUser(barrage.getUserId(), new ObjUserInfoCallback() {
-
-			@Override
-			public void callback(ObjUser user, AVException e) {
-				// TODO Auto-generated method stub
-				if(e == null){
-					barrageUser = user;
-				}
-			}
-		});
 		topHight=(number%(validHeightSpace/viewHight))*viewHight+viewHight;
 		number++;
 		LinearLayout ll = new LinearLayout(this);
@@ -223,9 +213,8 @@ public class BarrageActivity extends Activity{
 		//弹幕头像
 		ImageView imageView = new ImageView(this);
 		imageView.setId(1);
-		if(null != barrageUser.getProfileClip()){
-			//barrageUser.getProfileClip().getUrl()
-			imageView.setImageResource(R.drawable.mine_likelist_profile_default);
+		if(null != barrage.getUserAvator() && !("").equals(barrage.getUserAvator())){
+
 		}else{
 			imageView.setImageResource(R.drawable.mine_likelist_profile_default);
 		}
@@ -234,7 +223,7 @@ public class BarrageActivity extends Activity{
 		imageView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(BarrageActivity.this,v.getTag()+"" , Toast.LENGTH_SHORT).show();
+				//Toast.makeText(BarrageActivity.this,v.getTag()+"" , Toast.LENGTH_SHORT).show();
 				//headPhoto.setImageResource();
 				//uName.setText();
 				//uContent.setText();
@@ -252,8 +241,8 @@ public class BarrageActivity extends Activity{
 		tv.setClickable(true);
 		tv.setTextSize(13);
 		tv.setTag(barrage.getId());
-		if(null != barrageUser.getNameNick()){
-			tv.setText(barrageUser.getNameNick()+":"+barrage.getContent());
+		if(null != barrage.getNickName() && !("").equals(barrage.getNickName())){
+			tv.setText(barrage.getNickName()+":"+barrage.getContent());
 		}else{
 			tv.setText(barrage.getContent());
 		}
@@ -261,7 +250,7 @@ public class BarrageActivity extends Activity{
 
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(BarrageActivity.this,v.getTag()+"" , Toast.LENGTH_SHORT).show();
+				//Toast.makeText(BarrageActivity.this,v.getTag()+"" , Toast.LENGTH_SHORT).show();
 				//headPhoto.setImageResource();
 				//uName.setText();
 				//uContent.setText();
@@ -331,30 +320,87 @@ public class BarrageActivity extends Activity{
 		public void run() {
 			// TODO Auto-generated method stub
 			initAdd(getMsg());
-			handler.postDelayed(myRunnable, 2000);
+			handler.postDelayed(myRunnable, 1000);
 		}
 	}
+
+	public BarrageMsgBean getMsgTest(){
+		BarrageMsgBean msgBean = new BarrageMsgBean();
+		msgBean.setId(String.valueOf(System.currentTimeMillis()));
+		msgBean.setContent("喝咖啡的女摄影师啦啦啦");
+		msgBean.setNickName("");
+		msgBean.setSendTime(System.currentTimeMillis());
+		msgBean.setUser(AVUser.cast(AVUser.getCurrentUser(), ObjUser.class));
+		msgBean.setTime("");
+		return msgBean;
+	}
+	String userAvator ;
+	String nickname ;
 	//取得弹幕显示信息
 	public BarrageMsgBean getMsg(){
 		BarrageMsgBean msgBean = new BarrageMsgBean();
+		userAvator = "";
+		nickname = "";
 		//优先显示实时消息
 		if(realTimeList.size() > 0){
 			msgBean = realTimeList.get(0);
-			realTimeList.remove(msgBean);
-			hisList.add(msgBean);
 			lastMsgTime = System.currentTimeMillis();
 			msgBean.setId(String.valueOf(lastMsgTime));
+			ObjUserWrap.getObjUser(msgBean.getUserId(), new ObjUserInfoCallback() {
+
+				@Override
+				public void callback(ObjUser user, AVException e) {
+					// TODO Auto-generated method stub
+					if(e == null){
+						if(null != user.getProfileClip()){
+							userAvator = user.getProfileClip().getUrl();
+						}
+						if(null != user.getNameNick()){
+							nickname = user.getNameNick();
+						}
+					}
+				}
+			});
+			msgBean.setUserAvator(userAvator);
+			msgBean.setNickName(nickname);
+			userAvator = "";
+			nickname = "";
+			realTimeList.remove(msgBean);
+			hisList.add(msgBean);
 			return msgBean;
 		}
 		//没有实时消息，默认消息播放超过15秒，播放历史消息
 		if((System.currentTimeMillis() - lastMsgTime) > (15*1000) && hisList.size() > 0){
 			msgBean = hisList.get(getHisIndex());
+			msgBean.setId(String.valueOf(System.currentTimeMillis()));
 			hisIndex ++;
+			ObjUserWrap.getObjUser(msgBean.getUserId(), new ObjUserInfoCallback() {
+
+				@Override
+				public void callback(ObjUser user, AVException e) {
+					// TODO Auto-generated method stub
+					if(e == null){
+						if(null != user.getProfileClip()){
+							userAvator = user.getProfileClip().getUrl();
+						}
+						if(null != user.getNameNick()){
+							nickname = user.getNameNick();
+						}
+					}
+				}
+			});
+			msgBean.setUserAvator(userAvator);
+			msgBean.setNickName(nickname);
+			userAvator = "";
+			nickname = "";
 			return msgBean;
 		}
 		//没有实时消息，穿插默认消息
 		msgBean = defList.get(getDefIndex());
+		msgBean.setId(String.valueOf(System.currentTimeMillis()));
 		defIndex ++;
+		msgBean.setUserAvator(userAvator);
+		msgBean.setNickName(nickname);
 		return msgBean;
 	}
 	public int getHisIndex(){
@@ -436,6 +482,7 @@ public class BarrageActivity extends Activity{
 					@Override
 					public void done(List<AVIMMessage> msgs, AVIMException e) {
 						// TODO Auto-generated method stub
+
 						if(e != null){
 							return ;
 						}

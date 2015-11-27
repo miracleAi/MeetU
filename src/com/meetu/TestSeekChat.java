@@ -15,6 +15,7 @@ import com.meetu.bean.SeekChatInfoBean;
 import com.meetu.cloud.callback.ObjFunMapCallback;
 import com.meetu.cloud.callback.ObjFunObjectCallback;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjChatWrap;
 
 import android.R.array;
@@ -53,7 +54,7 @@ public class TestSeekChat extends Activity{
 		clickBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View arg0) {/*
 				// TODO Auto-generated method stub
 				ObjChatWrap.queryChatInfo(user, System.currentTimeMillis(), 999, new ObjFunMapCallback() {
 					
@@ -127,7 +128,16 @@ public class TestSeekChat extends Activity{
 					
 					}
 				});
-			}
+			*/
+				ObjChatWrap.queryfollow(user, new ObjFunMapCallback() {
+					
+					@Override
+					public void callback(Map<String, Object> map, AVException e) {
+						// TODO Auto-generated method stub
+						log.d("mytest", "follow"+map);
+					}
+				});
+				}
 		});
 	}
 

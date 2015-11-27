@@ -97,4 +97,25 @@ public class ObjChatWrap {
 			}
 		});
 	}
+	//测试关注
+	public static void queryfollow(ObjUser user,final ObjFunMapCallback callback){
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("user", user);
+		AVCloud.callFunctionInBackground("followMembers", params, new FunctionCallback<Map<String, Object>>() {
+
+			@Override
+			public void done(Map<String, Object> result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					callback.callback(null,e);
+					return;
+				}
+				if(result != null){
+					callback.callback(result, null);
+				}else{
+					callback.callback(null, new AVException(0, "获取觅聊信息失败"));
+				}
+			}
+		});
+	}
 }
