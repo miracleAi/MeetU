@@ -283,7 +283,6 @@ public class TestDanmu extends Activity{
 								bean.setContent(msg.getText());
 								bean.setUserId(msg.getFrom());
 								bean.setTime(DateUtils.getFormattedTimeInterval(msg.getTimestamp()));
-								bean.setSendTime(msg.getTimestamp());
 								hisList.add(bean);
 							}
 						}
@@ -309,7 +308,6 @@ public class TestDanmu extends Activity{
 					bean.setContent(msg.getText());
 					bean.setUserId(msg.getFrom());
 					bean.setTime(DateUtils.getFormattedTimeInterval(msg.getTimestamp()));
-					bean.setSendTime(msg.getTimestamp());
 					realTimeList.add(bean);
 				}
 				break;

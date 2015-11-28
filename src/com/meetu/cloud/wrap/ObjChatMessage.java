@@ -327,13 +327,13 @@ public class ObjChatMessage {
 	/**
 	 * 获取会话
 	 */
-	public static void getConversation(AVIMClient client,final ObjConversationListCallback callback){
+	public static void getConversation(String userId,AVIMClient client,final ObjConversationListCallback callback){
 		AVIMConversationQuery query = client.getQuery();
 		ArrayList<Integer> numbers = new ArrayList<Integer>();
 		numbers.add(1);
 		numbers.add(2);
-		//query.whereContainsIn("attr.cType", numbers);
-
+		query.whereContainsIn("attr.cType", numbers);
+		query.withMembers(Arrays.asList(userId));
 		query.setLimit(100);
 		query.whereGreaterThan("attr.overTime", System.currentTimeMillis());
 

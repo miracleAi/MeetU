@@ -5,10 +5,10 @@ import com.meetu.cloud.object.ObjUser;
 public class BarrageMsgBean {
 	String id;
 	String content;
+	//发送者ID
 	String userId;
-	ObjUser user;
+	//消息发送时间（或者默认消息附加信息）
 	String time;
-	long sendTime;
 	String userAvator;
 	String nickName;
 	
@@ -30,12 +30,6 @@ public class BarrageMsgBean {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public long getSendTime() {
-		return sendTime;
-	}
-	public void setSendTime(long sendTime) {
-		this.sendTime = sendTime;
-	}
 	public String getContent() {
 		return content;
 	}
@@ -54,11 +48,4 @@ public class BarrageMsgBean {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public ObjUser getUser() {
-		return user;
-	}
-	public void setUser(ObjUser user) {
-		this.user = user;
-	}
-	
 }

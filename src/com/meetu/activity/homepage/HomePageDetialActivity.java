@@ -320,7 +320,9 @@ OnClickListener ,OnScrollListener{
 			break;
 		case R.id.barrage_homepage_detial_img:
 			Intent intent5=new Intent(this,BarrageActivity.class);
-
+			Bundle bundle5=new Bundle();
+			bundle5.putSerializable("activityBean", activityBean);
+			intent5.putExtras(bundle5);
 			startActivity(intent5);
 			break;
 			

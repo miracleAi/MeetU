@@ -236,7 +236,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 	 * @date 2015-11-20
 	 */
 	public void getConversation(){
-		ObjChatMessage.getConversation(MyApplication.chatClient, new ObjConversationListCallback() {
+		ObjChatMessage.getConversation(user.getObjectId(),MyApplication.chatClient, new ObjConversationListCallback() {
 
 			@Override
 			public void callback(List<AVIMConversation> objects, AVException e) {
