@@ -287,6 +287,8 @@ public class RegisterVerificationActivity extends Activity implements OnClickLis
 				public void callback(boolean result, AVException e) {
 					if(result==true){
 						Intent intent=new Intent(RegisterVerificationActivity.this,MainActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						finish();
 						startActivity(intent);
 					}else{
 						log.e("failure", e);

@@ -197,7 +197,7 @@
         android:visibility="visible"
         android:cursorVisible="false"
         android:maxLength="6"
-        android:textColor="@color/white"
+        android:textColor="#00000000"
          >
 
         <requestFocus />

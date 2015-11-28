@@ -332,7 +332,7 @@ public class ObjChatMessage {
 		ArrayList<Integer> numbers = new ArrayList<Integer>();
 		numbers.add(1);
 		numbers.add(2);
-		//query.whereContainsIn("attr.cType", numbers);
+		query.whereContainsIn("attr.cType", numbers);
 
 		query.setLimit(100);
 		query.whereGreaterThan("attr.overTime", System.currentTimeMillis());

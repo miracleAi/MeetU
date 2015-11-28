@@ -168,7 +168,12 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 				Toast.makeText(getApplicationContext(), "请输入觅聊标题", Toast.LENGTH_SHORT).show();
 			}else{
 				//开始创建操作
-				createGroup();
+				if(photoPath.equals("")){
+					Toast.makeText(getApplicationContext(), "请选择照片", Toast.LENGTH_SHORT).show();
+				}else{
+					createGroup();
+				}
+				
 			}
 			break;
 		case R.id.back_creationChat_rl:
@@ -314,18 +319,31 @@ public class CreationChatActivity extends Activity implements OnClickListener{
      */
 	
 	public void cropPhoto(Uri uri){
+//		//调用拍照的裁剪功能
+//		Intent intent=new Intent("com.android.camera.action.CROP");
+//		intent.setDataAndType(uri, "image/*");
+//		intent.putExtra("crop", "true");
+//		 //裁剪框的比例，1：1
+//		intent.putExtra("aspectX", 1);
+//		intent.putExtra("aspectY", 1);
+//		// // outputX outputY 是裁剪后图片宽高
+//		intent.putExtra("outputX", 550);
+//		intent.putExtra("outputY", 516);
+//		intent.putExtra("return-data",true);
+////		log.e("lucifer", "PhotoWidth="+PhotoWidth+"  PhotoHight"+PhotoHight);
+//		startActivityForResult(intent,33);
+		
 		//调用拍照的裁剪功能
 		Intent intent=new Intent("com.android.camera.action.CROP");
 		intent.setDataAndType(uri, "image/*");
 		intent.putExtra("crop", "true");
-		 //裁剪框的比例，1：1
+		//aspectX aspectY 是宽和搞的比例
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
-		// // outputX outputY 是裁剪后图片宽高
-		intent.putExtra("outputX", 550);
-		intent.putExtra("outputY", 516);
+		// // outputX outputY 是裁剪图片宽高
+		intent.putExtra("outputX", 275);
+		intent.putExtra("outputY", 258);
 		intent.putExtra("return-data",true);
-//		log.e("lucifer", "PhotoWidth="+PhotoWidth+"  PhotoHight"+PhotoHight);
 		startActivityForResult(intent,33);
 	}
 	
@@ -363,7 +381,7 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 						log.e("zcq","已经建立过长连接");
 						saveGroupInfo();
 					}else{
-						saveGroupInfo();
+						
 						ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
 
 							@Override
@@ -375,6 +393,7 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 								if(client != null){
 									MyApplication.chatClient = client;
 									log.e("zcq", "连接聊天长连接成功");
+									saveGroupInfo();
 								}else{
 									log.e("zcq", "连接聊天长连接失败");
 								}

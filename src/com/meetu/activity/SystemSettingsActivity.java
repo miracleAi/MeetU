@@ -78,6 +78,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener{
 		case R.id.sign_out_system_settings_rl:
 			//TODO 清缓存 删除本地 信息
 			signOut();
+			
 			finish();
 		
 			
@@ -111,6 +112,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener{
 					ObjUserWrap.logOut();
 					Toast.makeText(getApplicationContext(), "退出", Toast.LENGTH_SHORT).show();	
 					Intent intent=new Intent(SystemSettingsActivity.this,LoginActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(intent);
 				}else{
 					log.e("zcq", "长连接注销失败");

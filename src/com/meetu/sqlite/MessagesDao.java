@@ -119,7 +119,7 @@ public class MessagesDao {
 	 * */
 	public void deleteAll(String uid){
 		SQLiteDatabase db=helper.getReadableDatabase();
-		String sql="delete * from messages where "+Constants.USERID +"="+uid;
+		String sql="delete from messages where "+Constants.USERID +"="+uid;
 		db.execSQL(sql);
 		db.close();
 	}
@@ -128,8 +128,9 @@ public class MessagesDao {
 	 * */
 	public void deleteConv(String userId,String convId){
 		SQLiteDatabase db=helper.getReadableDatabase();
-		String sql="delete * from messages where "+Constants.USERID +"="+userId+" and _conversation_id="+convId;
-		db.execSQL(sql);
+	//	String sql="delete from messages where "+Constants.USERID +"="+userId+" and _conversation_id="+convId;
+		String sql="delete from messages where "+Constants.USERID +"=?"+" and _conversation_id= ?";
+		db.execSQL(sql,new Object[]{userId,convId});
 		db.close();
 	}
  	/**

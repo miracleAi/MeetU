@@ -18,7 +18,9 @@ import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.activity.miliao.EmojiParser;
 import com.meetu.activity.miliao.XmlEmojifPullHelper;
 import com.meetu.adapter.MessagesListAdapter;
+import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjConversationListCallback;
+import com.meetu.cloud.callback.ObjListCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.common.Constants;
@@ -27,6 +29,7 @@ import com.meetu.entity.Messages;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.EmojisDao;
 import com.meetu.sqlite.MessagesDao;
+import com.meetu.sqlite.UserAboutDao;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -68,6 +71,10 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 	ObjUser user = null;
 	MyReceiver mr = null;
 	
+	//
+	private UserAboutDao userAboutDao;
+	private ArrayList<UserAboutBean> userAboutBeansList=new ArrayList<UserAboutBean>();
+	
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -83,6 +90,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
 	    messagesDao=new MessagesDao(getActivity());
+	    userAboutDao=new UserAboutDao(getActivity());
 //	    //TODO 测试	   
 //	    testMessages();
 	    
@@ -196,11 +204,21 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 			switch(msg.what){
 			case 1:	
 				log.e("zcq", "刷新了");
+
 				ArrayList<Messages> list = messagesDao.getMessages(user.getObjectId());
 				
 				if(list != null && list.size()>0){
 					mdataListCache.clear();
-					mdataListCache.addAll(list);		
+					
+					
+					for(Messages messages:list){
+						log.e("messages.getTiStatus()", ""+messages.getTiStatus());
+						if(messages.getTiStatus()==0){
+							mdataListCache.add(messages);
+						}else{
+							messagesDao.deleteConv(user.getObjectId(),messages.getConversationID());
+						}
+					}
 				}else{
 					//重新加载
 				}
@@ -236,6 +254,10 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 	 * @date 2015-11-20
 	 */
 	public void getConversation(){
+		//修改状态
+		messagesDao.updeteStatus(user.getObjectId());
+		
+		log.e("zcq", "正在加载数据");
 		ObjChatMessage.getConversation(MyApplication.chatClient, new ObjConversationListCallback() {
 
 			@Override
@@ -256,7 +278,11 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 					log.e("zcq", "user.getObjectId()=="+user.getObjectId());
 					for(int i=0;i<convList.size();i++){
 						AVIMConversation conversation = convList.get(i);
+						
+						getMember(conversation);
+						
 						Messages msg = new Messages();
+						
 						msg.setUserId(user.getObjectId());
 						msg.setConversationID(conversation.getConversationId());
 						int type = (Integer) conversation.getAttribute("cType");
@@ -282,6 +308,9 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 					messagesDao.insertList(list);
 				}
 				log.e("zcq", "list.size()=="+convList.size());
+				
+
+				
 				handler.sendEmptyMessage(1);
 			}
 		});
@@ -296,6 +325,38 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 			mdataListCache.addAll(list);		
 		}
 
+	}
+	
+	/**
+	 * 查询对话成员 插到本地
+	 * @param covn  
+	 * @author lucifer
+	 * @date 2015-11-28
+	 */
+	public void getMember(final AVIMConversation covn){
+		userAboutBeansList=new ArrayList<UserAboutBean>();
+		ObjChatMessage.getChatMembers(covn, new ObjListCallback() {
+			
+			@Override
+			public void callback(ArrayList<String> list, AVException e) {
+				if(e!=null){
+					log.e("zcq", e);
+				}
+				else if(list!=null){
+					for(String string:list){
+						UserAboutBean item=new UserAboutBean();
+						item.setUserId(user.getObjectId());
+						item.setAboutType(2);
+						item.setAboutUserId(string);
+						item.setAboutColetctionId(covn.getConversationId());
+						userAboutBeansList.add(item);
+					}
+
+				}
+				userAboutDao.saveUserAboutList(userAboutBeansList);
+				
+			}
+		});
 	}
 	
 	

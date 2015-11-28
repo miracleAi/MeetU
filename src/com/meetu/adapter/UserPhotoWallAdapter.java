@@ -102,13 +102,20 @@ public class UserPhotoWallAdapter extends RecyclerView.Adapter<RecyclerView.View
 					params.topMargin=DensityUtil.dip2px(mContext, 10);
 					holder.rlAll.setLayoutParams(params);
 				}
-				photoUrl=item.getPhoto().getUrl();
+				
+				if(item.getPhoto()!=null){
+					photoUrl=item.getPhoto().getUrl();
+				}
+			
 
 				int photoWidth=item.getImageWidth();
 				int photoHight=item.getImageHeight();
 				int Hight=(int) ((double)photoWidth/(width/2)*(photoHight));
 				if(photoWidth>=(width/2)){
-					finalBitmap.display(holder.ivImg, item.getPhoto().getUrl(), width/2, Hight);
+					if(item.getPhoto()!=null){
+						finalBitmap.display(holder.ivImg, item.getPhoto().getUrl(), width/2, Hight);
+					}
+					
 				}else{
 					//处理bitmap 
 					bitmapUtils.display(holder.ivImg, item.getPhoto().getUrl(),new BitmapLoadCallBack<ImageView>() {
