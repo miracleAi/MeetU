@@ -126,6 +126,15 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener{
 		titile.setText(""+seekChatBean.getTitle());
 		numberAll.setText(""+seekChatBean.getMembers().size());
 		numberFavor.setText(""+seekChatBean.getFolloweeCount());
+		numberUserAll.setText(""+seekChatBean.getMembers().size());
+		
+		int disNumber=(int) ((seekChatBean.getTimeChatStop()-System.currentTimeMillis())/3600000);
+		if(disNumber>=1){
+			dismissData.setText(""+disNumber+"H");
+		}else{
+			int minute=(int) ((seekChatBean.getTimeChatStop()-System.currentTimeMillis())/60000);
+			dismissData.setText(""+minute+"M");
+		}
 		
 	}
 	/**
@@ -321,7 +330,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener{
 			startActivity(five);
 			break;
 		case R.id.photoHead_manage_miliao_channel_img:
-			Intent intent=new Intent();
+			Intent intent=new Intent(getActivity(),UserPagerActivity.class);
 			intent.putExtra("userId", seekChatBean.getCreator().getObjectId());
 			startActivity(intent);	
 			break;

@@ -86,7 +86,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 	ArrayList<UserAboutBean>	userAboutBeansList=new ArrayList<UserAboutBean>();
 	
 	
-	SeekChatInfoBean chatBean = new SeekChatInfoBean();
+	SeekChatInfoBean chatBean = null;
 	
 	private List<SeekChatBean> seekChatBeansList=new ArrayList<SeekChatBean>();
 	
@@ -164,7 +164,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 		adapter=new BoardPageFragmentAdapter(super.getActivity().getSupportFragmentManager(), fragmentList);
 		viewPager.setAdapter(adapter);
 		viewPager.setOffscreenPageLimit(1);
-	//	viewPager.setCurrentItem(0);
+		viewPager.setCurrentItem(positonNow);
 		isAddconvesition();
 		conv = MyApplication.chatClient.getConversation(""+seekChatBeansList.get(positonNow).getConversationId());
 	}
@@ -265,6 +265,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 				//传对话的类型   1 表示活动群聊 2 表示觅聊  3 表示单聊
 				intent2.putExtra("ConversationStyle", ""+2);
 				intent2.putExtra("title", ""+seekChatBeansList.get(positonNow).getTitle());
+				intent2.putExtra("number", ""+seekChatBeansList.get(positonNow).getMembers().size());
 				Bundle bundle=new Bundle();
 				bundle.putSerializable("SeekChatBean", seekChatBeansList.get(positonNow));
 				intent2.putExtras(bundle);
@@ -454,10 +455,13 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 							//传对话的类型   1 表示活动群聊 2 表示觅聊  3 表示单聊
 							intent2.putExtra("ConversationStyle", ""+2);
 							intent2.putExtra("title", ""+seekChatBeansList.get(positonNow).getTitle());
+							intent2.putExtra("number", ""+seekChatBeansList.get(positonNow).getMembers().size()+1);
 							Bundle bundle=new Bundle();
 							bundle.putSerializable("SeekChatBean", seekChatBeansList.get(positonNow));
 							intent2.putExtras(bundle);
 							startActivity(intent2);
+							
+							loadData();
 							//TODO 应该只刷新成员 省流量 
 					//		handler.sendEmptyMessage(1);
 						}else{
@@ -625,7 +629,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 	public void isAddconvesition(){
 		List<String>list=new ArrayList<String>();
 		for(int i=0;i<seekChatBeansList.get(positonNow).getMembers().size();i++){
-			list.add(""+seekChatBeansList.get(i).getMembers().get(i).get("userId"));
+			list.add(""+seekChatBeansList.get(positonNow).getMembers().get(i).get("userId"));
 		}
 		for(String string:list){
 			if(user.getObjectId().equals(string)){
@@ -634,5 +638,24 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 			}
 		}
 	}
+
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		switch (requestCode) {
+		case 100:
+			if(resultCode==getActivity().RESULT_OK){
+				//创建觅聊 成功 执行的操作
+				log.e("lucifer", "需要重新加载数据");
+				loadData();
+			}
+			break;
+		
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+		
+	}
+	
 
 }

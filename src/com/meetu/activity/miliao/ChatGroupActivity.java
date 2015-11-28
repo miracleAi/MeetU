@@ -35,6 +35,7 @@ import com.meetu.R;
 import com.meetu.R.layout;
 import com.meetu.TestReceiveMsg.MemberChangeHandler;
 import com.meetu.adapter.ChatmsgsListViewAdapter;
+import com.meetu.bean.SeekChatBean;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjChat;
@@ -182,10 +183,12 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	private Messages message;//用来接收 消息列表传过来 消息
 	private ObjChat objChat;//用来接收 觅聊列表传过来 觅聊
 	private String jstitle ;//用来接收标题title
+	private String number;//用来接收传过来的成员数量
 	private TextView title;//标题
 	private TextView userNumber;
 	private UserAboutDao userAboutDao;
 	private List<UserAboutBean> userAboutBeans=new ArrayList<UserAboutBean>();
+	private SeekChatBean seekChatBean=null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -209,6 +212,10 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		conversationId=intent.getStringExtra("ConversationId");
 		conversation = MyApplication.chatClient.getConversation(""+conversationId);
 		jstitle=intent.getStringExtra("title");
+		number=intent.getStringExtra("number");
+		
+		seekChatBean=(SeekChatBean) intent.getSerializableExtra("SeekChatBean");
+		
 		log.e("lucifer", "conversationStyle=="+conversationStyle+" conversationId=="+conversationId);
 		/**
 		 * 删除所有本地聊天数据
@@ -251,16 +258,17 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 //		}
 		title.setText(""+jstitle);
 		
-		if(conversationStyle.equals("1")){
-			int number=userAboutDao.queryUserAbout(""+user.getObjectId(), 3, conversationId).size();
-			log.e("lucifer","number=="+ number+" conversationStyle=="+conversationStyle);
-			userNumber.setText(""+"("+number+")");
-			
-		}else if(conversationStyle.equals("2")){
-			int number=userAboutDao.queryUserAbout(""+user.getObjectId(), Integer.valueOf(conversationStyle), conversationId).size();
-			log.e("lucifer","number=="+ number+" conversationStyle=="+conversationStyle);
-			userNumber.setText(""+"("+number+")");
-		}
+//		if(conversationStyle.equals("1")){
+//			int number=userAboutDao.queryUserAbout(""+user.getObjectId(), 3, conversationId).size();
+//			log.e("lucifer","number=="+ number+" conversationStyle=="+conversationStyle);
+//			userNumber.setText(""+"("+number+")");
+//			
+//		}else if(conversationStyle.equals("2")){
+//			int number=userAboutDao.queryUserAbout(""+user.getObjectId(), Integer.valueOf(conversationStyle), conversationId).size();
+//			log.e("lucifer","number=="+ number+" conversationStyle=="+conversationStyle);
+//			userNumber.setText(""+"("+number+")");
+//		}
+		userNumber.setText("("+number+")");
 			
 	}
 	@Override

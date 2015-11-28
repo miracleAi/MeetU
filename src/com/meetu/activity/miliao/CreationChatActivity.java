@@ -173,7 +173,7 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 			break;
 		case R.id.back_creationChat_rl:
 			Intent intent=getIntent();
-			setResult(RESULT_OK,intent);
+			setResult(RESULT_CANCELED,intent);
 			finish();
 			break;
 
@@ -254,9 +254,11 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 			
 			break;
 		case 33:
+			log.e("图片处理", "aaa");
 			if(data!=null){
 				Bundle extras=data.getExtras();
 				headerPortait=extras.getParcelable("data");
+				log.e("headerPortait", headerPortait.toString());
 				if(headerPortait!=null){
 					photoPath=saveHeadImg(headerPortait);
 					photo.setImageBitmap(headerPortait);
@@ -323,7 +325,7 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 		intent.putExtra("outputX", 550);
 		intent.putExtra("outputY", 516);
 		intent.putExtra("return-data",true);
-		log.e("lucifer", "PhotoWidth="+PhotoWidth+"  PhotoHight"+PhotoHight);
+//		log.e("lucifer", "PhotoWidth="+PhotoWidth+"  PhotoHight"+PhotoHight);
 		startActivityForResult(intent,33);
 	}
 	
