@@ -254,11 +254,15 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 	 * @date 2015-11-20
 	 */
 	public void getConversation(){
+
 		//修改状态
 		messagesDao.updeteStatus(user.getObjectId());
 		
 		log.e("zcq", "正在加载数据");
-		ObjChatMessage.getConversation(MyApplication.chatClient, new ObjConversationListCallback() {
+	//	ObjChatMessage.getConversation(MyApplication.chatClient, new ObjConversationListCallback() {
+
+		ObjChatMessage.getConversation(user.getObjectId(),MyApplication.chatClient, new ObjConversationListCallback() {
+
 
 			@Override
 			public void callback(List<AVIMConversation> objects, AVException e) {

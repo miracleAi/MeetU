@@ -215,6 +215,32 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		aboutSb.append(Constants.ABOUTCOLECTIONID+ " varchar(100) ");
 		aboutSb.append(")");
 		db.execSQL(aboutSb.toString());
+		/**
+		 * 用户缓存表
+		 * */
+		StringBuffer userSb=new StringBuffer();
+		userSb.append("create table if not exists ");
+		userSb.append(Constants.USERINFO_TB+"(");
+		userSb.append(Constants.USERID+ " varchar(100) primary key,");
+		userSb.append(Constants.USERTYPE+ " Integer ,");
+		userSb.append(Constants.ISVIP+ " Integer ,");
+		userSb.append(Constants.ISCOMPLETE+ " Integer ,");
+		userSb.append(Constants.ISVERIFY+ " Integer ,");
+		userSb.append(Constants.GENDER+ " Integer ,");
+		userSb.append(Constants.NICKNAME+ " varchar(100) ,");
+		userSb.append(Constants.REALNAME+ " varchar(100) ,");
+		userSb.append(Constants.CONSTELLATION+ " varchar(100) ,");
+		userSb.append(Constants.BIRTHDAY+ " Integer ,");
+		userSb.append(Constants.SCHOOL+ " varchar(100) ,");
+		userSb.append(Constants.SCHOOLLOCATION+ " Integer ,");
+		userSb.append(Constants.SCHOOLNUM+ " Integer ,");
+		userSb.append(Constants.DEPARTMENT+ " varchar(100) ,");
+		userSb.append(Constants.DEPARTMENTID+ " Integer ,");
+		userSb.append(Constants.HOMETOWN+ " varchar(100) ,");
+		userSb.append(Constants.PROFILECLIP+ " varchar(100) ,");
+		userSb.append(Constants.PROFILEORIGN+ " varchar(100) ");
+		userSb.append(")");
+		db.execSQL(userSb.toString());
 	}
 
 	@Override

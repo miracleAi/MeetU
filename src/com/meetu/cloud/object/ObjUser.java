@@ -41,14 +41,6 @@ public class ObjUser extends AVUser implements Serializable{
 	private String department;
 	//专业编码
 	private int departmentId;
-	public int getDepartmentId() {
-		return this.getInt("departmentId");
-	}
-
-	public void setDepartmentId(int departmentId) {
-		this.put("departmentId", departmentId);;
-	}
-
 	//家乡
 	private String hometown;
 	//切圆后的头像
@@ -57,7 +49,13 @@ public class ObjUser extends AVUser implements Serializable{
 	private AVFile profileOrign;
 
 	public ObjUser(){}
+	public int getDepartmentId() {
+		return this.getInt("departmentId");
+	}
 
+	public void setDepartmentId(int departmentId) {
+		this.put("departmentId", departmentId);;
+	}
 	public int getUserType() {
 		return this.getInt("userType");
 	}

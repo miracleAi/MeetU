@@ -1,5 +1,7 @@
 package com.meetu.common;
 
+import com.avos.avoscloud.AVFile;
+
 public class Constants {
 	//消息接收广播
 	public static final String RECEIVE_MSG = "receive_msg";
@@ -206,9 +208,48 @@ public class Constants {
 	 * 系统消息类型
 	 * */
 	public static final int SysMsgTypeNone = 0;
-    public static final int SysMsgTypeText = 1;
-    public static final int SysMsgTypeFollow = 2;
-    public static final int SysMsgTypeActy = 3;
-    public static final int SysMsgTypeUserPhoto = 4;
-
+	public static final int SysMsgTypeText = 1;
+	public static final int SysMsgTypeFollow = 2;
+	public static final int SysMsgTypeActy = 3;
+	public static final int SysMsgTypeUserPhoto = 4;
+	/**
+	 * 表字段常量名
+	 * */
+	//用户表名
+	public static final String USERINFO_TB = "userinfo_tb";
+	//用户类型
+	public static final String USERTYPE = "user_type";
+	//用户是否是Vip用户
+	public static final String ISVIP = "is_vip";
+	//用户是否已完成验证
+	public static final String ISVERIFY = "is_verify";
+	//用户是否已完善个人信息
+	public static final String ISCOMPLETE = "is_complete";
+	//昵称
+	public static final String NICKNAME = "nick_name";
+	//真实名称
+	public static final String REALNAME = "real_name";
+	//性别
+	public static final String GENDER = "gender";
+	//生日
+	public static final String BIRTHDAY = "birthday";
+	//星座
+	public static final String CONSTELLATION = "constellation";
+	//学校
+	public static final String SCHOOL = "school";
+	//学校所在地编码
+	public static final String SCHOOLLOCATION = "shool_location";
+	//学校编码
+	public static final String SCHOOLNUM = "school_num";
+	//专业
+	public static final String DEPARTMENT = "department";
+	//专业编码
+	public static final String DEPARTMENTID = "department_id";
+	//家乡
+	public static final String HOMETOWN = "hometown";
+	//切圆后的头像
+	public static final String PROFILECLIP = "profile_clip";
+	//原始头像
+	public static final String PROFILEORIGN = "profile_orign";
+	private AVFile profileOrign;
 }

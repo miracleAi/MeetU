@@ -32,4 +32,9 @@
     <color name="view_backgroud">#cccccc</color>
     <color name="textColor_setting_Tip">#707070</color>
     <color name="textColor_setting">#a0a0a0</color>
+    
+    <color name="barrage_acty_end_bg">#AFAFAF</color>
+    <color name="barrage_acty_join_bg">#33c7e5</color>
+    <color name="barrage_conv_join_bg">#0bc7b4</color>
+    
 </resources>

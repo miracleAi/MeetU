@@ -17,9 +17,12 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.lidroid.xutils.BitmapUtils;
 import com.meetu.R;
-import com.meetu.TestDanmu.MessageHandler;
+import com.meetu.activity.miliao.ChatGroupActivity;
+import com.meetu.bean.ActivityBean;
 import com.meetu.bean.BarrageMsgBean;
+import com.meetu.bean.UserBean;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.callback.ObjCoversationCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
@@ -33,6 +36,7 @@ import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
 import com.meetu.entity.Barrage;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.UserDao;
 import com.meetu.tools.DenUtil;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
@@ -48,6 +52,7 @@ import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -84,8 +89,10 @@ public class BarrageActivity extends Activity{
 	String[] defExtras = {"","","","",""};
 	int defIndex = 0;
 	int hisIndex = 0;
-	String conversationId = "5623af6560b2ce30d24a2c67";
-	String activityId = "55e2b23a60b291d784a12ccb";
+	//5623af6560b2ce30d24a2c67  测试用
+	String conversationId = "";
+	//55e2b23a60b291d784a12ccb  测试用
+	String activityId = "";
 	ObjUser user = null;
 	long lastMsgTime = 0;
 	MessageHandler msgHandler = null;
@@ -93,10 +100,21 @@ public class BarrageActivity extends Activity{
 	private int validHeightSpace;
 	//控件相关
 	private ImageView headPhoto; 
-	private TextView uName,uContent,topTitle;
+	private TextView uName,uContent,topTitle,timeTv;
 	private RelativeLayout back,userJoinList;
-
+	//底部布局
+	RelativeLayout bottomRl;
+	TextView bottomTv;
+	ImageView bottomImv;
 	private int viewHight;//动态生成的view的高度 。考虑到上下间距。要稍大点
+	private BarrageMsgBean bottomBean = null;
+	private BottomRunnable bottomRunnable = null;
+	//网络 数据相关
+	private BitmapUtils bitmapUtils; 
+	private UserDao userDao;
+	//标记是否参加活动
+	private boolean isJoined = false;
+	private ActivityBean actyBean = new ActivityBean();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -105,28 +123,40 @@ public class BarrageActivity extends Activity{
 		// 全屏
 		super.getWindow();
 		setContentView(R.layout.activity_barrage);
+		actyBean= (ActivityBean) getIntent().getExtras().getSerializable("activityBean");
+		activityId = actyBean.getActyId();
+		conversationId = actyBean.getConversationId();
+		user = AVUser.cast(AVUser.getCurrentUser(), ObjUser.class);
 		myRunnable = new MyRunnable();
 		handler = new Handler();
 		msgHandler = new MessageHandler();
+		bottomRunnable = new BottomRunnable();
 		windowWidth = DisplayUtils.getWindowWidth(BarrageActivity.this);
 		validHeightSpace=DensityUtil.dip2px(this, 350);
+		bitmapUtils = new BitmapUtils(getApplicationContext());
+		userDao = new UserDao(getApplicationContext());
 		initView();
 		initChange();
-		isChatLogin();
+		isOrder();
 		initDefData();
 		//启动弹幕
 		handler.post(myRunnable);
+		handler.post(bottomRunnable);
 	}
 	private void initView() {
 		barrarylayout=(AbsoluteLayout) super.findViewById(R.id.top_barrage_rl);
 		headPhoto=(ImageView) super.findViewById(R.id.userHeadPhone_barrage_img);
 		uName=(TextView) super.findViewById(R.id.userName_barrage_tv);
 		uContent=(TextView) super.findViewById(R.id.content_bottom_barrage_tv);
+		timeTv = (TextView) findViewById(R.id.time_tv);
 
 		topTitle=(TextView) super.findViewById(R.id.title_top_barrary_tv);
 		back=(RelativeLayout) super.findViewById(R.id.back_barrage_rl);
 		userJoinList=(RelativeLayout) super.findViewById(R.id.userjoin_barrary_rl);
 
+		bottomRl = (RelativeLayout) findViewById(R.id.bottom_bottom_barrage_rl);
+		bottomTv = (TextView) findViewById(R.id.bottom_tv);
+		bottomImv = (ImageView) findViewById(R.id.bottom_arrow);
 	}
 	private void initChange() {
 		viewHight=DensityUtil.dip2px(this, 70);//动态生成的view的高度 。考虑到上下间距。稍大点
@@ -150,15 +180,95 @@ public class BarrageActivity extends Activity{
 					return;
 				}
 				if(result){
-					Log.d("mytest", "小U退出聊天登录成功");
+					//小U退出聊天登录成功
 				}else{
-					Log.d("mytest", "小U退出聊天登录成功失败");
+					//小U退出聊天登录成功失败
 				}
 			}
 		});
 		//停止弹幕
 		handler.removeCallbacks(myRunnable);
+		handler.removeCallbacks(bottomRunnable);
 		super.onDestroy();
+	}
+	public void initBottom(){
+		if(actyBean.getStatus() == Constants.ActyStatusOver){
+			bottomRl.setBackgroundColor(getResources().getColor(R.color.barrage_acty_end_bg));
+			bottomImv.setVisibility(View.GONE);
+			bottomTv.setText("活动已结束");
+		}else{
+			if(isJoined){
+				bottomRl.setBackgroundColor(getResources().getColor(R.color.barrage_conv_join_bg));
+				bottomImv.setVisibility(View.VISIBLE);
+				bottomTv.setText("进入群聊");
+			}else{
+				bottomRl.setBackgroundColor(getResources().getColor(R.color.barrage_acty_join_bg));
+				bottomImv.setVisibility(View.VISIBLE);
+				bottomTv.setText("报名活动");
+			}
+		}
+		bottomRl.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				log.d("mytest", "click");
+				if(actyBean.getStatus() == Constants.ActyStatusOver){
+					return;
+				}
+				if(!isJoined){
+					switch (actyBean.getStatus()) {
+					case Constants.ActyStatusProcess:
+						Toast.makeText(getApplicationContext(),"活动进行中，报名已结束" , 1000).show();
+						break;
+					case Constants.ActyStatusSignUPOver:
+						Toast.makeText(getApplicationContext(),"报名已结束" , 1000).show();
+						break;
+					case Constants.ActyStatusSignUp:
+						Intent intent = new Intent(BarrageActivity.this,JoinActivity.class);
+						Bundle bundle=new Bundle();
+						bundle.putSerializable("activityBean", actyBean);
+						intent.putExtras(bundle);
+						startActivity(intent);
+						break;
+					default:
+						break;
+					}
+				}else{
+					Intent intent = new Intent(BarrageActivity.this,ChatGroupActivity.class);
+					//startActivity(intent);
+				}
+			}
+		});
+	}
+	//判断用户是否报名
+	private void isOrder() {
+		// TODO Auto-generated method stub
+		ObjActivity activity = null;
+		try {
+			activity = ObjActivity.createWithoutData(ObjActivity.class, activityId);
+			ObjActivityWrap.queryUserJoin(activity, user, new ObjFunBooleanCallback() {
+
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						return ;
+					}
+					if(result){
+						isJoined = true;
+						isChatLogin();
+					}else{
+						isJoined = false;
+						uLigin();
+					}
+					initBottom();
+				}
+			});
+		} catch (AVException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 	//检查本人客户端是否登录
 	private void isChatLogin() {
@@ -172,10 +282,10 @@ public class BarrageActivity extends Activity{
 					return;
 				}
 				if(result){
-					Log.d("mytest", "本人聊天登录");
-					isOrder();
+					//本人聊天登录
+					getHisList(MyApplication.chatClient);
 				}else{
-					Log.d("mytest", "本人聊天未登录");
+					//本人聊天未登录
 					chatLogin();
 				}
 			}
@@ -193,8 +303,7 @@ public class BarrageActivity extends Activity{
 					return ;
 				}
 				MyApplication.chatClient = client;
-				Log.d("mytest", "本人聊天登录成功");
-				isOrder();
+				//本人聊天登录成功
 			}
 		});
 	}
@@ -203,18 +312,44 @@ public class BarrageActivity extends Activity{
 	 */
 	@SuppressLint("ResourceAsColor")
 	private void initAdd( final BarrageMsgBean barrage) {
+		//发送者用户信息判断及查询
+		if(barrage.getUserId() != null && !("").equals(barrage.getUserId())){
+			ArrayList<UserBean> list = userDao.queryUser(barrage.getUserId());
+			if(null != list && list.size()>0){
+				barrage.setNickName(list.get(0).getNameNick());
+				barrage.setUserAvator(list.get(0).getProfileClip());
+			}else{
+				if(null != barrage.getNickName() && ("小U").equals(barrage.getNickName())){
+
+				}else{
+					barrage.setNickName("");
+				}
+				barrage.setUserAvator("");
+				ObjUserWrap.getObjUser(barrage.getUserId(), new ObjUserInfoCallback() {
+
+					@Override
+					public void callback(ObjUser objuser, AVException e) {
+						// TODO Auto-generated method stub
+						if(e == null){
+							userDao.insertOrReplaceUser(objuser);
+						}
+					}
+				});
+			}
+		}
+		setBottomBean(barrage);
 		topHight=(number%(validHeightSpace/viewHight))*viewHight+viewHight;
 		number++;
 		LinearLayout ll = new LinearLayout(this);
 		//设置RelativeLayout布局的宽高
 		@SuppressWarnings("deprecation")
 		AbsoluteLayout.LayoutParams relLayoutParams=new AbsoluteLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,windowWidth,topHight);
-		LinearLayout.LayoutParams imageLp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 		//弹幕头像
 		ImageView imageView = new ImageView(this);
+		LinearLayout.LayoutParams imageLp = new LinearLayout.LayoutParams(DensityUtil.dip2px(getApplicationContext(), 44), DensityUtil.dip2px(getApplicationContext(), 44));
 		imageView.setId(1);
 		if(null != barrage.getUserAvator() && !("").equals(barrage.getUserAvator())){
-
+			bitmapUtils.display(imageView, barrage.getUserAvator());
 		}else{
 			imageView.setImageResource(R.drawable.mine_likelist_profile_default);
 		}
@@ -223,10 +358,8 @@ public class BarrageActivity extends Activity{
 		imageView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//Toast.makeText(BarrageActivity.this,v.getTag()+"" , Toast.LENGTH_SHORT).show();
-				//headPhoto.setImageResource();
-				//uName.setText();
-				//uContent.setText();
+				handler.removeCallbacks(bottomRunnable);
+				initBottom(barrage, true);
 			}
 		});
 		ll.addView(imageView,imageLp);
@@ -250,10 +383,8 @@ public class BarrageActivity extends Activity{
 
 			@Override
 			public void onClick(View v) {
-				//Toast.makeText(BarrageActivity.this,v.getTag()+"" , Toast.LENGTH_SHORT).show();
-				//headPhoto.setImageResource();
-				//uName.setText();
-				//uContent.setText();
+				handler.removeCallbacks(bottomRunnable);
+				initBottom(barrage, true);
 			}
 		});
 		tv.setId(2);
@@ -314,6 +445,40 @@ public class BarrageActivity extends Activity{
 		});
 
 	}
+	class BottomRunnable implements Runnable{
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			initBottom(getBottomBean(), false);
+		}
+
+	}
+	public void setBottomBean(BarrageMsgBean bean){
+		this.bottomBean = bean;
+	}
+	public BarrageMsgBean getBottomBean(){
+		return bottomBean;
+	}
+	public void initBottom(BarrageMsgBean bean,boolean isClick){
+		if(null != bean.getUserAvator() && !("").equals(bean.getUserAvator())){
+			bitmapUtils.display(headPhoto, bean.getUserAvator());
+		}else{
+			headPhoto.setImageResource(R.drawable.mine_likelist_profile_default);
+		}
+		if(null != bean.getNickName() && !("").equals(bean.getNickName())){
+			uName.setText(bean.getNickName());
+		}else{
+			uName.setText("");
+		}
+		timeTv.setText(bean.getTime());
+		uContent.setText(bean.getContent());
+		if(isClick){
+			handler.postDelayed(bottomRunnable, 8000);
+		}else{
+			handler.postDelayed(bottomRunnable, 5000);
+		}
+	}
 	class MyRunnable implements Runnable{
 
 		@Override
@@ -323,48 +488,14 @@ public class BarrageActivity extends Activity{
 			handler.postDelayed(myRunnable, 1000);
 		}
 	}
-
-	public BarrageMsgBean getMsgTest(){
-		BarrageMsgBean msgBean = new BarrageMsgBean();
-		msgBean.setId(String.valueOf(System.currentTimeMillis()));
-		msgBean.setContent("喝咖啡的女摄影师啦啦啦");
-		msgBean.setNickName("");
-		msgBean.setSendTime(System.currentTimeMillis());
-		msgBean.setUser(AVUser.cast(AVUser.getCurrentUser(), ObjUser.class));
-		msgBean.setTime("");
-		return msgBean;
-	}
-	String userAvator ;
-	String nickname ;
 	//取得弹幕显示信息
 	public BarrageMsgBean getMsg(){
 		BarrageMsgBean msgBean = new BarrageMsgBean();
-		userAvator = "";
-		nickname = "";
 		//优先显示实时消息
 		if(realTimeList.size() > 0){
 			msgBean = realTimeList.get(0);
 			lastMsgTime = System.currentTimeMillis();
 			msgBean.setId(String.valueOf(lastMsgTime));
-			ObjUserWrap.getObjUser(msgBean.getUserId(), new ObjUserInfoCallback() {
-
-				@Override
-				public void callback(ObjUser user, AVException e) {
-					// TODO Auto-generated method stub
-					if(e == null){
-						if(null != user.getProfileClip()){
-							userAvator = user.getProfileClip().getUrl();
-						}
-						if(null != user.getNameNick()){
-							nickname = user.getNameNick();
-						}
-					}
-				}
-			});
-			msgBean.setUserAvator(userAvator);
-			msgBean.setNickName(nickname);
-			userAvator = "";
-			nickname = "";
 			realTimeList.remove(msgBean);
 			hisList.add(msgBean);
 			return msgBean;
@@ -374,33 +505,12 @@ public class BarrageActivity extends Activity{
 			msgBean = hisList.get(getHisIndex());
 			msgBean.setId(String.valueOf(System.currentTimeMillis()));
 			hisIndex ++;
-			ObjUserWrap.getObjUser(msgBean.getUserId(), new ObjUserInfoCallback() {
-
-				@Override
-				public void callback(ObjUser user, AVException e) {
-					// TODO Auto-generated method stub
-					if(e == null){
-						if(null != user.getProfileClip()){
-							userAvator = user.getProfileClip().getUrl();
-						}
-						if(null != user.getNameNick()){
-							nickname = user.getNameNick();
-						}
-					}
-				}
-			});
-			msgBean.setUserAvator(userAvator);
-			msgBean.setNickName(nickname);
-			userAvator = "";
-			nickname = "";
 			return msgBean;
 		}
 		//没有实时消息，穿插默认消息
 		msgBean = defList.get(getDefIndex());
 		msgBean.setId(String.valueOf(System.currentTimeMillis()));
 		defIndex ++;
-		msgBean.setUserAvator(userAvator);
-		msgBean.setNickName(nickname);
 		return msgBean;
 	}
 	public int getHisIndex(){
@@ -419,38 +529,14 @@ public class BarrageActivity extends Activity{
 	private void initDefData() {
 		for(int i=0;i<defContents.length;i++){
 			BarrageMsgBean bean = new BarrageMsgBean();
+			bean.setUserId("");
+			bean.setNickName("小U");
 			bean.setContent(defContents[i]);
 			bean.setTime(defExtras[i]);
 			defList.add(bean);
 		}
 	}
-	//判断用户是否报名
-	private void isOrder() {
-		// TODO Auto-generated method stub
-		ObjActivity activity = null;
-		try {
-			activity = ObjActivity.createWithoutData(ObjActivity.class, activityId);
-			ObjActivityWrap.queryUserJoin(activity, user, new ObjFunBooleanCallback() {
 
-				@Override
-				public void callback(boolean result, AVException e) {
-					// TODO Auto-generated method stub
-					if(e != null){
-						return ;
-					}
-					if(result){
-						Log.d("mytest", "本人聊天登录成功且已报名");
-						getHisList(MyApplication.chatClient);
-					}else{
-						uLigin();
-					}
-				}
-			});
-		} catch (AVException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}
 	//小U账户登录
 	private void uLigin() {
 		ObjChatMessage.connectToChatServer(uClient, new ObjAvimclientCallback() {
@@ -462,7 +548,7 @@ public class BarrageActivity extends Activity{
 					return ;
 				}
 				uClient = client;
-				Log.d("mytest", "小U聊天登录成功");
+				//小U聊天登录成功
 				getHisList(uClient);
 			}
 		});
@@ -486,7 +572,7 @@ public class BarrageActivity extends Activity{
 						if(e != null){
 							return ;
 						}
-						Log.d("mytest", "获取历史消息成功"+msgs.size());
+						//获取历史消息成功
 						for(AVIMMessage message:msgs){
 							if(message instanceof AVIMTextMessage){
 								AVIMTextMessage msg = ((AVIMTextMessage)message);
@@ -494,11 +580,9 @@ public class BarrageActivity extends Activity{
 								bean.setContent(msg.getText());
 								bean.setUserId(msg.getFrom());
 								bean.setTime(DateUtils.getFormattedTimeInterval(msg.getTimestamp()));
-								bean.setSendTime(msg.getTimestamp());
 								hisList.add(bean);
 							}
 						}
-						Log.d("mytest", "获取历史消息成功"+hisList.size());
 					}
 				});
 			}
@@ -513,14 +597,13 @@ public class BarrageActivity extends Activity{
 			super.onMessage(message, conversation, client);
 			switch (message.getMessageType()) {
 			case Constants.TEXT_TYPE:
-				Log.d("mytest", "接收到实时消息");
+				//接收到实时消息
 				if(conversation.getConversationId().equals(conversationId)){
 					AVIMTextMessage msg = ((AVIMTextMessage)message);
 					BarrageMsgBean bean = new BarrageMsgBean();
 					bean.setContent(msg.getText());
 					bean.setUserId(msg.getFrom());
 					bean.setTime(DateUtils.getFormattedTimeInterval(msg.getTimestamp()));
-					bean.setSendTime(msg.getTimestamp());
 					realTimeList.add(bean);
 				}
 				break;

@@ -206,22 +206,23 @@ public class ObjUserWrap {
 	 * 根据用户ID获取用户信息
 	 * */
 	public static void getObjUser(String objId,final ObjUserInfoCallback callback){
-		AVQuery<ObjUser> query = AVUser.getQuery(ObjUser.class);
+		//查询用户，你需要使用特殊的用户查询对象来完成
+		AVQuery<AVUser> query = AVUser.getQuery();
 		query.whereEqualTo("objectId", objId);
-		query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
+		//query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
 		//TimeUnit.DAYS.toMillis(1)
-		query.setMaxCacheAge(10*60*1000);
-		query.getFirstInBackground(new GetCallback<ObjUser>() {
-
+		//query.setMaxCacheAge(10*60*1000);
+		query.getFirstInBackground(new GetCallback<AVUser>() {
+			
 			@Override
-			public void done(ObjUser user, AVException e) {
+			public void done(AVUser user, AVException e) {
 				// TODO Auto-generated method stub
 				if(e != null){
 					callback.callback(null, e);
 					return;
 				}
 				if(user != null){
-					callback.callback(user, null);
+					callback.callback(AVUser.cast(user, ObjUser.class), null);
 				}else{
 					callback.callback(null, new AVException(0, "获取用户信息失败"));
 				}

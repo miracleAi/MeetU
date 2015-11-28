@@ -203,7 +203,7 @@ public class MessagesDao {
 		SQLiteDatabase db=helper.getReadableDatabase();
 		Cursor c=db.rawQuery("select * from messages where "+Constants.USERID +"=? and _conversation_id=?", new String[]{uid,convid});
 		ArrayList<Messages> list=new ArrayList<Messages>();
-		while(c.moveToNext()){
+		while(c != null && c.moveToNext()){
 			Messages messages=new Messages();
 			messages.setConversationID(c.getString(c.getColumnIndex("_conversation_id")));
 			messages.setConversationType(c.getInt(c.getColumnIndex("_conversation_type")));

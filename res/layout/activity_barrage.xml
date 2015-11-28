@@ -61,15 +61,15 @@
               android:layout_alignTop="@+id/userName_barrage_tv"
               android:layout_toRightOf="@+id/textView4"
               android:textColor="#33c6e5"
-              android:text="min" />
+               />
 
           <TextView
-              android:id="@+id/textView4"
+              android:id="@+id/time_tv"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_alignTop="@+id/userName_barrage_tv"
               android:layout_toRightOf="@+id/textView3"
-              android:text="34"
+              android:text="34min"
               android:textColor="#33c6e5" />
 
           <RelativeLayout
@@ -77,7 +77,7 @@
               android:layout_height="wrap_content"
               android:layout_marginRight="20dp"
               android:layout_alignLeft="@+id/userName_barrage_tv"
-              android:layout_below="@+id/textView4"
+              android:layout_below="@+id/time_tv"
            >
 
               <TextView
@@ -99,7 +99,7 @@
           android:layout_width="match_parent"
           android:layout_height="45dp"
           android:layout_below="@id/bottom_top_barrage_rl"
-          android:background="#0bc7b4" >
+          android:background="@color/barrage_acty_join_bg" >
 
           <LinearLayout
               android:id="@+id/linearLayout1"
@@ -109,14 +109,14 @@
               android:layout_centerVertical="true" >
 
               <TextView
-                  android:id="@+id/textView1"
+                  android:id="@+id/bottom_tv"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="报名活动"
                   android:textColor="#ffffff"
                   android:textSize="16sp" />
               <ImageView
-              android:id="@+id/imageView1"
+              android:id="@+id/bottom_arrow"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
              	android:layout_marginLeft="8dp"
