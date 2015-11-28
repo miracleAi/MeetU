@@ -132,7 +132,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 
 		
 		ArrayList<Messages> list = messagesDao.getMessages(user.getObjectId());
-		log.e("zcq", "user.getObjectId()======"+user.getObjectId());
+		log.e("zcq", "user.getObjectId()======"+user.getObjectId()+"list=="+list.size());
 		if(list != null && list.size()>0){
 			mdataListCache.clear();
 			mdataListCache.addAll(list);		
@@ -357,6 +357,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 					}
 
 				}
+				userAboutDao.deleteByType(user.getObjectId(), 2, covn.getConversationId());
 				userAboutDao.saveUserAboutList(userAboutBeansList);
 				
 			}
