@@ -268,7 +268,11 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 //			log.e("lucifer","number=="+ number+" conversationStyle=="+conversationStyle);
 //			userNumber.setText(""+"("+number+")");
 //		}
-		userNumber.setText("("+number+")");
+		
+//		userNumber.setText("("+number+")");
+		int number=userAboutDao.queryUserAbout(""+user.getObjectId(), 2, conversationId).size();
+		log.e("lucifer","number=="+ number+" conversationStyle=="+conversationStyle);
+		userNumber.setText(""+"("+number+")");
 			
 	}
 	@Override
