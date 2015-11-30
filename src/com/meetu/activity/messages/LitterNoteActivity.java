@@ -108,6 +108,7 @@ public class LitterNoteActivity extends Activity implements OnLitterNotesItemCli
 		Intent intent=new Intent(this,NotesActivity.class);
 		Bundle bundle=new Bundle();
 		bundle.putSerializable("ObjScripBox", objScripBoxList.get(id));
+		intent.putExtras(bundle);
 		startActivity(intent);
 		
 	}

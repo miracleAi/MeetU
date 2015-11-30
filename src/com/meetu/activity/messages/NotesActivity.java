@@ -3,14 +3,24 @@ package com.meetu.activity.messages;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.tsz.afinal.FinalBitmap;
+
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 import com.meetu.R.layout;
 import com.meetu.R.menu;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
+
+import com.meetu.cloud.callback.ObjUserInfoCallback;
+import com.meetu.cloud.object.ObjScripBox;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.fragment.MiliaoChannelFragment;
 import com.meetu.fragment.NotesChannelFragment;
+import com.meetu.myapplication.MyApplication;
 
 
 import android.os.Bundle;
@@ -19,6 +29,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Loader;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -35,6 +46,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class NotesActivity extends FragmentActivity  implements OnPageChangeListener,OnClickListener{
@@ -47,6 +59,8 @@ public class NotesActivity extends FragmentActivity  implements OnPageChangeList
 	private static RelativeLayout bottomLayout;
 	private RelativeLayout disposeLayout;
 	private RelativeLayout laheilayout,jubaolayout;
+	private ImageView userHeadPhoto;
+	private TextView userName;
 	
 	//表情键盘相关
 	private LinearLayout sendLinearLayout;
@@ -54,7 +68,16 @@ public class NotesActivity extends FragmentActivity  implements OnPageChangeList
 	
 	private int beforeID=0;
 	
+	//网络数据相关
+	private ObjScripBox objScripBox=null;
+	private List<ObjUser> objUsers=new ArrayList<ObjUser>();
+	private AVUser currentUser = AVUser.getCurrentUser();
+	//当前用户
+	private ObjUser user = new ObjUser();
 
+	private String userId="";//对方id
+	
+	private FinalBitmap finalBitmap;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,19 +86,47 @@ public class NotesActivity extends FragmentActivity  implements OnPageChangeList
 		// 全屏
 		super.getWindow();
 		setContentView(R.layout.activity_notes);
+		objScripBox=(ObjScripBox) getIntent().getExtras().getSerializable("ObjScripBox");
+		if(currentUser!=null){
+			user = AVUser.cast(currentUser, ObjUser.class);
+		}else{
+			return;
+		}
+		initView();
+		
+		MyApplication app=(MyApplication) this.getApplicationContext();
+		finalBitmap=app.getFinalBitmap();
+		
+		
+		objUsers=new ArrayList<ObjUser>();
+		
+		if(objScripBox!=null){
+		
+			objUsers.addAll(objScripBox.getUsers());
+			
+			for(ObjUser objUser:objUsers){
+				if(!user.getObjectId().equals(objUser.getObjectId())){
+					userId=objUser.getObjectId();
+				}
+			}
+		}
+		if(!userId.equals("")){
+			getUserInfo(userId);
+		}
 		
 		mViewPager=(ViewPager) super.findViewById(R.id.mViewpager_notes);
 		mViewPager.setOnPageChangeListener(this);
 		initViewPager();
-		initView();
+		
 		
 	}
 
 	private void initViewPager() {
 		// TODO 先测试5个卡片
-				for(int i=0;i<2;i++){
+				for(int i=0;i<objScripBox.getScripCount();i++){
 				NotesChannelFragment frag=new NotesChannelFragment();
 				Bundle bundle=new Bundle();
+				bundle.putSerializable("ObjScripBox", objScripBox);
 
 				frag.setArguments(bundle);
 				fragmentList.add(frag);
@@ -99,7 +150,8 @@ public class NotesActivity extends FragmentActivity  implements OnPageChangeList
 		bottomLayout=(RelativeLayout) super.findViewById(R.id.send_bottom_rl);
 		disposeLayout=(RelativeLayout) super.findViewById(R.id.manage_notes_center_rl);
 		disposeLayout.setOnClickListener(this);
-		
+		userHeadPhoto=(ImageView) super.findViewById(R.id.photoHead_notes_top_img);
+		userName=(TextView) findViewById(R.id.userName_notes_tv);
 	}
 
 	@Override
@@ -236,6 +288,41 @@ public class NotesActivity extends FragmentActivity  implements OnPageChangeList
 			((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE))
 			.hideSoftInputFromWindow(curFocusView.getWindowToken(), 0);
 		}
+	}
+
+	
+	/**
+	 * 根据创建者用户id 获取用户相关信息
+	 * 
+	 * @param objId
+	 * @author lucifer
+	 * @date 2015-11-17
+	 */
+	private void getUserInfo(String objId) {
+		ObjUserWrap.getObjUser(objId, new ObjUserInfoCallback() {
+
+			@Override
+			public void callback(ObjUser user, AVException e) {
+
+				if (user.getProfileClip() != null) {
+					finalBitmap.display(userHeadPhoto, user.getProfileClip()
+							.getUrl());
+				}
+				userName.setText(user.getNameNick());
+				if (user.getGender() == 2) {
+
+					// 根据性别设置图片
+					Drawable nav_up = getResources().getDrawable(
+							R.drawable.acty_joinlist_img_male);
+					nav_up.setBounds(0, 0, nav_up.getMinimumWidth(),
+							nav_up.getMinimumHeight());
+					userName.setCompoundDrawables(null, null, nav_up, null);
+//					holder.sexViewImg.setImageResource(R.drawable.massage_letters_img_line_girl);
+				}
+				
+
+			}
+		});
 	}
 	
 	

@@ -3,6 +3,9 @@ package com.meetu.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.tsz.afinal.FinalBitmap;
+
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.R;
 import com.meetu.activity.messages.InputDialog;
@@ -11,8 +14,11 @@ import com.meetu.activity.messages.NotesActivity;
 import com.meetu.activity.miliao.FaceGVAdapter;
 import com.meetu.activity.miliao.FaceVPAdapter;
 import com.meetu.activity.miliao.ChatGroupActivity.OnCorpusSelectedListener;
+import com.meetu.cloud.object.ObjScripBox;
+import com.meetu.cloud.object.ObjUser;
 
 import com.meetu.entity.ChatEmoji;
+import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.EmojisDao;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
@@ -124,6 +130,12 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 	private	int layoutW = 0,layoutH = 0;//小纸条的输入框的宽高
 	private int viewX,viewY;
 	
+	//网络数据相关
+	ObjScripBox objScripBox=null;
+	private FinalBitmap finalBitmap;
+	private AVUser currentUser = AVUser.getCurrentUser();
+	//当前用户
+	private ObjUser user = new ObjUser();
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -140,6 +152,12 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 			
 			emojiHight=DensityUtil.dip2px(getActivity(), 275);
 			ruanHight=DensityUtil.dip2px(getActivity(), 350);
+			if(currentUser!=null){
+				user = AVUser.cast(currentUser, ObjUser.class);
+			}
+			objScripBox=(ObjScripBox)getArguments().getSerializable("ObjScripBox");
+			MyApplication app=(MyApplication) getActivity().getApplicationContext();
+			finalBitmap=app.getFinalBitmap();
 			
 			getHight();
 			
@@ -241,6 +259,8 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 		//表情下小圆点
 		mDotsLayout = (LinearLayout)view. findViewById(R.id.face_dots_container);
 		
+		
+	//	finalBitmap.display(topLayout, uri);
 		
 		
 		

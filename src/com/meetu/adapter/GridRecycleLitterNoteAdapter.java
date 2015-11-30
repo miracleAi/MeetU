@@ -106,7 +106,7 @@ public GridRecycleLitterNoteAdapter(Context context, List<ObjScripBox> list) {
 				});
 			}
 			objUsers=new ArrayList<ObjUser>();
-			item.getUsers();
+			
 			if(item.getUsers()!=null){
 			
 				objUsers.addAll(item.getUsers());

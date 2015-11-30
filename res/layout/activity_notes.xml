@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:background="@color/white"
-        android:gravity="center" >
+        >
 
         <RelativeLayout
             android:id="@+id/back_notes_top_rl"
@@ -38,7 +38,7 @@
             android:textColor="#a0a0a0"
             android:textSize="18sp" />
 
-        <RelativeLayout
+    <!--     <RelativeLayout
             android:id="@+id/openChat_notes_top_rl"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
@@ -54,8 +54,8 @@
                 android:layout_height="wrap_content"
                 android:text="开启聊天"
                 android:textColor="#33c6e5"
-                android:textSize="14sp" />
-        </RelativeLayout>
+                android:textSize="14sp" /> 
+        </RelativeLayout>-->
     </RelativeLayout>
 
     <RelativeLayout
@@ -96,7 +96,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/userName_notes_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
