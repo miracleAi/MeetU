@@ -167,7 +167,7 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment imple
 					cityDao.getCity(user.getHometown()).get(0).getCity()+
 					cityDao.getCity(user.getHometown()).get(0).getTown();
 			userhometown.setText(homeString);
-		}else{
+		}else{ 
 			userhometown.setText("");
 		}
 		

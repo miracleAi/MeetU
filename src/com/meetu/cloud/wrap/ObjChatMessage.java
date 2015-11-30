@@ -365,7 +365,7 @@ public class ObjChatMessage {
 			@Override
 			public void done(AVIMClient client, AVIMException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if(e != null){  
 					callback.callback(false, e);
 					return ;
 				}

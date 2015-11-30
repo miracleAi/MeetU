@@ -73,63 +73,21 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler{
 	//成员加入消息处理
 	public void handleMemberAdd(final AVIMClient client, final AVIMConversation conversation,
 			List<String> array, String str,final ObjUser user){
-		
-		log.e("zcq", "conversation"+conversation);
-		//TODO 空指针
-		int msgType = (Integer) conversation.getAttribute("cType");
-		if(msgType == Constants.ACTYSG){
-			//活动群，判断是否参加
-			String actyId = (String) conversation.getAttribute("appendId");
-			for(final String userId:array){
-				try {
-					ObjActivity acty = ObjActivity.createWithoutData(ObjActivity.class, actyId);
-					ObjUser joinUser = ObjUser.createWithoutData(ObjUser.class, userId);
-					ObjActivityWrap.queryUserJoin(acty, joinUser, new ObjFunBooleanCallback() {
-
-						@Override
-						public void callback(boolean result, AVException e) {
-							if(e != null){
-								return ;
-							}
-							if(result){
-								//已参加，保存
-								ObjUserWrap.getObjUser(client.getClientId(), new ObjUserInfoCallback() {
-
-									@Override
-									public void callback(ObjUser joinuser, AVException e) {
-										// TODO Auto-generated method stub
-										Chatmsgs chatBean = new Chatmsgs();
-										chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
-										chatBean.setNowJoinUserId(client.getClientId());
-										chatBean.setUid(user.getObjectId());
-										chatBean.setNowJoinUserId(userId);
-										chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
-										chatDao.insert(chatBean);
-										//未读消息加1,保存未读
-										msgDao.updateUnread(user.getObjectId(), conversation.getConversationId());
-									}
-								});
-							}
-						}
-					});
-				} catch (AVException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}else{
+		log.d("mytest", "conversation"+conversation);
 			for(String userId:array){
-			//普通群，直接保存
-			Chatmsgs chatBean = new Chatmsgs();
-			chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
-			chatBean.setNowJoinUserId(client.getClientId());
-			chatBean.setUid(user.getObjectId());
-			chatBean.setNowJoinUserId(userId);
-			chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
-			chatDao.insert(chatBean);
-			//未读消息加1,保存未读
-			msgDao.updateUnread(user.getObjectId(), conversation.getConversationId());
-			}
+				if(userId.equals(user.getObjectId())){
+					continue;
+				}
+				//普通群，直接保存
+				Chatmsgs chatBean = new Chatmsgs();
+				chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
+				chatBean.setNowJoinUserId(client.getClientId());
+				chatBean.setUid(user.getObjectId());
+				chatBean.setNowJoinUserId(userId);
+				chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
+				chatDao.insert(chatBean);
+				//未读消息加1,保存未读
+				msgDao.updateUnread(user.getObjectId(), conversation.getConversationId());
 		}
 	}
 	//被踢出
