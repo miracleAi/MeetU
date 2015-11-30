@@ -32,7 +32,7 @@
                 android:src="@drawable/acty_barrage_img_comment_profiles_default" />
 
             <ImageView
-                android:id="@+id/favor_item_miliao_info_img"
+                android:id="@+id/favor_item_note_info_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -41,7 +41,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/user_name_item_note_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/item_center1_litter_note_rl"
@@ -52,10 +52,10 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/school_item_note_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView1"
+            android:layout_below="@+id/user_name_item_note_tv"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="4dp"
             android:text="北京大学"
@@ -71,7 +71,7 @@
             android:layout_marginBottom="14dp" >
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/number_noread_item_note_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2"
@@ -97,7 +97,7 @@
             android:src="@drawable/massage_letters_img_paperplane" />
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/sex_view_color_img_item_note"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/imageView2"

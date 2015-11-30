@@ -17,9 +17,6 @@ public class UriToBitmap {
 	   // 读取uri所在的图片
 	   Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
 
-	   
-
-
 	   return bitmap;
 	  }
 	  catch (Exception e)

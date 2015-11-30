@@ -47,8 +47,8 @@
                 <action android:name="com.baidu.location.service_v2.2" />
             </intent-filter>
         </service>
-        
         <service android:name="com.avos.avoscloud.PushService" />
+
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -78,19 +78,19 @@
             android:name="com.meetu.TestActivityTwo"
             android:label="@string/app_name" >
         </activity>
-         <activity
+        <activity
             android:name="com.meetu.TestMsgActivity"
             android:label="@string/app_name" >
         </activity>
-         <activity
+        <activity
             android:name="com.meetu.TestReceiveMsg"
             android:label="@string/app_name" >
         </activity>
-         <activity
+        <activity
             android:name="com.meetu.TestMsgTwoActivity"
             android:label="@string/app_name" >
         </activity>
-         <activity
+        <activity
             android:name="com.meetu.TestDanmu"
             android:label="@string/app_name" >
         </activity>
@@ -109,7 +109,6 @@
         <activity
             android:name="com.meetu.activity.SetPersonalInformationActivity"
             android:label="@string/title_activity_shezhigerenxinxi" >
-
         </activity>
         <activity
             android:name="com.meetu.WangjimimaActivity"
@@ -259,6 +258,10 @@
         <activity
             android:name="com.meetu.activity.ReportActivity"
             android:label="@string/title_activity_report" >
+        </activity>
+        <activity
+            android:name="com.meetu.activity.messages.CreateLitterNoteActivity"
+            android:label="@string/title_activity_create_litter_note" >
         </activity>
     </application>
 

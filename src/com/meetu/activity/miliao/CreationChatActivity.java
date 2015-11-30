@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -14,10 +16,13 @@ import com.meetu.R;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.callback.ObjChatBeanCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjScripInfoCallback;
 import com.meetu.cloud.object.ObjChat;
+import com.meetu.cloud.object.ObjScrip;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjChatWrap;
+import com.meetu.cloud.wrap.ObjScriptWrap;
 import com.meetu.cloud.wrap.ObjUserPhotoWrap;
 import com.meetu.common.Constants;
 import com.meetu.myapplication.MyApplication;
@@ -433,8 +438,7 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 			super.onBackPressed();
 		}
 		
-		
-
+	
 	
 
 }

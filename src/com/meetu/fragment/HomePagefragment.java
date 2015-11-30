@@ -423,25 +423,25 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
  //       Log.e("e", "total "+total +" delta "+delta +" i  "+i +" HightY "+HightY+" a="+a);
         usernumber.setLayoutParams(lp);
         
-        //TODO 实时更新活动标签里的内容
+        //TODO 实时更新活动标签里的内容    滑动距离有点问题
         
       
-//      int ii= (int) ((maginY/actyListCache.size()));//标签滑动一个item 滑动的距离
-//      log.e("lucifer"+"ii=="+ii+" i=="+i+" maginTop=="+maginTop);
-//      int aa=(i-maginTop)/ii;
-//      if(itemNow!=aa){
-//    	  log.e("lucifer", "total=="+total+" itemHight=="+itemHight);
-//    	  itemNow=aa;
-//    	  if(itemNow>=actyListCache.size()){
-//    		  itemNow=actyListCache.size()-1;
-//    		  int number=userAboutDao.queryUserAbout(user.getObjectId(), 3, actyListCache.get(itemNow).getConversationId()).size();
-//              numberAll.setText(""+number);
-//    	  }else{
-//    		  int number=userAboutDao.queryUserAbout(user.getObjectId(), 3, actyListCache.get(itemNow).getConversationId()).size();
-//              numberAll.setText(""+number);
-//    	  }
-//    	 
-//      }
+      int ii= (int) ((maginY/actyListCache.size()-1));//标签滑动一个item 滑动的距离
+      log.e("lucifer"+"ii=="+ii+" i=="+i+" maginTop=="+maginTop);
+      int aa=(i-maginTop)/ii;
+      if(itemNow!=aa){
+    	  log.e("lucifer", "total=="+total+" itemHight=="+itemHight);
+    	  itemNow=aa;
+    	  if(itemNow>=actyListCache.size()){
+    		  itemNow=actyListCache.size()-1;
+    		  int number=userAboutDao.queryUserAbout(user.getObjectId(), 3, actyListCache.get(itemNow).getConversationId()).size();
+              numberAll.setText(""+number);
+    	  }else{
+    		  int number=userAboutDao.queryUserAbout(user.getObjectId(), 3, actyListCache.get(itemNow).getConversationId()).size();
+              numberAll.setText(""+number);
+    	  }
+    	 
+      }
      
       
 	}

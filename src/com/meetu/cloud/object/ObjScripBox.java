@@ -1,5 +1,6 @@
 package com.meetu.cloud.object;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVObject.AVObjectCreator;
 
 @AVClassName("ObjScripBox")
-public class ObjScripBox extends AVObject{
+public class ObjScripBox extends AVObject implements Serializable{
 	public static final Creator CREATOR = AVObjectCreator.instance;
 	/**
 	 *  数组，包含小纸条发送双方

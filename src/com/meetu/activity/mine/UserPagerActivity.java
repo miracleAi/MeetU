@@ -50,6 +50,7 @@ import com.avos.avoscloud.LogUtil.log;
 import com.lidroid.xutils.BitmapUtils;
 import com.meetu.R;
 import com.meetu.activity.SystemSettingsActivity;
+import com.meetu.activity.messages.CreateLitterNoteActivity;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjUser;
@@ -187,6 +188,7 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 		userProfileImv = (ImageView) findViewById(R.id.user_profile_iv);
 		userGenderImv = (ImageView) findViewById(R.id.user_gender_imv);
 		userScripImv = (ImageView) findViewById(R.id.user_scrip_imv);
+		userScripImv.setOnClickListener(this);
 		userNameTv = (TextView) findViewById(R.id.user_name_tv);
 //		userVipImv = (ImageView) findViewById(R.id.user_vip_dis);
 //		userApproveImv = (ImageView) findViewById(R.id.user_approve_dis);
@@ -461,6 +463,15 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 			Intent intent=new Intent(Intent.ACTION_PICK,null);
 			intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
 			startActivityForResult(intent, 00);	
+			break;
+			/**
+			 * 发送小纸条
+			 */
+		case R.id.user_scrip_imv:
+			
+			Intent intent3=new Intent(this,CreateLitterNoteActivity.class);
+			intent3.putExtra("userId", userId);
+			startActivity(intent3);
 			break;
 		default:
 			break;
