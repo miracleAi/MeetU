@@ -17,6 +17,7 @@ import com.meetu.cloud.callback.ObjFunObjectCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjChatWrap;
+import com.meetu.cloud.wrap.ObjFollowWrap;
 
 import android.R.array;
 import android.app.Activity;
@@ -129,12 +130,18 @@ public class TestSeekChat extends Activity{
 					}
 				});
 			*/
-				ObjChatWrap.queryfollow(user, new ObjFunMapCallback() {
+				ObjFollowWrap.queryfollow(user, new ObjFunMapCallback() {
 					
 					@Override
 					public void callback(Map<String, Object> map, AVException e) {
 						// TODO Auto-generated method stub
 						log.d("mytest", "follow"+map);
+						//相互关注的人ID列表
+						List<String> boths= (List<String>) map.get("boths");
+						//我关注的人ID列表
+						List<String> follow = (List<String>) map.get("followees");
+						//关注我的人ID列表
+						List<String> followers = (List<String>) map.get("followers");
 					}
 				});
 				}

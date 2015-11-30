@@ -432,8 +432,8 @@ public class TestMsgActivity extends Activity{
 
 				}
 				if(MyApplication.isChatLogin){
-					clickBtn.setText(SAVEGROUP);
-					//clickBtn.setText(CREATESCRIP);
+					//clickBtn.setText(SAVEGROUP);
+					clickBtn.setText(CREATESCRIP);
 				}else{
 					ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
 

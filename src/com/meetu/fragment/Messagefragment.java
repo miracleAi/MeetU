@@ -13,6 +13,7 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.meetu.R;
+import com.meetu.activity.messages.FollowActivity;
 import com.meetu.activity.messages.LitterNoteActivity;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.activity.miliao.EmojiParser;
@@ -57,6 +58,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 	private List<Messages> mdataListCache=new ArrayList<Messages>();
 	private MessagesListAdapter mAdapter;
 	private View view;
+	private RelativeLayout attentionLayout;
 	
 	private MessagesDao messagesDao;
 	private RelativeLayout littleNoteLayout;
@@ -143,6 +145,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 	}
 
 	private void initView() {
+		attentionLayout = (RelativeLayout) view.findViewById(R.id.attention_messages_rl);
 		mListView=(ListView) view.findViewById(R.id.listView_messages_fragment);
 		mAdapter=new MessagesListAdapter(getActivity(), mdataListCache,chatEmojis);
 		mListView.setAdapter(mAdapter);
@@ -158,6 +161,15 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 		filter.addAction(Constants.RECEIVE_MSG);
 		getActivity().registerReceiver(mr, filter);
 		
+		attentionLayout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(getActivity(),FollowActivity.class);
+				startActivity(intent);
+			}
+		});
 	}
 
 	@Override

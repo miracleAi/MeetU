@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-   >
+    android:layout_height="60dp" >
+
     <RelativeLayout
         android:id="@+id/center2_joinUsers_rl"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-      	
-         >
+        android:layout_height="60dp" >
 
         <ImageView
             android:id="@+id/userPhoto_joinUsers_img"
@@ -24,7 +22,6 @@
             android:layout_height="60dp"
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@+id/userPhoto_joinUsers_img"
-            
             android:gravity="center" >
 
             <TextView
@@ -35,15 +32,28 @@
                 android:textColor="#606366"
                 android:textSize="15sp" />
 
-            <TextView
-                android:id="@+id/school_item_joinUsers_tv"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/userName_item_joinUsers_tv"
-                android:text="北京大学"
-                android:textColor="#a0a0a0"
-                android:textSize="10sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/follow_scholl_img" />
+
+                <TextView
+                    android:id="@+id/school_item_joinUsers_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="北京大学"
+                    android:textColor="#a0a0a0"
+                    android:textSize="10sp" />
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/sex_joinUsers_img"
@@ -77,10 +87,16 @@
                 android:textColor="#bfbfbf"
                 android:textSize="10sp" />
         </RelativeLayout>
-
-        
-        
     </RelativeLayout>
-    
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/item_right_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/tvcell_nor" 
+        android:visibility="gone"/>
+
+</RelativeLayout>

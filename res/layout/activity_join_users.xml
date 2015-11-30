@@ -195,7 +195,7 @@
          >
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/point"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -204,12 +204,12 @@
             android:src="@drawable/acty_joinlist_img_point" />
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/myfollow_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/imageView1"
+            android:layout_toRightOf="@+id/point"
             android:text="我关注的人"
             android:textColor="#a0a0a0"
             android:textSize="15sp" />
@@ -218,10 +218,10 @@
             android:id="@+id/number_favor_joinUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/textView1"
-            android:layout_alignBottom="@+id/textView1"
+            android:layout_alignBaseline="@+id/myfollow_tv"
+            android:layout_alignBottom="@+id/myfollow_tv"
             android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@+id/textView1"
+            android:layout_toRightOf="@+id/myfollow_tv"
             android:text="(0)"
             android:textColor="#606366"
             android:textSize="14sp" />
@@ -251,7 +251,7 @@
          >
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/point2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -260,12 +260,12 @@
             android:src="@drawable/acty_joinlist_img_point" />
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/allmember_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/imageView1"
+            android:layout_toRightOf="@+id/point2"
             android:text="所有成员"
             android:textColor="#a0a0a0"
             android:textSize="15sp" />
@@ -274,10 +274,10 @@
             android:id="@+id/number_all_joinUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/textView1"
-            android:layout_alignBottom="@+id/textView1"
+            android:layout_alignBaseline="@+id/allmember_tv"
+            android:layout_alignBottom="@+id/allmember_tv"
             android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@+id/textView1"
+            android:layout_toRightOf="@+id/allmember_tv"
             android:text="(0)"
             android:textColor="#606366"
             android:textSize="14sp" />
