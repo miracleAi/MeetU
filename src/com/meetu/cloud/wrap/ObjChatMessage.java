@@ -333,9 +333,10 @@ public class ObjChatMessage {
 		numbers.add(1);
 		numbers.add(2);
 		query.whereContainsIn("attr.cType", numbers);
-
-		query.withMembers(Arrays.asList(userId));
-
+		//query.withMembers(Arrays.asList(userId));
+		ArrayList<String> member = new ArrayList<String>();
+		member.add(userId);
+		query.whereContainsIn("m",member);
 		query.setLimit(100);
 		query.whereGreaterThan("attr.overTime", System.currentTimeMillis());
 

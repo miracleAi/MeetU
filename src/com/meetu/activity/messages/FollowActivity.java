@@ -21,6 +21,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -45,6 +46,7 @@ public class FollowActivity extends FragmentActivity implements OnPageChangeList
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_follow_layout);
 		user = AVUser.cast(AVUser.getCurrentUser(), ObjUser.class);
 		initView();

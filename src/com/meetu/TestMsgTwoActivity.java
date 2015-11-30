@@ -127,6 +127,8 @@ public class TestMsgTwoActivity extends Activity{
 						clickBtn.setText(LOADFAIL);
 						return;  
 					}
+					log.d("mytest", "conversation:==="+objects);
+					log.d("mytest", "conversation:==="+objects.size());
 					clickBtn.setText(QUERYLOCALCOVERSATION);
 					ArrayList<AVIMConversation> convList = new ArrayList<AVIMConversation>();
 					for(AVIMConversation conversation:objects){

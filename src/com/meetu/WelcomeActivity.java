@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -51,6 +52,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.test.suitebuilder.TestMethod;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
