@@ -99,8 +99,8 @@ public class ObjFollowWrap {
 	/**
 	 * 关注
 	 * */
-	public static void followIn(ObjUser user,final ObjFunBooleanCallback callback){
-		user.followInBackground(user.getObjectId(), new FollowCallback<AVObject>() {
+	public static void followIn(ObjUser user,String userID,final ObjFunBooleanCallback callback){
+		user.followInBackground(userID, new FollowCallback<AVObject>() {
 
 			@Override
 			public void done(AVObject object, AVException e) {
@@ -120,8 +120,8 @@ public class ObjFollowWrap {
 	/**
 	 * 取消关注
 	 * */  
-	public static void unFollow(ObjUser user,final ObjFunBooleanCallback callback){
-		user.unfollowInBackground(user.getObjectId(), new FollowCallback<AVObject>() {
+	public static void unFollow(ObjUser user,String userID,final ObjFunBooleanCallback callback){
+		user.unfollowInBackground(userID, new FollowCallback<AVObject>() {
 
 			@Override
 			public void done(AVObject object, AVException e) {
