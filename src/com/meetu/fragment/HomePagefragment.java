@@ -376,6 +376,7 @@ public class HomePagefragment extends Fragment implements OnRefreshListener2<Lis
 				
 				initView();
 				refreshComplete();
+				
 				break;
 			}
 		}

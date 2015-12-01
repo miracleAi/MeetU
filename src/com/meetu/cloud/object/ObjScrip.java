@@ -1,5 +1,6 @@
 package com.meetu.cloud.object;
 
+import java.io.Serializable;
 import java.util.List;
 
 import android.os.Parcelable.Creator;
@@ -9,7 +10,7 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVObject.AVObjectCreator;
 @AVClassName("ObjScrip")
-public class ObjScrip extends AVObject{
+public class ObjScrip extends AVObject implements Serializable{
 	public static final Creator CREATOR = AVObjectCreator.instance;
 	/**
 	 *  纸条所属的纸箱

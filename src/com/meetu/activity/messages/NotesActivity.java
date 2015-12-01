@@ -14,9 +14,12 @@ import com.meetu.R.menu;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
 
+import com.meetu.cloud.callback.ObjScripCallback;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
+import com.meetu.cloud.object.ObjScrip;
 import com.meetu.cloud.object.ObjScripBox;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjScriptWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.fragment.MiliaoChannelFragment;
 import com.meetu.fragment.NotesChannelFragment;
@@ -24,6 +27,8 @@ import com.meetu.myapplication.MyApplication;
 
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -78,6 +83,10 @@ public class NotesActivity extends FragmentActivity  implements OnPageChangeList
 	private String userId="";//对方id
 	
 	private FinalBitmap finalBitmap;
+	
+	List<ObjScrip> objScripsList=new ArrayList<ObjScrip>();
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -116,18 +125,19 @@ public class NotesActivity extends FragmentActivity  implements OnPageChangeList
 		
 		mViewPager=(ViewPager) super.findViewById(R.id.mViewpager_notes);
 		mViewPager.setOnPageChangeListener(this);
-		initViewPager();
+//		initViewPager();
 		
+		getScrips(objScripBox);
 		
 	}
 
 	private void initViewPager() {
 		// TODO 先测试5个卡片
-				for(int i=0;i<objScripBox.getScripCount();i++){
+				for(int i=0;i<objScripsList.size();i++){
 				NotesChannelFragment frag=new NotesChannelFragment();
 				Bundle bundle=new Bundle();
 				bundle.putSerializable("ObjScripBox", objScripBox);
-
+				bundle.putSerializable("ObjScrip", objScripsList.get(i));
 				frag.setArguments(bundle);
 				fragmentList.add(frag);
 				
@@ -181,7 +191,7 @@ public class NotesActivity extends FragmentActivity  implements OnPageChangeList
 	
 				hideKeyBoard();
 				
-				NotesChannelFragment.mEditText.clearFocus();
+//				NotesChannelFragment.mEditText.clearFocus();
 				
 				//暴力 拿到 fragment
 				((NotesChannelFragment)fragmentList.get(beforeID)).isShowEditLayout();
@@ -325,6 +335,49 @@ public class NotesActivity extends FragmentActivity  implements OnPageChangeList
 		});
 	}
 	
+	//获取纸条箱内所有小纸条
+			public void getScrips(ObjScripBox box){
+				objScripsList=new ArrayList<ObjScrip>();
+				ObjScriptWrap.queryAllScrip(box, new ObjScripCallback() {
+					
+					@Override
+					public void callback(List<ObjScrip> objects, AVException e) {
+						// TODO Auto-generated method stub
+						if(e != null){
+							log.e("zcq", e);
+							return ;
+						}
+						if(objects.size()>0){
+							//成功
+							objScripsList.addAll(objects);
+							
+							handler.sendEmptyMessage(1);
+							
+						}else{
+						
+						}
+					}
+				});
+			}
+	
+			Handler handler=new Handler(){
+
+				@Override
+				public void handleMessage(Message msg) {
+					// TODO Auto-generated method stub
+					
+					switch (msg.what) {
+					case 1:
+						
+						initViewPager();
+						break;
+
+					default:
+						break;
+					}
+				}
+				
+			};
 	
 
 }
