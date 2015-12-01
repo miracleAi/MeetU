@@ -252,7 +252,15 @@
             android:label="@string/title_activity_notes" >
         </activity>
         <activity
+            android:name="com.meetu.activity.messages.SystemMsgActivity"
+            android:label="@string/title_activity_notes" >
+        </activity>
+        <activity
             android:name="com.meetu.activity.SystemSettingsActivity"
+            android:label="@string/title_activity_system_settings" >
+        </activity>
+        <activity
+            android:name="com.meetu.activity.messages.ShowSysMsgPhotoActivity"
             android:label="@string/title_activity_system_settings" >
         </activity>
         <activity

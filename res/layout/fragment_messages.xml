@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#80eeeeee" >
+    android:background="#80eeeeee"
+    android:orientation="vertical" >
 
     <RelativeLayout
         android:id="@+id/top_messages_rl"
@@ -54,7 +54,7 @@
         android:orientation="horizontal" >
 
         <RelativeLayout
-           
+            android:id="@+id/system_msg_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1" >
@@ -117,7 +117,7 @@
             android:background="#cccccc" />
 
         <RelativeLayout
-             android:id="@+id/litter_notes_fragment_messages_rl"
+            android:id="@+id/litter_notes_fragment_messages_rl"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1" >
@@ -172,28 +172,29 @@
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
-    
-    <RelativeLayout 
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="28dp"
-        >
-        <TextView android:layout_width="wrap_content"
+        android:layout_height="28dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
             android:layout_centerVertical="true"
-            android:textSize="12dp"
+            android:layout_marginLeft="20dp"
+            android:text="最新消息"
             android:textColor="#a0a0a0"
-            android:text="最新消息"/>
-        </RelativeLayout>
-        
-     <ListView
-            android:id="@+id/listView_messages_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:cacheColorHint="#00000000"
-            android:fadingEdge="none"
-            android:listSelector="#00000000"
-            android:scrollingCache="false" />
+            android:textSize="12dp" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/listView_messages_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:cacheColorHint="#00000000"
+        android:fadingEdge="none"
+        android:listSelector="#00000000"
+        android:scrollingCache="false" />
 
 </LinearLayout>

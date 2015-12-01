@@ -15,6 +15,9 @@ public class ObjSysMsgWrap {
 	public static void querySysMsgs(ObjUser user,final ObjSysMsgListCallback callback){
 		AVQuery<ObjSysMsg> query = AVObject.getQuery(ObjSysMsg.class);
 		query.whereEqualTo("user", user);
+		query.include("towardsUser");
+		query.include("acty");
+		query.include("userPhoto");
 		query.findInBackground(new FindCallback<ObjSysMsg>() {
 
 			@Override

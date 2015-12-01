@@ -71,7 +71,7 @@ public class ActivityDao {
 	public ArrayList<ActivityBean> queryActys(String userId){
 		SQLiteDatabase sdb=dbHelper.getWritableDatabase();
 		Cursor cursor=sdb.rawQuery("select * from "+ Constants.ACTIVITY_CACHE_TB+" where "+Constants.USERID +"=? order by "
-		+Constants.STATUS+","+Constants.TIMESTART+" desc",new  String[]{userId});
+				+Constants.STATUS+","+Constants.TIMESTART+" desc",new  String[]{userId});
 		cursor.moveToFirst();
 		ArrayList<ActivityBean> list = new ArrayList<ActivityBean>();
 		while(!cursor.isAfterLast()){
@@ -104,11 +104,46 @@ public class ActivityDao {
 		sdb.close();
 		return list;
 	}
+	//查询活动
+	public ArrayList<ActivityBean> queryActyBean(String userId,String actyId){
+		SQLiteDatabase sdb=dbHelper.getWritableDatabase();
+		Cursor cursor=sdb.rawQuery("select * from "+ Constants.ACTIVITY_CACHE_TB+" where "+Constants.USERID +"=? and "
+				+Constants.ACTIVITYID+"=?",new  String[]{userId,actyId});
+		ArrayList<ActivityBean> list = new ArrayList<ActivityBean>();
+		while(cursor.moveToNext()){
+			ActivityBean bean = new ActivityBean();
+			bean.setActyId(cursor.getString(cursor.getColumnIndex(Constants.ACTIVITYID)));
+			bean.setUserId(cursor.getString(cursor.getColumnIndex(Constants.USERID)));
+			bean.setActivityContent(cursor.getString(cursor.getColumnIndex(Constants.ACTIVITYCONTENT)));
+			bean.setActivityCover(cursor.getString(cursor.getColumnIndex(Constants.ACTIVITYCOVER)));
+			bean.setLocationAddress(cursor.getString(cursor.getColumnIndex(Constants.LOCATIONADDRESS)));
+			bean.setLocationPlace(cursor.getString(cursor.getColumnIndex(Constants.LOCATIONPLACE)));
+			bean.setOrderCountBoy(cursor.getInt(cursor.getColumnIndex(Constants.ORDERCOUNTBOY)));
+			bean.setOrderCountGirl(cursor.getInt(cursor.getColumnIndex(Constants.ORDERCOUNTGIRL)));
+			bean.setPraiseCount(cursor.getInt(cursor.getColumnIndex(Constants.PRAISECOUNT)));
+			bean.setStatus(cursor.getInt(cursor.getColumnIndex(Constants.STATUS)));
+			bean.setTimeStart(cursor.getLong(cursor.getColumnIndex(Constants.TIMESTART)));
+			bean.setTitle(cursor.getString(cursor.getColumnIndex(Constants.TITLE)));
+			bean.setTitleSub(cursor.getString(cursor.getColumnIndex(Constants.TITLESUB)));
+			bean.setTimeStop(cursor.getLong(cursor.getColumnIndex(Constants.TIMESTOP)));
+			bean.setLocationGovernment(cursor.getString(cursor.getColumnIndex(Constants.LOCATIONGOVERNMENT)));
+			bean.setLocationLatitude(cursor.getString(cursor.getColumnIndex(Constants.LOCATIONLATITUDE)));
+			bean.setLocationLongtitude(cursor.getString(cursor.getColumnIndex(Constants.LOCATIONLONGTITUDE)));
+			bean.setConversationId(cursor.getString(cursor.getColumnIndex(Constants.CONVERSATIONID)));
+			bean.setIndex(cursor.getInt(cursor.getColumnIndex(Constants.ACTIVITYINDEX)));
+			bean.setIsFavor(cursor.getInt(cursor.getColumnIndex(Constants.ISACTIVITYPRAISE)));
+			bean.setOrderAndFollow(cursor.getInt(cursor.getColumnIndex(Constants.ACTIVITYFOLLOWCOUNT)));
+			list.add(bean);
+		}
+		cursor.close();
+		sdb.close();
+		return list;
+	}
 	//根据用户清除活动缓存
 	public void deleteByUser(String userId){
 		SQLiteDatabase sdb=dbHelper.getWritableDatabase();
 		sdb.delete(Constants.ACTIVITY_CACHE_TB, Constants.USERID+"=?", new String[]{userId});
 		sdb.close();
 	}
-	
+
 }

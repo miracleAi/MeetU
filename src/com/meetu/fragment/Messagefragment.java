@@ -15,6 +15,7 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.meetu.R;
 import com.meetu.activity.messages.FollowActivity;
 import com.meetu.activity.messages.LitterNoteActivity;
+import com.meetu.activity.messages.SystemMsgActivity;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.activity.miliao.EmojiParser;
 import com.meetu.activity.miliao.XmlEmojifPullHelper;
@@ -62,6 +63,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 	
 	private MessagesDao messagesDao;
 	private RelativeLayout littleNoteLayout;
+	private RelativeLayout sysMsgLayout;
 	
 	//表情相关 xml解析    
 	private static EmojiParser parser;  
@@ -155,6 +157,8 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 		
 		littleNoteLayout=(RelativeLayout) view.findViewById(R.id.litter_notes_fragment_messages_rl);
 		littleNoteLayout.setOnClickListener(this);
+		sysMsgLayout = (RelativeLayout) view.findViewById(R.id.system_msg_layout);
+		sysMsgLayout.setOnClickListener(this);
 		
 		mr = new MyReceiver();
 		IntentFilter filter = new IntentFilter();
@@ -251,7 +255,10 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 			startActivity(intent);
 			
 			break;
-
+		case R.id.system_msg_layout:
+			Intent intent2 =new Intent(getActivity(),SystemMsgActivity.class);
+			startActivity(intent2);
+			break;
 		default:
 			break;
 		}

@@ -298,7 +298,7 @@ OnClickListener ,OnScrollListener{
 			case 60:
 				Toast.makeText(this, "活动报名已结束", Toast.LENGTH_SHORT).show();
 				break;
-
+ 
 			default:
 				break;
 			}

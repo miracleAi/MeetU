@@ -207,10 +207,15 @@ public class Constants {
 	/**
 	 * 系统消息类型
 	 * */
+	//未知
 	public static final int SysMsgTypeNone = 0;
+	//文本
 	public static final int SysMsgTypeText = 1;
+	//关注
 	public static final int SysMsgTypeFollow = 2;
+	//关注的人参加活动
 	public static final int SysMsgTypeActy = 3;
+	//用户墙照片点赞
 	public static final int SysMsgTypeUserPhoto = 4;
 	/**
 	 * 表字段常量名

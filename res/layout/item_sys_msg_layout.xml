@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/text_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/time_chat_item_left_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_centerHorizontal="true" >
+
+            <TextView
+                android:id="@+id/time_chat_item_left_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:text=""
+                android:textColor="#a0a0a0"
+                android:textSize="11dp" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/userHead_chat_item_left_img"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/time_chat_item_left_rl"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/message_groupchat_img_profiles_default" />
+
+        <TextView
+            android:id="@+id/userName_chat_item_left_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/time_chat_item_left_rl"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_toRightOf="@+id/userHead_chat_item_left_img"
+            android:text=""
+            android:textColor="#aaaaaa"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/content_chat_item_left_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/userName_chat_item_left_tv"
+            android:layout_below="@+id/userName_chat_item_left_tv"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/dialog_gray"
+            android:padding="10dp"
+            android:text="这是别人发的消息" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/card_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/time_photochat_item_right_rl"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_centerHorizontal="true" >
+
+            <TextView
+                android:id="@+id/time_chat_item_newjoin_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:text="昨天 23:16"
+                android:textColor="#a0a0a0"
+                android:textSize="11dp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="64dp"
+            android:layout_marginRight="64dp"
+            android:background="@drawable/dialog_huise_bg"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="#1933c6e5" >
+
+                <TextView
+                    android:id="@+id/msg_title_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:drawableLeft="@drawable/mine_alter_img_point_blue"
+                    android:drawablePadding="5dp"
+                    android:text="新人加入了，打个招呼吧"
+                    android:textColor="#a0a0a0"
+                    android:textSize="12dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp" >
+
+                <RelativeLayout
+                    android:id="@+id/bottom_left_rl"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="center" >
+
+                    <ImageView
+                        android:id="@+id/msg_photo_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/acty_barrage_img_comment_profiles_default" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/bottom_left_rl" >
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true" >
+
+                        <LinearLayout
+                            android:id="@+id/name_linear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:id="@+id/name_chat_item_newjoin_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="托马斯"
+                                android:textColor="#606366"
+                                android:textSize="15sp" />
+
+                            <ImageView
+                                android:id="@+id/sex_icon_imv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:src="@drawable/acty_joinlist_img_male" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_below="@id/name_linear"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal" >
+
+                            <ImageView
+                                android:id="@+id/school_icon_imv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/follow_scholl_img" />
+
+                            <TextView
+                                android:id="@+id/content_chat_item_newjoin_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="4dp"
+                                android:text="北京大学"
+                                android:textColor="#a0a0a0"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/acty_barrage_img_arrow" />
+                    </RelativeLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
