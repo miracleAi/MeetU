@@ -5,6 +5,10 @@ import java.util.List;
 
 
 
+
+
+
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
@@ -19,9 +23,12 @@ import com.meetu.common.ChatConnection;
 import com.meetu.db.TabDb;
 import com.meetu.fragment.MineUpfragment;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.tools.SystemBarTintManager;
 import com.meetu.view.ScrollTabHolder;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -33,6 +40,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -50,16 +58,23 @@ public class MainActivity extends FragmentActivity implements OnTabChangeListene
 	private ArrayList<Fragment> fragList=null;
 	private BoardPageFragmentAdapter adapter;
 	private String pageString;
-	
+
 	public static MineUpfragment fMineUpfragment;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.getWindow();
+		//状态栏相关
+		/*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {    
+			setTranslucentStatus(true);    
+			SystemBarTintManager tintManager = new SystemBarTintManager(this);    
+			tintManager.setStatusBarTintEnabled(true);    
+			tintManager.setStatusBarTintResource(R.color.touming);//通知栏所需颜色  
+		}    */
 		setContentView(R.layout.activity_main);
-		
+
 		tabHost=(FragmentTabHost)super.findViewById(android.R.id.tabhost);
 		contentLayout=(FrameLayout)super.findViewById(R.id.contentLayout);
 		tabHost.setup(this,super.getSupportFragmentManager(),R.id.contentLayout);
@@ -67,16 +82,28 @@ public class MainActivity extends FragmentActivity implements OnTabChangeListene
 		tabHost.setOnTabChangedListener(this);
 		initTab();	
 		pageString=super.getIntent().getStringExtra("page");
-		
-	//	fMineUpfragment=(MineUpfragment) MainActivity.this.getSupportFragmentManager().getFragments().get(3);
-		
-	//	fMineUpfragment=new MineUpfragment();
-		
+
+		//	fMineUpfragment=(MineUpfragment) MainActivity.this.getSupportFragmentManager().getFragments().get(3);
+
+		//	fMineUpfragment=new MineUpfragment();
+
 
 		ChatConnection.isConnection();
-		
+
 	}
-	
+	//状态栏相关
+	@TargetApi(19)     
+	private void setTranslucentStatus(boolean on) {    
+		Window win = getWindow();    
+		WindowManager.LayoutParams winParams = win.getAttributes();    
+		final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;    
+		if (on) {    
+			winParams.flags |= bits;    
+		} else {    
+			winParams.flags &= ~bits;    
+		}    
+		win.setAttributes(winParams);    
+	}  
 	@Override
 	public void onAttachFragment(Fragment fragment) {
 		// 获得fragment实例
@@ -87,8 +114,6 @@ public class MainActivity extends FragmentActivity implements OnTabChangeListene
 			fMineUpfragment=(MineUpfragment)fragment;
 			return;
 		}
-		
-		
 	}
 
 	private void initTab(){
@@ -111,14 +136,14 @@ public class MainActivity extends FragmentActivity implements OnTabChangeListene
 		return view;
 	}
 
-	
+
 
 	@Override
 	public void onTabChanged(String tabId) {
 		// TODO Auto-generated method stub
 		updateTab();
 	}
-	
+
 	private void updateTab(){
 		TabWidget tabw=tabHost.getTabWidget();
 		for(int i=0;i<tabw.getChildCount();i++){
@@ -131,7 +156,7 @@ public class MainActivity extends FragmentActivity implements OnTabChangeListene
 				((TextView)view.findViewById(R.id.tvTab)).setTextColor(getResources().getColor(R.color.foot_txt_gray));
 				iv.setImageResource(TabDb.getTabsImg()[i]);
 			}
-			
+
 		}
 	}
 	/**
@@ -148,16 +173,16 @@ public class MainActivity extends FragmentActivity implements OnTabChangeListene
 			System.exit(0);
 		}
 	}
-	
+
 	public static Fragment  getFragment(){
-//		List<Fragment> list=MainActivity.this.getSupportFragmentManager().getFragments();
-//		return list.get(3);
-		
+		//		List<Fragment> list=MainActivity.this.getSupportFragmentManager().getFragments();
+		//		return list.get(3);
+
 		return fMineUpfragment;
 	}
 
-	
-	
+
+
 
 
 }

@@ -36,5 +36,6 @@
     <color name="barrage_acty_end_bg">#AFAFAF</color>
     <color name="barrage_acty_join_bg">#33c7e5</color>
     <color name="barrage_conv_join_bg">#0bc7b4</color>
+    <color name="touming">#00000000</color>
     
 </resources>

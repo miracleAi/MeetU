@@ -11,7 +11,7 @@ import com.meetu.cloud.object.ObjSysMsg;
 import com.meetu.cloud.object.ObjUser;
 
 public class ObjSysMsgWrap {
-	//查询系统消息
+	//查询系统消息 
 	public static void querySysMsgs(ObjUser user,final ObjSysMsgListCallback callback){
 		AVQuery<ObjSysMsg> query = AVObject.getQuery(ObjSysMsg.class);
 		query.whereEqualTo("user", user);

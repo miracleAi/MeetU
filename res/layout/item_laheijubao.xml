@@ -16,7 +16,9 @@
             android:layout_height="61dp" 
             android:background="@drawable/item_buytickets_bg" 
             >
-            <TextView android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/lahei_item_tv" 
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:textColor="@color/textview_bg"
@@ -30,6 +32,7 @@
             android:background="@drawable/item_buytickets_bg" 
             >
             <TextView 
+                android:id="@+id/jubao_item_tv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"

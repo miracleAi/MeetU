@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import net.tsz.afinal.FinalBitmap;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -17,6 +16,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,6 +28,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,6 +37,7 @@ import android.view.Window;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -49,11 +51,15 @@ import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.LogUtil.log;
 import com.lidroid.xutils.BitmapUtils;
 import com.meetu.R;
+import com.meetu.activity.ReportActivity;
 import com.meetu.activity.SystemSettingsActivity;
 import com.meetu.activity.messages.CreateLitterNoteActivity;
+import com.meetu.activity.messages.NotesActivity;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
+import com.meetu.cloud.object.ObjShieldUser;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjShieldUserWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
 import com.meetu.entity.Middle;
@@ -121,6 +127,13 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 	// 上传 信息   头像相关
 	private	String fHeadPath = "";
 	private String yHeadPath = "";
+	//标记是否屏蔽
+	private boolean isShield = false;
+	//popwindow相关
+	TextView laheiTv;
+	TextView jubaoTv;
+	RelativeLayout laheilayout;
+	RelativeLayout jubaolayout;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -443,8 +456,121 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 			}
 		});
 	}
+	private PopupWindow popupWindow;
+	private void showPopWindow() {
+		if (popupWindow == null) {
+			View view = LayoutInflater.from(this).inflate(R.layout.item_laheijubao,
+					null);		
+			popupWindow = new PopupWindow(view,
+					ViewGroup.LayoutParams.MATCH_PARENT,
+					ViewGroup.LayoutParams.MATCH_PARENT);
+			// 设置外观
+			popupWindow.setFocusable(true);
+			popupWindow.setOutsideTouchable(true);
+			ColorDrawable colorDrawable = new ColorDrawable();
+			popupWindow.setBackgroundDrawable(colorDrawable);
+		    laheiTv= (TextView) view.findViewById(R.id.lahei_item_tv);
+			jubaoTv = (TextView) view.findViewById(R.id.jubao_item_tv);
+			laheilayout=(RelativeLayout) view.findViewById(R.id.lahei_item_laheijubao_rl);
+			jubaolayout=(RelativeLayout) view.findViewById(R.id.jubao_item_laheijubao_rl);
+			}
+		if(isShield){
+			laheiTv.setText("取消拉黑");
+		}else{
+			laheiTv.setText("拉黑Ta");
+		}
+		laheilayout.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				log.e("lucifer", "拉黑");
+				if(isShield){
+					cancelShieldUser(userId);
+				}else{
+					shieldUser(userId);
+				}
+				popupWindow.dismiss();
+			}
+		});
+		jubaolayout.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				log.e("lucifer", "举报");
+				//跳转到举报界面
+				popupWindow.dismiss();
+				Intent intent = new Intent(UserPagerActivity.this,ReportActivity.class);
+				intent.putExtra("flag", "user");
+				intent.putExtra("otherId", userId);
+				startActivity(intent);
+			}
+		});
+		}
+	/**
+	 * 拉黑用户
+	 * */
+	public void shieldUser(String userId){
+		ObjUser otherUser;
+		try {
+			otherUser = AVUser.createWithoutData(ObjUser.class, userId);
+			ObjShieldUser  shieldUser = new ObjShieldUser();
+			shieldUser.setUser(userMy);
+			shieldUser.setShieldUser(otherUser);
+			ObjShieldUserWrap.shieldUser(shieldUser, new ObjFunBooleanCallback() {
+
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						Toast.makeText(getApplicationContext(), "操作失败", 1000).show();
+						return;
+					}
+					if(result){
+						isShield = true;
+						Toast.makeText(getApplicationContext(), "已拉黑", 1000).show();
+					}else{
+						Toast.makeText(getApplicationContext(), "操作失败", 1000).show();
+					}
+				}
+			});
+		} catch (AVException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	/**
+	 * 取消拉黑
+	 * */
+	public void cancelShieldUser(String userId){
+		ObjUser otherUser;
+		try {
+			otherUser = AVUser.createWithoutData(ObjUser.class, userId);
+			ObjShieldUserWrap.unShieldUser(userMy,otherUser, new ObjFunBooleanCallback() {
+
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						Toast.makeText(getApplicationContext(), "操作失败", 1000).show();
+						return;
+					}
+					if(result){
+						isShield = false;
+						Toast.makeText(getApplicationContext(), "已取消拉黑", 1000).show();
+					}else{
+						Toast.makeText(getApplicationContext(), "取消失败", 1000).show();
+					}
+				}
+			});
+		} catch (AVException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 	@Override
-	public void onClick(View v) {
+	public void onClick(final View v) {
 		
 		switch (v.getId()) {
 		
@@ -457,7 +583,31 @@ public class UserPagerActivity extends FragmentActivity implements ScrollTabHold
 			startActivity(intent2);
 			break;
 		case R.id.addmore_userpager_layout_rl:
-			log.e("更多");
+			ObjUser otherUser;
+			try {
+				otherUser = AVUser.createWithoutData(ObjUser.class, userId);
+				ObjShieldUserWrap.isShield(userMy,otherUser, new ObjFunBooleanCallback() {
+
+					@Override
+					public void callback(boolean result, AVException e) {
+						// TODO Auto-generated method stub
+						if(e != null){
+							Toast.makeText(getApplicationContext(), "操作失败", 1000).show();
+							return;
+						}
+						if(result){
+							isShield = true;
+						}else{
+							isShield = false;
+						}
+						showPopWindow();
+						popupWindow.showAsDropDown(v, 0, 0);
+					}
+				});
+			} catch (AVException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			break;
 		case R.id.update_userpager_img:
 			Intent intent=new Intent(Intent.ACTION_PICK,null);

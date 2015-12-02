@@ -10,11 +10,11 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
-
 import com.meetu.R;
 import com.meetu.R.drawable;
 import com.meetu.R.id;
 import com.meetu.R.layout;
+import com.meetu.activity.ReportActivity;
 import com.meetu.adapter.GridRecycleMiLiaoInfoAdapter;
 import com.meetu.adapter.GridRecycleMiLiaoInfoAdapter.OnMiLiaoInfoItemClickCallBack;
 import com.meetu.bean.UserAboutBean;
@@ -24,7 +24,6 @@ import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
-
 import com.meetu.entity.User;
 import com.meetu.entity.UserAbout;
 import com.meetu.myapplication.MyApplication;
@@ -38,9 +37,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
 import android.support.v7.widget.GridLayoutManager;
-
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -293,7 +290,9 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 			break;
 		//举报觅聊
 		case R.id.center4_miliao_info_rl:
-			
+			Intent intent = new Intent(MiLiaoInfoActivity.this,ReportActivity.class);
+			intent.putExtra("flag", "conversation");
+			//intent.putExtra("otherId", value)
 			break;
 		
 		}
