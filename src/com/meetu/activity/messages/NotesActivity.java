@@ -69,13 +69,16 @@ public class NotesActivity extends FragmentActivity  implements OnPageChangeList
 	private static RelativeLayout bottomLayout;
 	private RelativeLayout disposeLayout;
 	private RelativeLayout laheilayout,jubaolayout;
+	private ImageView disposeImg;//箭头
 	TextView shieldTv,reportTv;
 	private ImageView userHeadPhoto;
 	private TextView userName;
-
+	private RelativeLayout isShowLayout;
+	private ImageView isShowImg;
+	public static boolean isShow=true;//是否显示小纸条消息
 	//表情键盘相关
 	private LinearLayout sendLinearLayout;
-	private Boolean isShow=false;
+//	private Boolean isShow=false;
 
 	private int beforeID=0;
 
@@ -143,22 +146,7 @@ public class NotesActivity extends FragmentActivity  implements OnPageChangeList
 	}
 
 	private void initViewPager() {
-		// TODO 先测试5个卡片
-		for(int i=0;i<objScripBox.getScripCount();i++){
-			NotesChannelFragment frag=new NotesChannelFragment();
-			Bundle bundle=new Bundle();
-			bundle.putSerializable("ObjScripBox", objScripBox);
 
-			frag.setArguments(bundle);
-			fragmentList.add(frag);
-
-		}
-		adapter=new BoardPageFragmentAdapter(getSupportFragmentManager(), fragmentList);
-		mViewPager.setAdapter(adapter);
-		mViewPager.setOffscreenPageLimit(2);
-		mViewPager.setCurrentItem(0);
-
-		mViewPager.setOnClickListener(this);
 
 		for(int i=0;i<objScripsList.size();i++){
 			NotesChannelFragment frag=new NotesChannelFragment();
@@ -187,8 +175,12 @@ public class NotesActivity extends FragmentActivity  implements OnPageChangeList
 		bottomLayout=(RelativeLayout) super.findViewById(R.id.send_bottom_rl);
 		disposeLayout=(RelativeLayout) super.findViewById(R.id.manage_notes_center_rl);
 		disposeLayout.setOnClickListener(this);
+		disposeImg=(ImageView) findViewById(R.id.manage_notes_center_img);
 		userHeadPhoto=(ImageView) super.findViewById(R.id.photoHead_notes_top_img);
 		userName=(TextView) findViewById(R.id.userName_notes_tv);
+		isShowLayout=(RelativeLayout) findViewById(R.id.isShowScript_notes_rl);
+		isShowLayout.setOnClickListener(this);
+		isShowImg=(ImageView) findViewById(R.id.isShowScript_notes_img);
 	}
 
 	@Override
@@ -264,6 +256,28 @@ public class NotesActivity extends FragmentActivity  implements OnPageChangeList
 			}
 			break;
 
+		case R.id.isShowScript_notes_rl:
+			//显示or隐藏小纸条消息
+			if(isShow==true){
+				isShow=false;
+				isShowImg.setImageResource(R.drawable.massage_letters_show_btn_hide_hl);
+				for(int i=0;i<objScripsList.size();i++){
+					//暴力 拿到 fragment
+					((NotesChannelFragment)fragmentList.get(i)).removeAllView();
+				}
+				
+			}else{
+				isShow=true;
+				isShowImg.setImageResource(R.drawable.massage_letters_show_btn_hide_nor);
+				for(int i=0;i<objScripsList.size();i++){
+					//暴力 拿到 fragment
+					((NotesChannelFragment)fragmentList.get(i)).showAllView();
+				}
+				
+				
+			}
+			
+			break;
 		default:
 			break;
 		}

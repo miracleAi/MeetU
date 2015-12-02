@@ -172,7 +172,10 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 	
 	private int noteIdNow=1;//标记当前生成的view是第几个view 小纸条 
 	
-	private List<String> noteIDList=new ArrayList<String>();
+	private List<Integer> noteIDList=new ArrayList<Integer>();
+	
+	
+	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -197,6 +200,8 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 			}
 			objScripBox=(ObjScripBox)getArguments().getSerializable("ObjScripBox");
 			objScrip=(ObjScrip) getArguments().getSerializable("ObjScrip");
+
+			
 			log.e("zcq duihua id", objScripBox.getConversationId());
 			conv = MyApplication.chatClient.getConversation(objScripBox.getConversationId());
 			
@@ -211,6 +216,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 			
 //			chatmsgsDao.deleteAll();
 			showScriptMsg();
+			
 			
 		}
 		ViewGroup parent=(ViewGroup) view.getParent();
@@ -244,15 +250,19 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 		}else{
 			chatmsgsListNewTenNote.addAll(chatmsgsList);
 		}
-//		log.e("content 纸条最后一个"+chatmsgsListNewTenNote.get(9).getContent());
-//		allLayout.removeAllViews();
+		log.e("zcq chatmsgsListNewTenNote", ""+chatmsgsListNewTenNote.size());
+		removeAllView();
 		
-		for(int i=0;i<10;i++){
-			removeView((i+1));
-		}
+
+		
+//		for(int i=0;i<chatmsgsListNewTenNote.size();i++){
+//			removeView((i+1));
+//			
+//		}
 		for(int i=0;i<chatmsgsListNewTenNote.size();i++){
+			log.e("zcq ", "chatmsgsListNewTenNote.size()==="+i);
 			
-			allLayout.addView(getMessageLayout(chatmsgsListNewTenNote.get(i),i));
+			allLayout.addView(getMessageLayout(chatmsgsListNewTenNote.get(i),i+1));
 			
 		}
 	}
@@ -377,19 +387,11 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 			log.e("lucifer","触发页面");
 			
 			getHight();
-//			showDialog();
-//			LinearLayout.LayoutParams params= (android.widget.LinearLayout.LayoutParams) sendLayout.getLayoutParams();
-//			
-//			params.bottomMargin=mVisibleHeight;
-//			
-//			sendLayout.setLayoutParams(params);
+
+			Boolean isShowView=NotesActivity.isShow;
+			log.e("zcq", "isShowView"+isShowView);
 			
-//			sendLinearLayout.setVisibility(View.VISIBLE);
-			
-//			Toast.makeText(getActivity(), ""+mVisibleHeight, Toast.LENGTH_SHORT).show();
-//			SendMessageCallback mCallback = null;
-//			new InputDialog(getActivity(), mCallback).show();
-			
+			if(isShowView==true){
 			//第一次点击屏幕
 			if(isWindow==true){
 				sendLinearLayout.setVisibility(View.VISIBLE);
@@ -438,6 +440,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 //				dismissAll();
 				removeView(numberId);
 				
+			}
 			}
 				
 			
@@ -743,6 +746,11 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 		content.setText(mEditText.getText().toString());
 		photoHead=(ImageView) view.findViewById(R.id.photoHead_notes_channel_fragment_img);
 		
+		//是我发的
+		if(user.getProfileClip()!=null){
+			finalBitmap.display(photoHead, user.getProfileClip().getUrl());
+		}
+		
 		viewX=windowFocusX-(DensityUtil.dip2px(getActivity(), 34)+1);
 		viewY=windowFocusY-(DensityUtil.dip2px(getActivity(), 54));
 		//在屏幕的最左边
@@ -877,7 +885,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 	 * id   是view 的id
 	 */
 	private void removeView( int id){
-		View hiddenView = allLayout.findViewById(numberId) ;  //在hidden_view.xml中hidden_layout是root layout
+		View hiddenView = allLayout.findViewById(id) ;  //在hidden_view.xml中hidden_layout是root layout
 		if ( null != hiddenView ) {
 
 			ViewGroup parent=(ViewGroup) hiddenView.getParent();
@@ -979,6 +987,16 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 		
 		ImageView photoHead=(ImageView) view.findViewById(R.id.photoHead_notes_channel_fragment_img);
 		
+//		if(user.getObjectId().equals(chatmsgs.getClientId())){
+//			//是我发的
+//			if(user.getProfileClip()!=null){
+//				finalBitmap.display(photoHead, user.getProfileClip().getUrl());
+//			}
+//			
+//		}
+		
+		
+		
 //		viewX=windowFocusX-(DensityUtil.dip2px(getActivity(), 34)+1);
 //		viewY=windowFocusY-(DensityUtil.dip2px(getActivity(), 54));
 //		//在屏幕的最左边
@@ -999,6 +1017,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 //		log.e("lucifer"+"x=="+viewX+"y=="+viewY);
 		int x=(chatmsgs.getScripX()*noteWight/10000);
 		int y=(chatmsgs.getScripY()*noteHight/10000);
+		
 //		log.e("zcq x y", "x=="+x+" y=="+y+"  id=="+chatmsgs.getMessageCacheId());
 		view.setX(x);
 		view.setY(y);
@@ -1006,7 +1025,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 			//删除第一条
 		}
 		
-		view.setId((noteID)+1);
+		view.setId(noteID);
 		
 //		view.setTag(notesMessageViewList.size());
 		view.setLayoutParams(params);
@@ -1105,7 +1124,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 	public void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-	//	AVIMMessageManager.unregisterMessageHandler(AVIMTypedMessage.class, msgHandler);
+		AVIMMessageManager.unregisterMessageHandler(AVIMTypedMessage.class, msgHandler);
 	}
 	@Override
 	public void onResume() {
@@ -1114,7 +1133,27 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 		AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
 	}
 	
-	
+	/**
+	 * 移除所有的view
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-2
+	 */
+	public  void removeAllView(){
+		for(int i=0;i<chatmsgsListNewTenNote.size();i++){
+			removeView((i+1));
+			
+		}
+	}
+	/**
+	 * 
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-2
+	 */
+	public void showAllView(){
+		handler.sendEmptyMessage(1);
+	}
 	
 	
 
