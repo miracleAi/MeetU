@@ -146,6 +146,7 @@ public class LitterNoteActivity extends Activity implements OnLitterNotesItemCli
 				}
 				if(objects.size()>0){
 					
+//					log.e("zcq 对话id", ""+objects.get(0).getConversationId());
 					objScripBoxList=new ArrayList<ObjScripBox>();
 
 					objScripBoxList.addAll(objects);

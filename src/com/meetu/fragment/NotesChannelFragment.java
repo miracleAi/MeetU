@@ -1,24 +1,43 @@
 package com.meetu.fragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.tsz.afinal.FinalBitmap;
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMMessageManager;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
+import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
+import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.meetu.R;
 import com.meetu.activity.messages.InputDialog;
 import com.meetu.activity.messages.InputDialog.SendMessageCallback;
 import com.meetu.activity.messages.NotesActivity;
 import com.meetu.activity.miliao.FaceGVAdapter;
 import com.meetu.activity.miliao.FaceVPAdapter;
+import com.meetu.activity.miliao.ChatGroupActivity.MessageHandler;
 import com.meetu.activity.miliao.ChatGroupActivity.OnCorpusSelectedListener;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjScripCallback;
+import com.meetu.cloud.object.ObjScrip;
 import com.meetu.cloud.object.ObjScripBox;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.utils.ChatMsgUtils;
+import com.meetu.cloud.wrap.ObjChatMessage;
+import com.meetu.cloud.wrap.ObjScriptWrap;
+import com.meetu.common.Constants;
 
 import com.meetu.entity.ChatEmoji;
+import com.meetu.entity.Chatmsgs;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.ChatmsgsDao;
 import com.meetu.sqlite.EmojisDao;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
@@ -37,6 +56,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -70,7 +91,10 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
 public class NotesChannelFragment extends Fragment implements OnClickListener,OnItemClickListener{
+	//控件相关
 	private RelativeLayout topLayout,bottomLayout,allLayout;
+	private TextView contentTextView;
+	
 	
 	private  View view;
 	private int windowWidth;
@@ -79,7 +103,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 	private LinearLayout sendLinearLayout;
 	int mVisibleHeight;
 	
-	public static EditText mEditText;
+	public  EditText mEditText;
 	private RelativeLayout emojiLayout;
 	private LinearLayout faceLayout;
 	private ImageView emojiAll;
@@ -93,7 +117,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 	private int noteHight;//纸条的绝对高度
 	private int emojiHight;//表情键盘的高度
 	private int ruanHight;//软键盘的高度
-	
+	private int noteWight;//纸条的最大宽度
     //添加表情相关
 	private EmojisDao emojisDao;
 	private static List<ChatEmoji> chatEmojis; 
@@ -134,8 +158,22 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 	ObjScripBox objScripBox=null;
 	private FinalBitmap finalBitmap;
 	private AVUser currentUser = AVUser.getCurrentUser();
+	ObjScrip objScrip=null;
+	AVIMConversation conv=null;
+	private int numberId=10000000;//点击屏幕生成的view的id
 	//当前用户
 	private ObjUser user = new ObjUser();
+	private ChatmsgsDao chatmsgsDao;
+	
+	private List<Chatmsgs> chatmsgsList=new ArrayList<Chatmsgs>();//用来存放纸条消息
+	private List<Chatmsgs>chatmsgsListNewTenNote=new ArrayList<Chatmsgs>();
+	
+	private MessageHandler msgHandler;
+	
+	private int noteIdNow=1;//标记当前生成的view是第几个view 小纸条 
+	
+	private List<String> noteIDList=new ArrayList<String>();
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -147,8 +185,10 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 			chatEmojis=emojisDao.getChatEmojisList();
 			emojiHigh=DensityUtil.dip2px(getActivity(), 24);
 			emojiWeight=DensityUtil.dip2px(getActivity(), 24);
-			
+			msgHandler=new MessageHandler();
+			chatmsgsDao=new ChatmsgsDao(getActivity());
 			noteHight=DisplayUtils.getWindowHeight(getActivity())-DensityUtil.dip2px(getActivity(), 190);
+			noteWight=DisplayUtils.getWindowWidth(getActivity());
 			
 			emojiHight=DensityUtil.dip2px(getActivity(), 275);
 			ruanHight=DensityUtil.dip2px(getActivity(), 350);
@@ -156,6 +196,10 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 				user = AVUser.cast(currentUser, ObjUser.class);
 			}
 			objScripBox=(ObjScripBox)getArguments().getSerializable("ObjScripBox");
+			objScrip=(ObjScrip) getArguments().getSerializable("ObjScrip");
+			log.e("zcq duihua id", objScripBox.getConversationId());
+			conv = MyApplication.chatClient.getConversation(objScripBox.getConversationId());
+			
 			MyApplication app=(MyApplication) getActivity().getApplicationContext();
 			finalBitmap=app.getFinalBitmap();
 			
@@ -165,12 +209,52 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 			//加载表情
 			InitViewPager();
 			
+//			chatmsgsDao.deleteAll();
+			showScriptMsg();
+			
 		}
 		ViewGroup parent=(ViewGroup) view.getParent();
 		if(parent!=null){
 			parent.removeView(view);
 		}
 		return view;
+	}
+/**
+ * 取本地数据库中的小纸条并显示
+ *   
+ * @author lucifer
+ * @date 2015-12-2
+ */
+	private void showScriptMsg() {
+//		chatmsgsList=chatmsgsDao.getScriptChatmsgsList(objScripBox.getConversationId(), user.getObjectId(), objScrip.getObjectId());
+		if(chatmsgsDao.getScriptChatmsgsList(objScripBox.getConversationId(), user.getObjectId(), objScrip.getObjectId())!=null){
+			log.e("zcq 缓存消息", "不等于null");
+			chatmsgsList.clear();
+			chatmsgsList.addAll(chatmsgsDao.getScriptChatmsgsList(objScripBox.getConversationId(), user.getObjectId(), objScrip.getObjectId()));
+		}
+		
+		log.e("zcq 缓存消息数量", ""+chatmsgsList.size());
+		chatmsgsListNewTenNote.clear();
+		if(chatmsgsList.size()>10){
+			for(int i=(chatmsgsList.size()-10);i<chatmsgsList.size();i++){
+				chatmsgsListNewTenNote.add(chatmsgsList.get(i));
+			}
+			
+
+		}else{
+			chatmsgsListNewTenNote.addAll(chatmsgsList);
+		}
+//		log.e("content 纸条最后一个"+chatmsgsListNewTenNote.get(9).getContent());
+//		allLayout.removeAllViews();
+		
+		for(int i=0;i<10;i++){
+			removeView((i+1));
+		}
+		for(int i=0;i<chatmsgsListNewTenNote.size();i++){
+			
+			allLayout.addView(getMessageLayout(chatmsgsListNewTenNote.get(i),i));
+			
+		}
 	}
 	/**
 	 * 获得弹出键盘的高度
@@ -242,8 +326,8 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 		
 		//获取点击屏幕的坐标
 		allLayout.setOnTouchListener(new TouchListenerImp());
-		sendLayout=(RelativeLayout) view.findViewById(R.id.bottom_emoji_send_rl);
-		
+		sendLayout=(RelativeLayout) view.findViewById(R.id.send_notes_rl);
+		sendLayout.setOnClickListener(this);
 		editviewLayout=(RelativeLayout) view.findViewById(R.id.bottom_emoji_send_rl);
 		sendLinearLayout=(LinearLayout) view.findViewById(R.id.bottom_notes_send_ll);
 		emojiLayout=(RelativeLayout) view.findViewById(R.id.emoji_notes_fragment_rl);
@@ -260,9 +344,14 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 		mDotsLayout = (LinearLayout)view. findViewById(R.id.face_dots_container);
 		
 		
-	//	finalBitmap.display(topLayout, uri);
+		contentTextView=(TextView) view.findViewById(R.id.content_fragment_notechannel_tv);
+		
+		if(objScrip.getContentImage()!=null){
+			finalBitmap.display(topLayout, objScrip.getContentImage().getUrl());
+		}
 		
 		
+		contentTextView.setText(""+objScrip.getContentText());
 		
 	}
 	/**
@@ -274,7 +363,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 
 		public boolean onTouch(View v, MotionEvent event) {
 	//	MainActivity.this.info.setText("x="+event.getX()+"y="+event.getY());
-			log.e("lucifer", "x=="+event.getX() +" y=="+event.getY());
+//			log.e("lucifer", "x=="+event.getX() +" y=="+event.getY());
 			windowFocusX=(int)event.getX();
 			windowFocusY=(int)event.getY();
 		return false;
@@ -347,7 +436,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 				NotesActivity.visible();
 //				allLayout.removeViewAt(1);
 //				dismissAll();
-				removeView(100);
+				removeView(numberId);
 				
 			}
 				
@@ -395,6 +484,49 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 			}
 			
 				
+			break;
+			
+		case R.id.send_notes_rl:
+			//发送纸条消息
+			if(mEditText.getText().length()!=0){
+				int x=(viewX*10000/noteWight);
+				int y=(viewY*10000/noteHight);
+				log.e("zcq fasong", "x==="+x+" y==="+y);
+				Chatmsgs chatmsgs=new Chatmsgs();
+				chatmsgs.setConversationId(objScripBox.getConversationId());
+				chatmsgs.setUid(user.getObjectId());
+				chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
+				chatmsgs.setClientId(user.getObjectId());
+				chatmsgs.setContent(""+mEditText.getText());
+				chatmsgs.setScriptId(objScrip.getObjectId());
+				chatmsgs.setScripX(x);
+				chatmsgs.setScripY(y);
+				
+				
+				sendMsg(chatmsgs);
+				
+				chatmsgsDao.insert(chatmsgs);
+				
+				mEditText.setText("");
+				sendLinearLayout.setVisibility(View.GONE);
+				faceLayout.setVisibility(View.GONE);
+				isShowEmoji=false;
+				InputMethodManager inputManager = (InputMethodManager)mEditText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE); 
+				inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0); 
+				isWindow=true;
+				mIsKeyboardShow=false;
+				
+				allLayout.setY(0);
+				mScrollView.setY(0);
+				NotesActivity.visible();
+//				allLayout.removeViewAt(1);
+//				dismissAll();
+				removeView(numberId);
+				handler.sendEmptyMessage(1);
+			}
+			
+			
+			
 			break;
 		default:
 			break;
@@ -524,7 +656,9 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 		if(emoji.getCharacter().equals("[删除]")){
 			EditViewDelect();
 		}else{
-			EditViewInsert(emoji);			
+			//TODO 暂时不显示表情
+			EditViewInsert(emoji);		
+			
 		}
 	}
 	
@@ -631,7 +765,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 		view.setX(viewX);
 		view.setY(viewY);
 		
-		view.setId(100);
+		view.setId(numberId);
 		
 //		view.setTag(notesMessageViewList.size());
 		view.setLayoutParams(params);
@@ -698,9 +832,9 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 
 			
 			
-			if(sendLayout.getVisibility()==View.VISIBLE){
+			if(sendLinearLayout.getVisibility()==View.VISIBLE){
 				
-				content.setText(""+arg0);
+				content.setText(""+arg0.toString());
 				
 			//	getTextWH(""+arg0);
 			}
@@ -724,10 +858,10 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 			
 			
 			
-			View myView=view.findViewById(100);
+			View myView=view.findViewById(numberId);
 			myView.setX(viewX);
 			myView.setY(viewY);
-			log.e("lucifer", "xxx==="+view.getX()+"yyy==="+view.getY());
+	//		log.e("lucifer", "xxx==="+view.getX()+"yyy==="+view.getY());
 		}
 	};
 //	
@@ -743,7 +877,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 	 * id   是view 的id
 	 */
 	private void removeView( int id){
-		View hiddenView = allLayout.findViewById(100) ;  //在hidden_view.xml中hidden_layout是root layout
+		View hiddenView = allLayout.findViewById(numberId) ;  //在hidden_view.xml中hidden_layout是root layout
 		if ( null != hiddenView ) {
 
 			ViewGroup parent=(ViewGroup) hiddenView.getParent();
@@ -758,16 +892,227 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 		
 		sendLinearLayout.setVisibility(View.GONE);
 		
-		removeView(100);
+		removeView(numberId);
 		mScrollView.setY(0);
 		allLayout.setY(0);
-		 mIsKeyboardShow=false;//记录系统软键盘是否弹出
+		mIsKeyboardShow=false;//记录系统软键盘是否弹出
 		isShowEmoji=false;//记录表情键盘是否弹出
 		isShowBottom=true;//记录公共底部是否显示    
 		
 		 isWindow=true;//记录屏幕点击的时候的状态 true 表示会弹出键盘 false 落下键盘
 	}
 	
+	
+	Handler handler=new Handler(){
+
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			
+			switch (msg.what) {
+			case 1:
+				log.e("zcq", "刷新了");
+				showScriptMsg();
+				break;
+
+			default:
+				break;
+			}
+		}
+		
+	};
+	
+	/**
+	 *  
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-1
+	 */
+	public void sendMsg(Chatmsgs chatmsgs){
+		
+		log.e("zcq发送时候的位置"+"x=="+chatmsgs.getScripX()+" y=="+chatmsgs.getScripY());
+		AVIMTextMessage msg = new AVIMTextMessage();
+		msg.setText(""+chatmsgs.getContent());
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+			map.put(Constants.SCRIP_ID,objScrip.getObjectId());
+			map.put(Constants.CHAT_MSG_TYPE, Constants.SHOW_SCRIPT);
+			map.put(Constants.SCRIP_X, chatmsgs.getScripX());
+			map.put(Constants.SCRIP_Y, chatmsgs.getScripY());			
+			
+		msg.setAttrs(map);
+		ObjChatMessage.sendChatMsg(conv,msg , new ObjFunBooleanCallback() {
+
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					log.e("zcq", e);
+					Toast.makeText(getActivity(), "发送失败", Toast.LENGTH_SHORT).show();
+					return ;
+				}
+				if(result){
+			//		clickBtn.setText(LOADSUC);
+					log.e("zcq", "发送成功");
+					Toast.makeText(getActivity(), "发送成功", Toast.LENGTH_SHORT).show();
+				}else{
+			//		clickBtn.setText(LOADFAIL);
+					log.e("zcq", "发送失败");
+					Toast.makeText(getActivity(), "发送失败", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+	}
+	
+	/**
+	 * 获取添加的视图 输入框  展示接收到的小纸条消息
+	 */
+	private View  getMessageLayout(Chatmsgs chatmsgs,int noteID){
+		RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+		
+		LayoutInflater inflater=(LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View view = inflater.inflate(R.layout.item_note_channels_messages, null);
+		RelativeLayout contentLayout=(RelativeLayout) view.findViewById(R.id.input_note_channels_rl);
+		TextView contentTextView=(TextView) view.findViewById(R.id.content_note_channels_tv);
+		
+		contentTextView.setText(""+chatmsgs.getContent());
+		
+		ImageView photoHead=(ImageView) view.findViewById(R.id.photoHead_notes_channel_fragment_img);
+		
+//		viewX=windowFocusX-(DensityUtil.dip2px(getActivity(), 34)+1);
+//		viewY=windowFocusY-(DensityUtil.dip2px(getActivity(), 54));
+//		//在屏幕的最左边
+//		if(windowFocusX<((DensityUtil.dip2px(getActivity(), 34)+1))){
+//			//x=((DensityUtil.dip2px(getActivity(), 34)+1));
+//			viewX=windowFocusX;
+//		}
+//		//在你屏幕的最右边
+//		if((windowWidth-windowFocusX)<((DensityUtil.dip2px(getActivity(), 34)+1))){
+//			viewX=windowFocusX-((DensityUtil.dip2px(getActivity(), 69)));
+//		}
+//		//在屏幕的最上边
+//		if(windowFocusY<(DensityUtil.dip2px(getActivity(), 54))){
+//			//y=(DensityUtil.dip2px(getActivity(), 54));
+//			viewY=windowFocusY;
+//		}
+//		
+//		log.e("lucifer"+"x=="+viewX+"y=="+viewY);
+		int x=(chatmsgs.getScripX()*noteWight/10000);
+		int y=(chatmsgs.getScripY()*noteHight/10000);
+//		log.e("zcq x y", "x=="+x+" y=="+y+"  id=="+chatmsgs.getMessageCacheId());
+		view.setX(x);
+		view.setY(y);
+		if(noteIdNow>10){
+			//删除第一条
+		}
+		
+		view.setId((noteID)+1);
+		
+//		view.setTag(notesMessageViewList.size());
+		view.setLayoutParams(params);
+		return view;
+	}
+	
+	/**
+	 * 用来接收消息的handle
+	 * @author lucifer
+	 *
+	 */
+	public class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>{
+
+		@Override
+		public void onMessage(AVIMTypedMessage message,
+				AVIMConversation conversation, AVIMClient client) {
+			super.onMessage(message, conversation, client);
+			// 请按自己需求改写
+			switch (message.getMessageType()) {
+			case Constants.TEXT_TYPE:
+				log.e("zcq", "接收到一条文本消息");
+			createChatMsg(conversation,message);
+				
+				break;
+			case Constants.IMAGE_TYPE:
+//			createChatPicMsg(conversation,message);
+				break;
+			default:
+				break;
+			}
+
+		    }
+	
+
+		@Override
+		public void onMessageReceipt(AVIMTypedMessage message,
+				AVIMConversation conversation, AVIMClient client) {
+			// TODO Auto-generated method stub
+			super.onMessageReceipt(message, conversation, client);
+		}
+		
+	}
+	
+	public void createChatMsg(AVIMConversation conversation,
+			AVIMTypedMessage message) {
+		// TODO Auto-generated method stub
+		AVIMTextMessage msg = ((AVIMTextMessage)message);
+		Chatmsgs chatBean = new Chatmsgs();
+		
+		chatBean.setUid(user.getObjectId());
+		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
+		chatBean.setClientId(msg.getFrom());
+		chatBean.setMessageId(msg.getMessageId());
+		chatBean.setConversationId(msg.getConversationId());
+		chatBean.setChatMsgDirection(ChatMsgUtils.getDerection(msg.getMessageIOType()));
+		chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
+//		boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
+//		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
+		String scriptId= (String) msg.getAttrs().get(Constants.SCRIP_ID);
+		int scriptX=(Integer) msg.getAttrs().get(Constants.SCRIP_X);
+		int scriptY=(Integer) msg.getAttrs().get(Constants.SCRIP_Y);
+		log.e("zcq 接受", "scriptId=="+scriptId+" x=="+scriptX+" y=="+scriptY);
+		chatBean.setScriptId(scriptId);
+		chatBean.setScripX(scriptX);
+		chatBean.setScripY(scriptY);
+		chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
+		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
+		chatBean.setContent(msg.getText());
+		int style=(Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
+//		//我接受别人的消息
+//		if(style==0&&ChatMsgUtils.getDerection(msg.getMessageIOType())==Constants.IOTYPE_IN){
+//			
+//			chatBean.setChatMsgType(12);
+//		}else{
+//			//接收到自己发的消息
+//			chatBean.setChatMsgType(10);
+//		}
+		//接收到本人id 发送的消息 不插入到本地消息数据库
+		if(!user.getObjectId().equals(msg.getFrom())){
+			chatmsgsDao.insert(chatBean);
+			log.e("lucifer", "插入成功");
+		}
+	
+		if(conversation.getConversationId().equals(objScripBox.getConversationId())){
+			//测试显示  刷新adapter
+			
+			handler.sendEmptyMessage(1);
+			
+		}else{
+			//未读消息加1
+//			messagesDao.updateUnread(user.getObjectId(), msg.getConversationId());
+		}
+		
+	}
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+	//	AVIMMessageManager.unregisterMessageHandler(AVIMTypedMessage.class, msgHandler);
+	}
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
+	}
 	
 	
 	

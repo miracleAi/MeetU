@@ -27,6 +27,7 @@
                 android:layout_below="@id/top_fragment_notes_channel_rl" >
 
                 <TextView
+                    android:id="@+id/content_fragment_notechannel_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="14dp"
@@ -60,7 +61,7 @@
         android:visibility="gone" >
 
         <RelativeLayout
-            android:id="@+id/bottom_emoji_send_rl"
+            android:id="@+id/bottom_note_channel_emoji_send_rl"
             android:layout_width="match_parent"
             android:layout_height="44dp" >
 
@@ -130,7 +131,7 @@
             android:id="@+id/chat_face_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/bottom_emoji_send_rl"
+            android:layout_below="@id/bottom_note_channel_emoji_send_rl"
             layout="@layout/chat_face_container"
             android:visibility="gone" />
     </LinearLayout>

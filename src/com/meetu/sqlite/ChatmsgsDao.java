@@ -135,5 +135,51 @@ public class ChatmsgsDao {
 		
 		
 	}
+	
+	/**
+	 * 查询小纸条消息列表
+	 * @param conversationId 属于哪个对话的id,哪个用户uid  scriptId 小纸条id
+	 * @return
+	 */
+	public List<Chatmsgs> getScriptChatmsgsList(String conversationId,String userId,String scriptId){
+		SQLiteDatabase db=helper.getReadableDatabase();
+		Cursor c=db.rawQuery("select * from chatmsgs " +
+				"where _conversation_id=? and "+Constants.USERID+"=? and _scrip_id=? ", new String[]{conversationId,userId,scriptId});
+		List<Chatmsgs> list=new ArrayList<Chatmsgs>();
+		while(c.moveToNext()){
+			Chatmsgs chatmsgs=new Chatmsgs();
+			
+			chatmsgs.setMessageCacheId(c.getString(c.getColumnIndex("_message_cache_id")));
+			chatmsgs.setUid(c.getString(c.getColumnIndex(Constants.USERID)));
+			chatmsgs.setMessageId(c.getString(c.getColumnIndex("_message_id")));
+			chatmsgs.setClientId(c.getString(c.getColumnIndex("_client_id")));
+			chatmsgs.setConversationId(c.getString(c.getColumnIndex("_conversation_id")));
+			chatmsgs.setChatMsgType(c.getInt(c.getColumnIndex("_chat_msg_type")));
+			chatmsgs.setChatMsgDirection(c.getInt(c.getColumnIndex("_chat_msg_direction")));
+			chatmsgs.setChatMsgStatus(c.getInt(c.getColumnIndex("_chat_msg_status")));
+			chatmsgs.setIsShowTime(c.getInt(c.getColumnIndex("_is_show_time")));
+			chatmsgs.setSendTimeStamp(c.getString(c.getColumnIndex("_send_time_stamp")));
+			chatmsgs.setDeliveredTimeStamp(c.getString(c.getColumnIndex("_delivered_time_stamp")));
+			chatmsgs.setContent(c.getString(c.getColumnIndex("_content")));
+			chatmsgs.setImgMsgImageUrl(c.getString(c.getColumnIndex("_img_msg_image_url")));
+			chatmsgs.setImgMsgImageWidth(c.getInt(c.getColumnIndex("_img_msg_image_width")));
+			chatmsgs.setImgMsgImageHeight(c.getInt(c.getColumnIndex("_img_msg_image_height")));
+			chatmsgs.setNowJoinUserId(c.getString(c.getColumnIndex("_now_join_user_id")));
+			chatmsgs.setNotificationBaseContent(c.getString(c.getColumnIndex("_notification_base_content")));
+			chatmsgs.setNotificationActyContent(c.getString(c.getColumnIndex("_notification_acty_content")));
+			chatmsgs.setNotificationActyTitle(c.getString(c.getColumnIndex("_notification_acty_title")));
+			chatmsgs.setNotificationActyTitleSub(c.getString(c.getColumnIndex("_notification_acty_title_sub")));
+			
+			chatmsgs.setScriptId(c.getString(c.getColumnIndex("_scrip_id")));
+			chatmsgs.setScripX(c.getInt(c.getColumnIndex("_scrip_x")));
+			chatmsgs.setScripY(c.getInt(c.getColumnIndex("_scrip_y")));		
+			list.add(chatmsgs);			
+		}
+		c.close();
+		db.close();
+		return list;
+		
+		
+	}
 
 }

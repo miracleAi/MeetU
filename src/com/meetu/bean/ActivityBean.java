@@ -26,7 +26,7 @@ public class ActivityBean implements Serializable {
 	private String userId;
 	//活动ID
 	private String actyId;
-	//是否点赞
+	//是否点赞 
 	private int isFavor;
 	//我关注并且参加活动的人数
 	private int orderAndFollow;
