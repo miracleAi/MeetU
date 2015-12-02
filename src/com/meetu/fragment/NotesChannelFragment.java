@@ -166,8 +166,13 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 	private ChatmsgsDao chatmsgsDao;
 	
 	private List<Chatmsgs> chatmsgsList=new ArrayList<Chatmsgs>();//用来存放纸条消息
+	private List<Chatmsgs>chatmsgsListNewTenNote=new ArrayList<Chatmsgs>();
 	
 	private MessageHandler msgHandler;
+	
+	private int noteIdNow=1;//标记当前生成的view是第几个view 小纸条 
+	
+	private List<String> noteIDList=new ArrayList<String>();
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -204,6 +209,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 			//加载表情
 			InitViewPager();
 			
+//			chatmsgsDao.deleteAll();
 			showScriptMsg();
 			
 		}
@@ -213,17 +219,41 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 		}
 		return view;
 	}
-	
+/**
+ * 取本地数据库中的小纸条并显示
+ *   
+ * @author lucifer
+ * @date 2015-12-2
+ */
 	private void showScriptMsg() {
 //		chatmsgsList=chatmsgsDao.getScriptChatmsgsList(objScripBox.getConversationId(), user.getObjectId(), objScrip.getObjectId());
 		if(chatmsgsDao.getScriptChatmsgsList(objScripBox.getConversationId(), user.getObjectId(), objScrip.getObjectId())!=null){
 			log.e("zcq 缓存消息", "不等于null");
+			chatmsgsList.clear();
 			chatmsgsList.addAll(chatmsgsDao.getScriptChatmsgsList(objScripBox.getConversationId(), user.getObjectId(), objScrip.getObjectId()));
 		}
+		
 		log.e("zcq 缓存消息数量", ""+chatmsgsList.size());
-		for(int i=0;i<chatmsgsList.size();i++){
+		chatmsgsListNewTenNote.clear();
+		if(chatmsgsList.size()>10){
+			for(int i=(chatmsgsList.size()-10);i<chatmsgsList.size();i++){
+				chatmsgsListNewTenNote.add(chatmsgsList.get(i));
+			}
 			
-			allLayout.addView(getMessageLayout(chatmsgsList.get(i)));
+
+		}else{
+			chatmsgsListNewTenNote.addAll(chatmsgsList);
+		}
+//		log.e("content 纸条最后一个"+chatmsgsListNewTenNote.get(9).getContent());
+//		allLayout.removeAllViews();
+		
+		for(int i=0;i<10;i++){
+			removeView((i+1));
+		}
+		for(int i=0;i<chatmsgsListNewTenNote.size();i++){
+			
+			allLayout.addView(getMessageLayout(chatmsgsListNewTenNote.get(i),i));
+			
 		}
 	}
 	/**
@@ -333,7 +363,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 
 		public boolean onTouch(View v, MotionEvent event) {
 	//	MainActivity.this.info.setText("x="+event.getX()+"y="+event.getY());
-			log.e("lucifer", "x=="+event.getX() +" y=="+event.getY());
+//			log.e("lucifer", "x=="+event.getX() +" y=="+event.getY());
 			windowFocusX=(int)event.getX();
 			windowFocusY=(int)event.getY();
 		return false;
@@ -831,7 +861,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 			View myView=view.findViewById(numberId);
 			myView.setX(viewX);
 			myView.setY(viewY);
-			log.e("lucifer", "xxx==="+view.getX()+"yyy==="+view.getY());
+	//		log.e("lucifer", "xxx==="+view.getX()+"yyy==="+view.getY());
 		}
 	};
 //	
@@ -937,7 +967,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 	/**
 	 * 获取添加的视图 输入框  展示接收到的小纸条消息
 	 */
-	private View  getMessageLayout(Chatmsgs chatmsgs){
+	private View  getMessageLayout(Chatmsgs chatmsgs,int noteID){
 		RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 		
 		LayoutInflater inflater=(LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -969,11 +999,14 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 //		log.e("lucifer"+"x=="+viewX+"y=="+viewY);
 		int x=(chatmsgs.getScripX()*noteWight/10000);
 		int y=(chatmsgs.getScripY()*noteHight/10000);
-		log.e("zcq x y", "x=="+x+" y=="+y+"  id=="+chatmsgs.getMessageCacheId());
+//		log.e("zcq x y", "x=="+x+" y=="+y+"  id=="+chatmsgs.getMessageCacheId());
 		view.setX(x);
 		view.setY(y);
+		if(noteIdNow>10){
+			//删除第一条
+		}
 		
-		view.setId(Integer.valueOf(chatmsgs.getMessageCacheId()));
+		view.setId((noteID)+1);
 		
 //		view.setTag(notesMessageViewList.size());
 		view.setLayoutParams(params);
@@ -995,7 +1028,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 			switch (message.getMessageType()) {
 			case Constants.TEXT_TYPE:
 				log.e("zcq", "接收到一条文本消息");
-//			createChatMsg(conversation,message);
+			createChatMsg(conversation,message);
 				
 				break;
 			case Constants.IMAGE_TYPE:
@@ -1015,6 +1048,70 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 			super.onMessageReceipt(message, conversation, client);
 		}
 		
+	}
+	
+	public void createChatMsg(AVIMConversation conversation,
+			AVIMTypedMessage message) {
+		// TODO Auto-generated method stub
+		AVIMTextMessage msg = ((AVIMTextMessage)message);
+		Chatmsgs chatBean = new Chatmsgs();
+		
+		chatBean.setUid(user.getObjectId());
+		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
+		chatBean.setClientId(msg.getFrom());
+		chatBean.setMessageId(msg.getMessageId());
+		chatBean.setConversationId(msg.getConversationId());
+		chatBean.setChatMsgDirection(ChatMsgUtils.getDerection(msg.getMessageIOType()));
+		chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
+//		boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
+//		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
+		String scriptId= (String) msg.getAttrs().get(Constants.SCRIP_ID);
+		int scriptX=(Integer) msg.getAttrs().get(Constants.SCRIP_X);
+		int scriptY=(Integer) msg.getAttrs().get(Constants.SCRIP_Y);
+		log.e("zcq 接受", "scriptId=="+scriptId+" x=="+scriptX+" y=="+scriptY);
+		chatBean.setScriptId(scriptId);
+		chatBean.setScripX(scriptX);
+		chatBean.setScripY(scriptY);
+		chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
+		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
+		chatBean.setContent(msg.getText());
+		int style=(Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
+//		//我接受别人的消息
+//		if(style==0&&ChatMsgUtils.getDerection(msg.getMessageIOType())==Constants.IOTYPE_IN){
+//			
+//			chatBean.setChatMsgType(12);
+//		}else{
+//			//接收到自己发的消息
+//			chatBean.setChatMsgType(10);
+//		}
+		//接收到本人id 发送的消息 不插入到本地消息数据库
+		if(!user.getObjectId().equals(msg.getFrom())){
+			chatmsgsDao.insert(chatBean);
+			log.e("lucifer", "插入成功");
+		}
+	
+		if(conversation.getConversationId().equals(objScripBox.getConversationId())){
+			//测试显示  刷新adapter
+			
+			handler.sendEmptyMessage(1);
+			
+		}else{
+			//未读消息加1
+//			messagesDao.updateUnread(user.getObjectId(), msg.getConversationId());
+		}
+		
+	}
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+	//	AVIMMessageManager.unregisterMessageHandler(AVIMTypedMessage.class, msgHandler);
+	}
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
 	}
 	
 	

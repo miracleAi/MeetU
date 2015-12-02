@@ -185,10 +185,12 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 	private String jstitle ;//用来接收标题title
 	private String number;//用来接收传过来的成员数量
 	private TextView title;//标题
+	private String objectID;//用来接收觅聊id
 	private TextView userNumber;
 	private UserAboutDao userAboutDao;
 	private List<UserAboutBean> userAboutBeans=new ArrayList<UserAboutBean>();
 	private SeekChatBean seekChatBean=null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -213,6 +215,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 		conversation = MyApplication.chatClient.getConversation(""+conversationId);
 		jstitle=intent.getStringExtra("title");
 		number=intent.getStringExtra("number");
+		objectID=intent.getStringExtra("objectId");
 		
 		seekChatBean=(SeekChatBean) intent.getSerializableExtra("SeekChatBean");
 		

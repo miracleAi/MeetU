@@ -266,6 +266,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 				intent2.putExtra("ConversationStyle", ""+2);
 				intent2.putExtra("title", ""+seekChatBeansList.get(positonNow).getTitle());
 				intent2.putExtra("number", ""+seekChatBeansList.get(positonNow).getMembers().size());
+				intent2.putExtra("objectId", seekChatBeansList.get(positonNow).getObjectId());//觅聊id
 				Bundle bundle=new Bundle();
 				bundle.putSerializable("SeekChatBean", seekChatBeansList.get(positonNow));
 				intent2.putExtras(bundle);
@@ -456,6 +457,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,OnC
 							intent2.putExtra("ConversationStyle", ""+2);
 							intent2.putExtra("title", ""+seekChatBeansList.get(positonNow).getTitle());
 							intent2.putExtra("number", ""+seekChatBeansList.get(positonNow).getMembers().size()+1);
+							intent2.putExtra("objectId", seekChatBeansList.get(positonNow).getObjectId());//觅聊id
 							Bundle bundle=new Bundle();
 							bundle.putSerializable("SeekChatBean", seekChatBeansList.get(positonNow));
 							intent2.putExtras(bundle);

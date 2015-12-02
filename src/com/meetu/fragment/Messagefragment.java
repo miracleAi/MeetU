@@ -193,6 +193,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,OnC
 			intent.putExtra("title",mdataListCache.get(position).getActyName());
 		}else{
 			intent.putExtra("title",mdataListCache.get(position).getChatName());
+			intent.putExtra("objectId", mdataListCache.get(position).getChatId());//觅聊id
 		}
 		Bundle bundle=new Bundle();
 		bundle.putSerializable("Messages", mdataListCache.get(position));
