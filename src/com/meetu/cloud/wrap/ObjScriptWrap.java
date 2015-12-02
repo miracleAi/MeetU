@@ -40,9 +40,9 @@ public class ObjScriptWrap {
 	 * */
 	public static void queryAllScrip(ObjScripBox scripBox,final ObjScripCallback callback){
 		AVQuery<ObjScrip> query = AVObject.getQuery(ObjScrip.class);
-		query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
+		//query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
 		//TimeUnit.DAYS.toMillis(1)
-		query.setMaxCacheAge(10*60*1000);
+		//query.setMaxCacheAge(10*60*1000);
 		query.whereEqualTo("scripBox", scripBox);
 		query.findInBackground(new FindCallback<ObjScrip>() {
 

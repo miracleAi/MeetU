@@ -481,7 +481,7 @@ public class NotesActivity extends FragmentActivity  implements OnPageChangeList
 				if(objects.size()>0){
 					//成功
 					objScripsList.addAll(objects);
-
+					log.e("zcq 纸条数量", ""+objects.size());
 					handler.sendEmptyMessage(1);
 
 				}else{

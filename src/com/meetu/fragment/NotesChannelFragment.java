@@ -987,13 +987,13 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 		
 		ImageView photoHead=(ImageView) view.findViewById(R.id.photoHead_notes_channel_fragment_img);
 		
-//		if(user.getObjectId().equals(chatmsgs.getClientId())){
-//			//是我发的
-//			if(user.getProfileClip()!=null){
-//				finalBitmap.display(photoHead, user.getProfileClip().getUrl());
-//			}
-//			
-//		}
+		if(user.getObjectId().equals(chatmsgs.getClientId())){
+			//是我发的
+			if(user.getProfileClip()!=null){
+				finalBitmap.display(photoHead, user.getProfileClip().getUrl());
+			}
+			
+		}
 		
 		
 		
@@ -1046,8 +1046,24 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 			// 请按自己需求改写
 			switch (message.getMessageType()) {
 			case Constants.TEXT_TYPE:
-				log.e("zcq", "接收到一条文本消息");
-			createChatMsg(conversation,message);
+				log.e("zcq", "接收到一条文本消息"+" MessageId()=="+message.getMessageId());
+			List<Chatmsgs> list=new ArrayList<Chatmsgs>();
+			List<Chatmsgs> list2=new ArrayList<Chatmsgs>();
+			list=chatmsgsDao.getScriptChatmsgsList(objScripBox.getConversationId(), user.getObjectId(), objScrip.getObjectId());
+			if(list!=null){
+				list2.addAll(list);
+				String scriptidString=list2.get(list2.size()-1).getScriptId();
+				
+				if(!message.getMessageId().equals(scriptidString)){
+					createChatMsg(conversation,message);
+				}
+			}else{
+				createChatMsg(conversation,message);
+			}
+			
+				
+			
+			
 				
 				break;
 			case Constants.IMAGE_TYPE:
@@ -1104,6 +1120,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,On
 //			chatBean.setChatMsgType(10);
 //		}
 		//接收到本人id 发送的消息 不插入到本地消息数据库
+		
 		if(!user.getObjectId().equals(msg.getFrom())){
 			chatmsgsDao.insert(chatBean);
 			log.e("lucifer", "插入成功");
