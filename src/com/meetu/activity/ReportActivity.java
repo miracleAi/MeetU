@@ -1,10 +1,13 @@
 package com.meetu.activity;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.meetu.R;
 import com.meetu.R.layout;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.object.ObjChat;
+import com.meetu.cloud.object.ObjReportChat;
 import com.meetu.cloud.object.ObjReportUser;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjReportWrap;
@@ -146,6 +149,8 @@ public class ReportActivity extends Activity implements OnClickListener{
 			//TODO 确定 需要做判断
 			if(flag.equals("user")){
 				reportUser(otherId);
+			}else{
+				reportChat(otherId);
 			}
 			break;
 
@@ -187,6 +192,39 @@ public class ReportActivity extends Activity implements OnClickListener{
 		} catch (AVException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+		}
+	}
+	/**
+	 * 举报觅聊
+	 * */
+	public void reportChat(String chatId){
+		ObjReportChat reportChat = new ObjReportChat();
+		try {
+			ObjChat chat = AVObject.createWithoutData(ObjChat.class, chatId);
+			reportChat.setChat(chat);
+			reportChat.setUser(user);
+			reportChat.setReportCode(selector);
+			reportChat.setAppend(reportEt.getText().toString());
+			ObjReportWrap.reportChat(reportChat, new ObjFunBooleanCallback() {
+				
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(e != null){
+						Toast.makeText(getApplicationContext(), "操作失败", 1000).show();
+						return;
+					}
+					if(result){
+						Toast.makeText(getApplicationContext(), "举报成功", 1000).show();
+						finish();
+					}else{
+						Toast.makeText(getApplicationContext(), "操作失败", 1000).show();
+					}
+				}
+			});
+		} catch (AVException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

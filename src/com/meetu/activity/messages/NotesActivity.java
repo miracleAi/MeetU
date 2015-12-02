@@ -30,16 +30,6 @@ import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.fragment.MiliaoChannelFragment;
 import com.meetu.fragment.NotesChannelFragment;
 import com.meetu.myapplication.MyApplication;
-
-
-
-
-
-
-
-
-
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;

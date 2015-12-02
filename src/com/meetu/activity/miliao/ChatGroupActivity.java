@@ -591,7 +591,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,OnIte
 			Intent intent=new Intent(this,MiLiaoInfoActivity.class);
 			intent.putExtra("ConversationStyle", conversationStyle);
 			intent.putExtra("ConversationId", conversationId);
-			
+			intent.putExtra("chatId", objectID);
 			startActivity(intent);
 		
 		default:

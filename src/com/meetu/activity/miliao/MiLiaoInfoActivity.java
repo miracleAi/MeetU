@@ -84,6 +84,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 	FinalBitmap finalBitmap;
 	private boolean isCreator=false;//用来标记是否是觅聊的创建者
 	private RelativeLayout miliaoLayout,qunliaoLayout;//用来 标记不同的view显示
+	String chatId = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +99,9 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 		Intent intent=getIntent();
 		conversationStyle=intent.getStringExtra("ConversationStyle");
 		conversationId=intent.getStringExtra("ConversationId");
+		if(getIntent().getStringExtra("chatId") != null){
+			chatId = getIntent().getStringExtra("chatId");
+		}
 		userAboutDao=new UserAboutDao(this);
 		if (currentUser != null) {
 			//强制类型转换
@@ -292,7 +296,8 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 		case R.id.center4_miliao_info_rl:
 			Intent intent = new Intent(MiLiaoInfoActivity.this,ReportActivity.class);
 			intent.putExtra("flag", "conversation");
-			//intent.putExtra("otherId", value)
+			intent.putExtra("otherId", chatId);
+			startActivity(intent);
 			break;
 		
 		}
