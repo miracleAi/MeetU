@@ -256,5 +256,11 @@ public class Constants {
 	public static final String PROFILECLIP = "profile_clip";
 	//原始头像
 	public static final String PROFILEORIGN = "profile_orign";
-	private AVFile profileOrign;
+	//用户信息缓存时间
+	public static final String USER_CACHE_TIME = "user_cache_time";
+	/**
+	 * 用户拉黑表，存储拉黑我的人
+	 * */
+	public static final String USER_SHIELD_TB = "user_shield_tb";
+	public static final String SHIELD_USER_ID = "shield_user_id";
 }

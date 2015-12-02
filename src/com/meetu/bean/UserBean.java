@@ -41,6 +41,15 @@ public class UserBean {
 	private String profileClip;
 	//原始头像
 	private String profileOrign;
+	//缓存时间
+	private String cacheTime;
+	
+	public String getCacheTime() {
+		return cacheTime;
+	}
+	public void setCacheTime(String cacheTime) {
+		this.cacheTime = cacheTime;
+	}
 	public String getUserId() {
 		return userId;
 	}

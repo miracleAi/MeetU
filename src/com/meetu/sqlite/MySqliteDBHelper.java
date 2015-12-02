@@ -238,9 +238,21 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		userSb.append(Constants.DEPARTMENTID+ " Integer ,");
 		userSb.append(Constants.HOMETOWN+ " varchar(100) ,");
 		userSb.append(Constants.PROFILECLIP+ " varchar(100) ,");
-		userSb.append(Constants.PROFILEORIGN+ " varchar(100) ");
+		userSb.append(Constants.PROFILEORIGN+ " varchar(100) ,");
+		userSb.append(Constants.USER_CACHE_TIME+ " varchar(100) ");
 		userSb.append(")");
 		db.execSQL(userSb.toString());
+		/**
+		 * 首页活动缓存表
+		 * */
+		StringBuffer userShieldTb=new StringBuffer();
+		userShieldTb.append("create table if not exists ");
+		userShieldTb.append(Constants.USER_SHIELD_TB+"(");
+		userShieldTb.append("id integer primary key autoincrement ,");
+		userShieldTb.append(Constants.USERID+ " varchar(100) ,");
+		userShieldTb.append(Constants.SHIELD_USER_ID+ " varchar(100) ");
+		userShieldTb.append(")");
+		db.execSQL(userShieldTb.toString());
 	}
 
 	@Override

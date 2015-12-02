@@ -351,8 +351,6 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,OnMi
 				
 			}
 			
-			
-			
 			handler.sendEmptyMessage(1);
 		}else {
 			Toast.makeText(this, "点击了位置"+position, Toast.LENGTH_SHORT).show();
