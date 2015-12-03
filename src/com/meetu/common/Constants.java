@@ -261,6 +261,8 @@ public class Constants {
 	/**
 	 * 用户拉黑表，存储拉黑我的人
 	 * */
+	//表名
 	public static final String USER_SHIELD_TB = "user_shield_tb";
+	//屏蔽我的人的ID
 	public static final String SHIELD_USER_ID = "shield_user_id";
 }
