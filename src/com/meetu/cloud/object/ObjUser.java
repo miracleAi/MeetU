@@ -10,52 +10,56 @@ import com.avos.avoscloud.AVUser;
 /**
  * Created by mac on 15/8/14.
  */
-public class ObjUser extends AVUser implements Serializable{
-	//此处为我们的默认实现，当然你也可以自行实现
+public class ObjUser extends AVUser implements Serializable {
+	// 此处为我们的默认实现，当然你也可以自行实现
 	public static final Creator CREATOR = AVUser.CREATOR;
-	//用户类型
+	// 用户类型
 	private int userType;
-	//用户是否是Vip用户
-	private boolean  isVipUser;
-	//用户是否已完成验证
-	private boolean  isVerifyUser;
-	//用户是否已完善个人信息
-	private boolean  isCompleteUserInfo;
-	//昵称
+	// 用户是否是Vip用户
+	private boolean isVipUser;
+	// 用户是否已完成验证
+	private boolean isVerifyUser;
+	// 用户是否已完善个人信息
+	private boolean isCompleteUserInfo;
+	// 昵称
 	private String nameNick;
-	//真实名称
+	// 真实名称
 	private String nameReal;
-	//性别
+	// 性别
 	private int gender;
-	//生日
+	// 生日
 	private long birthday;
-	//星座
+	// 星座
 	private String constellation;
-	//学校
+	// 学校
 	private String school;
-	//学校所在地编码
+	// 学校所在地编码
 	private long schoolLocation;
-	//学校编码
+	// 学校编码
 	private int schoolNum;
-	//专业
+	// 专业
 	private String department;
-	//专业编码
+	// 专业编码
 	private int departmentId;
-	//家乡
+	// 家乡
 	private String hometown;
-	//切圆后的头像
+	// 切圆后的头像
 	private AVFile profileClip;
-	//原始头像
+	// 原始头像
 	private AVFile profileOrign;
 
-	public ObjUser(){}
+	public ObjUser() {
+	}
+
 	public int getDepartmentId() {
 		return this.getInt("departmentId");
 	}
 
 	public void setDepartmentId(int departmentId) {
-		this.put("departmentId", departmentId);;
+		this.put("departmentId", departmentId);
+		;
 	}
+
 	public int getUserType() {
 		return this.getInt("userType");
 	}
@@ -136,13 +140,13 @@ public class ObjUser extends AVUser implements Serializable{
 		this.put("school", school);
 	}
 
-
 	public long getSchoolLocation() {
 		return this.getLong("schoolLocation");
 	}
 
 	public void setSchoolLocation(long schoolLocation) {
-		this.put("schoolLocation", schoolLocation);;
+		this.put("schoolLocation", schoolLocation);
+		;
 	}
 
 	public int getSchoolNum() {
@@ -150,7 +154,8 @@ public class ObjUser extends AVUser implements Serializable{
 	}
 
 	public void setSchoolNum(int schoolNum) {
-		this.put("schoolNum", schoolNum);;
+		this.put("schoolNum", schoolNum);
+		;
 	}
 
 	public String getDepartment() {
@@ -158,7 +163,8 @@ public class ObjUser extends AVUser implements Serializable{
 	}
 
 	public void setDepartment(String department) {
-		this.put("department", department);;
+		this.put("department", department);
+		;
 	}
 
 	public String getHometown() {

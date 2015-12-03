@@ -212,16 +212,18 @@ public class DateMychuli {
 		kk = st1.split(":");
 		jj = st2.split(":");
 		if (Integer.parseInt(kk[0]) < Integer.parseInt(jj[0]))
-		return "0";
+			return "0";
 		else {
-		double y = Double.parseDouble(kk[0]) + Double.parseDouble(kk[1]) / 60;
-		double u = Double.parseDouble(jj[0]) + Double.parseDouble(jj[1]) / 60;
-		if ((y -u) > 0)
-		return y - u + "";
-		else
-		return "0";
+			double y = Double.parseDouble(kk[0]) + Double.parseDouble(kk[1])
+					/ 60;
+			double u = Double.parseDouble(jj[0]) + Double.parseDouble(jj[1])
+					/ 60;
+			if ((y - u) > 0)
+				return y - u + "";
+			else
+				return "0";
 		}
-		}
+	}
 
 	/**
 	 * 得到二个日期间的间隔天数
@@ -230,14 +232,14 @@ public class DateMychuli {
 		SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd");
 		long day = 0;
 		try {
-		java.util.Date date = myFormatter.parse(sj1);
-		java.util.Date mydate = myFormatter.parse(sj2);
-		day = (date.getTime() - mydate.getTime()) / (24 * 60 * 60 * 1000);
+			java.util.Date date = myFormatter.parse(sj1);
+			java.util.Date mydate = myFormatter.parse(sj2);
+			day = (date.getTime() - mydate.getTime()) / (24 * 60 * 60 * 1000);
 		} catch (Exception e) {
-		return "";
+			return "";
 		}
 		return day + "";
-		}
+	}
 
 	/**
 	 * 时间前推或后推分钟,其中JJ表示分钟.
@@ -246,31 +248,32 @@ public class DateMychuli {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String mydate1 = "";
 		try {
-		Date date1 = format.parse(sj1);
-		long Time = (date1.getTime() / 1000) + Integer.parseInt(jj) * 60;
-		date1.setTime(Time * 1000);
-		mydate1 = format.format(date1);
+			Date date1 = format.parse(sj1);
+			long Time = (date1.getTime() / 1000) + Integer.parseInt(jj) * 60;
+			date1.setTime(Time * 1000);
+			mydate1 = format.format(date1);
 		} catch (Exception e) {
 		}
 		return mydate1;
-		}
+	}
 
 	/**
 	 * 得到一个时间延后或前移几天的时间,nowdate为时间,delay为前移或后延的天数
 	 */
 	public static String getNextDay(String nowdate, String delay) {
-		try{
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		String mdate = "";
-		Date d = strToDate(nowdate);
-		long myTime = (d.getTime() / 1000) + Integer.parseInt(delay) * 24 * 60 * 60;
-		d.setTime(myTime * 1000);
-		mdate = format.format(d);
-		return mdate;
-		}catch(Exception e){
-		return "";
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			String mdate = "";
+			Date d = strToDate(nowdate);
+			long myTime = (d.getTime() / 1000) + Integer.parseInt(delay) * 24
+					* 60 * 60;
+			d.setTime(myTime * 1000);
+			mdate = format.format(d);
+			return mdate;
+		} catch (Exception e) {
+			return "";
 		}
-		}
+	}
 
 	/**
 	 * 判断是否润年
@@ -312,7 +315,7 @@ public class DateMychuli {
 		String j = strtodate.toString();
 		String[] k = j.split("");
 		return k[2] + k[1].toUpperCase() + k[5].substring(2, 4);
-		}
+	}
 
 	/**
 	 * 获取一个月的最后一天
@@ -324,19 +327,20 @@ public class DateMychuli {
 		String str = dat.substring(0, 8);
 		String month = dat.substring(5, 7);
 		int mon = Integer.parseInt(month);
-		if (mon == 1 || mon == 3 || mon == 5 || mon == 7 || mon == 8 || mon == 10 || mon == 12) {
-		str += "31";
+		if (mon == 1 || mon == 3 || mon == 5 || mon == 7 || mon == 8
+				|| mon == 10 || mon == 12) {
+			str += "31";
 		} else if (mon == 4 || mon == 6 || mon == 9 || mon == 11) {
-		str += "30";
+			str += "30";
 		} else {
-		if (isLeapYear(dat)) {
-		str += "29";
-		} else {
-		str += "28";
-		}
+			if (isLeapYear(dat)) {
+				str += "29";
+			} else {
+				str += "28";
+			}
 		}
 		return str;
-		}
+	}
 
 	/**
 	 * 判断二个时间是否在同一个周
@@ -352,18 +356,21 @@ public class DateMychuli {
 		cal2.setTime(date2);
 		int subYear = cal1.get(Calendar.YEAR) - cal2.get(Calendar.YEAR);
 		if (0 == subYear) {
-		if (cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR))
-		return true;
+			if (cal1.get(Calendar.WEEK_OF_YEAR) == cal2
+					.get(Calendar.WEEK_OF_YEAR))
+				return true;
 		} else if (1 == subYear && 11 == cal2.get(Calendar.MONTH)) {
-		// 如果12月的最后一周横跨来年第一周的话则最后一周即算做来年的第一周
-		if (cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR))
-		return true;
+			// 如果12月的最后一周横跨来年第一周的话则最后一周即算做来年的第一周
+			if (cal1.get(Calendar.WEEK_OF_YEAR) == cal2
+					.get(Calendar.WEEK_OF_YEAR))
+				return true;
 		} else if (-1 == subYear && 11 == cal1.get(Calendar.MONTH)) {
-		if (cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR))
-		return true;
+			if (cal1.get(Calendar.WEEK_OF_YEAR) == cal2
+					.get(Calendar.WEEK_OF_YEAR))
+				return true;
 		}
 		return false;
-		}
+	}
 
 	/**
 	 * 产生周序列,即得到当前时间所在的年度是第几周
@@ -374,10 +381,10 @@ public class DateMychuli {
 		Calendar c = Calendar.getInstance(Locale.CHINA);
 		String week = Integer.toString(c.get(Calendar.WEEK_OF_YEAR));
 		if (week.length() == 1)
-		week = "0" + week;
+			week = "0" + week;
 		String year = Integer.toString(c.get(Calendar.YEAR));
 		return year + week;
-		}
+	}
 
 	/**
 	 * 获得一个日期所在的周的星期几的日期，如要找出2002年2月3日所在周的星期一是几号
@@ -392,21 +399,21 @@ public class DateMychuli {
 		Calendar c = Calendar.getInstance();
 		c.setTime(dd);
 		if (num.equals("1")) // 返回星期一所在的日期
-		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		else if (num.equals("2")) // 返回星期二所在的日期
-		c.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+			c.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
 		else if (num.equals("3")) // 返回星期三所在的日期
-		c.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+			c.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
 		else if (num.equals("4")) // 返回星期四所在的日期
-		c.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+			c.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
 		else if (num.equals("5")) // 返回星期五所在的日期
-		c.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+			c.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
 		else if (num.equals("6")) // 返回星期六所在的日期
-		c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+			c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
 		else if (num.equals("0")) // 返回星期日所在的日期
-		c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+			c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 		return new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
-		}
+	}
 
 	/**
 	 * 根据一个日期，返回是星期几的字符串
@@ -423,28 +430,28 @@ public class DateMychuli {
 		// hour中存的就是星期几了，其范围 1~7
 		// 1=星期日 7=星期六，其他类推
 		return new SimpleDateFormat("EEEE").format(c.getTime());
-		}
+	}
 
-	public static String getWeekStr(String sdate){
+	public static String getWeekStr(String sdate) {
 		String str = "";
 		str = DateMychuli.getWeek(sdate);
-		if("1".equals(str)){
-		str = "星期日";
-		}else if("2".equals(str)){
-		str = "星期一";
-		}else if("3".equals(str)){
-		str = "星期二";
-		}else if("4".equals(str)){
-		str = "星期三";
-		}else if("5".equals(str)){
-		str = "星期四";
-		}else if("6".equals(str)){
-		str = "星期五";
-		}else if("7".equals(str)){
-		str = "星期六";
+		if ("1".equals(str)) {
+			str = "星期日";
+		} else if ("2".equals(str)) {
+			str = "星期一";
+		} else if ("3".equals(str)) {
+			str = "星期二";
+		} else if ("4".equals(str)) {
+			str = "星期三";
+		} else if ("5".equals(str)) {
+			str = "星期四";
+		} else if ("6".equals(str)) {
+			str = "星期五";
+		} else if ("7".equals(str)) {
+			str = "星期六";
 		}
 		return str;
-		}
+	}
 
 	/**
 	 * 两个时间之间的天数
@@ -455,21 +462,21 @@ public class DateMychuli {
 	 */
 	public static long getDays(String date1, String date2) {
 		if (date1 == null || date1.equals(""))
-		return 0;
+			return 0;
 		if (date2 == null || date2.equals(""))
-		return 0;
+			return 0;
 		// 转换为标准时间
 		SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date date = null;
 		java.util.Date mydate = null;
 		try {
-		date = myFormatter.parse(date1);
-		mydate = myFormatter.parse(date2);
+			date = myFormatter.parse(date1);
+			mydate = myFormatter.parse(date2);
 		} catch (Exception e) {
 		}
 		long day = (date.getTime() - mydate.getTime()) / (24 * 60 * 60 * 1000);
 		return day;
-		}
+	}
 
 	/**
 	 * 形成如下的日历 ， 根据传入的一个时间返回一个结构 星期日 星期一 星期二 星期三 星期四 星期五 星期六 下面是当月的各个时间
@@ -489,7 +496,7 @@ public class DateMychuli {
 		int u = c.get(Calendar.DAY_OF_WEEK);
 		String newday = DateMychuli.getNextDay(sdate, (1 - u) + "");
 		return newday;
-		}
+	}
 
 	/**
 	 * 取得数据库主键 生成格式为yyyymmddhhmmss+k位随机数
@@ -501,7 +508,7 @@ public class DateMychuli {
 	public static String getNo(int k) {
 
 		return getUserDate("yyyyMMddhhmmss") + getRandom(k);
-		}
+	}
 
 	/**
 	 * 返回一个随机数
@@ -513,13 +520,13 @@ public class DateMychuli {
 		Random jjj = new Random();
 		// int suiJiShu = jjj.nextInt(9);
 		if (i == 0)
-		return "";
+			return "";
 		String jj = "";
 		for (int k = 0; k < i; k++) {
-		jj = jj + jjj.nextInt(9);
+			jj = jj + jjj.nextInt(9);
 		}
 		return jj;
-		}
+	}
 
 	/**
 	 * 
@@ -530,77 +537,78 @@ public class DateMychuli {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		;
 		if (date == null)
-		return false;
+			return false;
 		if (date.length() > 10) {
-		sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		} else {
-		sdf = new SimpleDateFormat("yyyy-MM-dd");
+			sdf = new SimpleDateFormat("yyyy-MM-dd");
 		}
 		try {
-		try {
-			sdf.parse(date);
-		} catch (java.text.ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			try {
+				sdf.parse(date);
+			} catch (java.text.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} catch (ParseException pe) {
-		return false;
+			return false;
 		}
 		return true;
-		}
+	}
+
 	/**
-	 * 计算两个时间的差   返回天+小时+分
+	 * 计算两个时间的差 返回天+小时+分
+	 * 
 	 * @param date1
 	 * @param date2
 	 * @return
 	 */
-	public static String getDateDifference(String date1,String date2){
+	public static String getDateDifference(String date1, String date2) {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try
-		 
+
 		{
-		 
-		  Date d1 = df.parse(date1);
-		 
-		  Date d2 = df.parse(date2);
-		  long diff = d1.getTime() - d2.getTime();//这样得到的差值是微秒级别
-		  long days = diff / (1000 * 60 * 60 * 24);		 
-		  long hours = (diff-days*(1000 * 60 * 60 * 24))/(1000* 60 * 60);
-		  long minutes = (diff-days*(1000 * 60 * 60 * 24)-hours*(1000* 60 * 60))/(1000* 60);
-		  System.out.println(""+days+"天"+hours+"小时"+minutes+"分");
-		  String dateDifferenceString=""+days+"天"+hours+"小时"+minutes+"分";
-		  return dateDifferenceString;
-		 
+
+			Date d1 = df.parse(date1);
+
+			Date d2 = df.parse(date2);
+			long diff = d1.getTime() - d2.getTime();// 这样得到的差值是微秒级别
+			long days = diff / (1000 * 60 * 60 * 24);
+			long hours = (diff - days * (1000 * 60 * 60 * 24))
+					/ (1000 * 60 * 60);
+			long minutes = (diff - days * (1000 * 60 * 60 * 24) - hours
+					* (1000 * 60 * 60))
+					/ (1000 * 60);
+			System.out.println("" + days + "天" + hours + "小时" + minutes + "分");
+			String dateDifferenceString = "" + days + "天" + hours + "小时"
+					+ minutes + "分";
+			return dateDifferenceString;
+
+		} catch (Exception e) {
 		}
-		catch (Exception e)
-		{
-		}	
 		return null;
 	}
+
 	/**
-	 * 计算两个时间的差   返回分钟
+	 * 计算两个时间的差 返回分钟
+	 * 
 	 * @param date1
 	 * @param date2
 	 * @return
 	 */
-	public static String getDateDifferenceMinute(String date1,String date2){
+	public static String getDateDifferenceMinute(String date1, String date2) {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		try		 
-		{		 
-		  Date d1 = df.parse(date1);		 
-		  Date d2 = df.parse(date2);
-		  long diff = d1.getTime() - d2.getTime();//这样得到的差值是微秒级别
-		  long minutes = (diff/(1000* 60));
-		  String minutesString=Long.toString(minutes);
-		  return minutesString;
-		 
+		try {
+			Date d1 = df.parse(date1);
+			Date d2 = df.parse(date2);
+			long diff = d1.getTime() - d2.getTime();// 这样得到的差值是微秒级别
+			long minutes = (diff / (1000 * 60));
+			String minutesString = Long.toString(minutes);
+			return minutesString;
+
+		} catch (Exception e) {
 		}
-		catch (Exception e)
-		{
-		}	
 		return null;
 	}
-	
-
 
 }

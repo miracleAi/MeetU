@@ -3,7 +3,6 @@ package com.meetu.activity;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.LogUtil.log;
 import com.baidu.location.e.r;
@@ -34,18 +33,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class RegisterVerificationActivity extends Activity implements OnClickListener{
+public class RegisterVerificationActivity extends Activity implements
+		OnClickListener {
 
 	private TimerTask mTimerTask;
 	private Timer mTimer = new Timer(true);
 	private Button sent;
-	private int i=59;
+	private int i = 59;
 	private Boolean running;
-	private TextView number1,number2,number3,number4,number5,number6;
+	private TextView number1, number2, number3, number4, number5, number6;
 	private TextView register;
-	private String uphone,upassward,number;
+	private String uphone, upassward, number;
 	private TextView fasongphone;
-
 
 	private LinearLayout numberLayout;
 	private EditText allEditText;
@@ -59,59 +58,63 @@ public class RegisterVerificationActivity extends Activity implements OnClickLis
 		// 全屏
 		super.getWindow();
 		setContentView(R.layout.activity_zhuce_yanzheng);
-		uphone=getIntent().getStringExtra("uphone");
-		upassward=getIntent().getStringExtra("upassward");
+		uphone = getIntent().getStringExtra("uphone");
+		upassward = getIntent().getStringExtra("upassward");
 		initView();
 
 		initLoad();
 
 	}
+
 	/**
 	 * 验证是否注册并发送短信验证码进行注册验证
 	 */
-	private void initLoad() {		
+	private void initLoad() {
 		ObjWrap.requestSmsCode(uphone, new ObjFunBooleanCallback() {
 
 			@Override
 			public void callback(boolean result, AVException e) {
-				if(result==true){
+				if (result == true) {
 
-				}else{
+				} else {
 					log.e("failure", e);
 
-				}				
+				}
 			}
-		});			
+		});
 	}
-	private void initView(){
-		fasongphone=(TextView) super.findViewById(R.id.phone_fasong_zhuce);
+
+	private void initView() {
+		fasongphone = (TextView) super.findViewById(R.id.phone_fasong_zhuce);
 		fasongphone.setText(uphone);
-		register=(TextView) super.findViewById(R.id.activity_register_to_yanzhengma_img);
+		register = (TextView) super
+				.findViewById(R.id.activity_register_to_yanzhengma_img);
 		register.setOnClickListener(this);
-		sent = (Button)findViewById(R.id.register_sent_bt);
+		sent = (Button) findViewById(R.id.register_sent_bt);
 		sent.setOnClickListener(this);
 
-		mTimerTask = new TimerTask(){
-			public void run(){
+		mTimerTask = new TimerTask() {
+			public void run() {
 
-				Message message = new Message();  
-				message.what = 1;  
-				doActionHandler.sendMessage(message);  
+				Message message = new Message();
+				message.what = 1;
+				doActionHandler.sendMessage(message);
 			}
 
 		};
-		mTimer.schedule(mTimerTask, 1000,1000); //在1秒后每1秒执行一次定时器中的方法，比如本文为调用log.v打印输出。
-		allEditText=(EditText) super.findViewById(R.id.all_Verification_et);
+		mTimer.schedule(mTimerTask, 1000, 1000); // 在1秒后每1秒执行一次定时器中的方法，比如本文为调用log.v打印输出。
+		allEditText = (EditText) super.findViewById(R.id.all_Verification_et);
 		allEditText.setFocusable(true);
 		allEditText.requestFocus();
 
-		number1=(TextView) super.findViewById(R.id.one_yanzheng_wangji_et);
-		number2=(TextView) super.findViewById(R.id.two_yanzheng_wangji_et);
-		number3=(TextView) super.findViewById(R.id.three_yanzheng_wangji_et);
-		number4=(TextView) super.findViewById(R.id.four_yanzheng_wangji_et);
-		number5=(TextView) super.findViewById(R.id.five_yanzheng_wangji_et);
-		number6=(TextView) super.findViewById(R.id.six_yanzheng_wangji_et);
-		numberLayout=(LinearLayout) super.findViewById(R.id.number_yanzheng_ll);
+		number1 = (TextView) super.findViewById(R.id.one_yanzheng_wangji_et);
+		number2 = (TextView) super.findViewById(R.id.two_yanzheng_wangji_et);
+		number3 = (TextView) super.findViewById(R.id.three_yanzheng_wangji_et);
+		number4 = (TextView) super.findViewById(R.id.four_yanzheng_wangji_et);
+		number5 = (TextView) super.findViewById(R.id.five_yanzheng_wangji_et);
+		number6 = (TextView) super.findViewById(R.id.six_yanzheng_wangji_et);
+		numberLayout = (LinearLayout) super
+				.findViewById(R.id.number_yanzheng_ll);
 
 		numberLayout.setOnClickListener(this);
 		number1.setOnClickListener(this);
@@ -125,13 +128,13 @@ public class RegisterVerificationActivity extends Activity implements OnClickLis
 
 	}
 
-
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
 
 	}
+
 	/**
 	 * 输入框的监听事件
 	 */
@@ -139,66 +142,85 @@ public class RegisterVerificationActivity extends Activity implements OnClickLis
 	private TextWatcher watcher = new TextWatcher() {
 
 		@Override
-		public void onTextChanged(CharSequence s, int start, int before, int count) {
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
 			// TODO Auto-generated method stub
 
-			if(allEditText.length()>0){
-				if(allEditText.length()==1){
+			if (allEditText.length() > 0) {
+				if (allEditText.length() == 1) {
 					number1.setBackgroundResource(R.drawable.register_ver_s_720);
-					String num2=(allEditText.getText()).toString().substring(0);
-					log.e("lucifer", "num1=="+num2+"  aaa"+allEditText.getText());
-					number1.setText((allEditText.getText()).toString().substring(0));
+					String num2 = (allEditText.getText()).toString().substring(
+							0);
+					log.e("lucifer",
+							"num1==" + num2 + "  aaa" + allEditText.getText());
+					number1.setText((allEditText.getText()).toString()
+							.substring(0));
 
-				}else if(allEditText.length()==2){
+				} else if (allEditText.length() == 2) {
 					number2.setBackgroundResource(R.drawable.register_ver_s_720);
-					String num2=(allEditText.getText()).toString().substring(1);
-					log.e("lucifer", "num2=="+num2+"  aaa"+allEditText.getText());
-					number2.setText((allEditText.getText()).toString().substring(1));
-				}else if(allEditText.length()==3){
+					String num2 = (allEditText.getText()).toString().substring(
+							1);
+					log.e("lucifer",
+							"num2==" + num2 + "  aaa" + allEditText.getText());
+					number2.setText((allEditText.getText()).toString()
+							.substring(1));
+				} else if (allEditText.length() == 3) {
 					number3.setBackgroundResource(R.drawable.register_ver_s_720);
-					String num3=(allEditText.getText()).toString().substring(2);
-					log.e("lucifer", "num2=="+num3+"  aaa"+allEditText.getText());
-					number3.setText((allEditText.getText()).toString().substring(2));
-				}else if(allEditText.length()==4){
+					String num3 = (allEditText.getText()).toString().substring(
+							2);
+					log.e("lucifer",
+							"num2==" + num3 + "  aaa" + allEditText.getText());
+					number3.setText((allEditText.getText()).toString()
+							.substring(2));
+				} else if (allEditText.length() == 4) {
 					number4.setBackgroundResource(R.drawable.register_ver_s_720);
-					String num4=(allEditText.getText()).toString().substring(3);
-					log.e("lucifer", "num4=="+num4+"  aaa"+allEditText.getText());
-					number4.setText((allEditText.getText()).toString().substring(3));
-				}else if(allEditText.length()==5){
+					String num4 = (allEditText.getText()).toString().substring(
+							3);
+					log.e("lucifer",
+							"num4==" + num4 + "  aaa" + allEditText.getText());
+					number4.setText((allEditText.getText()).toString()
+							.substring(3));
+				} else if (allEditText.length() == 5) {
 					number5.setBackgroundResource(R.drawable.register_ver_s_720);
-					String num2=(allEditText.getText()).toString().substring(4);
-					log.e("lucifer", "num5=="+num2+"  aaa"+allEditText.getText());
-					number5.setText((allEditText.getText()).toString().substring(4));
+					String num2 = (allEditText.getText()).toString().substring(
+							4);
+					log.e("lucifer",
+							"num5==" + num2 + "  aaa" + allEditText.getText());
+					number5.setText((allEditText.getText()).toString()
+							.substring(4));
 
-				}else if(allEditText.length()==6){
+				} else if (allEditText.length() == 6) {
 					number6.setBackgroundResource(R.drawable.register_ver_s_720);
-					String num2=(allEditText.getText()).toString().substring(5);
-					log.e("lucifer", "num6=="+num2+"  aaa"+allEditText.getText());
-					number6.setText((allEditText.getText()).toString().substring(5));	
+					String num2 = (allEditText.getText()).toString().substring(
+							5);
+					log.e("lucifer",
+							"num6==" + num2 + "  aaa" + allEditText.getText());
+					number6.setText((allEditText.getText()).toString()
+							.substring(5));
 				}
 
-				if(allEditText.length()<6){
+				if (allEditText.length() < 6) {
 					number6.setText("");
 					number6.setBackgroundResource(R.drawable.register_ver_h_720);
-				} 
-				if(allEditText.length()<5){
+				}
+				if (allEditText.length() < 5) {
 					number5.setText("");
 					number5.setBackgroundResource(R.drawable.register_ver_h_720);
 				}
-				if(allEditText.length()<4){
+				if (allEditText.length() < 4) {
 					number4.setText("");
 					number4.setBackgroundResource(R.drawable.register_ver_h_720);
 
 				}
-				if(allEditText.length()<3){
+				if (allEditText.length() < 3) {
 					number3.setText("");
 					number3.setBackgroundResource(R.drawable.register_ver_h_720);
 				}
-				if(allEditText.length()<2){
+				if (allEditText.length() < 2) {
 					number2.setText("");
 					number2.setBackgroundResource(R.drawable.register_ver_h_720);
 				}
-				if(allEditText.length()<1){
+				if (allEditText.length() < 1) {
 					number1.setText("");
 					number1.setBackgroundResource(R.drawable.register_ver_h_720);
 				}
@@ -215,8 +237,8 @@ public class RegisterVerificationActivity extends Activity implements OnClickLis
 
 		@Override
 		public void afterTextChanged(Editable s) {
-			log.e("lucifer", " changdu=="+allEditText.length());
-			if(allEditText.length()==0){
+			log.e("lucifer", " changdu==" + allEditText.length());
+			if (allEditText.length() == 0) {
 				number1.setText("");
 				number1.setBackgroundResource(R.drawable.register_ver_h_720);
 			}
@@ -224,43 +246,43 @@ public class RegisterVerificationActivity extends Activity implements OnClickLis
 		}
 	};
 
-
-	/** 
-	 * do some action 
-	 */  
+	/**
+	 * do some action
+	 */
 	private Handler doActionHandler = new Handler() {
 
-
-		@Override  
-		public void handleMessage(Message msg) {  
-			super.handleMessage(msg);  
-			int msgId = msg.what;  
-			switch (msgId) {  
-			case 1:  
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			int msgId = msg.what;
+			switch (msgId) {
+			case 1:
 				// do some action
 				sent.setEnabled(false);
-				sent.setText("已发送验证码"+i);
+				sent.setText("已发送验证码" + i);
 				i--;
-				if(i<0){
+				if (i < 0) {
 					sent.setText("重新发送");
 					sent.setEnabled(true);
 					sent.setBackgroundResource(R.drawable.register_sent_light_720);
 					break;
 				}
-				break;  
-			default:  
-				break;  
-			}  
-		}  
-	}; 
+				break;
+			default:
+				break;
+			}
+		}
+	};
+
 	/**
 	 * 
 	 */
-	public class StopThread extends  Thread {
+	public class StopThread extends Thread {
 
-		private boolean  _run  = true;
-		public void stopThread( boolean  run) {
-			this ._run = !run;
+		private boolean _run = true;
+
+		public void stopThread(boolean run) {
+			this._run = !run;
 		}
 	}
 
@@ -269,33 +291,38 @@ public class RegisterVerificationActivity extends Activity implements OnClickLis
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.register_sent_bt:
-			
+
 			initLoad();
-			i=59;
-//			Toast.makeText(RegisterVerificationActivity.this, "可点击测试", Toast.LENGTH_SHORT).show();
+			i = 59;
+			// Toast.makeText(RegisterVerificationActivity.this, "可点击测试",
+			// Toast.LENGTH_SHORT).show();
 			break;
 
 		case R.id.activity_register_to_yanzhengma_img:
 
-			number=allEditText.getText().toString();
+			number = allEditText.getText().toString();
 			log.e("yanzhengma", number.toString());
 
-			//			Toast.makeText(RegisterVerificationActivity.this, number, Toast.LENGTH_SHORT).show();
-			ObjUserWrap.register(uphone, upassward, number, new ObjFunBooleanCallback() {
+			// Toast.makeText(RegisterVerificationActivity.this, number,
+			// Toast.LENGTH_SHORT).show();
+			ObjUserWrap.register(uphone, upassward, number,
+					new ObjFunBooleanCallback() {
 
-				@Override
-				public void callback(boolean result, AVException e) {
-					if(result==true){
-						Intent intent=new Intent(RegisterVerificationActivity.this,MainActivity.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						finish();
-						startActivity(intent);
-					}else{
-						log.e("failure", e);
-					}
+						@Override
+						public void callback(boolean result, AVException e) {
+							if (result == true) {
+								Intent intent = new Intent(
+										RegisterVerificationActivity.this,
+										MainActivity.class);
+								intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+								finish();
+								startActivity(intent);
+							} else {
+								log.e("failure", e);
+							}
 
-				}
-			});
+						}
+					});
 
 			break;
 		case R.id.number_yanzheng_ll:
@@ -305,14 +332,20 @@ public class RegisterVerificationActivity extends Activity implements OnClickLis
 		case R.id.four_yanzheng_wangji_et:
 		case R.id.five_yanzheng_wangji_et:
 		case R.id.six_yanzheng_wangji_et:
-			//allEditText.setFocusable(true);
+			// allEditText.setFocusable(true);
 			allEditText.requestFocus();
-			InputMethodManager inputManager = (InputMethodManager)allEditText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);    
-			inputManager.showSoftInput(allEditText, 0); 
-			/*InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-			inputManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-			allEditText.requestFocusFromTouch();*/
-			log.e("lucifer","dianji");
+			InputMethodManager inputManager = (InputMethodManager) allEditText
+					.getContext()
+					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			inputManager.showSoftInput(allEditText, 0);
+			/*
+			 * InputMethodManager imm =
+			 * (InputMethodManager)getSystemService(Context
+			 * .INPUT_METHOD_SERVICE); inputManager.toggleSoftInput(0,
+			 * InputMethodManager.HIDE_NOT_ALWAYS);
+			 * allEditText.requestFocusFromTouch();
+			 */
+			log.e("lucifer", "dianji");
 			break;
 
 		default:

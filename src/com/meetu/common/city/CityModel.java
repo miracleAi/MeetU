@@ -5,7 +5,7 @@ import java.util.List;
 public class CityModel {
 	private String name;
 	private List<DistrictModel> districtList;
-	
+
 	public CityModel() {
 		super();
 	}
@@ -37,5 +37,5 @@ public class CityModel {
 		return "CityModel [name=" + name + ", districtList=" + districtList
 				+ "]";
 	}
-	
+
 }

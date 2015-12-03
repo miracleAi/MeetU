@@ -25,10 +25,13 @@ import com.meetu.common.Constants;
 public class ObjActivityOrderWrap {
 	/**
 	 * 查询活动报名成功表
+	 * 
 	 * @param callback
 	 */
-	public static void queryActivitySignUp(ObjActivity activity,final ObjUserCallback callback){
-		AVQuery<ObjActivityOrder> query = AVObject.getQuery(ObjActivityOrder.class);
+	public static void queryActivitySignUp(ObjActivity activity,
+			final ObjUserCallback callback) {
+		AVQuery<ObjActivityOrder> query = AVObject
+				.getQuery(ObjActivityOrder.class);
 		query.include("user");
 		query.whereEqualTo("activity", activity);
 		ArrayList<Integer> numbers = new ArrayList<Integer>();
@@ -45,25 +48,25 @@ public class ObjActivityOrderWrap {
 			@Override
 			public void done(List<ObjActivityOrder> list, AVException e) {
 				// TODO Auto-generated method stub
-				if(null != e){
+				if (null != e) {
 					callback.callback(null, new AVException(0, "查询活动报名表失败"));
-					return ;
+					return;
 				}
-				if(null == list){
-					return ;
+				if (null == list) {
+					return;
 				}
 				ArrayList<ObjUser> orderUsers = new ArrayList<ObjUser>();
-				if(list.size() == 0){
+				if (list.size() == 0) {
 					callback.callback(orderUsers, null);
-					return ;
+					return;
 				}
-				for(ObjActivityOrder object : list){
-					if(object.getAVUser("user") != null){
-						//强制类型转换 用此方法 可获得子类属性值
-						AVUser avUser= object.getAVUser("user");
-						ObjUser user  = AVUser.cast(avUser, ObjUser.class);
+				for (ObjActivityOrder object : list) {
+					if (object.getAVUser("user") != null) {
+						// 强制类型转换 用此方法 可获得子类属性值
+						AVUser avUser = object.getAVUser("user");
+						ObjUser user = AVUser.cast(avUser, ObjUser.class);
 						orderUsers.add(user);
-					}else{
+					} else {
 						Log.d("mytest", "user null");
 					}
 				}
@@ -71,8 +74,11 @@ public class ObjActivityOrderWrap {
 			}
 		});
 	}
-	//报名
-	public static void signUpActivity(ObjActivity activity,ObjUser user,ObjActivityTicket ticket,int status,String expect,final ObjFunBooleanCallback callback){
+
+	// 报名
+	public static void signUpActivity(ObjActivity activity, ObjUser user,
+			ObjActivityTicket ticket, int status, String expect,
+			final ObjFunBooleanCallback callback) {
 		ObjActivityOrder order = new ObjActivityOrder();
 		order.setActivity(activity);
 		order.setUser(user);
@@ -86,10 +92,10 @@ public class ObjActivityOrderWrap {
 			@Override
 			public void done(AVException e) {
 				// TODO Auto-generated method stub
-				if(e == null){
+				if (e == null) {
 					callback.callback(true, null);
-				}else{
-					callback.callback(false,e);
+				} else {
+					callback.callback(false, e);
 				}
 			}
 		});

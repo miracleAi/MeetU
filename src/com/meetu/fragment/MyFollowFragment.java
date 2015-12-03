@@ -30,18 +30,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MyFollowFragment extends Fragment implements OnRefreshListener2<ListView>{
-	TextView followCountTv,followerCountTv;
+public class MyFollowFragment extends Fragment implements
+		OnRefreshListener2<ListView> {
+	TextView followCountTv, followerCountTv;
 	PullToRefreshListView followLv;
 	ArrayList<String> followStrList = new ArrayList<String>();
-	FollowAdapter myFollowAdapter ;
-	ObjUser user ;
+	FollowAdapter myFollowAdapter;
+	ObjUser user;
+
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
 		user = AVUser.cast(AVUser.getCurrentUser(), ObjUser.class);
 	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -53,16 +56,18 @@ public class MyFollowFragment extends Fragment implements OnRefreshListener2<Lis
 		initView();
 		return view;
 	}
+
 	private void initView() {
 		// TODO Auto-generated method stub
-		ArrayList<String> list = (ArrayList<String>) getArguments().getSerializable("myFollowList");
+		ArrayList<String> list = (ArrayList<String>) getArguments()
+				.getSerializable("myFollowList");
 		int count = getArguments().getInt("followerCount");
-		if(list != null){
+		if (list != null) {
 			followStrList.clear();
 			followStrList.addAll(list);
-			followCountTv.setText(" "+followStrList.size()+"人");
-			followerCountTv.setText(" "+count+"人");
-		}else{
+			followCountTv.setText(" " + followStrList.size() + "人");
+			followerCountTv.setText(" " + count + "人");
+		} else {
 			followCountTv.setText(" 0人");
 			followerCountTv.setText(" 0人");
 		}
@@ -70,19 +75,21 @@ public class MyFollowFragment extends Fragment implements OnRefreshListener2<Lis
 		followLv.setAdapter(myFollowAdapter);
 		followLv.setMode(Mode.PULL_FROM_START);
 		followLv.setOnRefreshListener(this);
-		
+
 		followLv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-					long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(getActivity(),UserPagerActivity.class);
-				intent.putExtra("userId", followStrList.get(position-1));
+				Intent intent = new Intent(getActivity(),
+						UserPagerActivity.class);
+				intent.putExtra("userId", followStrList.get(position - 1));
 				startActivity(intent);
 			}
 		});
 	}
+
 	@Override
 	public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 		// TODO Auto-generated method stub
@@ -91,25 +98,26 @@ public class MyFollowFragment extends Fragment implements OnRefreshListener2<Lis
 			@Override
 			public void callback(Map<String, Object> map, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					Toast.makeText(getActivity(), "请求关注列表失败", 1000).show();
 					return;
 				}
 				List<String> followL = (List<String>) map.get("followees");
-				if(followL != null && followL.size()>0){
+				if (followL != null && followL.size() > 0) {
 					followStrList.clear();
 					followStrList.addAll(followL);
-					followCountTv.setText(" "+followStrList.size()+"人");
+					followCountTv.setText(" " + followStrList.size() + "人");
 					myFollowAdapter.notifyDataSetChanged();
 				}
 				List<String> followerL = (List<String>) map.get("followers");
-				if(followerL != null && followerL.size()>0){
-					followerCountTv.setText(" "+followerL.size()+"人");
+				if (followerL != null && followerL.size() > 0) {
+					followerCountTv.setText(" " + followerL.size() + "人");
 				}
 				followLv.onRefreshComplete();
 			}
 		});
 	}
+
 	@Override
 	public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 		// TODO Auto-generated method stub

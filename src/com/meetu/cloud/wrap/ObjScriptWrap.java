@@ -20,68 +20,73 @@ public class ObjScriptWrap {
 	/**
 	 * 创建小纸条
 	 * */
-	public static void createScrip(final ObjScrip scrip,final ObjScripInfoCallback callback){
+	public static void createScrip(final ObjScrip scrip,
+			final ObjScripInfoCallback callback) {
 		scrip.setFetchWhenSave(true);
 		scrip.saveInBackground(new SaveCallback() {
-			
+
 			@Override
 			public void done(AVException e) {
 				// TODO Auto-generated method stub
-				if(e == null){
+				if (e == null) {
 					callback.callback(scrip, null);
-				}else{
+				} else {
 					callback.callback(null, e);
 				}
 			}
 		});
 	}
+
 	/**
 	 * 查询所有
 	 * */
-	public static void queryAllScrip(ObjScripBox scripBox,final ObjScripCallback callback){
+	public static void queryAllScrip(ObjScripBox scripBox,
+			final ObjScripCallback callback) {
 		AVQuery<ObjScrip> query = AVObject.getQuery(ObjScrip.class);
-		//query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
-		//TimeUnit.DAYS.toMillis(1)
-		//query.setMaxCacheAge(10*60*1000);
+		// query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
+		// TimeUnit.DAYS.toMillis(1)
+		// query.setMaxCacheAge(10*60*1000);
 		query.whereEqualTo("scripBox", scripBox);
 		query.findInBackground(new FindCallback<ObjScrip>() {
 
 			@Override
 			public void done(List<ObjScrip> objects, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					callback.callback(null, e);
-					return ;
+					return;
 				}
-				if(null != objects){
+				if (null != objects) {
 					callback.callback(objects, null);
-				}else{
+				} else {
 					callback.callback(null, new AVException(0, "获取纸条失败"));
 				}
 			}
 		});
 	}
+
 	/**
 	 * 查询所有纸条箱
 	 * */
-	public static void queryScripBox(ObjUser user,final ObjScripBoxCallback callback){
+	public static void queryScripBox(ObjUser user,
+			final ObjScripBoxCallback callback) {
 		AVQuery<ObjScripBox> query = AVObject.getQuery(ObjScripBox.class);
 		query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
-		//TimeUnit.DAYS.toMillis(1)
-		query.setMaxCacheAge(10*60*1000);
+		// TimeUnit.DAYS.toMillis(1)
+		query.setMaxCacheAge(10 * 60 * 1000);
 		query.whereEqualTo("users", user);
 		query.findInBackground(new FindCallback<ObjScripBox>() {
-			
+
 			@Override
 			public void done(List<ObjScripBox> objects, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					callback.callback(null, e);
-					return ;
+					return;
 				}
-				if(null != objects){
+				if (null != objects) {
 					callback.callback(objects, null);
-				}else{
+				} else {
 					callback.callback(null, new AVException(0, "获取纸条箱失败"));
 				}
 			}

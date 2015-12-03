@@ -47,27 +47,27 @@ import android.util.Log;
 public class MyApplication extends Application {
 	public static AVIMClient chatClient;
 	public static boolean isChatLogin = false;
-	
-	
-	public BitmapUtils bitmapUtils=null;
-	private FinalBitmap finalBitmap=null;
+
+	public BitmapUtils bitmapUtils = null;
+	private FinalBitmap finalBitmap = null;
+
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-		//配置bitmapUtils
-		finalBitmap=FinalBitmap.create(this);
-		finalBitmap.configBitmapLoadThreadSize(3);//线程尺寸
+		// 配置bitmapUtils
+		finalBitmap = FinalBitmap.create(this);
+		finalBitmap.configBitmapLoadThreadSize(3);// 线程尺寸
 		finalBitmap.configDiskCachePath(getFilesDir().toString());//
-		finalBitmap.configDiskCacheSize(1024*1024*100);
-		int memory=(int)Runtime.getRuntime().maxMemory()/8;
+		finalBitmap.configDiskCacheSize(1024 * 1024 * 100);
+		int memory = (int) Runtime.getRuntime().maxMemory() / 8;
 		finalBitmap.configMemoryCacheSize(memory);
 		finalBitmap.configLoadingImage(R.drawable.mine_img_loading);
 		finalBitmap.configLoadfailImage(R.drawable.mine_img_loading);
-		//finalBitmap.configBitmapMaxHeight(bitmapHeight);
-		
+		// finalBitmap.configBitmapMaxHeight(bitmapHeight);
+
 		log.e("AVOSCloud", "3254");
-		//leancloud子类注册
+		// leancloud子类注册
 		AVObject.registerSubclass(ObjActivity.class);
 		AVObject.registerSubclass(ObjActivityPraise.class);
 		AVObject.registerSubclass(ObjActivityPhoto.class);
@@ -91,28 +91,34 @@ public class MyApplication extends Application {
 				"tcd4rj3s3c54bdlkv1vfu5puvu9c2k96ur9kge3qvptqxp8p",
 				"8fpp7j815746jg9x26f0d3c5p76xqkyqm586v2onvx3m2k7a");
 		AVOSCloud.setDebugLogEnabled(true);
-		AVIMMessageManager.registerDefaultMessageHandler(new DefaultMessageHandler(getApplicationContext()));
-//		AVIMMessageManager.setConversationEventHandler(new DefaultMemberHandler(getApplicationContext()));
+		AVIMMessageManager
+				.registerDefaultMessageHandler(new DefaultMessageHandler(
+						getApplicationContext()));
+		// AVIMMessageManager.setConversationEventHandler(new
+		// DefaultMemberHandler(getApplicationContext()));
 
-		if(null != AVUser.getCurrentUser()){
-			chatClient = AVIMClient.getInstance(AVUser.getCurrentUser().getObjectId());
-			ObjChatMessage.connectToChatServer(chatClient, new ObjAvimclientCallback() {
+		if (null != AVUser.getCurrentUser()) {
+			chatClient = AVIMClient.getInstance(AVUser.getCurrentUser()
+					.getObjectId());
+			ObjChatMessage.connectToChatServer(chatClient,
+					new ObjAvimclientCallback() {
 
-				@Override
-				public void callback(AVIMClient client, AVException e) {
-					// TODO Auto-generated method stub
-					if(e != null){
-						isChatLogin = false;
-						log.e("zcq", "长连接登录失败");
-						return ;
-					}
-					chatClient = client;
-					isChatLogin = true;
-					log.e("zcq", "长连接登录成功");
-				}
-			});
-		} 
+						@Override
+						public void callback(AVIMClient client, AVException e) {
+							// TODO Auto-generated method stub
+							if (e != null) {
+								isChatLogin = false;
+								log.e("zcq", "长连接登录失败");
+								return;
+							}
+							chatClient = client;
+							isChatLogin = true;
+							log.e("zcq", "长连接登录成功");
+						}
+					});
+		}
 	}
+
 	public FinalBitmap getFinalBitmap() {
 		// TODO Auto-generated method stub
 		return finalBitmap;

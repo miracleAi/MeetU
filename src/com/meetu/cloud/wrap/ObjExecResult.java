@@ -5,8 +5,6 @@ package com.meetu.cloud.wrap;
  */
 public enum ObjExecResult {
 
-    EXEC_TRUE,
-    EXEC_FALSE,
-    EXEC_EXCEPTION;
+	EXEC_TRUE, EXEC_FALSE, EXEC_EXCEPTION;
 
 }

@@ -6,5 +6,5 @@ import com.avos.avoscloud.AVException;
 import com.meetu.cloud.object.ObjScrip;
 
 public interface ObjScripCallback {
-	void callback(List<ObjScrip> objects,AVException e);
+	void callback(List<ObjScrip> objects, AVException e);
 }

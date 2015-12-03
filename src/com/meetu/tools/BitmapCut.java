@@ -23,11 +23,11 @@ import android.graphics.RectF;
 
 /**
  * 对图片处理进行的封装，切圆。且正方形。。。
+ * 
  * @author 张传强
- *
+ * 
  */
-public class BitmapCut
-{
+public class BitmapCut {
 
 	/**
 	 * 通过资源id转化成Bitmap
@@ -36,8 +36,7 @@ public class BitmapCut
 	 * @param resId
 	 * @return
 	 */
-	public static Bitmap ReadBitmapById(Context context, int resId)
-	{
+	public static Bitmap ReadBitmapById(Context context, int resId) {
 		BitmapFactory.Options opt = new BitmapFactory.Options();
 		opt.inPreferredConfig = Bitmap.Config.RGB_565;
 		opt.inPurgeable = true;
@@ -46,8 +45,6 @@ public class BitmapCut
 		return BitmapFactory.decodeStream(is, null, opt);
 	}
 
-	
-
 	/**
 	 * 设置背景为圆角
 	 * 
@@ -55,8 +52,7 @@ public class BitmapCut
 	 * @param pixels
 	 * @return
 	 */
-	public static Bitmap removeYuanjiao(Bitmap bitmap, int pixels)
-	{
+	public static Bitmap removeYuanjiao(Bitmap bitmap, int pixels) {
 		int width = bitmap.getWidth();
 		int height = bitmap.getHeight();
 
@@ -84,11 +80,9 @@ public class BitmapCut
 	/**
 	 * 按正方形裁切图片
 	 */
-	public static Bitmap ImageCrop(Bitmap bitmap, boolean isRecycled)
-	{
+	public static Bitmap ImageCrop(Bitmap bitmap, boolean isRecycled) {
 
-		if (bitmap == null)
-		{
+		if (bitmap == null) {
 			return null;
 		}
 
@@ -103,8 +97,7 @@ public class BitmapCut
 		Bitmap bmp = Bitmap.createBitmap(bitmap, retX, retY, wh, wh, null,
 				false);
 		if (isRecycled && bitmap != null && !bitmap.equals(bmp)
-				&& !bitmap.isRecycled())
-		{
+				&& !bitmap.isRecycled()) {
 			bitmap.recycle();
 			bitmap = null;
 		}
@@ -120,10 +113,8 @@ public class BitmapCut
 	 * @param bitmap
 	 * @return
 	 */
-	public static Bitmap ImageCropWithRect(Bitmap bitmap)
-	{
-		if (bitmap == null)
-		{
+	public static Bitmap ImageCropWithRect(Bitmap bitmap) {
+		if (bitmap == null) {
 			return null;
 		}
 
@@ -131,14 +122,12 @@ public class BitmapCut
 		int h = bitmap.getHeight();
 
 		int nw, nh, retX, retY;
-		if (w > h)
-		{
+		if (w > h) {
 			nw = h / 2;
 			nh = h;
 			retX = (w - nw) / 2;
 			retY = 0;
-		} else
-		{
+		} else {
 			nw = w / 2;
 			nh = w;
 			retX = w / 4;
@@ -148,8 +137,7 @@ public class BitmapCut
 		// 下面这句是关键
 		Bitmap bmp = Bitmap.createBitmap(bitmap, retX, retY, nw, nh, null,
 				false);
-		if (bitmap != null && !bitmap.equals(bmp) && !bitmap.isRecycled())
-		{
+		if (bitmap != null && !bitmap.equals(bmp) && !bitmap.isRecycled()) {
 			bitmap.recycle();
 			bitmap = null;
 		}
@@ -163,32 +151,26 @@ public class BitmapCut
 	 * @param bmp
 	 * @return
 	 */
-	public static byte[] readBitmap(Bitmap bmp)
-	{
+	public static byte[] readBitmap(Bitmap bmp) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		bmp.compress(Bitmap.CompressFormat.JPEG, 60, baos);
-		try
-		{
+		try {
 			baos.flush();
 			baos.close();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return baos.toByteArray();
 	}
 
-	
 	/**
 	 * 将图像裁剪成圆形
 	 * 
 	 * @param bitmap
 	 * @return
 	 */
-	public static Bitmap toRoundBitmap(Bitmap bitmap)
-	{
-		if (bitmap == null)
-		{
+	public static Bitmap toRoundBitmap(Bitmap bitmap) {
+		if (bitmap == null) {
 			return null;
 		}
 
@@ -196,8 +178,7 @@ public class BitmapCut
 		int height = bitmap.getHeight();
 		float roundPx;
 		float left, top, right, bottom, dst_left, dst_top, dst_right, dst_bottom;
-		if (width <= height)
-		{
+		if (width <= height) {
 			roundPx = width / 2;
 			top = 0;
 			bottom = width;
@@ -208,8 +189,7 @@ public class BitmapCut
 			dst_top = 0;
 			dst_right = width;
 			dst_bottom = width;
-		} else
-		{
+		} else {
 			roundPx = height / 2;
 			float clip = (width - height) / 2;
 			left = clip;
@@ -242,30 +222,26 @@ public class BitmapCut
 
 		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
 		canvas.drawBitmap(bitmap, src, dst, paint);
-		if (bitmap != null && !bitmap.isRecycled())
-		{
+		if (bitmap != null && !bitmap.isRecycled()) {
 			bitmap.recycle();
 			bitmap = null;
 		}
 		return output;
 	}
-	
+
 	/**
 	 * 将图像裁剪成
 	 * 
 	 * @param bitmap
 	 * @return
 	 */
-	public static Bitmap toRectBitmap(Bitmap bitmap)
-	{
-		if (bitmap == null)
-		{
+	public static Bitmap toRectBitmap(Bitmap bitmap) {
+		if (bitmap == null) {
 			return null;
 		}
 
 		int width = bitmap.getWidth();
 		int height = bitmap.getHeight();
-		
 
 		Bitmap output = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 		Canvas canvas = new Canvas(output);
@@ -276,8 +252,7 @@ public class BitmapCut
 
 		canvas.drawARGB(0, 0, 0, 0);
 		canvas.drawBitmap(bitmap, null, paint);
-		if (bitmap != null && !bitmap.isRecycled())
-		{
+		if (bitmap != null && !bitmap.isRecycled()) {
 			bitmap.recycle();
 			bitmap = null;
 		}
@@ -285,10 +260,8 @@ public class BitmapCut
 	}
 
 	// 将图片变成带圆边的圆形图片
-	public static Bitmap getRoundBitmap(Bitmap bitmap, int width, int height)
-	{
-		if (bitmap == null)
-		{
+	public static Bitmap getRoundBitmap(Bitmap bitmap, int width, int height) {
+		if (bitmap == null) {
 			return null;
 		}
 		// 将图片变成圆角
@@ -320,10 +293,8 @@ public class BitmapCut
 
 	// 将图片变成带圆边的圆形图片
 	public static Bitmap getRoundBitmap(Bitmap bitmap, int width, int height,
-			int color)
-	{
-		if (bitmap == null)
-		{
+			int color) {
+		if (bitmap == null) {
 			return null;
 		}
 		// 将图片变成圆角
@@ -362,8 +333,7 @@ public class BitmapCut
 	 *            转圆角的弧度
 	 * @return 转圆角的bitmap
 	 */
-	public static Bitmap toRoundCorner(Bitmap bitmap, int pixels)
-	{
+	public static Bitmap toRoundCorner(Bitmap bitmap, int pixels) {
 		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
 				bitmap.getHeight(), Config.ARGB_8888);
 		Canvas canvas = new Canvas(output);
@@ -378,8 +348,7 @@ public class BitmapCut
 		canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
 		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
 		canvas.drawBitmap(bitmap, rect, rect, paint);
-		if (bitmap != null && !bitmap.isRecycled())
-		{
+		if (bitmap != null && !bitmap.isRecycled()) {
 			bitmap.recycle();
 		}
 		return output;
@@ -391,8 +360,7 @@ public class BitmapCut
 	 * @param bitmap
 	 * @return
 	 */
-	public static Bitmap getRadiusBitmap(Bitmap bitmap)
-	{
+	public static Bitmap getRadiusBitmap(Bitmap bitmap) {
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint.setColor(0xffffffff);
 		Bitmap radiusBitmap = Bitmap.createBitmap(bitmap.getWidth(),
@@ -402,8 +370,7 @@ public class BitmapCut
 		canvas.drawRoundRect(rectF, 7, 7, paint);
 		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
 		canvas.drawBitmap(bitmap, 0, 0, paint);
-		if (bitmap != null && !bitmap.isRecycled()) 
-		{
+		if (bitmap != null && !bitmap.isRecycled()) {
 			bitmap.recycle();
 		}
 		return radiusBitmap;
@@ -411,8 +378,7 @@ public class BitmapCut
 
 	// 获得指定大小的圆边的bitmap数组
 	public static ArrayList<Bitmap> getRadiusBitmapList(String[] pathArray,
-			int size, int len, float radius, int color)
-	{
+			int size, int len, float radius, int color) {
 		Bitmap canvasBitmap = null;
 		Canvas canvas = null;
 		Paint paint = null;
@@ -423,17 +389,14 @@ public class BitmapCut
 		Bitmap scaledBitmap = null;
 
 		ArrayList<Bitmap> list = new ArrayList<Bitmap>();
-		for (int i = 0; i < pathArray.length; i++)
-		{
+		for (int i = 0; i < pathArray.length; i++) {
 			file = new File(pathArray[i]);
 			if (!file.exists())
 				continue;
-			try
-			{
+			try {
 				fis = new FileInputStream(file);
 				bitmap = BitmapFactory.decodeStream(fis);
-				if (bitmap != null)
-				{
+				if (bitmap != null) {
 					canvasBitmap = Bitmap.createBitmap(len, len,
 							Config.ARGB_8888);
 					canvas = new Canvas(canvasBitmap);
@@ -447,39 +410,28 @@ public class BitmapCut
 					canvas.drawBitmap(scaledBitmap, 0, 0, paint);
 					list.add(canvasBitmap);
 				}
-			} catch (FileNotFoundException e)
-			{
-			} finally
-			{
-				if (fis != null)
-				{
-					try
-					{
+			} catch (FileNotFoundException e) {
+			} finally {
+				if (fis != null) {
+					try {
 						fis.close();
-					} catch (IOException e1)
-					{
+					} catch (IOException e1) {
 					}
 				}
 			}
 			if (list.size() == size)
 				break;
 		}
-		if (scaledBitmap != null && !scaledBitmap.isRecycled())
-		{
+		if (scaledBitmap != null && !scaledBitmap.isRecycled()) {
 			scaledBitmap.recycle();
 			scaledBitmap = null;
 		}
-		if (bitmap != null && !bitmap.isRecycled())
-		{
+		if (bitmap != null && !bitmap.isRecycled()) {
 			bitmap.recycle();
 			bitmap = null;
 		}
 		return list;
 	}
-
-	
-
-	
 
 	/**
 	 * 按照一定的宽高比例裁剪图片
@@ -492,41 +444,33 @@ public class BitmapCut
 	 * @return
 	 */
 	public static Bitmap ImageCrop(Bitmap bitmap, int num1, int num2,
-			boolean isRecycled)
-	{
-		if (bitmap == null)
-		{
+			boolean isRecycled) {
+		if (bitmap == null) {
 			return null;
 		}
 		int w = bitmap.getWidth(); // 得到图片的宽，高
 		int h = bitmap.getHeight();
 		int retX, retY;
 		int nw, nh;
-		if (w > h)
-		{
-			if (h > w * num2 / num1)
-			{
+		if (w > h) {
+			if (h > w * num2 / num1) {
 				nw = w;
 				nh = w * num2 / num1;
 				retX = 0;
 				retY = (h - nh) / 2;
-			} else
-			{
+			} else {
 				nw = h * num1 / num2;
 				nh = h;
 				retX = (w - nw) / 2;
 				retY = 0;
 			}
-		} else
-		{
-			if (w > h * num2 / num1)
-			{
+		} else {
+			if (w > h * num2 / num1) {
 				nh = h;
 				nw = h * num2 / num1;
 				retY = 0;
 				retX = (w - nw) / 2;
-			} else
-			{
+			} else {
 				nh = w * num1 / num2;
 				nw = w;
 				retY = (h - nh) / 2;
@@ -536,8 +480,7 @@ public class BitmapCut
 		Bitmap bmp = Bitmap.createBitmap(bitmap, retX, retY, nw, nh, null,
 				false);
 		if (isRecycled && bitmap != null && !bitmap.equals(bmp)
-				&& !bitmap.isRecycled())
-		{
+				&& !bitmap.isRecycled()) {
 			bitmap.recycle();
 			bitmap = null;
 		}
@@ -545,9 +488,4 @@ public class BitmapCut
 					// false);
 	}
 
-	
-
-	
-
-	
 }

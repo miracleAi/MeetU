@@ -64,8 +64,8 @@ public class DBManager {
 		return null;
 
 	}
-	
-	 public void closeDatabase() {
-	        this.database.close();
-	    }
+
+	public void closeDatabase() {
+		this.database.close();
+	}
 }

@@ -43,185 +43,195 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 
-public class MemoryWallActivity extends Activity implements OnItemClickCallBack,OnClickListener{
-	
+public class MemoryWallActivity extends Activity implements
+		OnItemClickCallBack, OnClickListener {
+
 	private RecyclerView mRecyclerView;
 	private static StaggeredMemoryWallAdapter mAdapter;
-	private List<PhotoWall> data=new ArrayList<PhotoWall>();
+	private List<PhotoWall> data = new ArrayList<PhotoWall>();
 	private RelativeLayout backLayout;
 	private ImageView barrage;
-	//网络相关信息
-	private ActivityBean activityBean=new ActivityBean();
-	private ObjActivity objActivity= null;
-	private List<ObjActivityPhoto> photoList=new ArrayList<ObjActivityPhoto>();
-	//当前用户
-		ObjUser user = new ObjUser();
-		AVUser currentUser = AVUser.getCurrentUser();
+	// 网络相关信息
+	private ActivityBean activityBean = new ActivityBean();
+	private ObjActivity objActivity = null;
+	private List<ObjActivityPhoto> photoList = new ArrayList<ObjActivityPhoto>();
+	// 当前用户
+	ObjUser user = new ObjUser();
+	AVUser currentUser = AVUser.getCurrentUser();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// 去除title
 		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
-				// 全屏
-				super.getWindow();
+		// 全屏
+		super.getWindow();
 		setContentView(R.layout.activity_memory_wall);
-		activityBean= (ActivityBean) getIntent().getExtras().getSerializable("activityBean");
+		activityBean = (ActivityBean) getIntent().getExtras().getSerializable(
+				"activityBean");
 		if (currentUser != null) {
-			//强制类型转换
+			// 强制类型转换
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
-		
+
 		initLoadActivity(activityBean.getActyId());
 		initView();
 	}
+
 	private void initLoadActivity(String activityId) {
-		log.e("zcq", "activityId=="+activityId);
+		log.e("zcq", "activityId==" + activityId);
 		try {
-			 objActivity=AVObject.createWithoutData(ObjActivity.class, activityId);
+			objActivity = AVObject.createWithoutData(ObjActivity.class,
+					activityId);
 
 		} catch (AVException e) {
-			
+
 			e.printStackTrace();
 		}
-		
+
 	}
+
 	private void initView() {
-		mRecyclerView=(RecyclerView) super.findViewById(R.id.id_RecyclerView_memoryWall);
-//		loaddataUrl();
+		mRecyclerView = (RecyclerView) super
+				.findViewById(R.id.id_RecyclerView_memoryWall);
+		// loaddataUrl();
 		loaddata();
-		mAdapter=new StaggeredMemoryWallAdapter(this, photoList);
-		//对点赞 的回调进行处理
+		mAdapter = new StaggeredMemoryWallAdapter(this, photoList);
+		// 对点赞 的回调进行处理
 		mAdapter.setOnItemFavourMemory(new OnItemFavourMemory() {
-			
+
 			@Override
 			public void onItemFavour(int position) {
 				// TODO Auto-generated method stub
-				ObjActivityPhotoWrap.praiseActivityPhoto(photoList.get(position), user, new ObjFunBooleanCallback() {
-					
-					@Override
-					public void callback(boolean result, AVException e) {
-						if(e!=null){
-							log.e("zcq", e);
-						}else if(result){
-							log.e("zcq", "点赞成功");
-							handler.sendEmptyMessage(1);
-						}else{
-							log.e("zcq", "点赞失败");
-							handler.sendEmptyMessage(1);
-						}
-						
-					}
-				});
-				
+				ObjActivityPhotoWrap.praiseActivityPhoto(
+						photoList.get(position), user,
+						new ObjFunBooleanCallback() {
+
+							@Override
+							public void callback(boolean result, AVException e) {
+								if (e != null) {
+									log.e("zcq", e);
+								} else if (result) {
+									log.e("zcq", "点赞成功");
+									handler.sendEmptyMessage(1);
+								} else {
+									log.e("zcq", "点赞失败");
+									handler.sendEmptyMessage(1);
+								}
+
+							}
+						});
+
 			}
-			
+
 			@Override
 			public void onItemCancleFavour(int position) {
-				ObjActivityPhotoWrap.cancelPraiseActivityPhoto(user, photoList.get(position), new ObjFunBooleanCallback() {
-					
-					@Override
-					public void callback(boolean result, AVException e) {
-						if(e!=null){
-							log.e("zcq", e);
-						}else if(result){
-							log.e("zcq", "取消点赞成功");
-							handler.sendEmptyMessage(1);
-						}else{
-							log.e("zcq", "取消点赞失败");
-							handler.sendEmptyMessage(1);
-						}
-						
-					}
-				});
-				
+				ObjActivityPhotoWrap.cancelPraiseActivityPhoto(user,
+						photoList.get(position), new ObjFunBooleanCallback() {
+
+							@Override
+							public void callback(boolean result, AVException e) {
+								if (e != null) {
+									log.e("zcq", e);
+								} else if (result) {
+									log.e("zcq", "取消点赞成功");
+									handler.sendEmptyMessage(1);
+								} else {
+									log.e("zcq", "取消点赞失败");
+									handler.sendEmptyMessage(1);
+								}
+
+							}
+						});
+
 			}
 		});
 		mAdapter.setOnItemClickLitener(this);
-		mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+		mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,
+				StaggeredGridLayoutManager.VERTICAL));
 		mRecyclerView.setAdapter(mAdapter);
-		
-		backLayout=(RelativeLayout) super.findViewById(R.id.back_memorywall_homepager_rl);
+
+		backLayout = (RelativeLayout) super
+				.findViewById(R.id.back_memorywall_homepager_rl);
 		backLayout.setOnClickListener(this);
-		barrage=(ImageView) super.findViewById(R.id.barrage_memorywall_img);
+		barrage = (ImageView) super.findViewById(R.id.barrage_memorywall_img);
 		barrage.setOnClickListener(this);
 	}
 
 	private void loaddata() {
 
-		
-		ObjActivityPhotoWrap.queryActivityPhotos(objActivity, new ObjActivityPhotoCallback() {
-			
-			@Override
-			public void callback(List<ObjActivityPhoto> objects, AVException e) {
-				// TODO Auto-generated method stub
-				if(e!=null){
-					log.e("zcq", e);
-				}
-				else if(objects!=null && objects.size()>0){
-					
-					photoList.addAll(objects);
-				}else{
-	//				Toast.makeText(getApplicationContext(), "数据加载失败", 1000).show();
-				}
-				
-				handler.sendEmptyMessage(1);
-			}
-		});
-		
-		
+		ObjActivityPhotoWrap.queryActivityPhotos(objActivity,
+				new ObjActivityPhotoCallback() {
+
+					@Override
+					public void callback(List<ObjActivityPhoto> objects,
+							AVException e) {
+						// TODO Auto-generated method stub
+						if (e != null) {
+							log.e("zcq", e);
+						} else if (objects != null && objects.size() > 0) {
+
+							photoList.addAll(objects);
+						} else {
+							// Toast.makeText(getApplicationContext(), "数据加载失败",
+							// 1000).show();
+						}
+
+						handler.sendEmptyMessage(1);
+					}
+				});
+
 	}
+
 	@Override
 	public void onItemClick(int id) {
-		Intent intent=new Intent(this,MemoryPhotoActivity.class);
-		intent.putExtra("id", ""+id);
-		Bundle bundle=new Bundle();
+		Intent intent = new Intent(this, MemoryPhotoActivity.class);
+		intent.putExtra("id", "" + id);
+		Bundle bundle = new Bundle();
 		bundle.putSerializable("ObjActivityPhoto", (Serializable) photoList);
 		intent.putExtras(bundle);
 		startActivity(intent);
-		
+
 		this.overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
-		
+
 	}
+
 	@Override
 	public void onItemLongClick(View view, int position) {
-		
-		
+
 	}
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-			case R.id.back_memorywall_homepager_rl :
-				finish();
-				
-				
-				break;
-			case R.id.barrage_memorywall_img:
-				Intent intent=new Intent(this,BarrageActivity.class);
-				startActivity(intent);
+		case R.id.back_memorywall_homepager_rl:
+			finish();
 
-			default :
-				break;
+			break;
+		case R.id.barrage_memorywall_img:
+			Intent intent = new Intent(this, BarrageActivity.class);
+			startActivity(intent);
+
+		default:
+			break;
 		}
-		
+
 	}
-	
-	public static Handler handler=new Handler(){
+
+	public static Handler handler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
-			switch(msg.what){
+			switch (msg.what) {
 			case 1:
-				
+
 				mAdapter.notifyDataSetChanged();
-								
+
 				break;
 			}
 		}
-	
-	};
-	
 
-	
+	};
 
 }

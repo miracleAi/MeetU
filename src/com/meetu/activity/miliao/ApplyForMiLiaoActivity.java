@@ -38,7 +38,7 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 	private RelativeLayout backLayout;
 	private ImageView applyImageView;
 	private EditText content;// 内容
-	
+
 	private LinearLayout nonetipLayout;
 	private TextView applyResultTextView;
 
@@ -50,13 +50,12 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 	// 权限申请
 	ObjAuthoriseApply applys = new ObjAuthoriseApply();
 
-//	SeekChatInfoBean chatBean = new SeekChatInfoBean();
-	
+	// SeekChatInfoBean chatBean = new SeekChatInfoBean();
+
 	private boolean isApply;
 	private String applyId;
 	private String categoryId;
 	private String applyResult;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,20 +68,20 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 		if (currentUser != null) {
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
-//		chatBean =  (SeekChatInfoBean) getIntent().getExtras().get(
-//				"chatBean");
-		Intent intent=getIntent();
+		// chatBean = (SeekChatInfoBean) getIntent().getExtras().get(
+		// "chatBean");
+		Intent intent = getIntent();
 
-		String number=intent.getStringExtra("isApply");
-		if(number.equals("0")){
-			isApply=false;
-		}else{
-			isApply=true;
+		String number = intent.getStringExtra("isApply");
+		if (number.equals("0")) {
+			isApply = false;
+		} else {
+			isApply = true;
 		}
-		applyId=intent.getStringExtra("applyId");
-		categoryId=intent.getStringExtra("CategoryId");
-		applyResult=intent.getStringExtra("ApplyReply");
-		
+		applyId = intent.getStringExtra("applyId");
+		categoryId = intent.getStringExtra("CategoryId");
+		applyResult = intent.getStringExtra("ApplyReply");
+
 		log.e("categoryId", categoryId);
 		log.e("applyId", applyId);
 		initView();
@@ -96,15 +95,15 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 				.findViewById(R.id.applyForMiLiao_img);
 		applyImageView.setOnClickListener(this);
 		content = (EditText) super.findViewById(R.id.content_applyForMiLiao_et);
-		
-		nonetipLayout=(LinearLayout) findViewById(R.id.apply_no_miliao_ll);
-		applyResultTextView=(TextView) findViewById(R.id.apply_result_miliao_tv);
-		
-		if(isApply){
+
+		nonetipLayout = (LinearLayout) findViewById(R.id.apply_no_miliao_ll);
+		applyResultTextView = (TextView) findViewById(R.id.apply_result_miliao_tv);
+
+		if (isApply) {
 			nonetipLayout.setVisibility(View.GONE);
 			applyResultTextView.setVisibility(View.VISIBLE);
 			applyResultTextView.setText(applyResult);
-		}else{
+		} else {
 			nonetipLayout.setVisibility(View.VISIBLE);
 			applyResultTextView.setVisibility(View.GONE);
 		}
@@ -125,18 +124,16 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 			if (content.getText().length() == 0) {
 				Toast.makeText(getApplicationContext(), "请填写申请内容", 1000).show();
 			} else {
-		//		queryIsApply(chatBean);
-				
-				if(isApply){
-					
-					applys=getObjAuthoriseById(applyId);
-					updateApplyAuthorise(applys, content.getText()
-							.toString());
-				}else{
+				// queryIsApply(chatBean);
+
+				if (isApply) {
+
+					applys = getObjAuthoriseById(applyId);
+					updateApplyAuthorise(applys, content.getText().toString());
+				} else {
 					// 没申请过
-					categorys=getObjAuthoriseCategoryById(""+categoryId);
-					applyAuthorise(categorys, content.getText()
-							.toString());
+					categorys = getObjAuthoriseCategoryById("" + categoryId);
+					applyAuthorise(categorys, content.getText().toString());
 				}
 				finish();
 			}
@@ -147,32 +144,32 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 
 	}
 
-//	// 查询是否已申请
-//	public void queryIsApply(final SeekChatInfoBean chatInfoBean) {
-//		ObjAuthoriseWrap.queryApply(user, category,
-//				new ObjAuthoriseApplyCallback() {
-//
-//					@Override
-//					public void callback(List<ObjAuthoriseApply> objects,
-//							AVException e) {
-//						// TODO Auto-generated method stub
-//						if (e != null) {
-//							log.e("zcq", e);
-//							return;
-//						}
-//						if (objects.size() == 0) {
-//							// 没申请过
-//							applyAuthorise(category, content.getText()
-//									.toString());
-//						} else {
-//							// 申请过
-//							apply = objects.get(0);
-//							updateApplyAuthorise(apply, content.getText()
-//									.toString());
-//						}
-//					}
-//				});
-//	}
+	// // 查询是否已申请
+	// public void queryIsApply(final SeekChatInfoBean chatInfoBean) {
+	// ObjAuthoriseWrap.queryApply(user, category,
+	// new ObjAuthoriseApplyCallback() {
+	//
+	// @Override
+	// public void callback(List<ObjAuthoriseApply> objects,
+	// AVException e) {
+	// // TODO Auto-generated method stub
+	// if (e != null) {
+	// log.e("zcq", e);
+	// return;
+	// }
+	// if (objects.size() == 0) {
+	// // 没申请过
+	// applyAuthorise(category, content.getText()
+	// .toString());
+	// } else {
+	// // 申请过
+	// apply = objects.get(0);
+	// updateApplyAuthorise(apply, content.getText()
+	// .toString());
+	// }
+	// }
+	// });
+	// }
 
 	// 发起申请
 	/**
@@ -235,12 +232,12 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 					}
 				});
 	}
-	
+
 	/**
 	 * 根据ID生成activity对象
 	 * */
-	public static  ObjAuthoriseApply getObjAuthoriseById(String id){
-		ObjAuthoriseApply apply= null;
+	public static ObjAuthoriseApply getObjAuthoriseById(String id) {
+		ObjAuthoriseApply apply = null;
 		try {
 			apply = AVObject.createWithoutData(ObjAuthoriseApply.class, id);
 		} catch (AVException e) {
@@ -249,14 +246,15 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 		}
 		return apply;
 	}
-	
+
 	/**
 	 * 根据ID生成activity对象
 	 * */
-	public static  ObjAuthoriseCategory getObjAuthoriseCategoryById(String id){
-		ObjAuthoriseCategory category= null;
+	public static ObjAuthoriseCategory getObjAuthoriseCategoryById(String id) {
+		ObjAuthoriseCategory category = null;
 		try {
-			category = AVObject.createWithoutData(ObjAuthoriseCategory.class, id);
+			category = AVObject.createWithoutData(ObjAuthoriseCategory.class,
+					id);
 		} catch (AVException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

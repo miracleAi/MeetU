@@ -283,8 +283,8 @@ public class ForgetPasswordVerificationActivity extends Activity implements
 
 		@Override
 		public void afterTextChanged(Editable s) {
-			log.e("lucifer", " changdu=="+allEditText.length());
-			if(allEditText.length()==0){
+			log.e("lucifer", " changdu==" + allEditText.length());
+			if (allEditText.length() == 0) {
 				number1.setText("");
 				number1.setBackgroundResource(R.drawable.register_ver_h_720);
 			}

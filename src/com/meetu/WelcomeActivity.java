@@ -58,15 +58,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-
 public class WelcomeActivity extends Activity {
 
+	// 导入学校数据库到本地
+	private DBManager dbHelper;
 
-	//导入学校数据库到本地
-	private  DBManager dbHelper;
-
-	//导入城市数据库到本地
-	private  DBManagerCity dbHelperCity;
+	// 导入城市数据库到本地
+	private DBManagerCity dbHelperCity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,45 +75,47 @@ public class WelcomeActivity extends Activity {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_welcome);
 
-		//导入数据库
+		// 导入数据库
 		dbHelper = new DBManager(this);
 		dbHelper.openDatabase();
 		dbHelper.closeDatabase();
 
-		dbHelperCity=new DBManagerCity(this);
+		dbHelperCity = new DBManagerCity(this);
 		dbHelperCity.openDatabase();
 		dbHelperCity.closeDatabase();
- 
 
-//		//拿到本地的用户
-//		AVUser currentUser = AVUser.getCurrentUser();
-//		if(currentUser!=null){
-//			Intent intent = new Intent(WelcomeActivity.this,TestMsgTwoActivity.class);
-//			startActivity(intent);
-//			finish();
-//
-//		}else{
-//			Intent intent = new Intent(WelcomeActivity.this,LoginOrRegisterActivity.class);
-//			startActivity(intent);
-//			finish();
-//		}
+		// //拿到本地的用户
+		// AVUser currentUser = AVUser.getCurrentUser();
+		// if(currentUser!=null){
+		// Intent intent = new
+		// Intent(WelcomeActivity.this,TestMsgTwoActivity.class);
+		// startActivity(intent);
+		// finish();
+		//
+		// }else{
+		// Intent intent = new
+		// Intent(WelcomeActivity.this,LoginOrRegisterActivity.class);
+		// startActivity(intent);
+		// finish();
+		// }
 		next();
-		
+
 	}
 
-
 	private SharedPreferences sp;
-	private  void next() {
 
-		sp=super.getSharedPreferences("app_param", Context.MODE_PRIVATE);
+	private void next() {
 
-		int user=sp.getInt("user", 0);
-		if(user==0){
+		sp = super.getSharedPreferences("app_param", Context.MODE_PRIVATE);
+
+		int user = sp.getInt("user", 0);
+		if (user == 0) {
 			goIndex();
-		}else{
+		} else {
 			goHome();
 		}
 	}
+
 	/**
 	 * 首次进入app 进行的操作
 	 */
@@ -123,9 +123,9 @@ public class WelcomeActivity extends Activity {
 		// TODO Auto-generated method stub
 		Toast.makeText(this, "第一次进入", Toast.LENGTH_SHORT).show();
 
-		sp=super.getSharedPreferences("app_param", Context.MODE_PRIVATE);
+		sp = super.getSharedPreferences("app_param", Context.MODE_PRIVATE);
 		sp.edit().putInt("user", 1).commit();
-		//解析xml  开子线程处理任务
+		// 解析xml 开子线程处理任务
 		new MyAsyncTask().execute();
 		goHome();
 	}
@@ -134,20 +134,20 @@ public class WelcomeActivity extends Activity {
 		AVUser currentUser = AVUser.getCurrentUser();
 		if (currentUser != null) {
 			// 允许用户使用应用
-			Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
+			Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
 			WelcomeActivity.this.startActivity(intent);
 			finish();
 		} else {
-			//缓存用户对象为空时， 可打开用户注册界面…
-			Intent intent = new Intent(WelcomeActivity.this,LoginOrRegisterActivity.class);
+			// 缓存用户对象为空时， 可打开用户注册界面…
+			Intent intent = new Intent(WelcomeActivity.this,
+					LoginOrRegisterActivity.class);
 			startActivity(intent);
 			finish();
 		}
 
-
 	}
 
-	class MyAsyncTask extends AsyncTask<Void,Void, Void>{
+	class MyAsyncTask extends AsyncTask<Void, Void, Void> {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
@@ -157,49 +157,48 @@ public class WelcomeActivity extends Activity {
 		}
 
 	}
-	//解析 xml 返回 emoji list
-	private static EmojiParser parser;  
-	private static List<ChatEmoji> chatEmojis; 
+
+	// 解析 xml 返回 emoji list
+	private static EmojiParser parser;
+	private static List<ChatEmoji> chatEmojis;
 	private EmojisDao emojisDao;
+
 	private void loadEmoji() {
 
-		//TODO 删除以前插入的数据   测试需要
-		//	emojisDao.deleteAll();
+		// TODO 删除以前插入的数据 测试需要
+		// emojisDao.deleteAll();
 
 		try {
-			emojisDao=new EmojisDao(this);
+			emojisDao = new EmojisDao(this);
 
-			InputStream is = this.getAssets().open("expressionImage_custom.xml");
-			parser = new XmlEmojifPullHelper();  
-			//		 parser=new XmlEmojiSaxBookParser();
+			InputStream is = this.getAssets()
+					.open("expressionImage_custom.xml");
+			parser = new XmlEmojifPullHelper();
+			// parser=new XmlEmojiSaxBookParser();
 			chatEmojis = parser.parse(is);
 			for (ChatEmoji emoji : chatEmojis) {
-				//根据String类型id获取对应资源id
-				int resID = this.getResources().getIdentifier(emoji.getFaceName(),
-						"drawable", this.getPackageName());
-				log.e("lucifer222222","name"+emoji.getFaceName()+" resID=="+resID);		              
-				emoji.setId(resID);     
-			} 
+				// 根据String类型id获取对应资源id
+				int resID = this.getResources().getIdentifier(
+						emoji.getFaceName(), "drawable", this.getPackageName());
+				log.e("lucifer222222", "name" + emoji.getFaceName()
+						+ " resID==" + resID);
+				emoji.setId(resID);
+			}
 
-			//插入到sqlite 数据库
-			for(ChatEmoji emoji : chatEmojis){
+			// 插入到sqlite 数据库
+			for (ChatEmoji emoji : chatEmojis) {
 				emojisDao.insert(emoji);
 			}
 
-
 		} catch (IOException e1) {
-			log.e("2",e1); 
+			log.e("2", e1);
 			e1.printStackTrace();
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 
 			log.e("3", e);
 			e.printStackTrace();
-		}  
+		}
 
 	}
-
-
-
 
 }
