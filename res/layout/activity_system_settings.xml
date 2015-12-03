@@ -28,7 +28,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/title_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -89,7 +89,7 @@
             android:id="@+id/evaluation_system_settings_rl"
             android:layout_width="match_parent"
             android:layout_height="49dp"
-           android:background="@drawable/item_system_settings_bg" >
+            android:background="@drawable/item_system_settings_bg" >
 
             <TextView
                 android:id="@+id/textView5"
@@ -108,9 +108,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
                 android:text="@string/system_setting_evaluation_meetu_tip"
                 android:textColor="#bfbfbf"
-                android:layout_marginRight="10dp"
                 android:textSize="12sp" />
         </RelativeLayout>
 
@@ -142,8 +142,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:text="@string/system_setting_clear_meetu_tip"
                 android:layout_marginRight="10dp"
+                android:text="@string/system_setting_clear_meetu_tip"
                 android:textColor="#bfbfbf"
                 android:textSize="12sp" />
         </RelativeLayout>
@@ -176,9 +176,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
                 android:text="@string/system_setting_Checkforupdates_tip"
                 android:textColor="#bfbfbf"
-                android:layout_marginRight="10dp"
                 android:textSize="12sp" />
         </RelativeLayout>
 
@@ -210,9 +210,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
                 android:text="@string/system_setting_sign_out_tip"
                 android:textColor="#bfbfbf"
-                android:layout_marginRight="10dp"
                 android:textSize="12sp" />
         </RelativeLayout>
 
@@ -220,6 +220,17 @@
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="#cccccc" />
+
+        <TextView
+            android:id="@+id/progress_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:text="进度"
+            android:textColor="#d633c6e5"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <TextView
@@ -229,8 +240,8 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
-        android:textSize="14sp"
+        android:text="@string/system_setting_hello"
         android:textColor="#d633c6e5"
-        android:text="@string/system_setting_hello" />
+        android:textSize="14sp" />
 
 </RelativeLayout>

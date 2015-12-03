@@ -31,6 +31,7 @@ import com.meetu.cloud.object.ObjActivityTicket;
 import com.meetu.cloud.object.ObjAuthoriseApply;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
 import com.meetu.cloud.object.ObjChat;
+import com.meetu.cloud.object.ObjGlobalAndroid;
 import com.meetu.cloud.object.ObjReportChat;
 import com.meetu.cloud.object.ObjReportUser;
 import com.meetu.cloud.object.ObjScrip;
@@ -87,6 +88,7 @@ public class MyApplication extends Application {
 		AVObject.registerSubclass(ObjReportChat.class);
 		AVObject.registerSubclass(ObjReportUser.class);
 		AVObject.registerSubclass(ObjShieldUser.class);
+		AVObject.registerSubclass(ObjGlobalAndroid.class);
 		AVOSCloud.initialize(this,
 				"tcd4rj3s3c54bdlkv1vfu5puvu9c2k96ur9kge3qvptqxp8p",
 				"8fpp7j815746jg9x26f0d3c5p76xqkyqm586v2onvx3m2k7a");

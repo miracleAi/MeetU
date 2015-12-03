@@ -178,8 +178,6 @@ public class ChatmsgsDao {
 		c.close();
 		db.close();
 		return list;
-		
-		
 	}
 
 }
