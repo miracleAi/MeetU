@@ -20,7 +20,7 @@
 
         <RelativeLayout
             android:id="@+id/right_item_fragment_messages_lr"
-            android:layout_width="50dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" >
@@ -34,7 +34,7 @@
                 android:layout_marginTop="3dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="刚刚 "
+                android:text="2014:05:06"
                 android:textColor="#606366"
                 android:textSize="10sp" />
 

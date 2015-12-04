@@ -257,7 +257,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 			if (seekChatBeansList != null && seekChatBeansList.size() != 0) {
 
 				if (isAdd) {
-
+					log.e("zcq", "已经加入过当前觅聊");
 					Intent intent2 = new Intent(getActivity(),
 							ChatGroupActivity.class);
 					intent2.putExtra("ConversationId", ""
@@ -273,12 +273,17 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 											.getMembers().size());
 					intent2.putExtra("objectId",
 							seekChatBeansList.get(positonNow).getObjectId());// 觅聊id
+					intent2.putExtra("TimeOver", ""+seekChatBeansList.get(positonNow).getTimeChatStop());
+					
+					log.e("zcq timeover", ""+seekChatBeansList.get(positonNow).getTimeChatStop());
+					
 					Bundle bundle = new Bundle();
 					bundle.putSerializable("SeekChatBean",
 							seekChatBeansList.get(positonNow));
 					intent2.putExtras(bundle);
 					startActivity(intent2);
 				} else {
+					log.e("zcq", "没加入过当前觅聊");
 					joinGroup(conv);
 				}
 			}
@@ -450,6 +455,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 	//
 	// 加入当前觅聊
 	public void joinGroup(AVIMConversation conversation) {
+		
 		ObjChatMessage.joinChat(MyApplication.chatClient, conversation,
 				new ObjFunBooleanCallback() {
 
@@ -462,7 +468,9 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 						}
 						if (result) {
 							log.e("zcq", "加入觅聊成功");
-
+							loadData();
+							
+							
 							Intent intent2 = new Intent(getActivity(),
 									ChatGroupActivity.class);
 							intent2.putExtra("ConversationId", ""
@@ -479,13 +487,14 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 							intent2.putExtra("objectId",
 									seekChatBeansList.get(positonNow)
 											.getObjectId());// 觅聊id
+							intent2.putExtra("TimeOver",""+ seekChatBeansList.get(positonNow).getTimeChatStop());
 							Bundle bundle = new Bundle();
 							bundle.putSerializable("SeekChatBean",
 									seekChatBeansList.get(positonNow));
 							intent2.putExtras(bundle);
 							startActivity(intent2);
 
-							loadData();
+						
 							// TODO 应该只刷新成员 省流量
 							// handler.sendEmptyMessage(1);
 						} else {
@@ -631,6 +640,13 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 									"timeChatStop" + bean.getTimeChatStop());
 
 							seekChatBeansList.add(bean);
+							
+							//缓存觅聊成员
+							List<String> userList=new ArrayList<String>();
+							for(int j=0;j<bean.getMembers().size();j++){
+								userList.add(""+bean.getMembers().get(j).get("userId"));
+							}
+							getMember(userList,""+bean.getConversationId());
 
 						}
 
@@ -722,6 +738,35 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 
 		}
 		super.onActivityResult(requestCode, resultCode, data);
+
+	}
+	
+	/**
+	 * 查询对话成员 插到本地
+	 * 
+	 * @param covn
+	 * @author lucifer
+	 * @date 2015-11-28
+	 */
+	public void getMember(List<String> list,String conversationId) {
+
+		userAboutBeansList = new ArrayList<UserAboutBean>();
+
+	//	List<String> list = covn.getMembers();
+		if (list != null) {
+			for (String string : list) {
+				UserAboutBean item = new UserAboutBean();
+				item.setUserId(user.getObjectId());
+				item.setAboutType(2);
+				item.setAboutUserId(string);
+				item.setAboutColetctionId(conversationId);
+				userAboutBeansList.add(item);
+			}
+
+		}
+		userAboutDao.deleteByType(user.getObjectId(), 2,
+				conversationId);
+		userAboutDao.saveUserAboutList(userAboutBeansList);
 
 	}
 

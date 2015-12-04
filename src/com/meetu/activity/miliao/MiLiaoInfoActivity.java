@@ -18,6 +18,7 @@ import com.meetu.activity.ReportActivity;
 import com.meetu.adapter.GridRecycleMiLiaoInfoAdapter;
 import com.meetu.adapter.GridRecycleMiLiaoInfoAdapter.OnMiLiaoInfoItemClickCallBack;
 import com.meetu.bean.UserAboutBean;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunStringCallback;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjUser;
@@ -86,6 +87,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 	private boolean isCreator = false;// 用来标记是否是觅聊的创建者
 	private RelativeLayout miliaoLayout, qunliaoLayout;// 用来 标记不同的view显示
 	String chatId = "";
+	private RelativeLayout exitLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -230,6 +232,8 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 
 	private void initView() {
 		// TODO Auto-generated method stub
+		exitLayout=(RelativeLayout) findViewById(R.id.bottom_miliao_info_rl);
+		exitLayout.setOnClickListener(this);
 		backLayout = (RelativeLayout) super
 				.findViewById(R.id.back_miliao_info_img_rl);
 		backLayout.setOnClickListener(this);
@@ -309,7 +313,31 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 			intent.putExtra("otherId", chatId);
 			startActivity(intent);
 			break;
-
+			//退出群聊
+		case R.id.bottom_miliao_info_rl:
+			
+			ObjChatMessage.userQuitConv(conv, new ObjFunBooleanCallback() {
+				
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(e!=null){
+						log.e("zcq", e);
+						return;
+					}
+					if(result){
+						log.e("zcq", "退出成功");
+						Toast.makeText(getApplicationContext(), "退出成功", Toast.LENGTH_SHORT).show();
+						userAboutDao.deleteUserTypeUserId(user.getObjectId(), 2, conversationId, user.getObjectId());
+						finish();
+					}else {
+						log.e("zcq", "退出失败");
+						
+					}
+					
+				}
+			});
+			break;
 		}
 
 	}
@@ -357,7 +385,13 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 					mList2.add(item);
 
 				} else {
-					mList2.remove(position);
+					if(!mList2.get(position).getUserId().equals(user.getObjectId())){
+						deleteUser(mList2.get(position).getUserId());
+						mList2.remove(position);
+					}else{
+						Toast.makeText(getApplicationContext(), "不能删除自己", Toast.LENGTH_SHORT).show();
+					}
+					
 				}
 
 			}
@@ -483,4 +517,34 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 		});
 	}
 
+/**
+ * 踢出成员
+ * @param memberId  
+ * @author lucifer
+ * @date 2015-12-4
+ */
+		public void deleteUser(final String memberId){
+			ObjChatMessage.deleteMember(memberId, conv, new ObjFunBooleanCallback() {
+				
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(e!=null){
+						log.e("zcq", e);
+						return;
+					}
+					if(result){
+						log.e("zcq", "踢出成功");
+						Toast.makeText(getApplicationContext(), "踢出成功", Toast.LENGTH_SHORT).show();
+						userAboutDao.deleteUserTypeUserId(user.getObjectId(), 2, conversationId, memberId);
+					}else{
+						log.e("zcq", "踢出失败");
+						Toast.makeText(getApplicationContext(), "踢出失败", Toast.LENGTH_SHORT).show();
+					}
+					
+				}
+			});
+		}
+	
+	
 }

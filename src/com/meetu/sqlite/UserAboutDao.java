@@ -2,6 +2,7 @@ package com.meetu.sqlite;
 
 import java.util.ArrayList;
 
+import com.avos.avoscloud.LogUtil.log;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.common.Constants;
 
@@ -88,6 +89,26 @@ public class UserAboutDao {
 		}
 		sdb.close();
 	}
+	/**
+	 * 删除指定对话中的指定用户
+	 * @param userId
+	 * @param aboutType
+	 * @param convercationId
+	 * @param deleteUserId  
+	 * @author lucifer
+	 * @date 2015-12-4
+	 */
+	public void deleteUserTypeUserId(String userId,int aboutType,String convercationId,String deleteUserId){
+		
+		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
+		sdb.delete(Constants.USERABOUT_CACHE_TB, Constants.USERID
+				+ "=? and " + Constants.ABOUTTYPE + "=? and " + Constants.ABOUTUSERID + "=?", new String[] {
+				userId, Integer.toString(aboutType) ,deleteUserId});
+		sdb.close();
+		log.e("zcq", "删除数据库成员成功");
+	}
+	
+	
 	// 查询参加活动并且我关注的人
 	/*
 	 * public ArrayList<UserAboutBean> queryOrderAndFollowUser(String userId,int

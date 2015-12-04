@@ -83,6 +83,7 @@
         android:layout_height="20dp"
         android:layout_below="@+id/top_changname_rl"
         android:layout_centerHorizontal="true"
+        
         android:gravity="center" >
 
         <ImageView

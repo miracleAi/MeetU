@@ -43,6 +43,7 @@ import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.utils.ChatMsgUtils;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.common.Constants;
+import com.meetu.common.dismissData;
 import com.meetu.entity.ChatEmoji;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.entity.Messages;
@@ -188,6 +189,8 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 	private TextView title;// 标题
 	private String objectID;// 用来接收觅聊id
 	private long timeOver;//用来接收传过来的结束时间
+	private TextView timeOverTextView;
+	private LinearLayout timeLayout;
 	private TextView userNumber;
 	private UserAboutDao userAboutDao;
 	private List<UserAboutBean> userAboutBeans = new ArrayList<UserAboutBean>();
@@ -220,6 +223,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 		jstitle = intent.getStringExtra("title");
 		number = intent.getStringExtra("number");
 		objectID = intent.getStringExtra("objectId");
+		timeOver=Long.valueOf(intent.getStringExtra("TimeOver"));
 		
 		
 		seekChatBean = (SeekChatBean) intent
@@ -440,10 +444,19 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 		photo.setOnClickListener(this);
 		camera = (ImageView) super.findViewById(R.id.chat_camera_container_img);
 		camera.setOnClickListener(this);
-
+		timeLayout=(LinearLayout) findViewById(R.id.time_remind_miliao_ll);
 		title = (TextView) super.findViewById(R.id.title_fragment_chat_tv);
 		userNumber = (TextView) super
 				.findViewById(R.id.number_user_fragment_chat_tv);
+		timeOverTextView=(TextView) findViewById(R.id.time_remind_miliao_tv);
+//		timeOverTextView.setOnClickListener(this);
+		
+		if(dismissData.getDismissData(timeOver)==null){
+			timeLayout.setVisibility(View.GONE);
+		}else{
+			timeOverTextView.setText(""+dismissData.getDismissData(timeOver));
+		}
+	
 
 	}
 

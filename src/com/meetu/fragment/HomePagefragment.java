@@ -315,6 +315,7 @@ public class HomePagefragment extends Fragment implements
 					actyDao.saveActyList(actyList);
 
 					log.e("zcq", "actyList==" + actyList.size());
+					actyListCache.clear();
 					actyListCache.addAll(actyDao.queryActys(user.getObjectId()));
 					log.e("zcq", "actyListCache==" + actyListCache.size());
 

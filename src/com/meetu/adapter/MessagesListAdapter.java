@@ -10,12 +10,14 @@ import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.common.EmojisRelevantUtils;
 import com.meetu.common.Spanning;
+import com.meetu.common.dismissData;
 import com.meetu.entity.ChatEmoji;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.entity.Huodong;
 import com.meetu.entity.Messages;
 import com.meetu.entity.User;
 import com.meetu.sqlite.ChatmsgsDao;
+import com.meetu.tools.DateUtils;
 
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -134,7 +136,7 @@ public class MessagesListAdapter extends BaseAdapter {
 			holder.noReadLayout.setVisibility(View.VISIBLE);
 			holder.tvNoReadMessages.setText("99+");
 		} else if (item.getUnreadMsgCount() <= 0) {
-			holder.noReadLayout.setVisibility(View.GONE);
+			holder.noReadLayout.setVisibility(View.INVISIBLE);
 
 		} else {
 			holder.noReadLayout.setVisibility(View.VISIBLE);
@@ -142,15 +144,24 @@ public class MessagesListAdapter extends BaseAdapter {
 		}
 
 		if (item.getConversationType() == 1) {
-
+			
 			holder.tvName.setText(item.getActyName());
 			holder.photpHead
 					.setImageResource(R.drawable.massage_newslist_img_acty);
+			if(dismissData.getDismissData(item.getTimeOver())!=null){
+				holder.tvTime.setText(""+dismissData.getDismissData(item.getTimeOver())+"后消失");
+			}else{
+				if(chatmsgs!=null){
+					holder.tvTime.setText(""+com.meetu.cloud.utils.DateUtils.getFormattedTimeInterval(Long.valueOf(chatmsgs.getSendTimeStamp())));
+				}
+				
+			}
 
 		} else if (item.getConversationType() == 2) {
 			holder.tvName.setText(item.getChatName());
 			holder.photpHead
 					.setImageResource(R.drawable.massage_newslist_img_chat);
+			holder.tvTime.setText(""+dismissData.getDismissData(item.getTimeOver())+"后消失");
 		}
 
 		return convertView;

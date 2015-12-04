@@ -4,10 +4,12 @@ import java.util.List;
 
 import net.tsz.afinal.FinalBitmap;
 
+import com.avos.avoscloud.AVUser;
 import com.meetu.R;
 import com.meetu.activity.miliao.MiLiaoInfoActivity;
 import com.meetu.adapter.StaggeredMemoryWallAdapter.MyViewHolder;
 import com.meetu.adapter.StaggeredMemoryWallAdapter.OnItemClickCallBack;
+import com.meetu.cloud.object.ObjUser;
 import com.meetu.entity.PhotoWall;
 import com.meetu.entity.User;
 import com.meetu.entity.UserAbout;
@@ -37,6 +39,10 @@ public class GridRecycleMiLiaoInfoAdapter extends
 	private Context mContext;
 	// 网络数据处理
 	private FinalBitmap finalBitmap;
+	
+	// 当前用户
+		private ObjUser user = new ObjUser();
+		AVUser currentUser = AVUser.getCurrentUser();
 
 	/**
 	 * 单击 和长按接口
@@ -64,6 +70,12 @@ public class GridRecycleMiLiaoInfoAdapter extends
 		this.mContext = context;
 		MyApplication app = (MyApplication) context.getApplicationContext();
 		finalBitmap = app.getFinalBitmap();
+		if (currentUser != null) {
+			// 强制类型转换
+			user = AVUser.cast(currentUser, ObjUser.class);
+		} else {
+			return;
+		}
 	}
 
 	@Override
@@ -84,7 +96,7 @@ public class GridRecycleMiLiaoInfoAdapter extends
 				}
 			}
 
-			if (item.getIsDetele() == false) {
+			if (item.getIsDetele() == false||item.getUserId().equals(user.getObjectId())) {
 				holder.ivDetele.setVisibility(View.INVISIBLE);
 			} else {
 				holder.ivDetele.setVisibility(View.VISIBLE);
