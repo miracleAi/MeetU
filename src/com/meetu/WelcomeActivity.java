@@ -67,16 +67,18 @@ public class WelcomeActivity extends Activity {
 
 	//导入城市数据库到本地
 	private  DBManagerCity dbHelperCity;
+	Handler handler ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		super.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		/*super.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
 		setContentView(R.layout.activity_welcome);
 
+		handler = new Handler();
 		//导入数据库
 		dbHelper = new DBManager(this);
 		dbHelper.openDatabase();
@@ -85,30 +87,13 @@ public class WelcomeActivity extends Activity {
 		dbHelperCity=new DBManagerCity(this);
 		dbHelperCity.openDatabase();
 		dbHelperCity.closeDatabase();
- 
-
-//		//拿到本地的用户
-//		AVUser currentUser = AVUser.getCurrentUser();
-//		if(currentUser!=null){
-//			Intent intent = new Intent(WelcomeActivity.this,TestMsgTwoActivity.class);
-//			startActivity(intent);
-//			finish();
-//
-//		}else{
-//			Intent intent = new Intent(WelcomeActivity.this,LoginOrRegisterActivity.class);
-//			startActivity(intent);
-//			finish();
-//		}
 		next();
-		
 	}
 
 
 	private SharedPreferences sp;
 	private  void next() {
-
 		sp=super.getSharedPreferences("app_param", Context.MODE_PRIVATE);
-
 		int user=sp.getInt("user", 0);
 		if(user==0){
 			goIndex();
@@ -120,31 +105,30 @@ public class WelcomeActivity extends Activity {
 	 * 首次进入app 进行的操作
 	 */
 	private void goIndex() {
-		// TODO Auto-generated method stub
-		Toast.makeText(this, "第一次进入", Toast.LENGTH_SHORT).show();
-
-		sp=super.getSharedPreferences("app_param", Context.MODE_PRIVATE);
-		sp.edit().putInt("user", 1).commit();
 		//解析xml  开子线程处理任务
 		new MyAsyncTask().execute();
-		goHome();
 	}
 
 	private void goHome() {
-		AVUser currentUser = AVUser.getCurrentUser();
-		if (currentUser != null) {
-			// 允许用户使用应用
-			Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
-			WelcomeActivity.this.startActivity(intent);
-			finish();
-		} else {
-			//缓存用户对象为空时， 可打开用户注册界面…
-			Intent intent = new Intent(WelcomeActivity.this,LoginOrRegisterActivity.class);
-			startActivity(intent);
-			finish();
-		}
+		handler.postDelayed(new Runnable() {
 
-
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				AVUser currentUser = AVUser.getCurrentUser();
+				if (currentUser != null) {
+					// 允许用户使用应用
+					Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
+					WelcomeActivity.this.startActivity(intent);
+					finish();
+				} else {
+					//缓存用户对象为空时， 可打开用户注册界面…
+					Intent intent = new Intent(WelcomeActivity.this,LoginOrRegisterActivity.class);
+					startActivity(intent);
+					finish();
+				}
+			}
+		}, 2000);
 	}
 
 	class MyAsyncTask extends AsyncTask<Void,Void, Void>{
@@ -154,6 +138,15 @@ public class WelcomeActivity extends Activity {
 			// TODO Auto-generated method stub
 			loadEmoji();
 			return null;
+		}
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			// 加载结束，进入引导页
+			Intent intent = new Intent(WelcomeActivity.this,GuidActivity.class);
+			startActivity(intent);
+			finish();
 		}
 
 	}

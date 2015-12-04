@@ -19,7 +19,6 @@ import com.meetu.activity.mine.UpdatepictureActivity;
 import com.meetu.adapter.PhotoWallAdapter;
 import com.meetu.adapter.UserPhotoWallAdapter;
 import com.meetu.adapter.PhotoWallAdapter.GridViewHeightaListener;
-
 import com.meetu.cloud.callback.ObjUserPhotoCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.object.ObjUserPhoto;
@@ -27,6 +26,8 @@ import com.meetu.cloud.wrap.ObjUserPhotoWrap;
 import com.meetu.entity.Middle;
 import com.meetu.entity.PhotoWall;
 import com.meetu.tools.BitmapCut;
+import com.meetu.tools.DensityUtil;
+import com.meetu.tools.DisplayUtils;
 import com.meetu.view.MyRecyclerView.OnScrollListener;
 import com.meetu.view.ScrollTabHolderMineupFragment;
 

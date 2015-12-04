@@ -9,7 +9,7 @@
         android:id="@+id/bt_zhuce_dengluorzhuce"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        
+        android:padding="10dp"
         android:background="@color/tablebar_check"
          android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
@@ -20,6 +20,7 @@
         android:id="@+id/bt_denglu_dengluorzhuce"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="10dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="61dp"
