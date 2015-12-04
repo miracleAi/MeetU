@@ -9,8 +9,6 @@ import com.meetu.adapter.MinePhotoAdapter;
 import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.entity.PhotoWall;
 
-
-
 import android.os.Bundle;
 import android.R.integer;
 import android.app.Activity;
@@ -25,7 +23,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-public class MinephotoActivity extends Activity implements OnClickListener ,OnPageChangeListener{
+public class MinephotoActivity extends Activity implements OnClickListener,
+		OnPageChangeListener {
 	private String itemid;
 	private String pid;
 	private PhotoWall dataPhotoWall;
@@ -33,13 +32,14 @@ public class MinephotoActivity extends Activity implements OnClickListener ,OnPa
 	private ViewPager viewPager;
 	private MinePhotoAdapter adapter;
 	int id;
-//	private List<PhotoWall> photolist=new ArrayList<PhotoWall>();
-	private RelativeLayout backLayout,delectLayout;
+	// private List<PhotoWall> photolist=new ArrayList<PhotoWall>();
+	private RelativeLayout backLayout, delectLayout;
 	// 网络数据相关
 	private String photoUrl;
-	private List<ObjUserPhoto> objUserPhotos=new ArrayList<ObjUserPhoto>();
-	private String userId;//用户的id
-	private boolean isMyself=true;//用来标记是否从我自己的页面跳过来的
+	private List<ObjUserPhoto> objUserPhotos = new ArrayList<ObjUserPhoto>();
+	private String userId;// 用户的id
+	private boolean isMyself = true;// 用来标记是否从我自己的页面跳过来的
+
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,51 +49,55 @@ public class MinephotoActivity extends Activity implements OnClickListener ,OnPa
 		// 全屏
 		super.getWindow();
 		setContentView(R.layout.activity_minephoto);
-		userId=super.getIntent().getStringExtra("userId");
+		userId = super.getIntent().getStringExtra("userId");
 		itemid = super.getIntent().getStringExtra("id");
 		pid = super.getIntent().getStringExtra("id");
-		id=Integer.parseInt(itemid);
-		log.e("zcq", "id=="+itemid);
-		objUserPhotos=(List<ObjUserPhoto>) this.getIntent().getSerializableExtra("photolist");
+		id = Integer.parseInt(itemid);
+		log.e("zcq", "id==" + itemid);
+		objUserPhotos = (List<ObjUserPhoto>) this.getIntent()
+				.getSerializableExtra("photolist");
 
 		Intent intent = this.getIntent();
 
-		photoUrl=intent.getStringExtra("url");
-		
-		if(userId==null){
-			isMyself=false;
+		photoUrl = intent.getStringExtra("url");
+
+		if (userId == null) {
+			isMyself = false;
 		}
 		initView();
 	}
+
 	/*
 	 * 点击显示照片
 	 */
 	private void initView() {
 
-//		photo = (ImageView) super.findViewById(R.id.photo_demail_mine);
-//		photo.setImageResource(dataPhotoWall.getImg());
+		// photo = (ImageView) super.findViewById(R.id.photo_demail_mine);
+		// photo.setImageResource(dataPhotoWall.getImg());
 		back = (ImageView) super
 				.findViewById(R.id.back_mine_photoview_fullscreen_img);
 		back.setOnClickListener(this);
 		delect = (ImageView) super
 				.findViewById(R.id.deldect_mine_photoview_fullscreen_img);
 		delect.setOnClickListener(this);
-		backLayout=(RelativeLayout) super.findViewById(R.id.back_mine_photoview_fullscreen_rl);
+		backLayout = (RelativeLayout) super
+				.findViewById(R.id.back_mine_photoview_fullscreen_rl);
 		backLayout.setOnClickListener(this);
-		delectLayout=(RelativeLayout) super.findViewById(R.id.deldect_mine_photoview_fullscreen_rl);
+		delectLayout = (RelativeLayout) super
+				.findViewById(R.id.deldect_mine_photoview_fullscreen_rl);
 		delectLayout.setOnClickListener(this);
-//		favor = (ImageView) super.findViewById(R.id.favor_minephoto_mine);
-//		favor.setOnClickListener(this);
-		viewPager=(ViewPager)super.findViewById(R.id.viewpager_photo);
+		// favor = (ImageView) super.findViewById(R.id.favor_minephoto_mine);
+		// favor.setOnClickListener(this);
+		viewPager = (ViewPager) super.findViewById(R.id.viewpager_photo);
 		load();
-		adapter=new MinePhotoAdapter(this, objUserPhotos,userId);
+		adapter = new MinePhotoAdapter(this, objUserPhotos, userId);
 		viewPager.setAdapter(adapter);
 		viewPager.setOnPageChangeListener(this);
 		viewPager.setCurrentItem(id);
-		
-		if(isMyself==false){
+
+		if (isMyself == false) {
 			delectLayout.setVisibility(View.GONE);
-		}else{
+		} else {
 			delectLayout.setVisibility(View.VISIBLE);
 		}
 
@@ -101,42 +105,44 @@ public class MinephotoActivity extends Activity implements OnClickListener ,OnPa
 
 	private void load() {
 
-		
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-			case R.id.back_mine_photoview_fullscreen_rl :
-				finish();
+		case R.id.back_mine_photoview_fullscreen_rl:
+			finish();
 
-				break;
-			case R.id.deldect_mine_photoview_fullscreen_rl :
+			break;
+		case R.id.deldect_mine_photoview_fullscreen_rl:
 
-				Toast.makeText(this, "进行删除操作", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "进行删除操作", Toast.LENGTH_SHORT).show();
 
-				break;
+			break;
 
-			default :
-				break;
+		default:
+			break;
 		}
 
 	}
+
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
+
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
 		// TODO Auto-generated method stub
-		
+
 	}
+
 	@Override
 	public void onPageSelected(int arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

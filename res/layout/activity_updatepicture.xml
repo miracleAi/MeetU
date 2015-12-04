@@ -116,7 +116,7 @@
         android:layout_height="match_parent"      
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-         android:src="@drawable/avty_cover_card4_img"             
+                   
         />
      </RelativeLayout>
 

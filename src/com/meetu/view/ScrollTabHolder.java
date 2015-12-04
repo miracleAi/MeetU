@@ -9,9 +9,10 @@ import android.widget.ScrollView;
  */
 public interface ScrollTabHolder {
 
-    void adjustScroll(int scrollHeight, int headerHeight);
-    void onScrollViewScroll(ScrollView view, int x, int y,
-            int oldX, int oldY, int pagePosition);
+	void adjustScroll(int scrollHeight, int headerHeight);
 
-    void onRecyclerViewScroll(RecyclerView view, int scrollY, int pagePosition);
+	void onScrollViewScroll(ScrollView view, int x, int y, int oldX, int oldY,
+			int pagePosition);
+
+	void onRecyclerViewScroll(RecyclerView view, int scrollY, int pagePosition);
 }

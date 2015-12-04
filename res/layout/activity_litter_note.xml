@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#80cccccc" >
+    android:background="@drawable/message_box_backgroud" >
 
     <RelativeLayout
         android:id="@+id/top_litter_notes_rl"
@@ -70,6 +70,6 @@
         android:layout_below="@id/view_litter_notes"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:background="@color/white" />
+        android:background="@drawable/message_box_backgroud" />
 
 </RelativeLayout>

@@ -3,7 +3,7 @@ package com.meetu.common.city;
 public class DistrictModel {
 	private String name;
 	private String zipcode;
-	
+
 	public DistrictModel() {
 		super();
 	}

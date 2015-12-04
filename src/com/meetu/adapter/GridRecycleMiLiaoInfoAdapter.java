@@ -29,18 +29,20 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class GridRecycleMiLiaoInfoAdapter extends RecyclerView.Adapter<GridRecycleMiLiaoInfoAdapter.MyViewHolder>{
+public class GridRecycleMiLiaoInfoAdapter extends
+		RecyclerView.Adapter<GridRecycleMiLiaoInfoAdapter.MyViewHolder> {
 
 	private List<UserAbout> list;
 	private LayoutInflater mInflater;
 	private Context mContext;
-	//网络数据处理
+	// 网络数据处理
 	private FinalBitmap finalBitmap;
-	
+
 	/**
 	 * 单击 和长按接口
+	 * 
 	 * @author Administrator
-	 *
+	 * 
 	 */
 	public interface OnMiLiaoInfoItemClickCallBack {
 		void onItemClick(int id);
@@ -50,43 +52,44 @@ public class GridRecycleMiLiaoInfoAdapter extends RecyclerView.Adapter<GridRecyc
 
 	private OnMiLiaoInfoItemClickCallBack mOnItemClickLitener;
 
-	
-	public void setOnItemClickLitenerBack(OnMiLiaoInfoItemClickCallBack mOnItemClickLitener) {
+	public void setOnItemClickLitenerBack(
+			OnMiLiaoInfoItemClickCallBack mOnItemClickLitener) {
 		this.mOnItemClickLitener = mOnItemClickLitener;
 	}
-	
-	
-public GridRecycleMiLiaoInfoAdapter(Context context, List<UserAbout> list) {
-		
+
+	public GridRecycleMiLiaoInfoAdapter(Context context, List<UserAbout> list) {
+
 		mInflater = LayoutInflater.from(context);
 		this.list = list;
-		this.mContext=context;
-		MyApplication app=(MyApplication) context.getApplicationContext();
-		finalBitmap=app.getFinalBitmap();
+		this.mContext = context;
+		MyApplication app = (MyApplication) context.getApplicationContext();
+		finalBitmap = app.getFinalBitmap();
 	}
 
 	@Override
-	public void onBindViewHolder(MyViewHolder holder,final int position) {
-		if (list!=null && list.size()>0){
-			
+	public void onBindViewHolder(MyViewHolder holder, final int position) {
+		if (list != null && list.size() > 0) {
+
 			UserAbout item = list.get(position);
 			holder.tvName.setText(item.getUserName());
-	//		holder.ivImg.setImageResource(item.getHeadPhoto());
-			if(position==list.size()-1&&item.getUserHeadPhotoUrl()==null){
+			// holder.ivImg.setImageResource(item.getHeadPhoto());
+			if (position == list.size() - 1
+					&& item.getUserHeadPhotoUrl() == null) {
 				holder.ivImg.setImageResource(item.getDeleteImg());
-			}else{
-				if(item.getUserHeadPhotoUrl()!=null||item.getUserHeadPhotoUrl()!=""){
-					finalBitmap.display(holder.ivImg, item.getUserHeadPhotoUrl());
+			} else {
+				if (item.getUserHeadPhotoUrl() != null
+						|| item.getUserHeadPhotoUrl() != "") {
+					finalBitmap.display(holder.ivImg,
+							item.getUserHeadPhotoUrl());
 				}
 			}
-			
 
-			if(item.getIsDetele()==false){
+			if (item.getIsDetele() == false) {
 				holder.ivDetele.setVisibility(View.INVISIBLE);
-			}else{
+			} else {
 				holder.ivDetele.setVisibility(View.VISIBLE);
 			}
-			
+
 			if (mOnItemClickLitener != null) {
 				holder.rlAll.setOnClickListener(new OnClickListener() {
 					@Override
@@ -94,18 +97,18 @@ public GridRecycleMiLiaoInfoAdapter(Context context, List<UserAbout> list) {
 						mOnItemClickLitener.onItemClick(position);
 					}
 				});
-				
+
 				holder.rlAll.setOnLongClickListener(new OnLongClickListener() {
 					@Override
 					public boolean onLongClick(View v) {
-	
+
 						return false;
 					}
 				});
 			}
-			
+
 		}
-		
+
 	}
 
 	@Override
@@ -118,10 +121,10 @@ public GridRecycleMiLiaoInfoAdapter(Context context, List<UserAbout> list) {
 	public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		MyViewHolder holder = new MyViewHolder(mInflater.inflate(
 				R.layout.item_miliao_info, parent, false));
-		
+
 		return holder;
 	}
-	
+
 	class MyViewHolder extends ViewHolder {
 		private RelativeLayout rlAll;
 		private ImageView ivImg;
@@ -130,17 +133,21 @@ public GridRecycleMiLiaoInfoAdapter(Context context, List<UserAbout> list) {
 		private TextView tvName;
 
 		int id;
+
 		public MyViewHolder(View view) {
 			super(view);
-			ivImg = (ImageView) view.findViewById(R.id.photo_item_miliao_info_img);
-			tvName=(TextView) view.findViewById(R.id.name_item_miliao_info_tv);
-			rlAll=(RelativeLayout) view.findViewById(R.id.all_item_miliao_info_rl);
-			ivDetele=(ImageView) view.findViewById(R.id.delete_item_miliao_info_img);
-			ivFavor=(ImageView) view.findViewById(R.id.favor_item_miliao_info_img);
-			}
+			ivImg = (ImageView) view
+					.findViewById(R.id.photo_item_miliao_info_img);
+			tvName = (TextView) view
+					.findViewById(R.id.name_item_miliao_info_tv);
+			rlAll = (RelativeLayout) view
+					.findViewById(R.id.all_item_miliao_info_rl);
+			ivDetele = (ImageView) view
+					.findViewById(R.id.delete_item_miliao_info_img);
+			ivFavor = (ImageView) view
+					.findViewById(R.id.favor_item_miliao_info_img);
+		}
 
-		
 	}
-	
 
 }

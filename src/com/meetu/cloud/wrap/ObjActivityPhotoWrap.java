@@ -19,39 +19,46 @@ import com.meetu.cloud.object.ObjUser;
 public class ObjActivityPhotoWrap {
 	/**
 	 * 获取活动图片
+	 * 
 	 * @param activity
 	 * @param callback
 	 */
-	public static void queryActivityPhotos(ObjActivity activity,final ObjActivityPhotoCallback callback){
-		AVQuery<ObjActivityPhoto> query = AVObject.getQuery(ObjActivityPhoto.class);
+	public static void queryActivityPhotos(ObjActivity activity,
+			final ObjActivityPhotoCallback callback) {
+		AVQuery<ObjActivityPhoto> query = AVObject
+				.getQuery(ObjActivityPhoto.class);
 		query.whereEqualTo("activity", activity);
 		query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
-		//TimeUnit.DAYS.toMillis(1)
-		query.setMaxCacheAge(10*60*1000);
+		// TimeUnit.DAYS.toMillis(1)
+		query.setMaxCacheAge(10 * 60 * 1000);
 		query.findInBackground(new FindCallback<ObjActivityPhoto>() {
-			
+
 			@Override
 			public void done(List<ObjActivityPhoto> objects, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					callback.callback(null, e);
-					return ;
+					return;
 				}
-				if(objects != null){
+				if (objects != null) {
 					ObjActivityPhoto photo = objects.get(0);
 					callback.callback(objects, e);
 				}
 			}
 		});
 	}
+
 	/**
 	 * 查询是否对活动照片点赞
+	 * 
 	 * @param photo
 	 * @param user
 	 * @param callback
 	 */
-	public static void queryPhotoPraise(ObjActivityPhoto photo,ObjUser user,final ObjFunBooleanCallback callback){
-		AVQuery<AVObject> query = new AVQuery<AVObject>(ObjTableName.getPhotoPraiseTb());
+	public static void queryPhotoPraise(ObjActivityPhoto photo, ObjUser user,
+			final ObjFunBooleanCallback callback) {
+		AVQuery<AVObject> query = new AVQuery<AVObject>(
+				ObjTableName.getPhotoPraiseTb());
 		query.whereEqualTo("activityPhoto", photo);
 		query.whereEqualTo("user", user);
 		query.findInBackground(new FindCallback<AVObject>() {
@@ -59,65 +66,72 @@ public class ObjActivityPhotoWrap {
 			@Override
 			public void done(List<AVObject> object, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					callback.callback(false, e);
-					return ;
+					return;
 				}
-				if(object != null && object.size()>0){
+				if (object != null && object.size() > 0) {
 					callback.callback(true, null);
-				}else{
+				} else {
 					callback.callback(false, null);
 				}
 			}
 		});
 	}
+
 	/**
 	 * 对活动照片点赞
+	 * 
 	 * @param photo
 	 * @param user
 	 * @param callback
 	 */
-	public static void praiseActivityPhoto(ObjActivityPhoto photo,ObjUser user,final ObjFunBooleanCallback callback){
+	public static void praiseActivityPhoto(ObjActivityPhoto photo,
+			ObjUser user, final ObjFunBooleanCallback callback) {
 		ObjActivityPhotoPraise praise = new ObjActivityPhotoPraise();
 		praise.setActivityPhoto(photo);
 		praise.setUser(user);
 		praise.saveInBackground(new SaveCallback() {
-			
+
 			@Override
 			public void done(AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					callback.callback(false, e);
-					return ;
-				}else{
+					return;
+				} else {
 					callback.callback(true, null);
 				}
 			}
 		});
 	}
+
 	/**
 	 * 取消对活动照片点赞
+	 * 
 	 * @param user
 	 * @param activity
 	 * @param callback
 	 */
-	public static void cancelPraiseActivityPhoto(ObjUser user,ObjActivityPhoto photo,final ObjFunBooleanCallback callback){
-		AVQuery<AVObject> query = new AVQuery<AVObject>(ObjTableName.getPhotoPraiseTb());
+	public static void cancelPraiseActivityPhoto(ObjUser user,
+			ObjActivityPhoto photo, final ObjFunBooleanCallback callback) {
+		AVQuery<AVObject> query = new AVQuery<AVObject>(
+				ObjTableName.getPhotoPraiseTb());
 		query.whereEqualTo("user", user);
-		query.whereEqualTo("activityPhoto", photo); 
+		query.whereEqualTo("activityPhoto", photo);
 		query.deleteAllInBackground(new DeleteCallback() {
-			
+
 			@Override
 			public void done(AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					callback.callback(false, e);
-					return ;
-				}else{
+					return;
+				} else {
 					callback.callback(true, null);
 				}
 			}
 		});
-		
+
 	}
 }

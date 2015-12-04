@@ -55,21 +55,18 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-
-public class CreationChatActivity extends Activity implements OnClickListener{
-	private ImageView photoUpdate,uploadAgain,photo;
-	private int windowHight,windowWidth;
+public class CreationChatActivity extends Activity implements OnClickListener {
+	private ImageView photoUpdate, uploadAgain, photo;
+	private int windowHight, windowWidth;
 	private EditText updateText;
-	private TextView textsize;//输入的文字数量
-	private RelativeLayout photoUpdateLayout,photoLayout;
-	private int PhotoWidth,PhotoHight;
-	private RelativeLayout upLayout,backLayout;
-	//网络数据相关
-	private String photoPath="";
+	private TextView textsize;// 输入的文字数量
+	private RelativeLayout photoUpdateLayout, photoLayout;
+	private int PhotoWidth, PhotoHight;
+	private RelativeLayout upLayout, backLayout;
+	// 网络数据相关
+	private String photoPath = "";
 	ObjUser user = new ObjUser();
 	AVUser currentUser = ObjUser.getCurrentUser();
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,78 +74,90 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.getWindow();
 		setContentView(R.layout.activity_creation_chat);
-		if(currentUser!=null){
+		if (currentUser != null) {
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
 		initView();
 	}
 
 	private void initView() {
-		photoUpdateLayout=(RelativeLayout) super.findViewById(R.id.photoUpdate_creationChat_rl);
-		//设置上传主题图片在屏幕的1/3高度处
-		RelativeLayout.LayoutParams ll=(LayoutParams) photoUpdateLayout.getLayoutParams();
-		windowHight=DisplayUtils.getWindowHeight(this);
-		//状态栏加标题栏在本屏幕的高度
-		int topHight=DensityUtil.dip2px(this, 64);
-		//图片的半径
-		int imageViewRange=DensityUtil.dip2px(this, 45);
-		ll.topMargin=windowHight/3-topHight-imageViewRange;
+		photoUpdateLayout = (RelativeLayout) super
+				.findViewById(R.id.photoUpdate_creationChat_rl);
+		// 设置上传主题图片在屏幕的1/3高度处
+		RelativeLayout.LayoutParams ll = (LayoutParams) photoUpdateLayout
+				.getLayoutParams();
+		windowHight = DisplayUtils.getWindowHeight(this);
+		// 状态栏加标题栏在本屏幕的高度
+		int topHight = DensityUtil.dip2px(this, 64);
+		// 图片的半径
+		int imageViewRange = DensityUtil.dip2px(this, 45);
+		ll.topMargin = windowHight / 3 - topHight - imageViewRange;
 		photoUpdateLayout.setLayoutParams(ll);
-		
-		//动态设置选择照片后布局的高度
-		photoLayout=(RelativeLayout) super.findViewById(R.id.photo_creationChat_rl);
-		RelativeLayout.LayoutParams params=(LayoutParams) photoLayout.getLayoutParams();
-		//屏幕宽度
-		windowWidth=DisplayUtils.getWindowWidth(this);
-		PhotoWidth=windowWidth-DensityUtil.dip2px(this, 50+50);
-		PhotoHight=(int) (PhotoWidth/(275.00/258.00));
-		params.height=PhotoHight;
-		
+
+		// 动态设置选择照片后布局的高度
+		photoLayout = (RelativeLayout) super
+				.findViewById(R.id.photo_creationChat_rl);
+		RelativeLayout.LayoutParams params = (LayoutParams) photoLayout
+				.getLayoutParams();
+		// 屏幕宽度
+		windowWidth = DisplayUtils.getWindowWidth(this);
+		PhotoWidth = windowWidth - DensityUtil.dip2px(this, 50 + 50);
+		PhotoHight = (int) (PhotoWidth / (275.00 / 258.00));
+		params.height = PhotoHight;
+
 		photoLayout.setLayoutParams(params);
-		log.e("lucifer","photoLayoutWidth="+PhotoWidth+"params.height="+params.height);
-		
-		photoUpdate=(ImageView) super.findViewById(R.id.photoUpdate_creationChat_img);
-		
+		log.e("lucifer", "photoLayoutWidth=" + PhotoWidth + "params.height="
+				+ params.height);
+
+		photoUpdate = (ImageView) super
+				.findViewById(R.id.photoUpdate_creationChat_img);
+
 		photoUpdateLayout.setOnClickListener(this);
-		
-		photo=(ImageView) super.findViewById(R.id.photo_creationChat_img);
-		
-		uploadAgain=(ImageView) super.findViewById(R.id.uploadAgain_creationChat_img);
+
+		photo = (ImageView) super.findViewById(R.id.photo_creationChat_img);
+
+		uploadAgain = (ImageView) super
+				.findViewById(R.id.uploadAgain_creationChat_img);
 		uploadAgain.setOnClickListener(this);
-		
-		updateText=(EditText) super.findViewById(R.id.CreationChat_text_mine);
+
+		updateText = (EditText) super.findViewById(R.id.CreationChat_text_mine);
 		updateText.addTextChangedListener(watcher);
-		textsize=(TextView) super.findViewById(R.id.textsize_CreationChat_tv);
-		
+		textsize = (TextView) super.findViewById(R.id.textsize_CreationChat_tv);
+
 		// wancheng
-		upLayout=(RelativeLayout) super.findViewById(R.id.wancheng_creationChat_rl);
+		upLayout = (RelativeLayout) super
+				.findViewById(R.id.wancheng_creationChat_rl);
 		upLayout.setOnClickListener(this);
-		backLayout=(RelativeLayout) super.findViewById(R.id.back_creationChat_rl);
+		backLayout = (RelativeLayout) super
+				.findViewById(R.id.back_creationChat_rl);
 		backLayout.setOnClickListener(this);
 	}
+
 	/**
 	 * 监听editview 中输入的字符的数量 动态改变数量
 	 */
 	private TextWatcher watcher = new TextWatcher() {
-	    
-	    @Override
-	    public void onTextChanged(CharSequence s, int start, int before, int count) {
-	              
-	    }
-	    
-	    @Override
-	    public void beforeTextChanged(CharSequence s, int start, int count,
-	            int after) {
-	    
-	    }
-	    
-	    @Override
-	    public void afterTextChanged(Editable s) {
-	    	
-	       textsize.setText(""+updateText.getText().length());
-	       
-	    }
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
+
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+
+			textsize.setText("" + updateText.getText().length());
+
+		}
 	};
+
 	/**
 	 * 点击事件 处理
 	 */
@@ -158,119 +167,124 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.photoUpdate_creationChat_rl:
-			
+
 			showDialog();
-			
-			
-			
+
 			break;
 		case R.id.uploadAgain_creationChat_img:
-		//	Toast.makeText(this, "重新上传", Toast.LENGTH_SHORT).show();
+			// Toast.makeText(this, "重新上传", Toast.LENGTH_SHORT).show();
 			showDialog();
 			break;
 		case R.id.wancheng_creationChat_rl:
-			if(updateText.getText().length()==0){
-				Toast.makeText(getApplicationContext(), "请输入觅聊标题", Toast.LENGTH_SHORT).show();
-			}else{
-				//开始创建操作
-				if(photoPath.equals("")){
-					Toast.makeText(getApplicationContext(), "请选择照片", Toast.LENGTH_SHORT).show();
-				}else{
+			if (updateText.getText().length() == 0) {
+				Toast.makeText(getApplicationContext(), "请输入觅聊标题",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				// 开始创建操作
+				if (photoPath.equals("")) {
+					Toast.makeText(getApplicationContext(), "请选择照片",
+							Toast.LENGTH_SHORT).show();
+				} else {
 					createGroup();
 				}
-				
+
 			}
 			break;
 		case R.id.back_creationChat_rl:
-			Intent intent=getIntent();
-			setResult(RESULT_CANCELED,intent);
+			Intent intent = getIntent();
+			setResult(RESULT_CANCELED, intent);
 			finish();
 			break;
 
 		default:
 			break;
 		}
-		
+
 	}
 
 	private void showDialog() {
-		final  AlertDialog portraidlg=new AlertDialog.Builder(this).create();
+		final AlertDialog portraidlg = new AlertDialog.Builder(this).create();
 		portraidlg.show();
-		Window win=portraidlg.getWindow();
+		Window win = portraidlg.getWindow();
 		win.setContentView(R.layout.dialog_show_photo);
-		RadioButton portrait_native=(RadioButton)win.findViewById(R.id.Portrait_native);
+		RadioButton portrait_native = (RadioButton) win
+				.findViewById(R.id.Portrait_native);
 		portrait_native.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
-				
-				Intent intent1=new Intent(Intent.ACTION_PICK,null);
-				intent1.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+
+				Intent intent1 = new Intent(Intent.ACTION_PICK, null);
+				intent1.setDataAndType(
+						MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
 				startActivityForResult(intent1, 11);
 				portraidlg.dismiss();
 			}
 		});
-		RadioButton portrait_take=(RadioButton)win.findViewById(R.id.Portrait_take);
+		RadioButton portrait_take = (RadioButton) win
+				.findViewById(R.id.Portrait_take);
 		portrait_take.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
-				
-				//调用摄像头
-				Intent intent2=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
-						"/photo.png")));
+
+				// 调用摄像头
+				Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
+						.fromFile(new File(Environment
+								.getExternalStorageDirectory(), "/photo.png")));
 				startActivityForResult(intent2, 22);
 				portraidlg.dismiss();
 			}
 		});
-		View viewTop=win.findViewById(R.id.view_top_dialog_sethead);
-		View viewBottom=win.findViewById(R.id.view_bottom_dialog_sethead);
-		//点击dialog外部，关闭dialog
-				viewTop.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View arg0) {
-						
-						portraidlg.dismiss();
-					}
-				});
-				viewBottom.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View arg0) {
-						
-						portraidlg.dismiss();
-					}
-				});
-		
+		View viewTop = win.findViewById(R.id.view_top_dialog_sethead);
+		View viewBottom = win.findViewById(R.id.view_bottom_dialog_sethead);
+		// 点击dialog外部，关闭dialog
+		viewTop.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+
+				portraidlg.dismiss();
+			}
+		});
+		viewBottom.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+
+				portraidlg.dismiss();
+			}
+		});
+
 	}
-	
+
 	private Bitmap headerPortait;
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
+
 		switch (requestCode) {
 		case 11:
-			if(resultCode==this.RESULT_OK){
-				cropPhoto(data.getData());//裁剪图片
+			if (resultCode == this.RESULT_OK) {
+				cropPhoto(data.getData());// 裁剪图片
 			}
-			break ;
+			break;
 		case 22:
-			if(resultCode==this.RESULT_OK){
-				File temp=new File(Environment.getExternalStorageDirectory()
+			if (resultCode == this.RESULT_OK) {
+				File temp = new File(Environment.getExternalStorageDirectory()
 						+ "/photo.png");
-				cropPhoto(Uri.fromFile(temp));//裁剪图片
-				
+				cropPhoto(Uri.fromFile(temp));// 裁剪图片
+
 			}
-			
+
 			break;
 		case 33:
 			log.e("图片处理", "aaa");
-			if(data!=null){
-				Bundle extras=data.getExtras();
-				headerPortait=extras.getParcelable("data");
+			if (data != null) {
+				Bundle extras = data.getExtras();
+				headerPortait = extras.getParcelable("data");
 				log.e("headerPortait", headerPortait.toString());
-				if(headerPortait!=null){
-					photoPath=saveHeadImg(headerPortait);
+				if (headerPortait != null) {
+					photoPath = saveHeadImg(headerPortait);
 					photo.setImageBitmap(headerPortait);
 					photoUpdateLayout.setVisibility(View.GONE);
 					photoUpdateLayout.setFocusable(false);
@@ -285,160 +299,168 @@ public class CreationChatActivity extends Activity implements OnClickListener{
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
+
 	/**
 	 * 把要上传的图片存到本地sd卡上
+	 * 
 	 * @param photo
 	 */
-	public String saveHeadImg(Bitmap photo){
-		FileOutputStream fos=null;
+	public String saveHeadImg(Bitmap photo) {
+		FileOutputStream fos = null;
 		String path = "";
-		path = Environment.getExternalStorageDirectory()+"/photo.png";
+		path = Environment.getExternalStorageDirectory() + "/photo.png";
 		try {
-			fos=new FileOutputStream(new File(Environment.getExternalStorageDirectory()+"/photo.png"));
+			fos = new FileOutputStream(new File(
+					Environment.getExternalStorageDirectory() + "/photo.png"));
 			photo.compress(CompressFormat.PNG, 100, fos);
-			
+
 		} catch (FileNotFoundException e) {
-			
+
 			e.printStackTrace();
-		}finally{
-			
-				try {
-					if(fos!=null)fos.close();
-				} catch (IOException e) {
-					
-					e.printStackTrace();
-				}
+		} finally {
+
+			try {
+				if (fos != null)
+					fos.close();
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
 		}
 		return path;
-		
+
 	}
-	
-	public Bitmap readHead(){
-		String file=Environment.getExternalStorageDirectory()+"/photo.png";
+
+	public Bitmap readHead() {
+		String file = Environment.getExternalStorageDirectory() + "/photo.png";
 		return BitmapFactory.decodeFile(file);
 	}
-	
+
 	/**
-     * 调用拍照的裁剪功能
-     * @param uri
-     */
-	
-	public void cropPhoto(Uri uri){
-//		//调用拍照的裁剪功能
-//		Intent intent=new Intent("com.android.camera.action.CROP");
-//		intent.setDataAndType(uri, "image/*");
-//		intent.putExtra("crop", "true");
-//		 //裁剪框的比例，1：1
-//		intent.putExtra("aspectX", 1);
-//		intent.putExtra("aspectY", 1);
-//		// // outputX outputY 是裁剪后图片宽高
-//		intent.putExtra("outputX", 550);
-//		intent.putExtra("outputY", 516);
-//		intent.putExtra("return-data",true);
-////		log.e("lucifer", "PhotoWidth="+PhotoWidth+"  PhotoHight"+PhotoHight);
-//		startActivityForResult(intent,33);
-		
-		//调用拍照的裁剪功能
-		Intent intent=new Intent("com.android.camera.action.CROP");
+	 * 调用拍照的裁剪功能
+	 * 
+	 * @param uri
+	 */
+
+	public void cropPhoto(Uri uri) {
+		// //调用拍照的裁剪功能
+		// Intent intent=new Intent("com.android.camera.action.CROP");
+		// intent.setDataAndType(uri, "image/*");
+		// intent.putExtra("crop", "true");
+		// //裁剪框的比例，1：1
+		// intent.putExtra("aspectX", 1);
+		// intent.putExtra("aspectY", 1);
+		// // // outputX outputY 是裁剪后图片宽高
+		// intent.putExtra("outputX", 550);
+		// intent.putExtra("outputY", 516);
+		// intent.putExtra("return-data",true);
+		// // log.e("lucifer",
+		// "PhotoWidth="+PhotoWidth+"  PhotoHight"+PhotoHight);
+		// startActivityForResult(intent,33);
+
+		// 调用拍照的裁剪功能
+		Intent intent = new Intent("com.android.camera.action.CROP");
 		intent.setDataAndType(uri, "image/*");
 		intent.putExtra("crop", "true");
-		//aspectX aspectY 是宽和搞的比例
+		// aspectX aspectY 是宽和搞的比例
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
 		// // outputX outputY 是裁剪图片宽高
 		intent.putExtra("outputX", 275);
 		intent.putExtra("outputY", 258);
-		intent.putExtra("return-data",true);
-		startActivityForResult(intent,33);
+		intent.putExtra("return-data", true);
+		startActivityForResult(intent, 33);
 	}
-	
-	//创建群
+
+	// 创建群
 	AVFile groupf = null;
-		public void createGroup(){
-			try {
-				groupf = AVFile.withAbsoluteLocalPath("chat"+user.getObjectId()+Constants.IMG_TYPE, photoPath);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+	public void createGroup() {
+		try {
+			groupf = AVFile.withAbsoluteLocalPath("chat" + user.getObjectId()
+					+ Constants.IMG_TYPE, photoPath);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// 上传图片
+		ObjUserPhotoWrap.savePhoto(groupf, new ObjFunBooleanCallback() {
+
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					// clickBtn.setText(LOADFAIL);
+					log.e("zcq", e);
+					return;
+				} else if (!result) {
+					// clickBtn.setText(LOADFAIL);
+					log.e("zcq", "照片上传失败");
+					return;
+
+				} else if (MyApplication.isChatLogin) {
+
+					// 建立长连接
+					log.e("zcq", "已经建立过长连接");
+					saveGroupInfo();
+				} else {
+
+					ObjChatMessage.connectToChatServer(
+							MyApplication.chatClient,
+							new ObjAvimclientCallback() {
+
+								@Override
+								public void callback(AVIMClient client,
+										AVException e) {
+									if (e != null) {
+										log.e("zcq", e);
+										return;
+									}
+									if (client != null) {
+										MyApplication.chatClient = client;
+										log.e("zcq", "连接聊天长连接成功");
+										saveGroupInfo();
+									} else {
+										log.e("zcq", "连接聊天长连接失败");
+									}
+								}
+							});
+				}
 			}
-			//上传图片
-			ObjUserPhotoWrap.savePhoto(groupf, new ObjFunBooleanCallback() {
+		});
+	}
 
-				@Override
-				public void callback(boolean result, AVException e) {
-					// TODO Auto-generated method stub
-					if(e != null){
-					//	clickBtn.setText(LOADFAIL);
-						log.e("zcq", e);
-						return ;
+	// 保存群信息
+	public void saveGroupInfo() {
+		ObjChatWrap.saveGroupInfo(user, groupf,
+				updateText.getText().toString(), new ObjChatBeanCallback() {
+
+					@Override
+					public void callback(ObjChat object, AVException e) {
+						// TODO Auto-generated method stub
+						if (e != null) {
+							// clickBtn.setText(LOADFAIL);
+							return;
+						} else {
+							Intent intent = getIntent();
+							setResult(RESULT_OK, intent);
+							finish();
+						}
+
 					}
-					else if(!result){
-					//	clickBtn.setText(LOADFAIL);
-						log.e("zcq", "照片上传失败");
-						return;
+				});
+	}
 
-					}else if(MyApplication.isChatLogin){
-					
-						//建立长连接
-						log.e("zcq","已经建立过长连接");
-						saveGroupInfo();
-					}else{
-						
-						ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
-
-							@Override
-							public void callback(AVIMClient client, AVException e) {							
-								if(e != null){
-									log.e("zcq", e);
-									return ;
-								}
-								if(client != null){
-									MyApplication.chatClient = client;
-									log.e("zcq", "连接聊天长连接成功");
-									saveGroupInfo();
-								}else{
-									log.e("zcq", "连接聊天长连接失败");
-								}
-							}
-						});
-					}
-				}
-			});
-		}
-		
-		//保存群信息
-		public void saveGroupInfo(){
-			ObjChatWrap.saveGroupInfo(user, groupf, updateText.getText().toString(), new ObjChatBeanCallback() {
-
-				@Override
-				public void callback(ObjChat object, AVException e) {
-					// TODO Auto-generated method stub
-					if(e != null){
-						//clickBtn.setText(LOADFAIL);
-						return ;
-					}else{
-						Intent intent=getIntent();
-						setResult(RESULT_OK, intent);
-						finish();
-					}
-					
-				}
-			});
-		}
-
-		@Override
-		public void onBackPressed() {
-			// TODO Auto-generated method stub
-			Intent intent=getIntent();
-			setResult(RESULT_OK,intent);
-			finish();
-			super.onBackPressed();
-		}
-		
-	
-	
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		Intent intent = getIntent();
+		setResult(RESULT_OK, intent);
+		finish();
+		super.onBackPressed();
+	}
 
 }

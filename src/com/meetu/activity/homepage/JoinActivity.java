@@ -278,36 +278,36 @@ public class JoinActivity extends Activity implements OnClickListener,
 	private void joinActivity() {
 
 		checkISjoinActivity();
-//		if (isJoin==true) {
-//			
-//		} else {
-//
-//			if (nameEditText.getText().length() != 0) {
-//				ObjActivityOrderWrap.signUpActivity(objActivity, user, tickets
-//						.get(selectedPosition),
-//						Constants.OrderStatusPaySuccess, nameEditText.getText()
-//								.toString(), new ObjFunBooleanCallback() {
-//
-//							@Override
-//							public void callback(boolean result, AVException e) {
-//								// TODO Auto-generated method stub
-//								if (e != null || result == false) {
-//									Toast.makeText(getApplicationContext(),
-//											"报名失败，请检查网络", Toast.LENGTH_SHORT)
-//											.show();
-//								} else {
-//									Toast.makeText(getApplicationContext(),
-//											"报名成功", Toast.LENGTH_SHORT).show();
-//									isJoin=true;
-//								}
-//							}
-//						});
-//
-//			} else {
-//				Toast.makeText(getApplicationContext(), "请填写你的真实姓名",
-//						Toast.LENGTH_SHORT).show();
-//			}
-//		}
+		// if (isJoin==true) {
+		//
+		// } else {
+		//
+		// if (nameEditText.getText().length() != 0) {
+		// ObjActivityOrderWrap.signUpActivity(objActivity, user, tickets
+		// .get(selectedPosition),
+		// Constants.OrderStatusPaySuccess, nameEditText.getText()
+		// .toString(), new ObjFunBooleanCallback() {
+		//
+		// @Override
+		// public void callback(boolean result, AVException e) {
+		// // TODO Auto-generated method stub
+		// if (e != null || result == false) {
+		// Toast.makeText(getApplicationContext(),
+		// "报名失败，请检查网络", Toast.LENGTH_SHORT)
+		// .show();
+		// } else {
+		// Toast.makeText(getApplicationContext(),
+		// "报名成功", Toast.LENGTH_SHORT).show();
+		// isJoin=true;
+		// }
+		// }
+		// });
+		//
+		// } else {
+		// Toast.makeText(getApplicationContext(), "请填写你的真实姓名",
+		// Toast.LENGTH_SHORT).show();
+		// }
+		// }
 	}
 
 	/**
@@ -330,39 +330,50 @@ public class JoinActivity extends Activity implements OnClickListener,
 						}
 						if (e != null) {
 							return;
-						}else if (result) {
+						} else if (result) {
 
 							isJoin = true;
-							Toast.makeText(getApplicationContext(), "您已经报名过此活动",
-									Toast.LENGTH_SHORT).show();
-							
+							Toast.makeText(getApplicationContext(),
+									"您已经报名过此活动", Toast.LENGTH_SHORT).show();
+
 						} else {
 
 							isJoin = false;
 							if (nameEditText.getText().length() != 0) {
-								ObjActivityOrderWrap.signUpActivity(objActivity, user, tickets
-										.get(selectedPosition),
-										Constants.OrderStatusPaySuccess, nameEditText.getText()
-												.toString(), new ObjFunBooleanCallback() {
+								ObjActivityOrderWrap.signUpActivity(
+										objActivity, user,
+										tickets.get(selectedPosition),
+										Constants.OrderStatusPaySuccess,
+										nameEditText.getText().toString(),
+										new ObjFunBooleanCallback() {
 
 											@Override
-											public void callback(boolean result, AVException e) {
-												// TODO Auto-generated method stub
-												if (e != null || result == false) {
-													Toast.makeText(getApplicationContext(),
-															"报名失败，请检查网络", Toast.LENGTH_SHORT)
+											public void callback(
+													boolean result,
+													AVException e) {
+												// TODO Auto-generated method
+												// stub
+												if (e != null
+														|| result == false) {
+													Toast.makeText(
+															getApplicationContext(),
+															"报名失败，请检查网络",
+															Toast.LENGTH_SHORT)
 															.show();
 												} else {
-													Toast.makeText(getApplicationContext(),
-															"报名成功", Toast.LENGTH_SHORT).show();
-													isJoin=true;
+													Toast.makeText(
+															getApplicationContext(),
+															"报名成功",
+															Toast.LENGTH_SHORT)
+															.show();
+													isJoin = true;
 												}
 											}
 										});
 
 							} else {
-								Toast.makeText(getApplicationContext(), "请填写你的真实姓名",
-										Toast.LENGTH_SHORT).show();
+								Toast.makeText(getApplicationContext(),
+										"请填写你的真实姓名", Toast.LENGTH_SHORT).show();
 							}
 						}
 					}

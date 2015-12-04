@@ -67,7 +67,7 @@ public class MinePhotoAdapter extends PagerAdapter {
 			// 强制类型转换
 			userMy = AVUser.cast(currentUser, ObjUser.class);
 		}
-		log.e("zcq", "userId=="+userId);
+		log.e("zcq", "userId==" + userId);
 		if (userId != null) {
 			isMyself = false;
 		}
@@ -100,7 +100,6 @@ public class MinePhotoAdapter extends PagerAdapter {
 		View view = LayoutInflater.from(mContext).inflate(
 				R.layout.item_minephoto_viewpager, null);
 
-	
 		TextView desc = (TextView) view
 				.findViewById(R.id.desc_item_minephoto_tv);
 		desc.setText("" + item.getPhotoDescription());
@@ -120,31 +119,32 @@ public class MinePhotoAdapter extends PagerAdapter {
 			finalBitmap.display(img, photoUrl);
 		}
 
-		if(isMyself==false){
-			getUserInfo(userId,view);
-		}else{
-			TextView name=(TextView) view.findViewById(R.id.name_mine_photoview_fullscreen);
-			name.setText(""+userMy.getNameNick());
+		if (isMyself == false) {
+			getUserInfo(userId, view);
+		} else {
+			TextView name = (TextView) view
+					.findViewById(R.id.name_mine_photoview_fullscreen);
+			name.setText("" + userMy.getNameNick());
 			ImageView photoHead = (ImageView) view
 					.findViewById(R.id.nameheader_mine_photoview_fullscreen_img);
 			RelativeLayout favorLayout = (RelativeLayout) view
 					.findViewById(R.id.favor_minephoto_mine_rl);
-			if(userMy.getProfileClip()!=null){
-				finalBitmap.display(photoHead, userMy.getProfileClip().getUrl());
+			if (userMy.getProfileClip() != null) {
+				finalBitmap
+						.display(photoHead, userMy.getProfileClip().getUrl());
 			}
 			favorLayout.setOnClickListener(new View.OnClickListener() {
 
 				@Override
-				public void onClick(View arg0) {				
-						Intent intent = new Intent(mContext, FavorListActivity.class);
-						mContext.startActivity(intent);
-					
-					
+				public void onClick(View arg0) {
+					Intent intent = new Intent(mContext,
+							FavorListActivity.class);
+					mContext.startActivity(intent);
+
 				}
 			});
-			
+
 		}
-		
 
 		container.addView(view);
 		return view;
@@ -166,41 +166,45 @@ public class MinePhotoAdapter extends PagerAdapter {
 					return;
 				} else if (user != null) {
 					userObjUser = user;
-					
-					TextView name=(TextView) view.findViewById(R.id.name_mine_photoview_fullscreen);
-					name.setText(""+userMy.getNameNick());
-					
+
+					TextView name = (TextView) view
+							.findViewById(R.id.name_mine_photoview_fullscreen);
+					name.setText("" + userMy.getNameNick());
+
 					ImageView photoHead = (ImageView) view
 							.findViewById(R.id.nameheader_mine_photoview_fullscreen_img);
-					// bitmapUtils.display(photoHead, user.getProfileClip().getUrl());
-					
-					log.e("zcq", "isMyself=="+isMyself);
-					if(isMyself==true){
-						log.e("zcq", "wode"+""+user.getProfileClip());
-						if(userMy.getProfileClip()!=null){
-							finalBitmap.display(photoHead, userMy.getProfileClip().getUrl());
+					// bitmapUtils.display(photoHead,
+					// user.getProfileClip().getUrl());
+
+					log.e("zcq", "isMyself==" + isMyself);
+					if (isMyself == true) {
+						log.e("zcq", "wode" + "" + user.getProfileClip());
+						if (userMy.getProfileClip() != null) {
+							finalBitmap.display(photoHead, userMy
+									.getProfileClip().getUrl());
 						}
-					}else{
+					} else {
 						log.e("zcq", "nide");
-						if(userObjUser.getProfileClip()!=null){
-							finalBitmap.display(photoHead, userObjUser.getProfileClip().getUrl());
+						if (userObjUser.getProfileClip() != null) {
+							finalBitmap.display(photoHead, userObjUser
+									.getProfileClip().getUrl());
 						}
 					}
-					
+
 					/**
 					 * viewpager 内部事件监听处理
 					 */
-					
+
 					RelativeLayout favorLayout = (RelativeLayout) view
 							.findViewById(R.id.favor_minephoto_mine_rl);
 					favorLayout.setOnClickListener(new View.OnClickListener() {
 
 						@Override
 						public void onClick(View arg0) {
-													
-								//图片点赞  给用户
-								Toast.makeText(mContext, "dianzan", 1000).show();
-				
+
+							// 图片点赞 给用户
+							Toast.makeText(mContext, "dianzan", 1000).show();
+
 						}
 					});
 

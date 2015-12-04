@@ -18,8 +18,6 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-
-
 import com.avos.avoscloud.LogUtil.log;
 import com.baidu.location.e.r;
 import com.meetu.R;
@@ -27,32 +25,33 @@ import com.meetu.cloud.object.ObjActivityTicket;
 import com.meetu.entity.Booking;
 import com.meetu.entity.Huodong;
 
-
 @SuppressLint("NewApi")
-public class BookingListViewAdapter  extends BaseAdapter implements OnClickListener {
+public class BookingListViewAdapter extends BaseAdapter implements
+		OnClickListener {
 
 	private Context mContext;
 	private List<ObjActivityTicket> newsList;
-	
-	private final int TYPE_COUNT=4;
-//	private FinalBitmap fianlBitmap;
-//	
-	private int selectedPosition = -1;
-	
-	public BookingListViewAdapter(Context context,List<ObjActivityTicket> newsList){
-		this.mContext=context;
-		this.newsList=newsList;
 
+	private final int TYPE_COUNT = 4;
+	// private FinalBitmap fianlBitmap;
+	//
+	private int selectedPosition = -1;
+
+	public BookingListViewAdapter(Context context,
+			List<ObjActivityTicket> newsList) {
+		this.mContext = context;
+		this.newsList = newsList;
 
 	}
+
 	/**
 	 * 为选中的item设置背景 控件设置选中
+	 * 
 	 * @param i
 	 */
-	public void setSelectedPosition(int i)
-    {
-        selectedPosition = i;
-    }
+	public void setSelectedPosition(int i) {
+		selectedPosition = i;
+	}
 
 	@Override
 	public int getViewTypeCount() {
@@ -60,29 +59,25 @@ public class BookingListViewAdapter  extends BaseAdapter implements OnClickListe
 		return TYPE_COUNT;
 	}
 
-
-
-	
-
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		Log.d("lucifer","getCount()");
-//		return newsList.size();
+		Log.d("lucifer", "getCount()");
+		// return newsList.size();
 		return newsList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		Log.d("lucifer","getItem()");
+		Log.d("lucifer", "getItem()");
 		return newsList.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
 		// TODO Auto-generated method stub
-		Log.d("lucifer","getItemId()");
+		Log.d("lucifer", "getItemId()");
 		return position;
 	}
 
@@ -90,73 +85,82 @@ public class BookingListViewAdapter  extends BaseAdapter implements OnClickListe
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		ViewHolder holder=null;
-		ObjActivityTicket item=newsList.get(position);
-		if(convertView==null){
-			holder=new ViewHolder();
-//			//��layout.xmlת��ΪView
-//			switch(item.getStyle()){
-//			case 0:
-				convertView=LayoutInflater.from(mContext).inflate(R.layout.item_buypiao, null);
+		ViewHolder holder = null;
+		ObjActivityTicket item = newsList.get(position);
+		if (convertView == null) {
+			holder = new ViewHolder();
+			// //��layout.xmlת��ΪView
+			// switch(item.getStyle()){
+			// case 0:
+			convertView = LayoutInflater.from(mContext).inflate(
+					R.layout.item_buypiao, null);
 
-			holder.tvTilte=(TextView)convertView.findViewById(R.id.name_buyPiao_join_homepager);
-			holder.tvPrice=(TextView) convertView.findViewById(R.id.price_baypiao_join_homepager);
-			holder.tvleftPrice=(TextView) convertView.findViewById(R.id.left_price_baypiao_join_homepager);
-			holder.noTickets=(ImageView) convertView.findViewById(R.id.no_tickets_join);
-			holder.tvDesc=(TextView) convertView.findViewById(R.id.desc_buyPiao_join_homepager);
+			holder.tvTilte = (TextView) convertView
+					.findViewById(R.id.name_buyPiao_join_homepager);
+			holder.tvPrice = (TextView) convertView
+					.findViewById(R.id.price_baypiao_join_homepager);
+			holder.tvleftPrice = (TextView) convertView
+					.findViewById(R.id.left_price_baypiao_join_homepager);
+			holder.noTickets = (ImageView) convertView
+					.findViewById(R.id.no_tickets_join);
+			holder.tvDesc = (TextView) convertView
+					.findViewById(R.id.desc_buyPiao_join_homepager);
 			convertView.setTag(holder);
-		}else{
-			holder=(ViewHolder)convertView.getTag();
+		} else {
+			holder = (ViewHolder) convertView.getTag();
 		}
 
-		holder.tvTilte.setText(""+item.getTicketTitle());
-		holder.tvPrice.setText(""+item.getPrice());
-		holder.tvDesc.setText(""+item.getTicketDescription());
-		int number=Integer.valueOf(item.getTicketCount())-Integer.valueOf(item.getTicketSaleCount());
-		log.e("zcq", "number=="+number);
-		if(number<=0){
+		holder.tvTilte.setText("" + item.getTicketTitle());
+		holder.tvPrice.setText("" + item.getPrice());
+		holder.tvDesc.setText("" + item.getTicketDescription());
+		int number = Integer.valueOf(item.getTicketCount())
+				- Integer.valueOf(item.getTicketSaleCount());
+		log.e("zcq", "number==" + number);
+		if (number <= 0) {
 			holder.noTickets.setVisibility(View.VISIBLE);
-			holder.tvPrice.setTextColor(mContext.getResources().getColor(R.color.text_changehui));
-			holder.tvleftPrice.setTextColor(mContext.getResources().getColor(R.color.text_changehui));
+			holder.tvPrice.setTextColor(mContext.getResources().getColor(
+					R.color.text_changehui));
+			holder.tvleftPrice.setTextColor(mContext.getResources().getColor(
+					R.color.text_changehui));
 		}
-		
-		//动态设置选中的item的背景和textview前边的图片
-		Drawable drawable = mContext.getResources().getDrawable(R.drawable.acty_join_btn_point_hl);
-		drawable.setBounds(drawable.getIntrinsicWidth(), 0, 0, drawable.getIntrinsicHeight());
-		Drawable drawable2 = mContext.getResources().getDrawable(R.drawable.acty_join_btn_point_nor);
-		drawable2.setBounds(drawable.getIntrinsicWidth(), 0, 0, drawable.getIntrinsicHeight());
-		if(selectedPosition == position){
-			convertView.setBackgroundColor(mContext.getResources().getColor(R.color.buyticket_check));
-			holder.tvTilte.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-			
-		}else {
+
+		// 动态设置选中的item的背景和textview前边的图片
+		Drawable drawable = mContext.getResources().getDrawable(
+				R.drawable.acty_join_btn_point_hl);
+		drawable.setBounds(drawable.getIntrinsicWidth(), 0, 0,
+				drawable.getIntrinsicHeight());
+		Drawable drawable2 = mContext.getResources().getDrawable(
+				R.drawable.acty_join_btn_point_nor);
+		drawable2.setBounds(drawable.getIntrinsicWidth(), 0, 0,
+				drawable.getIntrinsicHeight());
+		if (selectedPosition == position) {
+			convertView.setBackgroundColor(mContext.getResources().getColor(
+					R.color.buyticket_check));
+			holder.tvTilte.setCompoundDrawablesWithIntrinsicBounds(drawable,
+					null, null, null);
+
+		} else {
 			convertView.setBackgroundColor(Color.WHITE);
-			holder.tvTilte.setCompoundDrawablesWithIntrinsicBounds(drawable2, null, null, null);
+			holder.tvTilte.setCompoundDrawablesWithIntrinsicBounds(drawable2,
+					null, null, null);
 		}
 
 		return convertView;
 	}
-	
-	
-	private class ViewHolder{
+
+	private class ViewHolder {
 		private TextView tvTilte;
 		private TextView tvPrice;
 		private TextView tvleftPrice;
 		private TextView tvDesc;
 		private ImageView noTickets;
-		
-		
-		
-	}
 
+	}
 
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 
 	}
-	
-
-
 
 }

@@ -22,47 +22,47 @@ import com.meetu.common.Constants;
 
 public class ActivityBean implements Serializable {
 
-	//userid 缓存标记用户需要
+	// userid 缓存标记用户需要
 	private String userId;
-	//活动ID
+	// 活动ID
 	private String actyId;
-	//是否点赞 
+	// 是否点赞
 	private int isFavor;
-	//我关注并且参加活动的人数
+	// 我关注并且参加活动的人数
 	private int orderAndFollow;
-	//  活动封面（图片）（只读）
+	// 活动封面（图片）（只读）
 	private String activityCover;
-	//  活动开始时间（UNIX时间戳，毫秒）（只读）
+	// 活动开始时间（UNIX时间戳，毫秒）（只读）
 	private long timeStart;
-	//  活动详情（网页）（只读）
+	// 活动详情（网页）（只读）
 	private String activityContent;
-	//  点赞数量（只读）
+	// 点赞数量（只读）
 	private int praiseCount;
-	//  活动已报名的女孩数量（只读）
+	// 活动已报名的女孩数量（只读）
 	private int orderCountGirl;
-	//  活动已报名的男孩数量（只读）
+	// 活动已报名的男孩数量（只读）
 	private int orderCountBoy;
-	//  活动标题（只读）
+	// 活动标题（只读）
 	private String title;
-	//  活动子标题（只读）
+	// 活动子标题（只读）
 	private String titleSub;
-	//  活动状态（只读）
+	// 活动状态（只读）
 	private int status;
-	//  活动大概地址（只读）
+	// 活动大概地址（只读）
 	private String locationAddress;
-	//  活动详细地址（只读）
+	// 活动详细地址（只读）
 	private String locationPlace;
-	//  活动举办地的行政地址（只读）
+	// 活动举办地的行政地址（只读）
 	private String locationGovernment;
-	//活动经度
+	// 活动经度
 	private String locationLongtitude;
-	//活动纬度
+	// 活动纬度
 	private String locationLatitude;
-	//  活动结束时间（UNIX时间戳，毫秒）（只读）
+	// 活动结束时间（UNIX时间戳，毫秒）（只读）
 	private long timeStop;
-	//  活动群聊的对话ID（只读）
+	// 活动群聊的对话ID（只读）
 	String conversationId;
-	//index标记是插入的第几条活动
+	// index标记是插入的第几条活动
 	private int index;
 
 	public String getLocationLongtitude() {
@@ -88,7 +88,6 @@ public class ActivityBean implements Serializable {
 	public void setIndex(int index) {
 		this.index = index;
 	}
-
 
 	public int getIsFavor() {
 		return isFavor;

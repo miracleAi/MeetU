@@ -5,35 +5,33 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 
 public class CustomViewPager extends ViewPager {
-	private boolean isCanScroll = true;  
-	public CustomViewPager(Context context) {  
+	private boolean isCanScroll = true;
 
-		super(context);  
+	public CustomViewPager(Context context) {
 
-	}  
+		super(context);
 
-	public CustomViewPager(Context context, AttributeSet attrs) {  
+	}
 
-		super(context, attrs);  
+	public CustomViewPager(Context context, AttributeSet attrs) {
 
-	}  
-	public void setScanScroll(boolean isCanScroll){  
+		super(context, attrs);
 
-		this.isCanScroll = isCanScroll;  
+	}
 
-	}  
+	public void setScanScroll(boolean isCanScroll) {
 
+		this.isCanScroll = isCanScroll;
 
+	}
 
+	@Override
+	public void scrollTo(int x, int y) {
 
-	@Override  
+		if (isCanScroll) {
 
-	public void scrollTo(int x, int y){  
+			super.scrollTo(x, y);
 
-		if (isCanScroll){  
-
-			super.scrollTo(x, y);  
-
-		} 
+		}
 	}
 }

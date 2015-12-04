@@ -21,114 +21,115 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-
-
-
-public class ChangeNameActivity extends Activity implements OnClickListener{
-	//控件相关
+public class ChangeNameActivity extends Activity implements OnClickListener {
+	// 控件相关
 	private TextView queding;
 	private EditText nameEditText;
 	private String name;
 	private ImageView backImageView;
-	private RelativeLayout backLayout,quedingLayout;
-	
-	//网络数据 相关
-	//拿本地的  user 
+	private RelativeLayout backLayout, quedingLayout;
+
+	// 网络数据 相关
+	// 拿本地的 user
 	private AVUser currentUser = AVUser.getCurrentUser();
 	private ObjUser user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//去除title
+		// 去除title
 		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		//全屏
+		// 全屏
 		super.getWindow();
 		setContentView(R.layout.activity_change_name);
-		
-		//拿到本地的缓存对象  user
-				if(currentUser!=null){
-					//强制类型转换
-					user = AVUser.cast(currentUser, ObjUser.class);
-				}
-		
-		name=super.getIntent().getStringExtra("name");
-		
-		queding=(TextView) super.findViewById(R.id.mine_changename_wancheng_bt);
+
+		// 拿到本地的缓存对象 user
+		if (currentUser != null) {
+			// 强制类型转换
+			user = AVUser.cast(currentUser, ObjUser.class);
+		}
+
+		name = super.getIntent().getStringExtra("name");
+
+		queding = (TextView) super
+				.findViewById(R.id.mine_changename_wancheng_bt);
 		queding.setOnClickListener(this);
-		
-		nameEditText=(EditText) findViewById(R.id.name_changname_et);
+
+		nameEditText = (EditText) findViewById(R.id.name_changname_et);
 		nameEditText.setText(name);
 		nameEditText.setOnClickListener(this);
-		backImageView=(ImageView) super.findViewById(R.id.back_changename_mine);
+		backImageView = (ImageView) super
+				.findViewById(R.id.back_changename_mine);
 		backImageView.setOnClickListener(this);
-		backLayout=(RelativeLayout) super.findViewById(R.id.back_changename_mine_rl);
-		quedingLayout=(RelativeLayout) super.findViewById(R.id.mine_changename_wancheng_rl);
+		backLayout = (RelativeLayout) super
+				.findViewById(R.id.back_changename_mine_rl);
+		quedingLayout = (RelativeLayout) super
+				.findViewById(R.id.mine_changename_wancheng_rl);
 		backLayout.setOnClickListener(this);
 		quedingLayout.setOnClickListener(this);
 	}
 
-
-	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		//点击确定
-			case R.id.mine_changename_wancheng_rl :
-				
-				completeInfo(user);				
-				
-				
-				break;
-			case R.id.back_changename_mine_rl:
-				Intent intent2=new Intent();	
-				intent2.putExtra("name", name);
-				ChangeNameActivity.this.setResult(RESULT_CANCELED,intent2);
-				finish();
-			default :
-				break;
+		// 点击确定
+		case R.id.mine_changename_wancheng_rl:
+
+			completeInfo(user);
+
+			break;
+		case R.id.back_changename_mine_rl:
+			Intent intent2 = new Intent();
+			intent2.putExtra("name", name);
+			ChangeNameActivity.this.setResult(RESULT_CANCELED, intent2);
+			finish();
+		default:
+			break;
 		}
-		
+
 	}
+
 	/**
 	 * 设置点击返回键的状态
 	 */
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
-		Intent intent=new Intent();	
+		Intent intent = new Intent();
 		intent.putExtra("name", name);
-		ChangeNameActivity.this.setResult(RESULT_CANCELED,intent);
+		ChangeNameActivity.this.setResult(RESULT_CANCELED, intent);
 		finish();
 	}
+
 	/**
-	 * 上传 修改信息 
-	 * @param user  
+	 * 上传 修改信息
+	 * 
+	 * @param user
 	 * @author lucifer
 	 * @date 2015-11-6
 	 */
-	public void completeInfo(final ObjUser user){
-		
+	public void completeInfo(final ObjUser user) {
+
 		user.setNameNick(nameEditText.getText().toString());
 
-		//只上传信息
-		ObjUserWrap.completeUserInfo(user,new ObjFunBooleanCallback() {
+		// 只上传信息
+		ObjUserWrap.completeUserInfo(user, new ObjFunBooleanCallback() {
 
 			@Override
-			public void callback(boolean result, AVException e) {			
-				if(result){					
-					Toast.makeText(getApplicationContext(), "save 名字修改成功", 1000).show();
-					Intent intent=new Intent();				
+			public void callback(boolean result, AVException e) {
+				if (result) {
+					Toast.makeText(getApplicationContext(), "save 名字修改成功", 1000)
+							.show();
+					Intent intent = new Intent();
 					intent.putExtra("name", nameEditText.getText().toString());
-					ChangeNameActivity.this.setResult(RESULT_OK,intent);				
-					finish();				
-				}else{
-					Toast.makeText(getApplicationContext(), "save 名字修改失败", 1000).show();
+					ChangeNameActivity.this.setResult(RESULT_OK, intent);
+					finish();
+				} else {
+					Toast.makeText(getApplicationContext(), "save 名字修改失败", 1000)
+							.show();
 				}
 			}
 		});
 	}
-	
 
 }

@@ -7,5 +7,5 @@ import com.meetu.cloud.wrap.ObjExecResult;
  * Created by mac on 15/9/14.
  */
 public interface ObjFunEnumCallback {
-    void callback(ObjExecResult result, AVException e);
+	void callback(ObjExecResult result, AVException e);
 }

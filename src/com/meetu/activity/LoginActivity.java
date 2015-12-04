@@ -1,10 +1,5 @@
 package com.meetu.activity;
 
-
-
-
-
-
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.LogUtil.log;
@@ -36,11 +31,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LoginActivity extends Activity implements OnClickListener{
-	//控件相关
+public class LoginActivity extends Activity implements OnClickListener {
+	// 控件相关
 	private ImageView back;
 	private Button dengluButton;
-	private EditText uphone,upassward;
+	private EditText uphone, upassward;
 	private TextView forgert;
 	private TextView forgetPassword;
 
@@ -54,50 +49,58 @@ public class LoginActivity extends Activity implements OnClickListener{
 		setContentView(R.layout.activity_login);
 		initView();
 	}
-	private void initView(){
-		back=(ImageView) super.findViewById(R.id.iv_back_denglu);
+
+	private void initView() {
+		back = (ImageView) super.findViewById(R.id.iv_back_denglu);
 		back.setOnClickListener(this);
-		uphone=(EditText) super.findViewById(R.id.activity_register_phone_et);
-		upassward=(EditText) super.findViewById(R.id.activity_register_mima_et);
+		uphone = (EditText) super.findViewById(R.id.activity_register_phone_et);
+		upassward = (EditText) super
+				.findViewById(R.id.activity_register_mima_et);
 		uphone.addTextChangedListener(watcher);
 		upassward.addTextChangedListener(watcher);
-		dengluButton=(Button) super.findViewById(R.id.denglu_bt_denglu);
+		dengluButton = (Button) super.findViewById(R.id.denglu_bt_denglu);
 		dengluButton.setOnClickListener(this);
-		forgert=(TextView)super.findViewById(R.id.forget_to_torgetactivty_tv);
+		forgert = (TextView) super
+				.findViewById(R.id.forget_to_torgetactivty_tv);
 		forgert.setOnClickListener(this);
-		
+
 	}
 
 	/**
 	 * Editview 输入框监听事件
 	 */
-	
+
 	private TextWatcher watcher = new TextWatcher() {
-	    
-	    @Override
-	    public void onTextChanged(CharSequence s, int start, int before, int count) {
-	        // TODO Auto-generated method stub
-	    	if(uphone.getText().length()!=0&&upassward.getText().length()!=0){
-	    		dengluButton.setBackgroundResource(R.drawable.register_login_720);
-	    	}else{
-	    		dengluButton.setBackgroundResource(R.drawable.register_login_1_720);
-	    	}
-	        
-	    }
-	    
-	    @Override
-	    public void beforeTextChanged(CharSequence s, int start, int count,
-	            int after) {
-	        // TODO Auto-generated method stub
-	        
-	    }
-	    
-	    @Override
-	    public void afterTextChanged(Editable s) {
-	        // TODO Auto-generated method stub
-	        
-	    }
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
+			// TODO Auto-generated method stub
+			if (uphone.getText().length() != 0
+					&& upassward.getText().length() != 0) {
+				dengluButton
+						.setBackgroundResource(R.drawable.register_login_720);
+			} else {
+				dengluButton
+						.setBackgroundResource(R.drawable.register_login_1_720);
+			}
+
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+			// TODO Auto-generated method stub
+
+		}
 	};
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -106,81 +109,87 @@ public class LoginActivity extends Activity implements OnClickListener{
 			finish();
 			break;
 		case R.id.denglu_bt_denglu:
-			if(uphone.getText().length()!=11){
-				Toast.makeText(LoginActivity.this, "手机格式不正确", Toast.LENGTH_SHORT).show();
-			}else if(upassward.getText().length()<6){
-				Toast.makeText(LoginActivity.this, "密码不能小于6位", Toast.LENGTH_SHORT).show();
-			}
-			else{
-//				Toast.makeText(LoginActivity.this, "可以发送数据了", Toast.LENGTH_SHORT).show();
-				
-				ObjUserWrap.login(uphone.getText().toString(), upassward.getText().toString(), new ObjFunObjectCallback() {
-					
+			if (uphone.getText().length() != 11) {
+				Toast.makeText(LoginActivity.this, "手机格式不正确",
+						Toast.LENGTH_SHORT).show();
+			} else if (upassward.getText().length() < 6) {
+				Toast.makeText(LoginActivity.this, "密码不能小于6位",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				// Toast.makeText(LoginActivity.this, "可以发送数据了",
+				// Toast.LENGTH_SHORT).show();
+
+				ObjUserWrap.login(uphone.getText().toString(), upassward
+						.getText().toString(), new ObjFunObjectCallback() {
+
 					@Override
 					public void callback(AVObject object, AVException e) {
-						if(object!=null){
-							//登陆成功
+						if (object != null) {
+							// 登陆成功
 							log.e("object", object.getClassName());
-							Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+							Intent intent = new Intent(LoginActivity.this,
+									MainActivity.class);
 							intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							startActivity(intent);
-							
-							
-//							if(MyApplication.isChatLogin){
-//								Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-//								startActivity(intent);
-//								finish();
-//							}else{
-//								ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
-//
-//									@Override
-//									public void callback(AVIMClient client, AVException e) {							
-//										if(e != null){
-//											log.e("zcq", e);
-//											return ;
-//										}
-//										if(client != null){
-//											MyApplication.chatClient = client;
-//											log.e("zcq", "连接聊天长连接成功");
-//											Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-//											startActivity(intent);
-//											finish();
-//										}else{
-//											log.e("zcq", "连接聊天长连接失败");
-//										}
-//									}
-//								});
-//							}
-							
-							
-							
-						}else {
-							if(e.getCode()==1){
-								Toast.makeText(LoginActivity.this, "密码不正确", Toast.LENGTH_SHORT).show();
+
+							// if(MyApplication.isChatLogin){
+							// Intent intent=new
+							// Intent(LoginActivity.this,MainActivity.class);
+							// startActivity(intent);
+							// finish();
+							// }else{
+							// ObjChatMessage.connectToChatServer(MyApplication.chatClient,
+							// new ObjAvimclientCallback() {
+							//
+							// @Override
+							// public void callback(AVIMClient client,
+							// AVException e) {
+							// if(e != null){
+							// log.e("zcq", e);
+							// return ;
+							// }
+							// if(client != null){
+							// MyApplication.chatClient = client;
+							// log.e("zcq", "连接聊天长连接成功");
+							// Intent intent=new
+							// Intent(LoginActivity.this,MainActivity.class);
+							// startActivity(intent);
+							// finish();
+							// }else{
+							// log.e("zcq", "连接聊天长连接失败");
+							// }
+							// }
+							// });
+							// }
+
+						} else {
+							if (e.getCode() == 1) {
+								Toast.makeText(LoginActivity.this, "密码不正确",
+										Toast.LENGTH_SHORT).show();
 							}
-							if(e.getCode()==2){
-								Toast.makeText(LoginActivity.this, "用户不存在", Toast.LENGTH_SHORT).show();
+							if (e.getCode() == 2) {
+								Toast.makeText(LoginActivity.this, "用户不存在",
+										Toast.LENGTH_SHORT).show();
 							}
 						}
-						
+
 					}
 				});
-				
+
 			}
 			break;
-		//忘记密码 操作
+		// 忘记密码 操作
 		case R.id.forget_to_torgetactivty_tv:
-			Intent intent=new Intent(LoginActivity.this,ForgetPasswardActivity.class);
-			intent.putExtra("userphone",uphone.getText());
+			Intent intent = new Intent(LoginActivity.this,
+					ForgetPasswardActivity.class);
+			intent.putExtra("userphone", uphone.getText());
 			startActivity(intent);
-			
 
-			
 			break;
 		default:
 			break;
 		}
-		
+
 	}
 
 }

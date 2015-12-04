@@ -45,16 +45,21 @@ import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 /**
  * 系统设置 页面
+ * 
  * @author Administrator
- *
+ * 
  */
-public class SystemSettingsActivity extends Activity implements OnClickListener{
-	private RelativeLayout sharelayout,evaluationlayout,clearlayout,checkForUpdatelayout,signOutlayout;
+public class SystemSettingsActivity extends Activity implements OnClickListener {
+	private RelativeLayout sharelayout, evaluationlayout, clearlayout,
+			checkForUpdatelayout, signOutlayout;
 	private RelativeLayout backLayout;
+
 	private ObjGlobalAndroid globalObject;
 	private TextView progressTv;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,18 +74,24 @@ public class SystemSettingsActivity extends Activity implements OnClickListener{
 	}
 
 	private void initView() {
-		// TODO 
-		sharelayout=(RelativeLayout) super.findViewById(R.id.share_system_settings_rl);
-		evaluationlayout=(RelativeLayout) super.findViewById(R.id.evaluation_system_settings_rl);
-		clearlayout=(RelativeLayout) super.findViewById(R.id.clear_system_settings_rl);
-		checkForUpdatelayout=(RelativeLayout) super.findViewById(R.id.checkforupdates_system_settings_rl);
-		signOutlayout=(RelativeLayout) super.findViewById(R.id.sign_out_system_settings_rl);
+		// TODO
+		sharelayout = (RelativeLayout) super
+				.findViewById(R.id.share_system_settings_rl);
+		evaluationlayout = (RelativeLayout) super
+				.findViewById(R.id.evaluation_system_settings_rl);
+		clearlayout = (RelativeLayout) super
+				.findViewById(R.id.clear_system_settings_rl);
+		checkForUpdatelayout = (RelativeLayout) super
+				.findViewById(R.id.checkforupdates_system_settings_rl);
+		signOutlayout = (RelativeLayout) super
+				.findViewById(R.id.sign_out_system_settings_rl);
 		sharelayout.setOnClickListener(this);
 		evaluationlayout.setOnClickListener(this);
 		clearlayout.setOnClickListener(this);
 		checkForUpdatelayout.setOnClickListener(this);
 		signOutlayout.setOnClickListener(this);
-		backLayout=(RelativeLayout) super.findViewById(R.id.back_systemSettings_rl);
+		backLayout = (RelativeLayout) super
+				.findViewById(R.id.back_systemSettings_rl);
 		backLayout.setOnClickListener(this);
 		sharelayout.setVisibility(View.GONE);
 		progressTv = (TextView) findViewById(R.id.progress_tv);
@@ -93,6 +104,28 @@ public class SystemSettingsActivity extends Activity implements OnClickListener{
 		switch (v.getId()) {
 		case R.id.share_system_settings_rl:
 			Toast.makeText(this, "分享", Toast.LENGTH_SHORT).show();
+//<<<<<<< HEAD
+//
+//			break;
+//		case R.id.evaluation_system_settings_rl:
+//			Toast.makeText(this, "评价", Toast.LENGTH_SHORT).show();
+//
+//			break;
+//		case R.id.clear_system_settings_rl:
+//			Toast.makeText(this, "清除", Toast.LENGTH_SHORT).show();
+//
+//			break;
+//		case R.id.checkforupdates_system_settings_rl:
+//			Toast.makeText(this, "检查", Toast.LENGTH_SHORT).show();
+//
+//			break;
+//		case R.id.sign_out_system_settings_rl:
+//			// TODO 清缓存 删除本地 信息
+//			signOut();
+//
+//			finish();
+//
+//=======
 			break;
 		case R.id.evaluation_system_settings_rl:
 			commentApp();
@@ -106,6 +139,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener{
 		case R.id.sign_out_system_settings_rl:
 			signOut();
 			finish();
+
 			break;
 		case R.id.back_systemSettings_rl:
 			finish();
@@ -114,6 +148,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener{
 		default:
 			break;
 		}
+
 
 	}
 	public void showDialog(){
@@ -256,14 +291,43 @@ public class SystemSettingsActivity extends Activity implements OnClickListener{
 			}
 		}
 		return pName.contains(packageName);// 判断pName中是否有目标程序的包名，有TRUE，没有FALSE
+
 	}
 
 	/**
 	 * 注销登录需要做的操作，删除本地的用户对象 断开application的长连接
-	 *   
+	 * 
 	 * @author lucifer
 	 * @date 2015-11-25
 	 */
+//<<<<<<< HEAD
+//	public void signOut() {
+//		ObjChatMessage.logOutChat(MyApplication.chatClient,
+//				new ObjFunBooleanCallback() {
+//
+//					@Override
+//					public void callback(boolean result, AVException e) {
+//						// TODO Auto-generated method stub
+//						if (e != null) {
+//							log.e("zcq", "退出" + e);
+//							return;
+//						} else if (result) {
+//							log.e("zcq", "长连接注销成功");
+//							ObjUserWrap.logOut();
+//							Toast.makeText(getApplicationContext(), "退出",
+//									Toast.LENGTH_SHORT).show();
+//							Intent intent = new Intent(
+//									SystemSettingsActivity.this,
+//									LoginActivity.class);
+//							intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//							startActivity(intent);
+//						} else {
+//							log.e("zcq", "长连接注销失败");
+//						}
+//
+//					}
+//				});
+//=======
 	public void signOut(){
 		ObjChatMessage.logOutChat(MyApplication.chatClient, new ObjFunBooleanCallback() {
 
@@ -286,6 +350,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener{
 
 			}
 		});
+
 
 	}
 

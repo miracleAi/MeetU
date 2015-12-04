@@ -1,10 +1,5 @@
 package com.meetu.common.city;
 
-
-
-
-
-
 import com.meetu.R;
 
 import android.os.Bundle;
@@ -14,7 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ShengshiquActivity extends BaseActivity implements OnClickListener, OnWheelChangedListener {
+public class ShengshiquActivity extends BaseActivity implements
+		OnClickListener, OnWheelChangedListener {
 	private WheelView mViewProvince;
 	private WheelView mViewCity;
 	private WheelView mViewDistrict;
@@ -28,28 +24,29 @@ public class ShengshiquActivity extends BaseActivity implements OnClickListener,
 		setUpListener();
 		setUpData();
 	}
-	
+
 	private void setUpViews() {
 		mViewProvince = (WheelView) findViewById(R.id.id_province);
 		mViewCity = (WheelView) findViewById(R.id.id_city);
 		mViewDistrict = (WheelView) findViewById(R.id.id_district);
 		mBtnConfirm = (TextView) findViewById(R.id.city_selector_shengshiqu_tv);
 	}
-	
+
 	private void setUpListener() {
-    	// ���change�¼�
-    	mViewProvince.addChangingListener(this);
-    	// ���change�¼�
-    	mViewCity.addChangingListener(this);
-    	// ���change�¼�
-    	mViewDistrict.addChangingListener(this);
-    	// ���onclick�¼�
-    	mBtnConfirm.setOnClickListener(this);
-    }
-	
+		// ���change�¼�
+		mViewProvince.addChangingListener(this);
+		// ���change�¼�
+		mViewCity.addChangingListener(this);
+		// ���change�¼�
+		mViewDistrict.addChangingListener(this);
+		// ���onclick�¼�
+		mBtnConfirm.setOnClickListener(this);
+	}
+
 	private void setUpData() {
 		initProvinceDatas();
-		mViewProvince.setViewAdapter(new ArrayWheelAdapter<String>(ShengshiquActivity.this, mProvinceDatas));
+		mViewProvince.setViewAdapter(new ArrayWheelAdapter<String>(
+				ShengshiquActivity.this, mProvinceDatas));
 		// ���ÿɼ���Ŀ����
 		mViewProvince.setVisibleItems(7);
 		mViewCity.setVisibleItems(7);
@@ -82,7 +79,8 @@ public class ShengshiquActivity extends BaseActivity implements OnClickListener,
 		if (areas == null) {
 			areas = new String[] { "" };
 		}
-		mViewDistrict.setViewAdapter(new ArrayWheelAdapter<String>(this, areas));
+		mViewDistrict
+				.setViewAdapter(new ArrayWheelAdapter<String>(this, areas));
 		mViewDistrict.setCurrentItem(0);
 	}
 
@@ -113,7 +111,10 @@ public class ShengshiquActivity extends BaseActivity implements OnClickListener,
 	}
 
 	private void showSelectedResult() {
-		Toast.makeText(ShengshiquActivity.this, "你选择了:"+mCurrentProviceName+","+mCurrentCityName+","
-				+mCurrentDistrictName+","+mCurrentZipCode, Toast.LENGTH_SHORT).show();
+		Toast.makeText(
+				ShengshiquActivity.this,
+				"你选择了:" + mCurrentProviceName + "," + mCurrentCityName + ","
+						+ mCurrentDistrictName + "," + mCurrentZipCode,
+				Toast.LENGTH_SHORT).show();
 	}
 }

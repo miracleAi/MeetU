@@ -23,22 +23,25 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
 /**
  * 举报页面
+ * 
  * @author Administrator
- *
+ * 
  */
 
-public class ReportActivity extends Activity implements OnClickListener{
-	private RelativeLayout pornLayout,advertisingLayout,swearingLayout,othersLayout;
-	private ImageView pornImg,advertisingImg,swearingImg,othersImg;
+public class ReportActivity extends Activity implements OnClickListener {
+	private RelativeLayout pornLayout, advertisingLayout, swearingLayout,
+			othersLayout;
+	private ImageView pornImg, advertisingImg, swearingImg, othersImg;
 
-	private int selector=-1;//选中的举报类型0  1 2 3  记录
+	private int selector = -1;// 选中的举报类型0 1 2 3 记录
 
-	//控件相关
-	private RelativeLayout backLayout,defineLayout;
+	// 控件相关
+	private RelativeLayout backLayout, defineLayout;
 	EditText reportEt;
-	
+
 	ObjUser user;
 	String flag = "";
 	String otherId = "";
@@ -59,26 +62,31 @@ public class ReportActivity extends Activity implements OnClickListener{
 
 	private void initView() {
 
-		pornLayout=(RelativeLayout) super.findViewById(R.id.porn_report_rl);
-		advertisingLayout=(RelativeLayout) super.findViewById(R.id.advertising_report_rl);
-		swearingLayout=(RelativeLayout) super.findViewById(R.id.swearing_report_rl);
-		othersLayout=(RelativeLayout) super.findViewById(R.id.others_report_rl);
+		pornLayout = (RelativeLayout) super.findViewById(R.id.porn_report_rl);
+		advertisingLayout = (RelativeLayout) super
+				.findViewById(R.id.advertising_report_rl);
+		swearingLayout = (RelativeLayout) super
+				.findViewById(R.id.swearing_report_rl);
+		othersLayout = (RelativeLayout) super
+				.findViewById(R.id.others_report_rl);
 		reportEt = (EditText) findViewById(R.id.content_report_tv);
 
-		pornImg=(ImageView) super.findViewById(R.id.porn_report_img);
-		advertisingImg=(ImageView) super.findViewById(R.id.advertising_report_img);
-		swearingImg=(ImageView) super.findViewById(R.id.swearing_report_img);
-		othersImg=(ImageView) super.findViewById(R.id.others_report_img);
+		pornImg = (ImageView) super.findViewById(R.id.porn_report_img);
+		advertisingImg = (ImageView) super
+				.findViewById(R.id.advertising_report_img);
+		swearingImg = (ImageView) super.findViewById(R.id.swearing_report_img);
+		othersImg = (ImageView) super.findViewById(R.id.others_report_img);
 
 		pornLayout.setOnClickListener(this);
 		advertisingLayout.setOnClickListener(this);
 		swearingLayout.setOnClickListener(this);
 		othersLayout.setOnClickListener(this);
 
-		//控件相关
-		backLayout=(RelativeLayout) super.findViewById(R.id.back_report_rl);
+		// 控件相关
+		backLayout = (RelativeLayout) super.findViewById(R.id.back_report_rl);
 		backLayout.setOnClickListener(this);
-		defineLayout=(RelativeLayout) super.findViewById(R.id.define_report_rl);
+		defineLayout = (RelativeLayout) super
+				.findViewById(R.id.define_report_rl);
 		defineLayout.setOnClickListener(this);
 
 	}
@@ -87,9 +95,10 @@ public class ReportActivity extends Activity implements OnClickListener{
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.porn_report_rl:
-			//0 表示色情
-			selector=0;
-			pornLayout.setBackgroundColor(this.getResources().getColor(R.color.buyticket_check));
+			// 0 表示色情
+			selector = 0;
+			pornLayout.setBackgroundColor(this.getResources().getColor(
+					R.color.buyticket_check));
 			pornImg.setImageResource(R.drawable.acty_join_btn_point_hl);
 
 			advertisingLayout.setBackgroundColor(Color.WHITE);
@@ -101,12 +110,13 @@ public class ReportActivity extends Activity implements OnClickListener{
 
 			break;
 		case R.id.advertising_report_rl:
-			//1表示广告
-			selector=1;
+			// 1表示广告
+			selector = 1;
 			pornLayout.setBackgroundColor(Color.WHITE);
 			pornImg.setImageResource(R.drawable.acty_join_btn_point_nor);
 
-			advertisingLayout.setBackgroundColor(this.getResources().getColor(R.color.buyticket_check));
+			advertisingLayout.setBackgroundColor(this.getResources().getColor(
+					R.color.buyticket_check));
 			advertisingImg.setImageResource(R.drawable.acty_join_btn_point_hl);
 			swearingLayout.setBackgroundColor(Color.WHITE);
 			swearingImg.setImageResource(R.drawable.acty_join_btn_point_nor);
@@ -115,22 +125,23 @@ public class ReportActivity extends Activity implements OnClickListener{
 
 			break;
 		case R.id.swearing_report_rl:
-			//32表示侮辱谩骂
-			selector=2;
+			// 32表示侮辱谩骂
+			selector = 2;
 			pornLayout.setBackgroundColor(Color.WHITE);
 			pornImg.setImageResource(R.drawable.acty_join_btn_point_nor);
 
 			advertisingLayout.setBackgroundColor(Color.WHITE);
 			advertisingImg.setImageResource(R.drawable.acty_join_btn_point_nor);
-			swearingLayout.setBackgroundColor(this.getResources().getColor(R.color.buyticket_check));
+			swearingLayout.setBackgroundColor(this.getResources().getColor(
+					R.color.buyticket_check));
 			swearingImg.setImageResource(R.drawable.acty_join_btn_point_hl);
 			othersLayout.setBackgroundColor(Color.WHITE);
 			othersImg.setImageResource(R.drawable.acty_join_btn_point_nor);
 
 			break;
 		case R.id.others_report_rl:
-			//3 表示其他
-			selector=3;
+			// 3 表示其他
+			selector = 3;
 			pornLayout.setBackgroundColor(Color.WHITE);
 			pornImg.setImageResource(R.drawable.acty_join_btn_point_nor);
 
@@ -138,7 +149,8 @@ public class ReportActivity extends Activity implements OnClickListener{
 			advertisingImg.setImageResource(R.drawable.acty_join_btn_point_nor);
 			swearingLayout.setBackgroundColor(Color.WHITE);
 			swearingImg.setImageResource(R.drawable.acty_join_btn_point_nor);
-			othersLayout.setBackgroundColor(this.getResources().getColor(R.color.buyticket_check));
+			othersLayout.setBackgroundColor(this.getResources().getColor(
+					R.color.buyticket_check));
 			othersImg.setImageResource(R.drawable.acty_join_btn_point_hl);
 
 			break;
@@ -146,28 +158,28 @@ public class ReportActivity extends Activity implements OnClickListener{
 			finish();
 			break;
 		case R.id.define_report_rl:
-			//TODO 确定 需要做判断
-			if(flag.equals("user")){
+			// TODO 确定 需要做判断
+			if (flag.equals("user")) {
 				reportUser(otherId);
-			}else{
+			} else {
 				reportChat(otherId);
 			}
 			break;
-
 
 		default:
 			break;
 		}
 
 	}
+
 	/**
 	 * 举报用户
 	 * */
-	public void reportUser(String usrId){
+	public void reportUser(String usrId) {
 		ObjUser otherUser;
 		try {
 			otherUser = AVUser.createWithoutData(ObjUser.class, usrId);
-			ObjReportUser  shieldUser = new ObjReportUser();
+			ObjReportUser shieldUser = new ObjReportUser();
 			shieldUser.setUser(user);
 			shieldUser.setReportUser(otherUser);
 			shieldUser.setReportCode(selector);
@@ -177,15 +189,18 @@ public class ReportActivity extends Activity implements OnClickListener{
 				@Override
 				public void callback(boolean result, AVException e) {
 					// TODO Auto-generated method stub
-					if(e != null){
-						Toast.makeText(getApplicationContext(), "操作失败", 1000).show();
+					if (e != null) {
+						Toast.makeText(getApplicationContext(), "操作失败", 1000)
+								.show();
 						return;
 					}
-					if(result){
-						Toast.makeText(getApplicationContext(), "举报成功", 1000).show();
+					if (result) {
+						Toast.makeText(getApplicationContext(), "举报成功", 1000)
+								.show();
 						finish();
-					}else{
-						Toast.makeText(getApplicationContext(), "操作失败", 1000).show();
+					} else {
+						Toast.makeText(getApplicationContext(), "操作失败", 1000)
+								.show();
 					}
 				}
 			});
@@ -194,10 +209,11 @@ public class ReportActivity extends Activity implements OnClickListener{
 			e1.printStackTrace();
 		}
 	}
+
 	/**
 	 * 举报觅聊
 	 * */
-	public void reportChat(String chatId){
+	public void reportChat(String chatId) {
 		ObjReportChat reportChat = new ObjReportChat();
 		try {
 			ObjChat chat = AVObject.createWithoutData(ObjChat.class, chatId);
@@ -206,19 +222,22 @@ public class ReportActivity extends Activity implements OnClickListener{
 			reportChat.setReportCode(selector);
 			reportChat.setAppend(reportEt.getText().toString());
 			ObjReportWrap.reportChat(reportChat, new ObjFunBooleanCallback() {
-				
+
 				@Override
 				public void callback(boolean result, AVException e) {
 					// TODO Auto-generated method stub
-					if(e != null){
-						Toast.makeText(getApplicationContext(), "操作失败", 1000).show();
+					if (e != null) {
+						Toast.makeText(getApplicationContext(), "操作失败", 1000)
+								.show();
 						return;
 					}
-					if(result){
-						Toast.makeText(getApplicationContext(), "举报成功", 1000).show();
+					if (result) {
+						Toast.makeText(getApplicationContext(), "举报成功", 1000)
+								.show();
 						finish();
-					}else{
-						Toast.makeText(getApplicationContext(), "操作失败", 1000).show();
+					} else {
+						Toast.makeText(getApplicationContext(), "操作失败", 1000)
+								.show();
 					}
 				}
 			});

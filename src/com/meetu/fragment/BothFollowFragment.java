@@ -37,54 +37,62 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class BothFollowFragment extends Fragment implements OnRefreshListener2<ListView>{
+public class BothFollowFragment extends Fragment implements
+		OnRefreshListener2<ListView> {
 	TextView bothCountTv;
 	PullToRefreshListView bothLv;
 	ArrayList<String> bothStrList = new ArrayList<String>();
-	FollowAdapter bothAdapter ;
-	ObjUser user ;
+	FollowAdapter bothAdapter;
+	ObjUser user;
+
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
 		user = AVUser.cast(AVUser.getCurrentUser(), ObjUser.class);
 	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		View view = inflater.inflate(R.layout.fragment_both_follow_layout, null);
+		View view = inflater
+				.inflate(R.layout.fragment_both_follow_layout, null);
 		bothCountTv = (TextView) view.findViewById(R.id.both_count_tv);
-		bothLv  = (PullToRefreshListView) view.findViewById(R.id.both_follow_lv);
+		bothLv = (PullToRefreshListView) view.findViewById(R.id.both_follow_lv);
 		initView();
 		return view;
 	}
+
 	private void initView() {
 		// TODO Auto-generated method stub
-		ArrayList<String> list = (ArrayList<String>) getArguments().getSerializable("bothFollowList");
-		if(list != null){
+		ArrayList<String> list = (ArrayList<String>) getArguments()
+				.getSerializable("bothFollowList");
+		if (list != null) {
 			bothStrList.clear();
 			bothStrList.addAll(list);
-			bothCountTv.setText(" "+bothStrList.size()+"人");
+			bothCountTv.setText(" " + bothStrList.size() + "人");
 		}
-		bothAdapter = new FollowAdapter(getActivity(),bothStrList);
+		bothAdapter = new FollowAdapter(getActivity(), bothStrList);
 		bothLv.setAdapter(bothAdapter);
 		bothLv.setMode(Mode.PULL_FROM_START);
 		bothLv.setOnRefreshListener(this);
-		
+
 		bothLv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-					long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(getActivity(),UserPagerActivity.class);
-				intent.putExtra("userId", bothStrList.get(position-1));
+				Intent intent = new Intent(getActivity(),
+						UserPagerActivity.class);
+				intent.putExtra("userId", bothStrList.get(position - 1));
 				startActivity(intent);
 			}
 		});
 	}
-  	@Override
+
+	@Override
 	public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 		// TODO Auto-generated method stub
 		ObjFollowWrap.queryfollow(user, new ObjFunMapCallback() {
@@ -92,21 +100,22 @@ public class BothFollowFragment extends Fragment implements OnRefreshListener2<L
 			@Override
 			public void callback(Map<String, Object> map, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					Toast.makeText(getActivity(), "请求关注列表失败", 1000).show();
 					return;
 				}
 				List<String> bothL = (List<String>) map.get("boths");
-				if(bothL != null && bothL.size()>0){
+				if (bothL != null && bothL.size() > 0) {
 					bothStrList.clear();
 					bothStrList.addAll(bothL);
-					bothCountTv.setText(" "+bothStrList.size()+"人");
+					bothCountTv.setText(" " + bothStrList.size() + "人");
 					bothAdapter.notifyDataSetChanged();
 				}
 				bothLv.onRefreshComplete();
 			}
 		});
 	}
+
 	@Override
 	public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 		// TODO Auto-generated method stub

@@ -45,14 +45,16 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class SystemMsgActivity extends Activity implements OnRefreshListener2<ListView>{
+public class SystemMsgActivity extends Activity implements
+		OnRefreshListener2<ListView> {
 	private ImageView backImv;
 	private PullToRefreshListView systemLv;
 	ArrayList<ObjSysMsg> msgList = new ArrayList<ObjSysMsg>();
-	SysAdapter sysAdapter ;
-	ObjUser user ;
+	SysAdapter sysAdapter;
+	ObjUser user;
 	BitmapUtils bitmapUtils;
 	private ActivityDao activityDao;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -65,6 +67,7 @@ public class SystemMsgActivity extends Activity implements OnRefreshListener2<Li
 		initView();
 		loadSysMsg();
 	}
+
 	private void initView() {
 		// TODO Auto-generated method stub
 		backImv = (ImageView) findViewById(R.id.back_system_msg_img);
@@ -85,33 +88,40 @@ public class SystemMsgActivity extends Activity implements OnRefreshListener2<Li
 		systemLv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-					long arg3) {
-				// position -1 
-				ObjSysMsg msg = msgList.get(position -1);
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				// position -1
+				ObjSysMsg msg = msgList.get(position - 1);
 				switch (msg.getMsgType()) {
 				case Constants.SysMsgTypeText:
 
 					break;
 				case Constants.SysMsgTypeActy:
-					Intent actyIntent = new Intent(SystemMsgActivity.this,HomePageDetialActivity.class);
-					ArrayList<ActivityBean> list = activityDao.queryActyBean(user.getObjectId(),msgList.get(position-1).getActy().getObjectId());
-					if(list != null && list.size()>0){
-						Bundle bundle=new Bundle();
+					Intent actyIntent = new Intent(SystemMsgActivity.this,
+							HomePageDetialActivity.class);
+					ArrayList<ActivityBean> list = activityDao.queryActyBean(
+							user.getObjectId(), msgList.get(position - 1)
+									.getActy().getObjectId());
+					if (list != null && list.size() > 0) {
+						Bundle bundle = new Bundle();
 						bundle.putSerializable("activityBean", list.get(0));
 						actyIntent.putExtras(bundle);
 						startActivity(actyIntent);
 					}
 					break;
 				case Constants.SysMsgTypeFollow:
-					Intent followIntent = new Intent(SystemMsgActivity.this,UserPagerActivity.class);
-					followIntent.putExtra("userId", msg.getTowardsUser().getObjectId());
+					Intent followIntent = new Intent(SystemMsgActivity.this,
+							UserPagerActivity.class);
+					followIntent.putExtra("userId", msg.getTowardsUser()
+							.getObjectId());
 					startActivity(followIntent);
 					break;
 				case Constants.SysMsgTypeUserPhoto:
-					Intent photoIntent = new Intent(SystemMsgActivity.this,ShowSysMsgPhotoActivity.class);
-					if(msg.getUserPhoto().getPhoto()!=null){
-						photoIntent.putExtra("photoUrl", msg.getUserPhoto().getPhoto().getUrl());
+					Intent photoIntent = new Intent(SystemMsgActivity.this,
+							ShowSysMsgPhotoActivity.class);
+					if (msg.getUserPhoto().getPhoto() != null) {
+						photoIntent.putExtra("photoUrl", msg.getUserPhoto()
+								.getPhoto().getUrl());
 						startActivity(photoIntent);
 					}
 					break;
@@ -122,43 +132,51 @@ public class SystemMsgActivity extends Activity implements OnRefreshListener2<Li
 		});
 
 	}
+
 	private void loadSysMsg() {
 		ObjSysMsgWrap.querySysMsgs(user, new ObjSysMsgListCallback() {
 
 			@Override
 			public void callback(List<ObjSysMsg> objects, AVException e) {
 				// TODO Auto-generated method stub
-				if( e == null){
+				if (e == null) {
 					msgList.clear();
 					msgList.addAll(objects);
 					sysAdapter.notifyDataSetChanged();
-				}else{
-					//查询出错
+				} else {
+					// 查询出错
 				}
 				systemLv.onRefreshComplete();
 			}
 		});
 
 	}
+
 	@Override
 	public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 		// TODO Auto-generated method stub
 		loadSysMsg();
 	}
+
 	@Override
 	public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 		// TODO Auto-generated method stub
 
 	}
-	private int mMaxItemWidth;//item最大宽度
-	private int mMinItemWidth;//item最小宽度
-	class SysAdapter extends BaseAdapter{
+
+	private int mMaxItemWidth;// item最大宽度
+	private int mMinItemWidth;// item最小宽度
+
+	class SysAdapter extends BaseAdapter {
 
 		public SysAdapter() {
 			// TODO Auto-generated constructor stub
-			mMaxItemWidth=DisplayUtils.getWindowWidth(getApplicationContext())-DensityUtil.dip2px(getApplicationContext(), 110);
-			mMinItemWidth=DensityUtil.dip2px(getApplicationContext(), 44);
+			mMaxItemWidth = DisplayUtils
+					.getWindowWidth(getApplicationContext())
+					- DensityUtil.dip2px(getApplicationContext(), 110);
+			mMinItemWidth = DensityUtil.dip2px(getApplicationContext(), 44);
 		}
+
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
@@ -182,33 +200,47 @@ public class SystemMsgActivity extends Activity implements OnRefreshListener2<Li
 			// TODO Auto-generated method stub
 			ObjSysMsg bean = msgList.get(position);
 			ViewHolder holder = null;
-			if(convertView == null){
+			if (convertView == null) {
 				holder = new ViewHolder();
-				convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_sys_msg_layout, null);
-				holder.textContent = (TextView) convertView.findViewById(R.id.content_chat_item_left_tv);
-				holder.textAvator = (ImageView) convertView.findViewById(R.id.userHead_chat_item_left_img);
-				holder.textTime = (TextView) convertView.findViewById(R.id.time_chat_item_left_tv);
-				holder.textName = (TextView) convertView.findViewById(R.id.userName_chat_item_left_tv);
-				holder.timeTv = (TextView) convertView.findViewById(R.id.time_chat_item_newjoin_tv);
-				holder.msgTitleTv = (TextView) convertView.findViewById(R.id.msg_title_tv);
-				holder.nameTv = (TextView) convertView.findViewById(R.id.name_chat_item_newjoin_tv);
-				holder.contentTv = (TextView) convertView.findViewById(R.id.content_chat_item_newjoin_tv);
-				holder.msgImv = (ImageView) convertView.findViewById(R.id.msg_photo_img);
-				holder.schoolIconImv = (ImageView) convertView.findViewById(R.id.school_icon_imv);
-				holder.sexImv = (ImageView) convertView.findViewById(R.id.sex_icon_imv);
-				holder.textLayout = (RelativeLayout) convertView.findViewById(R.id.text_layout);
-				holder.cardLayout = (LinearLayout) convertView.findViewById(R.id.card_layout);
-				if(bean.getMsgType() == Constants.SysMsgTypeText){
-					//文本消息
+				convertView = LayoutInflater.from(getApplicationContext())
+						.inflate(R.layout.item_sys_msg_layout, null);
+				holder.textContent = (TextView) convertView
+						.findViewById(R.id.content_chat_item_left_tv);
+				holder.textAvator = (ImageView) convertView
+						.findViewById(R.id.userHead_chat_item_left_img);
+				holder.textTime = (TextView) convertView
+						.findViewById(R.id.time_chat_item_left_tv);
+				holder.textName = (TextView) convertView
+						.findViewById(R.id.userName_chat_item_left_tv);
+				holder.timeTv = (TextView) convertView
+						.findViewById(R.id.time_chat_item_newjoin_tv);
+				holder.msgTitleTv = (TextView) convertView
+						.findViewById(R.id.msg_title_tv);
+				holder.nameTv = (TextView) convertView
+						.findViewById(R.id.name_chat_item_newjoin_tv);
+				holder.contentTv = (TextView) convertView
+						.findViewById(R.id.content_chat_item_newjoin_tv);
+				holder.msgImv = (ImageView) convertView
+						.findViewById(R.id.msg_photo_img);
+				holder.schoolIconImv = (ImageView) convertView
+						.findViewById(R.id.school_icon_imv);
+				holder.sexImv = (ImageView) convertView
+						.findViewById(R.id.sex_icon_imv);
+				holder.textLayout = (RelativeLayout) convertView
+						.findViewById(R.id.text_layout);
+				holder.cardLayout = (LinearLayout) convertView
+						.findViewById(R.id.card_layout);
+				if (bean.getMsgType() == Constants.SysMsgTypeText) {
+					// 文本消息
 					holder.textLayout.setVisibility(View.VISIBLE);
 					holder.cardLayout.setVisibility(View.GONE);
-				}else{
-					//卡片消息
+				} else {
+					// 卡片消息
 					holder.textLayout.setVisibility(View.GONE);
 					holder.cardLayout.setVisibility(View.VISIBLE);
 				}
 				convertView.setTag(holder);
-			}else{
+			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
 			switch (bean.getMsgType()) {
@@ -217,42 +249,58 @@ public class SystemMsgActivity extends Activity implements OnRefreshListener2<Li
 				holder.textContent.setMinWidth(mMinItemWidth);
 				holder.textContent.setText(bean.getContent());
 				holder.textName.setText("小U");
-				holder.textAvator.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
-				holder.textTime.setText(DateUtils.format(bean.getCreatedAt().getTime(), DateUtils.DateFormat_YearTime));
+				holder.textAvator
+						.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
+				holder.textTime.setText(DateUtils.format(bean.getCreatedAt()
+						.getTime(), DateUtils.DateFormat_YearTime));
 				break;
 			case Constants.SysMsgTypeFollow:
 				holder.schoolIconImv.setVisibility(View.VISIBLE);
 				holder.sexImv.setVisibility(View.VISIBLE);
-				ObjUser followUser = AVUser.cast(bean.getAVUser("towardsUser"), ObjUser.class);
+				ObjUser followUser = AVUser.cast(bean.getAVUser("towardsUser"),
+						ObjUser.class);
 				holder.nameTv.setText(followUser.getNameNick());
 				holder.contentTv.setText(followUser.getSchool());
-				holder.timeTv.setText(DateUtils.format(bean.getCreatedAt().getTime(), DateUtils.DateFormat_YearTime));
-				holder.msgTitleTv.setText("hi, "+user.getNameNick()+", 你和"+followUser.getNameNick()+"已相互关注");
-				if(user.getProfileClip() != null){
-					bitmapUtils.display(holder.msgImv, followUser.getProfileClip().getUrl());
-				}else{
-					holder.msgImv.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
+				holder.timeTv.setText(DateUtils.format(bean.getCreatedAt()
+						.getTime(), DateUtils.DateFormat_YearTime));
+				holder.msgTitleTv.setText("hi, " + user.getNameNick() + ", 你和"
+						+ followUser.getNameNick() + "已相互关注");
+				if (user.getProfileClip() != null) {
+					bitmapUtils.display(holder.msgImv, followUser
+							.getProfileClip().getUrl());
+				} else {
+					holder.msgImv
+							.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
 				}
-				if(followUser.getGender() == 2){
-					holder.sexImv.setImageResource(R.drawable.acty_joinlist_img_female);
-				}else{
-					holder.sexImv.setImageResource(R.drawable.acty_joinlist_img_male);
+				if (followUser.getGender() == 2) {
+					holder.sexImv
+							.setImageResource(R.drawable.acty_joinlist_img_female);
+				} else {
+					holder.sexImv
+							.setImageResource(R.drawable.acty_joinlist_img_male);
 				}
 				break;
 			case Constants.SysMsgTypeActy:
 				holder.schoolIconImv.setVisibility(View.GONE);
 				holder.sexImv.setVisibility(View.GONE);
 				try {
-					ObjActivity acty = bean.getAVObject("acty", ObjActivity.class);
-					ObjUser actyUser = AVUser.cast(bean.getAVUser("towardsUser"), ObjUser.class);
+					ObjActivity acty = bean.getAVObject("acty",
+							ObjActivity.class);
+					ObjUser actyUser = AVUser.cast(
+							bean.getAVUser("towardsUser"), ObjUser.class);
 					holder.nameTv.setText(acty.getTitle());
 					holder.contentTv.setText(acty.getTitleSub());
-					holder.msgTitleTv.setText("hi, "+user.getNameNick()+", 你关注的"+actyUser.getNameNick()+"参加了"+acty.getTitle()+"活动");
-					holder.timeTv.setText(DateUtils.format(bean.getCreatedAt().getTime(), DateUtils.DateFormat_YearTime));
-					if(acty.getActivityCover() != null){
-						bitmapUtils.display(holder.msgImv, acty.getActivityCover().getUrl());
-					}else{
-						holder.msgImv.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
+					holder.msgTitleTv.setText("hi, " + user.getNameNick()
+							+ ", 你关注的" + actyUser.getNameNick() + "参加了"
+							+ acty.getTitle() + "活动");
+					holder.timeTv.setText(DateUtils.format(bean.getCreatedAt()
+							.getTime(), DateUtils.DateFormat_YearTime));
+					if (acty.getActivityCover() != null) {
+						bitmapUtils.display(holder.msgImv, acty
+								.getActivityCover().getUrl());
+					} else {
+						holder.msgImv
+								.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
 					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -263,14 +311,20 @@ public class SystemMsgActivity extends Activity implements OnRefreshListener2<Li
 				holder.schoolIconImv.setVisibility(View.GONE);
 				holder.sexImv.setVisibility(View.GONE);
 				try {
-					ObjUserPhoto photo = bean.getAVObject("userPhoto", ObjUserPhoto.class);
-					ObjUser favorUser = AVUser.cast(bean.getAVUser("towardsUser"), ObjUser.class);
-					holder.msgTitleTv.setText("hi, "+user.getNameNick()+", "+favorUser.getNameNick()+"为你的照片送上一个赞");
-					holder.timeTv.setText(DateUtils.format(bean.getCreatedAt().getTime(), DateUtils.DateFormat_YearTime));
-					if(photo.getPhoto() != null){
-						bitmapUtils.display(holder.msgImv, photo.getPhoto().getUrl());
-					}else{
-						holder.msgImv.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
+					ObjUserPhoto photo = bean.getAVObject("userPhoto",
+							ObjUserPhoto.class);
+					ObjUser favorUser = AVUser.cast(
+							bean.getAVUser("towardsUser"), ObjUser.class);
+					holder.msgTitleTv.setText("hi, " + user.getNameNick()
+							+ ", " + favorUser.getNameNick() + "为你的照片送上一个赞");
+					holder.timeTv.setText(DateUtils.format(bean.getCreatedAt()
+							.getTime(), DateUtils.DateFormat_YearTime));
+					if (photo.getPhoto() != null) {
+						bitmapUtils.display(holder.msgImv, photo.getPhoto()
+								.getUrl());
+					} else {
+						holder.msgImv
+								.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
 					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -282,7 +336,8 @@ public class SystemMsgActivity extends Activity implements OnRefreshListener2<Li
 			}
 			return convertView;
 		}
-		class ViewHolder{
+
+		class ViewHolder {
 			TextView textContent;
 			TextView textTime;
 			ImageView textAvator;

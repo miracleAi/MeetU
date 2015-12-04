@@ -12,97 +12,97 @@ import com.avos.avoscloud.AVUser;
 import com.meetu.common.Constants;
 
 @AVClassName("ObjActivity")
-public class ObjActivity extends AVObject implements Serializable{
+public class ObjActivity extends AVObject implements Serializable {
 	public static final Creator CREATOR = AVObjectCreator.instance;
 	/**
-	 *  活动封面（图片）（只读）
+	 * 活动封面（图片）（只读）
 	 */
-	//AVFile activityCover;
+	// AVFile activityCover;
 	public static final String ACTYCOVER = "activityCover";
 	/**
-	 *  活动开始时间（UNIX时间戳，毫秒）（只读）
+	 * 活动开始时间（UNIX时间戳，毫秒）（只读）
 	 */
-	//long timeStart;
+	// long timeStart;
 	public static final String TIMESTART = "timeStart";
 	/**
-	 *  活动大概地址（只读）
+	 * 活动大概地址（只读）
 	 */
-	//String locationAddress;
+	// String locationAddress;
 	public static final String LOCATIONADDRESS = "locationAddress";
 	/**
-	 *  活动详情（网页）（只读）
+	 * 活动详情（网页）（只读）
 	 */
-	//AVFile activityContent;
+	// AVFile activityContent;
 	public static final String ACTYCONTENT = "activityContent";
 	/**
-	 *  点赞数量（只读）
+	 * 点赞数量（只读）
 	 */
-	//int praiseCount;
+	// int praiseCount;
 	public static final String PRAISECOUNT = "praiseCount";
 	/**
-	 *  活动已报名的女孩数量（只读）
+	 * 活动已报名的女孩数量（只读）
 	 */
-	//int orderCountGirl;
+	// int orderCountGirl;
 	public static final String ORDERCOUNGG = "orderCountGirl";
 	/**
-	 *  活动标题（只读）
+	 * 活动标题（只读）
 	 */
-	//String title;
+	// String title;
 	public static final String TITLE = "title";
 	/**
-	 *  活动已报名的男孩数量（只读）
+	 * 活动已报名的男孩数量（只读）
 	 */
-	//int orderCountBoy;
+	// int orderCountBoy;
 	public static final String ORDERCOUNGB = "orderCountBoy";
 	/**
-	 *  活动地址标题（只读）
+	 * 活动地址标题（只读）
 	 */
-	//String locationTitle;
+	// String locationTitle;
 	public static final String LOCATIONTITLE = "locationTitle";
 	/**
-	 *  活动状态（只读）
+	 * 活动状态（只读）
 	 */
-	//int status;
+	// int status;
 	public static final String STATUS = "status";
 	/**
-	 *  活动详细地址（只读）
+	 * 活动详细地址（只读）
 	 */
-	//String locationPlace;
+	// String locationPlace;
 	public static final String LOCATIONPLACE = "locationPlace";
 	/**
-	 *  活动子标题（只读）
+	 * 活动子标题（只读）
 	 */
-	//String titleSub;
+	// String titleSub;
 	public static final String TITLESUB = "titleSub";
 	/**
-	 *  活动举办地的行政地址（只读）
+	 * 活动举办地的行政地址（只读）
 	 */
-	//String locationGovernment;
+	// String locationGovernment;
 	public static final String LOCATIONGOV = "locationGovernment";
 	/**
-	 *  活动地址经度（只读）
+	 * 活动地址经度（只读）
 	 */
-	//int locationLongitude;
+	// int locationLongitude;
 	public static final String LOCATIONLONGITUDE = "locationLongitude";
 	/**
-	 *  活动地址纬度（只读）
+	 * 活动地址纬度（只读）
 	 */
-	//int locationLatitude;
+	// int locationLatitude;
 	public static final String LOCATIONLATITUDE = "locationLatitude";
 	/**
-	 *  活动地址子标题（只读）
+	 * 活动地址子标题（只读）
 	 */
-	//String locationSubtitle;
+	// String locationSubtitle;
 	public static final String LOCATIONSUBT = "locationSubtitle";
 	/**
-	 *  活动结束时间（UNIX时间戳，毫秒）（只读）
+	 * 活动结束时间（UNIX时间戳，毫秒）（只读）
 	 */
-	//long timeStop;
+	// long timeStop;
 	public static final String TIMESTOP = "timeStop";
 	/**
-	 *  活动群聊的对话ID（只读）
+	 * 活动群聊的对话ID（只读）
 	 */
-	//String conversationId;
+	// String conversationId;
 	public static final String CONVERSATIONID = "conversationId";
 
 	public ObjActivity() {
@@ -112,65 +112,82 @@ public class ObjActivity extends AVObject implements Serializable{
 	public int getStatus() {
 		return this.getInt(STATUS);
 	}
+
 	public String getTitle() {
 		return this.getString(TITLE);
 	}
+
 	public String getTitleSub() {
 		return this.getString(TITLESUB);
 	}
+
 	public String getLocationGovernment() {
 		return this.getString(LOCATIONGOV);
 	}
+
 	public String getLocationAddress() {
 		return this.getString(LOCATIONADDRESS);
 	}
+
 	public String getLocationPlace() {
 		return this.getString(LOCATIONPLACE);
 	}
+
 	public long getLocationLongitude() {
 		return this.getLong(LOCATIONLONGITUDE);
 	}
+
 	public long getLocationLatitude() {
 		return this.getLong(LOCATIONLATITUDE);
 	}
+
 	public String getLocationTitle() {
 		return this.getString(LOCATIONTITLE);
 	}
+
 	public String getLocationSubtitle() {
 		return this.getString(LOCATIONSUBT);
 	}
+
 	public int getPraiseCount() {
 		return this.getInt(PRAISECOUNT);
 	}
+
 	public long getTimeStart() {
 		return this.getLong(TIMESTART);
 	}
+
 	public long getTimeStop() {
 		return this.getLong(TIMESTOP);
 	}
+
 	public AVFile getActivityCover() {
 		return this.getAVFile(ACTYCOVER);
 	}
+
 	public AVFile getActivityContent() {
 		return this.getAVFile(ACTYCONTENT);
 	}
+
 	public int getOrderCountBoy() {
 		return this.getInt(ORDERCOUNGB);
 	}
+
 	public int getOrderCountGirl() {
 		return this.getInt(ORDERCOUNGG);
 	}
+
 	public String getConversationId() {
 		return this.getString(CONVERSATIONID);
 	}
 
-	public static String getStatusStr(int status){
+	public static String getStatusStr(int status) {
 		String statusStr = "";
 		switch (status) {
 		case Constants.ActyStatusNotRelease:
 			statusStr = "活动未发布";
 			break;
-		case Constants.ActyStatusSignUp: 
+		case Constants.ActyStatusSignUp:
 			statusStr = "火热报名中";
 			break;
 		case Constants.ActyStatusCancel:
@@ -179,13 +196,13 @@ public class ObjActivity extends AVObject implements Serializable{
 		case Constants.ActyStatusSignUPOver:
 			statusStr = "报名结束";
 			break;
-		case Constants.ActyStatusProcess: 
+		case Constants.ActyStatusProcess:
 			statusStr = "活动进行中";
 			break;
-		case Constants.ActyStatusOver: 
+		case Constants.ActyStatusOver:
 			statusStr = "活动已结束";
 			break;
-		case Constants.ActyStatusRemove: 
+		case Constants.ActyStatusRemove:
 			statusStr = "活动已移除";
 			break;
 		case Constants.ActyStatusUnknown:
@@ -196,8 +213,9 @@ public class ObjActivity extends AVObject implements Serializable{
 		}
 		return statusStr;
 	}
-	//获得AVFile的URL 缓存存储时需要
-	public static String getAVileUrl(AVFile f){
+
+	// 获得AVFile的URL 缓存存储时需要
+	public static String getAVileUrl(AVFile f) {
 		return f.getUrl();
 	}
 }

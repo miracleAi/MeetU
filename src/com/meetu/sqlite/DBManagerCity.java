@@ -8,10 +8,6 @@ import java.io.InputStream;
 
 import com.meetu.R;
 
-
-
-
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
@@ -68,8 +64,8 @@ public class DBManagerCity {
 		return null;
 
 	}
-	
-	 public void closeDatabase() {
-	        this.database.close();
-	    }
+
+	public void closeDatabase() {
+		this.database.close();
+	}
 }

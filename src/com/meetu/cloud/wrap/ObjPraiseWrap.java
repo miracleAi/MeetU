@@ -23,10 +23,13 @@ import com.meetu.cloud.object.ObjUser;
 public class ObjPraiseWrap {
 	/**
 	 * 查询我是否对活动点赞
+	 * 
 	 * @param callback
 	 */
-	public static void queryActivityFavor(AVUser user,ObjActivity activity,final ObjFunBooleanCallback callback){
-		AVQuery<AVObject> query = new AVQuery<AVObject>(ObjTableName.getActivityFavorTb());
+	public static void queryActivityFavor(AVUser user, ObjActivity activity,
+			final ObjFunBooleanCallback callback) {
+		AVQuery<AVObject> query = new AVQuery<AVObject>(
+				ObjTableName.getActivityFavorTb());
 		query.whereEqualTo("user", user);
 		query.whereEqualTo("activity", activity);
 		query.getFirstInBackground(new GetCallback<AVObject>() {
@@ -34,25 +37,28 @@ public class ObjPraiseWrap {
 			@Override
 			public void done(AVObject object, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					callback.callback(false, e);
-					return ;
+					return;
 				}
-				if(object != null){
+				if (object != null) {
 					callback.callback(true, null);
-				}else{
+				} else {
 					callback.callback(false, null);
 				}
 			}
 		});
 	}
+
 	/**
 	 * 对活动点赞
+	 * 
 	 * @param user
 	 * @param activity
 	 * @param callback
 	 */
-	public static void praiseActivity(ObjUser user,ObjActivity activity,final ObjFunBooleanCallback callback){
+	public static void praiseActivity(ObjUser user, ObjActivity activity,
+			final ObjFunBooleanCallback callback) {
 		ObjActivityPraise praise = new ObjActivityPraise();
 		praise.setActivity(activity);
 		praise.setUser(user);
@@ -61,24 +67,28 @@ public class ObjPraiseWrap {
 			@Override
 			public void done(AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					callback.callback(false, e);
-					return ;
-				}else{
+					return;
+				} else {
 					callback.callback(true, null);
 				}
 			}
 		});
 
 	}
+
 	/**
 	 * 取消对活动点赞
+	 * 
 	 * @param user
 	 * @param activity
 	 * @param callback
 	 */
-	public static void cancelPraiseActivity(ObjUser user,ObjActivity activity,final ObjFunBooleanCallback callback){
-		AVQuery<AVObject> query = new AVQuery<AVObject>(ObjTableName.getActivityFavorTb());
+	public static void cancelPraiseActivity(ObjUser user, ObjActivity activity,
+			final ObjFunBooleanCallback callback) {
+		AVQuery<AVObject> query = new AVQuery<AVObject>(
+				ObjTableName.getActivityFavorTb());
 		query.whereEqualTo("user", user);
 		query.whereEqualTo("activity", activity);
 		query.deleteAllInBackground(new DeleteCallback() {
@@ -86,10 +96,10 @@ public class ObjPraiseWrap {
 			@Override
 			public void done(AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					callback.callback(false, e);
-					return ;
-				}else{
+					return;
+				} else {
 					callback.callback(true, null);
 				}
 			}

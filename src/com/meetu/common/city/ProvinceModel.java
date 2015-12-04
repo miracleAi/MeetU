@@ -5,7 +5,7 @@ import java.util.List;
 public class ProvinceModel {
 	private String name;
 	private List<CityModel> cityList;
-	
+
 	public ProvinceModel() {
 		super();
 	}
@@ -36,5 +36,5 @@ public class ProvinceModel {
 	public String toString() {
 		return "ProvinceModel [name=" + name + ", cityList=" + cityList + "]";
 	}
-	
+
 }

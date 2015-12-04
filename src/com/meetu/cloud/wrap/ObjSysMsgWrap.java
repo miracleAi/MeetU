@@ -11,8 +11,9 @@ import com.meetu.cloud.object.ObjSysMsg;
 import com.meetu.cloud.object.ObjUser;
 
 public class ObjSysMsgWrap {
-	//查询系统消息 
-	public static void querySysMsgs(ObjUser user,final ObjSysMsgListCallback callback){
+	// 查询系统消息
+	public static void querySysMsgs(ObjUser user,
+			final ObjSysMsgListCallback callback) {
 		AVQuery<ObjSysMsg> query = AVObject.getQuery(ObjSysMsg.class);
 		query.whereEqualTo("user", user);
 		query.include("towardsUser");
@@ -23,13 +24,13 @@ public class ObjSysMsgWrap {
 			@Override
 			public void done(List<ObjSysMsg> objects, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					callback.callback(null, e);
-					return ;
+					return;
 				}
-				if(objects != null){
+				if (objects != null) {
 					callback.callback(objects, null);
-				}else{
+				} else {
 					callback.callback(null, new AVException(0, "获取系统消息失败"));
 				}
 			}

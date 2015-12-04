@@ -51,7 +51,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TestActivityTwo extends Activity{
+public class TestActivityTwo extends Activity {
 	private static final String LOADUSERPHOTO = "loadUserPhoto";
 	private static final String LOADING = "loading";
 	private static final String LOAD_FAIL = "fail";
@@ -60,45 +60,51 @@ public class TestActivityTwo extends Activity{
 	private static final String CANCELPRAISEUSERPHOTO = "cancelPraiseUserPhoto";
 	private static final String ADDUSERPHOTO = "addUserPhoto";
 	private static final String DELETEUSERPHOTO = "deleteUserPhoto";
-	
+
 	private ImageView ivTouxiang;
 	private Button clickBtn;
 	private EditText ed;
 	String fPath = "";
 	String yPath = "";
 	boolean isSms = true;
-	//活动测试
+	// 活动测试
 	private ImageView favorImg;
-	private TextView favrCout,followTv,joinTv,statusTv,titleTv,addressTv,timeTv,bigImg,contentTv,orderUserTv,actyCoverTv;
-	private TextView firstTv,secondTv;
-	//当前用户
+	private TextView favrCout, followTv, joinTv, statusTv, titleTv, addressTv,
+			timeTv, bigImg, contentTv, orderUserTv, actyCoverTv;
+	private TextView firstTv, secondTv;
+	// 当前用户
 	ObjUser user = new ObjUser();
-	//需上传的用户照片
+	// 需上传的用户照片
 	Bitmap userphoto;
-	
+
 	ObjUserPhoto photoBean = new ObjUserPhoto();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//去除title
+		// 去除title
 		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		//全屏
-		super.getWindow(); 
+		// 全屏
+		super.getWindow();
 		setContentView(R.layout.testtwo_layout);
 		initView();
 	}
-	private void initView(){
-		ivTouxiang=(ImageView)super.findViewById(R.id.selfinfo1_userhead_img);
+
+	private void initView() {
+		ivTouxiang = (ImageView) super
+				.findViewById(R.id.selfinfo1_userhead_img);
 		clickBtn = (Button) findViewById(R.id.click);
 		ed = (EditText) findViewById(R.id.ed);
 		firstTv = (TextView) findViewById(R.id.first_tv);
 		secondTv = (TextView) findViewById(R.id.second_tv);
 		favorImg = (ImageView) findViewById(R.id.favor_img);
-		Bitmap head=readHead();
-		if(head!=null){
+		Bitmap head = readHead();
+		if (head != null) {
 			userphoto = head;
-			fPath = Environment.getExternalStorageDirectory()+"/f_user_photo.png";
-			yPath = Environment.getExternalStorageDirectory()+"/user_photo.png";
+			fPath = Environment.getExternalStorageDirectory()
+					+ "/f_user_photo.png";
+			yPath = Environment.getExternalStorageDirectory()
+					+ "/user_photo.png";
 		}
 		ivTouxiang.setOnClickListener(new OnClickListener() {
 
@@ -108,8 +114,8 @@ public class TestActivityTwo extends Activity{
 				showDialog();
 			}
 		});
-		//clickBtn.setText(LOADUSERPHOTO);
-		//clickBtn.setText(ADDUSERPHOTO);
+		// clickBtn.setText(LOADUSERPHOTO);
+		// clickBtn.setText(ADDUSERPHOTO);
 		clickBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -117,48 +123,54 @@ public class TestActivityTwo extends Activity{
 				// TODO Auto-generated method stub
 				AVUser currentUser = AVUser.getCurrentUser();
 				if (currentUser != null) {
-					//强制类型转换
+					// 强制类型转换
 					user = AVUser.cast(currentUser, ObjUser.class);
-					if(clickBtn.getText().toString().equals(LOADUSERPHOTO)){
+					if (clickBtn.getText().toString().equals(LOADUSERPHOTO)) {
 						clickBtn.setText(LOADING);
 						getUserPhoto(user);
-						return ;
+						return;
 					}
-					if(clickBtn.getText().toString().equals(PRAISERUSERPHOTO)){
-						//对用户照片点赞
+					if (clickBtn.getText().toString().equals(PRAISERUSERPHOTO)) {
+						// 对用户照片点赞
 						clickBtn.setText(LOADING);
 						praiseUserPhoto(photoBean, user);
-						return ;
+						return;
 					}
-					if(clickBtn.getText().toString().equals(CANCELPRAISEUSERPHOTO)){
-						//对用户照片取消点赞
+					if (clickBtn.getText().toString()
+							.equals(CANCELPRAISEUSERPHOTO)) {
+						// 对用户照片取消点赞
 						clickBtn.setText(LOADING);
 						cancelPraiseUserPhoto(photoBean, user);
-						return ;
+						return;
 					}
-					if(clickBtn.getText().toString().equals(ADDUSERPHOTO)){
-						//上传用户照片
+					if (clickBtn.getText().toString().equals(ADDUSERPHOTO)) {
+						// 上传用户照片
 						clickBtn.setText(LOADING);
 						upLoadUserPhoto(user);
-						return ;
+						return;
 					}
-					if(clickBtn.getText().toString().equals(DELETEUSERPHOTO)){
+					if (clickBtn.getText().toString().equals(DELETEUSERPHOTO)) {
 						clickBtn.setText(LOADING);
 						deleteUserPhoto(photoBean);
-						return ;
+						return;
 					}
-				}else{
-					Toast.makeText(getApplicationContext(), "not login", 1000).show();
-					return ;
+				} else {
+					Toast.makeText(getApplicationContext(), "not login", 1000)
+							.show();
+					return;
 				}
 			}
 		});
 	}
-	AVFile userf =null;
-	//上传用户照片
-	public void upLoadUserPhoto(final ObjUser user){
+
+	AVFile userf = null;
+
+	// 上传用户照片
+	public void upLoadUserPhoto(final ObjUser user) {
 		try {
-			userf = AVFile.withAbsoluteLocalPath("ObjUserPhoto"+user.getObjectId()+Constants.IMG_TYPE, fPath);
+			userf = AVFile.withAbsoluteLocalPath(
+					"ObjUserPhoto" + user.getObjectId() + Constants.IMG_TYPE,
+					fPath);
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -167,179 +179,196 @@ public class TestActivityTwo extends Activity{
 			e1.printStackTrace();
 		}
 		ObjUserPhotoWrap.savePhoto(userf, new ObjFunBooleanCallback() {
-			
+
 			@Override
 			public void callback(boolean result, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					clickBtn.setText(LOAD_FAIL);
-					return ;
+					return;
 				}
-				if(result){
+				if (result) {
 					int wedth = userphoto.getWidth();
 					int height = userphoto.getHeight();
-					
-					ObjUserPhotoWrap.addUserPhoto(user, userphoto, userf, "first", height, wedth, new ObjFunBooleanCallback() {
-						
-						@Override
-						public void callback(boolean result, AVException e) {
-							// TODO Auto-generated method stub
-							if(e != null){
-								clickBtn.setText(LOAD_FAIL);
-							}
-							if(result){
-								clickBtn.setText(LOAD_SUC);
-							}else{
-								clickBtn.setText(LOAD_FAIL);
-							}
-						}
-					});
-				}else{
+
+					ObjUserPhotoWrap.addUserPhoto(user, userphoto, userf,
+							"first", height, wedth,
+							new ObjFunBooleanCallback() {
+
+								@Override
+								public void callback(boolean result,
+										AVException e) {
+									// TODO Auto-generated method stub
+									if (e != null) {
+										clickBtn.setText(LOAD_FAIL);
+									}
+									if (result) {
+										clickBtn.setText(LOAD_SUC);
+									} else {
+										clickBtn.setText(LOAD_FAIL);
+									}
+								}
+							});
+				} else {
 					clickBtn.setText(LOAD_FAIL);
 				}
 			}
 		});
 	}
-	//获取用户照片
-	public void getUserPhoto(ObjUser phuser){
+
+	// 获取用户照片
+	public void getUserPhoto(ObjUser phuser) {
 		ObjUserPhotoWrap.queryUserPhoto(phuser, new ObjUserPhotoCallback() {
-			
+
 			@Override
 			public void callback(List<ObjUserPhoto> objects, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					clickBtn.setText(LOAD_FAIL);
-					return ;
+					return;
 				}
-				if(objects != null && objects.size()>0){
+				if (objects != null && objects.size() > 0) {
 					photoBean = objects.get(0);
 					clickBtn.setText(DELETEUSERPHOTO);
-					//queryIsPraiseUserPhoto(photoBean, user);
-				}else{
+					// queryIsPraiseUserPhoto(photoBean, user);
+				} else {
 					clickBtn.setText(LOAD_FAIL);
 				}
 			}
 		});
 	}
-	//删除用户照片
-	public void deleteUserPhoto(ObjUserPhoto photo){
+
+	// 删除用户照片
+	public void deleteUserPhoto(ObjUserPhoto photo) {
 		ObjUserPhotoWrap.deleteUserPhoto(photo, new ObjFunBooleanCallback() {
-			
+
 			@Override
 			public void callback(boolean result, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					clickBtn.setText(LOAD_FAIL);
-					return ;
+					return;
 				}
-				if(result){
+				if (result) {
 					clickBtn.setText(LOAD_SUC);
-				}else{
+				} else {
 					clickBtn.setText(LOAD_FAIL);
 				}
 			}
 		});
 	}
-	//查询是否对用户照片点赞
-	public void queryIsPraiseUserPhoto(ObjUserPhoto photo,ObjUser user){
-		ObjUserPhotoWrap.queryUserPhotoPraise(photo, user, new ObjFunBooleanCallback() {
-			
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOAD_FAIL);
-					return ;
-				}
-				if(result){
-					clickBtn.setText(CANCELPRAISEUSERPHOTO);
-					favorImg.setVisibility(View.VISIBLE);
-				}else{
-					clickBtn.setText(PRAISERUSERPHOTO);
-					favorImg.setVisibility(View.GONE);
-				}
-			}
-		});
+
+	// 查询是否对用户照片点赞
+	public void queryIsPraiseUserPhoto(ObjUserPhoto photo, ObjUser user) {
+		ObjUserPhotoWrap.queryUserPhotoPraise(photo, user,
+				new ObjFunBooleanCallback() {
+
+					@Override
+					public void callback(boolean result, AVException e) {
+						// TODO Auto-generated method stub
+						if (e != null) {
+							clickBtn.setText(LOAD_FAIL);
+							return;
+						}
+						if (result) {
+							clickBtn.setText(CANCELPRAISEUSERPHOTO);
+							favorImg.setVisibility(View.VISIBLE);
+						} else {
+							clickBtn.setText(PRAISERUSERPHOTO);
+							favorImg.setVisibility(View.GONE);
+						}
+					}
+				});
 	}
-	//对用户照片点赞
-	public void praiseUserPhoto(ObjUserPhoto photo,ObjUser user){
-		ObjUserPhotoWrap.praiseUserPhoto(photoBean, user, new ObjFunBooleanCallback() {
-			
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOAD_FAIL);
-					return ;
-				}
-				if(result){
-					clickBtn.setText(CANCELPRAISEUSERPHOTO);
-					favorImg.setVisibility(View.VISIBLE);
-				}else{
-					clickBtn.setText(LOAD_FAIL);
-				}
-			}
-		});
+
+	// 对用户照片点赞
+	public void praiseUserPhoto(ObjUserPhoto photo, ObjUser user) {
+		ObjUserPhotoWrap.praiseUserPhoto(photoBean, user,
+				new ObjFunBooleanCallback() {
+
+					@Override
+					public void callback(boolean result, AVException e) {
+						// TODO Auto-generated method stub
+						if (e != null) {
+							clickBtn.setText(LOAD_FAIL);
+							return;
+						}
+						if (result) {
+							clickBtn.setText(CANCELPRAISEUSERPHOTO);
+							favorImg.setVisibility(View.VISIBLE);
+						} else {
+							clickBtn.setText(LOAD_FAIL);
+						}
+					}
+				});
 	}
-	//对用户照片取消点赞
-	public void cancelPraiseUserPhoto(ObjUserPhoto photo,ObjUser user){
-		ObjUserPhotoWrap.cancelPraiseUserPhoto(photo, user, new ObjFunBooleanCallback() {
-			
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOAD_FAIL);
-					return ;
-				}
-				if(result){
-					clickBtn.setText(PRAISERUSERPHOTO);
-					favorImg.setVisibility(View.GONE);
-				}else{
-					clickBtn.setText(LOAD_FAIL);
-				}
-			}
-		});
+
+	// 对用户照片取消点赞
+	public void cancelPraiseUserPhoto(ObjUserPhoto photo, ObjUser user) {
+		ObjUserPhotoWrap.cancelPraiseUserPhoto(photo, user,
+				new ObjFunBooleanCallback() {
+
+					@Override
+					public void callback(boolean result, AVException e) {
+						// TODO Auto-generated method stub
+						if (e != null) {
+							clickBtn.setText(LOAD_FAIL);
+							return;
+						}
+						if (result) {
+							clickBtn.setText(PRAISERUSERPHOTO);
+							favorImg.setVisibility(View.GONE);
+						} else {
+							clickBtn.setText(LOAD_FAIL);
+						}
+					}
+				});
 	}
+
 	/**
 	 * 
 	 * 一下为测试界面相关部分
 	 */
 
-	private void showDialog(){
-		final  AlertDialog portraidlg=new AlertDialog.Builder(this).create();
+	private void showDialog() {
+		final AlertDialog portraidlg = new AlertDialog.Builder(this).create();
 		portraidlg.show();
-		Window win=portraidlg.getWindow();
+		Window win = portraidlg.getWindow();
 		win.setContentView(R.layout.dialog_show_photo);
-		RadioButton portrait_native=(RadioButton)win.findViewById(R.id.Portrait_native);
+		RadioButton portrait_native = (RadioButton) win
+				.findViewById(R.id.Portrait_native);
 		portrait_native.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Intent intent1=new Intent(Intent.ACTION_PICK,null);
-				intent1.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+				Intent intent1 = new Intent(Intent.ACTION_PICK, null);
+				intent1.setDataAndType(
+						MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
 				startActivityForResult(intent1, 11);
 				portraidlg.dismiss();
 			}
 		});
-		RadioButton portrait_take=(RadioButton)win.findViewById(R.id.Portrait_take);
+		RadioButton portrait_take = (RadioButton) win
+				.findViewById(R.id.Portrait_take);
 		portrait_take.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				//调用摄像头
-				Intent intent2=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
-						"/user_photo.png")));
+				// 调用摄像头
+				Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
+						.fromFile(new File(Environment
+								.getExternalStorageDirectory(),
+								"/user_photo.png")));
 				startActivityForResult(intent2, 22);
 				portraidlg.dismiss();
 			}
 		});
-		View viewTop=win.findViewById(R.id.view_top_dialog_sethead);
-		View viewBottom=win.findViewById(R.id.view_bottom_dialog_sethead);
-		//点击dialog外部，关闭dialog
+		View viewTop = win.findViewById(R.id.view_top_dialog_sethead);
+		View viewBottom = win.findViewById(R.id.view_bottom_dialog_sethead);
+		// 点击dialog外部，关闭dialog
 		viewTop.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -355,41 +384,41 @@ public class TestActivityTwo extends Activity{
 			}
 		});
 
-
-
 	}
+
 	private Bitmap headerPortait;
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		switch (requestCode) {
 		case 11:
-			if(resultCode==this.RESULT_OK){
-				cropPhoto(data.getData());//裁剪图片
+			if (resultCode == this.RESULT_OK) {
+				cropPhoto(data.getData());// 裁剪图片
 			}
-			break ;
+			break;
 		case 22:
-			if(resultCode==this.RESULT_OK){
-				File temp=new File(Environment.getExternalStorageDirectory()
+			if (resultCode == this.RESULT_OK) {
+				File temp = new File(Environment.getExternalStorageDirectory()
 						+ "/user_photo.png");
-				cropPhoto(Uri.fromFile(temp));//裁剪图片
+				cropPhoto(Uri.fromFile(temp));// 裁剪图片
 
 			}
 
 			break;
 		case 33:
-			if(data!=null){
-				Bundle extras=data.getExtras();
-				//裁剪后图片
-				headerPortait=extras.getParcelable("data");
+			if (data != null) {
+				Bundle extras = data.getExtras();
+				// 裁剪后图片
+				headerPortait = extras.getParcelable("data");
 				userphoto = headerPortait;
-				if(headerPortait!=null){
-					fPath = saveHeadImg(headerPortait,false);
+				if (headerPortait != null) {
+					fPath = saveHeadImg(headerPortait, false);
 				}
-				//切圆图片
-				headerPortait=BitmapCut.toRoundBitmap(headerPortait);
-				if(headerPortait!=null){
-					yPath = saveHeadImg(headerPortait,true);
+				// 切圆图片
+				headerPortait = BitmapCut.toRoundBitmap(headerPortait);
+				if (headerPortait != null) {
+					yPath = saveHeadImg(headerPortait, true);
 					ivTouxiang.setImageBitmap(headerPortait);
 				}
 			}
@@ -400,16 +429,19 @@ public class TestActivityTwo extends Activity{
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	public String saveHeadImg(Bitmap head,boolean isY){
-		FileOutputStream fos=null;
+
+	public String saveHeadImg(Bitmap head, boolean isY) {
+		FileOutputStream fos = null;
 		String path = "";
-		if(isY){
-			path = Environment.getExternalStorageDirectory()+"/user_photo.png";
-		}else{
-			path = Environment.getExternalStorageDirectory()+"/f_user_photo.png";
+		if (isY) {
+			path = Environment.getExternalStorageDirectory()
+					+ "/user_photo.png";
+		} else {
+			path = Environment.getExternalStorageDirectory()
+					+ "/f_user_photo.png";
 		}
 		try {
-			fos=new FileOutputStream(new File(path));
+			fos = new FileOutputStream(new File(path));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -429,7 +461,6 @@ public class TestActivityTwo extends Activity{
 		}
 		return path;
 
-
 	}
 
 	@Override
@@ -439,30 +470,31 @@ public class TestActivityTwo extends Activity{
 		return true;
 	}
 
-
-	public Bitmap readHead(){
-		String file=Environment.getExternalStorageDirectory()+"/user_photo.png";
+	public Bitmap readHead() {
+		String file = Environment.getExternalStorageDirectory()
+				+ "/user_photo.png";
 		return BitmapFactory.decodeFile(file);
 	}
 
 	/**
 	 * 调用拍照的裁剪功能
+	 * 
 	 * @param uri
 	 */
 
-	public void cropPhoto(Uri uri){
-		//调用拍照的裁剪功能
-		Intent intent=new Intent("com.android.camera.action.CROP");
+	public void cropPhoto(Uri uri) {
+		// 调用拍照的裁剪功能
+		Intent intent = new Intent("com.android.camera.action.CROP");
 		intent.setDataAndType(uri, "image/*");
 		intent.putExtra("crop", "true");
-		//aspectX aspectY 是宽和搞的比例
+		// aspectX aspectY 是宽和搞的比例
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
 		// // outputX outputY 是裁剪图片宽高
 		intent.putExtra("outputX", 250);
 		intent.putExtra("outputY", 250);
-		intent.putExtra("return-data",true);
-		startActivityForResult(intent,33);
+		intent.putExtra("return-data", true);
+		startActivityForResult(intent, 33);
 	}
 
 }

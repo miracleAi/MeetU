@@ -36,7 +36,8 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
-public class UserPhotoWallAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class UserPhotoWallAdapter extends
+		RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	private static final int TYPE_HEADER = 1;
 	private static final int TYPE_ITEM = 0;
 
@@ -46,8 +47,8 @@ public class UserPhotoWallAdapter extends RecyclerView.Adapter<RecyclerView.View
 	private int width;
 	private Context mContext;
 	private GridViewHeightaListener gridViewHeightaListener;
-	//网络数据相关
-	private BitmapUtils bitmapUtils; 
+	// 网络数据相关
+	private BitmapUtils bitmapUtils;
 	private String photoUrl;
 	private FinalBitmap finalBitmap;
 
@@ -62,16 +63,19 @@ public class UserPhotoWallAdapter extends RecyclerView.Adapter<RecyclerView.View
 	public void setOnItemClickLitener(OnItemClickCallBack mOnItemClickLitener) {
 		this.mOnItemClickLitener = mOnItemClickLitener;
 	}
+
 	public UserPhotoWallAdapter(Context context, List<ObjUserPhoto> datas) {
 		// TODO Auto-generated constructor stub
 		mInflater = LayoutInflater.from(context);
 		this.mPhotos = datas;
-		width = DisplayUtils.getWindowWidth((Activity)context)-DensityUtil.dip2px(context, 28);
-		mContext=context;
-		bitmapUtils=new BitmapUtils(mContext);
-		MyApplication app=(MyApplication) context.getApplicationContext();
-		finalBitmap=app.getFinalBitmap();
+		width = DisplayUtils.getWindowWidth((Activity) context)
+				- DensityUtil.dip2px(context, 28);
+		mContext = context;
+		bitmapUtils = new BitmapUtils(mContext);
+		MyApplication app = (MyApplication) context.getApplicationContext();
+		finalBitmap = app.getFinalBitmap();
 	}
+
 	@Override
 	public int getItemCount() {
 		// TODO Auto-generated method stub
@@ -81,72 +85,78 @@ public class UserPhotoWallAdapter extends RecyclerView.Adapter<RecyclerView.View
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int pos) {
 		// TODO Auto-generated method stub
-		if(mPhotos!=null && mPhotos.size()>0){
-			log.d("mytest", "pos"+pos);
-			if(getItemViewType(pos) == TYPE_HEADER ){
+		if (mPhotos != null && mPhotos.size() > 0) {
+			log.d("mytest", "pos" + pos);
+			if (getItemViewType(pos) == TYPE_HEADER) {
 				RecyclerHeaderViewHolder holder = (RecyclerHeaderViewHolder) viewHolder;
-				StaggeredGridLayoutManager.LayoutParams clp = (StaggeredGridLayoutManager.LayoutParams) holder.headView.getLayoutParams();
-				if(clp != null){
+				StaggeredGridLayoutManager.LayoutParams clp = (StaggeredGridLayoutManager.LayoutParams) holder.headView
+						.getLayoutParams();
+				if (clp != null) {
 					clp.setFullSpan(true);
 					clp.width = width;
 					clp.height = DensityUtil.dip2px(mContext, 335);
 					holder.headView.setLayoutParams(clp);
 				}
-			}else{
-				final int position = pos -1;
+			} else {
+				final int position = pos - 1;
 				final RecyclerItemViewHolder holder = (RecyclerItemViewHolder) viewHolder;
 				ObjUserPhoto item = mPhotos.get(position);
-				//设置第一行的上magin
-				if(position==0||position==1){
-					RelativeLayout.LayoutParams params= (android.widget.RelativeLayout.LayoutParams) holder.rlAll.getLayoutParams();
-					params.topMargin=DensityUtil.dip2px(mContext, 10);
+				// 设置第一行的上magin
+				if (position == 0 || position == 1) {
+					RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) holder.rlAll
+							.getLayoutParams();
+					params.topMargin = DensityUtil.dip2px(mContext, 10);
 					holder.rlAll.setLayoutParams(params);
 				}
-				
-				if(item.getPhoto()!=null){
-					photoUrl=item.getPhoto().getUrl();
-				}
-			
 
-				int photoWidth=item.getImageWidth();
-				int photoHight=item.getImageHeight();
-				int Hight=(int) ((double)photoWidth/(width/2)*(photoHight));
-				if(photoWidth>=(width/2)){
-					if(item.getPhoto()!=null){
-						finalBitmap.display(holder.ivImg, item.getPhoto().getUrl(), width/2, Hight);
+				if (item.getPhoto() != null) {
+					photoUrl = item.getPhoto().getUrl();
+				}
+
+				int photoWidth = item.getImageWidth();
+				int photoHight = item.getImageHeight();
+				int Hight = (int) ((double) photoWidth / (width / 2) * (photoHight));
+				if (photoWidth >= (width / 2)) {
+					if (item.getPhoto() != null) {
+						finalBitmap.display(holder.ivImg, item.getPhoto()
+								.getUrl(), width / 2, Hight);
 					}
-					
-				}else{
-					//处理bitmap 
-					bitmapUtils.display(holder.ivImg, item.getPhoto().getUrl(),new BitmapLoadCallBack<ImageView>() {
 
-						@Override
-						public void onLoadCompleted(ImageView container, String uri,
-								Bitmap bitmap, BitmapDisplayConfig config,
-								BitmapLoadFrom from) {
+				} else {
+					// 处理bitmap
+					bitmapUtils.display(holder.ivImg, item.getPhoto().getUrl(),
+							new BitmapLoadCallBack<ImageView>() {
 
-							bitmap=BitmapChange.zoomImg(bitmap, width/2);
-							holder.ivImg.setImageBitmap(bitmap);
-						}
+								@Override
+								public void onLoadCompleted(
+										ImageView container, String uri,
+										Bitmap bitmap,
+										BitmapDisplayConfig config,
+										BitmapLoadFrom from) {
 
-						@Override
-						public void onLoadFailed(ImageView arg0, String arg1,
-								Drawable arg2) {
-							// TODO Auto-generated method stub
+									bitmap = BitmapChange.zoomImg(bitmap,
+											width / 2);
+									holder.ivImg.setImageBitmap(bitmap);
+								}
 
-						}
-					} );
+								@Override
+								public void onLoadFailed(ImageView arg0,
+										String arg1, Drawable arg2) {
+									// TODO Auto-generated method stub
+
+								}
+							});
 
 				}
 
+				holder.ivFavorNumber.setText("" + item.getPraiseCount());
+				holder.ivViewNumber.setText("" + item.getBrowseCount());
+				holder.ivDesc.setText("" + item.getPhotoDescription());
 
-				holder.ivFavorNumber.setText(""+item.getPraiseCount());
-				holder.ivViewNumber.setText(""+item.getBrowseCount());
-				holder.ivDesc.setText(""+item.getPhotoDescription());
+				Date photoDate = item.getCreatedAt();
 
-				Date photoDate=item.getCreatedAt();
-
-				String photoDateString=DateUtils.getDateToString(photoDate.getTime());
+				String photoDateString = DateUtils.getDateToString(photoDate
+						.getTime());
 				holder.ivphotoDate.setText(photoDateString);
 				// 如果设置了回调，则设置点击事件
 				if (mOnItemClickLitener != null) {
@@ -157,55 +167,65 @@ public class UserPhotoWallAdapter extends RecyclerView.Adapter<RecyclerView.View
 						}
 					});
 
-					holder.itemView.setOnLongClickListener(new OnLongClickListener() {
-						@Override
-						public boolean onLongClick(View v) {
-							return false;
-						}
-					});
+					holder.itemView
+							.setOnLongClickListener(new OnLongClickListener() {
+								@Override
+								public boolean onLongClick(View v) {
+									return false;
+								}
+							});
 				}
 			}
 		}
 
 	}
+
 	@Override
 	public int getItemViewType(int position) {
 		// TODO Auto-generated method stub
 		return position == 0 ? TYPE_HEADER : TYPE_ITEM;
 	}
+
 	@Override
-	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup,
+			int viewType) {
 		Context context = viewGroup.getContext();
 		View view;
 		if (viewType == TYPE_HEADER) {
-			view = LayoutInflater.from(context)
-					.inflate(R.layout.recycler_header, viewGroup, false);
+			view = LayoutInflater.from(context).inflate(
+					R.layout.recycler_header, viewGroup, false);
 			return new RecyclerHeaderViewHolder(view);
 		} else if (viewType == TYPE_ITEM) {
-			view = LayoutInflater.from(context)
-					.inflate(R.layout.item_photowall_fragment, viewGroup, false);
+			view = LayoutInflater.from(context).inflate(
+					R.layout.item_photowall_fragment, viewGroup, false);
 			return new RecyclerItemViewHolder(view);
 		}
 
 		throw new RuntimeException("Invalid view type " + viewType);
 	}
+
 	private static class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
 		private RelativeLayout rlAll;
 		private ImageView ivImg;
-		private TextView ivFavorNumber,ivViewNumber,ivphotoDate,ivDesc;
+		private TextView ivFavorNumber, ivViewNumber, ivphotoDate, ivDesc;
+
 		public RecyclerItemViewHolder(View view) {
 			super(view);
 			ivImg = (ImageView) view.findViewById(R.id.mine_img_loading);
-			rlAll=(RelativeLayout) view.findViewById(R.id.rl_all);
-			ivFavorNumber=(TextView) view.findViewById(R.id.mine_favourNumber);
-			ivViewNumber=(TextView) view.findViewById(R.id.mine_viewNumber);
-			ivphotoDate=(TextView) view.findViewById(R.id.mine_date_item_photoWall_tv);
-			ivDesc=(TextView) view.findViewById(R.id.desc_item_photo_tv);
+			rlAll = (RelativeLayout) view.findViewById(R.id.rl_all);
+			ivFavorNumber = (TextView) view
+					.findViewById(R.id.mine_favourNumber);
+			ivViewNumber = (TextView) view.findViewById(R.id.mine_viewNumber);
+			ivphotoDate = (TextView) view
+					.findViewById(R.id.mine_date_item_photoWall_tv);
+			ivDesc = (TextView) view.findViewById(R.id.desc_item_photo_tv);
 		}
 	}
 
-	private static class RecyclerHeaderViewHolder extends RecyclerView.ViewHolder {
-		View headView ;
+	private static class RecyclerHeaderViewHolder extends
+			RecyclerView.ViewHolder {
+		View headView;
+
 		public RecyclerHeaderViewHolder(View itemView) {
 			super(itemView);
 			headView = itemView.findViewById(R.id.cv);

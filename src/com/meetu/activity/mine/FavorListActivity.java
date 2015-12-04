@@ -23,33 +23,35 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class FavorListActivity extends Activity implements OnRefreshListener2<ListView> ,OnItemClickListener,OnClickListener{
+public class FavorListActivity extends Activity implements
+		OnRefreshListener2<ListView>, OnItemClickListener, OnClickListener {
 	private PullToRefreshListView lvNewsList;
 	private LikesListviewAdapter adapter;
-	private List<Huodong> data=new ArrayList<Huodong>();
+	private List<Huodong> data = new ArrayList<Huodong>();
 	private ImageView back;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//去除title
-				super.requestWindowFeature(Window.FEATURE_NO_TITLE);
-				//全屏
-				super.getWindow();
+		// 去除title
+		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// 全屏
+		super.getWindow();
 		setContentView(R.layout.activity_favor_list);
-		 lvNewsList=(PullToRefreshListView)super.findViewById(R.id.newlikeslist);
-		 adapter=new LikesListviewAdapter(this,data);
-		 lvNewsList.setAdapter(adapter);
-		 lvNewsList.setMode(Mode.BOTH);
-		 lvNewsList.setOnRefreshListener(this);
-		 //lvNewsList.setRefreshing(true);	
-		 lvNewsList.setOnItemClickListener(this);
-		 initView();
+		lvNewsList = (PullToRefreshListView) super
+				.findViewById(R.id.newlikeslist);
+		adapter = new LikesListviewAdapter(this, data);
+		lvNewsList.setAdapter(adapter);
+		lvNewsList.setMode(Mode.BOTH);
+		lvNewsList.setOnRefreshListener(this);
+		// lvNewsList.setRefreshing(true);
+		lvNewsList.setOnItemClickListener(this);
+		initView();
 	}
 
 	private void initView() {
 		// TODO Auto-generated method stub
-		back=(ImageView) findViewById(R.id.back_favorlist_mine_img);
+		back = (ImageView) findViewById(R.id.back_favorlist_mine_img);
 		back.setOnClickListener(this);
 	}
 
@@ -63,33 +65,33 @@ public class FavorListActivity extends Activity implements OnRefreshListener2<Li
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-			case R.id.back_favorlist_mine_img :
-				finish();
-				
-				break;
+		case R.id.back_favorlist_mine_img:
+			finish();
 
-			default :
-				break;
+			break;
+
+		default:
+			break;
 		}
-		
+
 	}
 
 }

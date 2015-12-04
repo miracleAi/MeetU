@@ -71,7 +71,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-public class TestMsgActivity extends Activity{
+public class TestMsgActivity extends Activity {
 	private static final String AUTHORISECATEGORY = "AuthoriseCategory";
 	private static final String ISAPPLY = "isApply";
 	private static final String HAVEAUTHOREISE = "haveAuthorise";
@@ -95,25 +95,26 @@ public class TestMsgActivity extends Activity{
 	private static final String GETSCRIPBOXS = "getScripBoxs";
 	ImageView upImg;
 	Button clickBtn;
-	TextView countTv,infoTv;
+	TextView countTv, infoTv;
 	AVIMConversation chatConversation;
-	//当前觅聊会话ID
+	// 当前觅聊会话ID
 	String conversationId;
-	//会话成员列表
+	// 会话成员列表
 	ArrayList<String> memberList = new ArrayList<String>();
-	//权限
+	// 权限
 	ObjAuthoriseCategory category = new ObjAuthoriseCategory();
-	//权限申请
+	// 权限申请
 	ObjAuthoriseApply apply = new ObjAuthoriseApply();
 	ObjUser user = new ObjUser();
 	String fPath = "";
 	String yPath = "";
-	//需上传的用户照片
+	// 需上传的用户照片
 	Bitmap groupPhoto;
-	//当前小纸条
+	// 当前小纸条
 	ObjScrip scripCurrent = null;
-	//纸条箱
+	// 纸条箱
 	ObjScripBox box = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -121,6 +122,7 @@ public class TestMsgActivity extends Activity{
 		setContentView(R.layout.test_msg_layout);
 		initView();
 	}
+
 	private void initView() {
 		// TODO Auto-generated method stub
 		upImg = (ImageView) findViewById(R.id.up_img);
@@ -129,11 +131,13 @@ public class TestMsgActivity extends Activity{
 		clickBtn = (Button) findViewById(R.id.click);
 		AVUser currentUser = ObjUser.getCurrentUser();
 		user = AVUser.cast(currentUser, ObjUser.class);
-		Bitmap head=readHead();
-		if(head!=null){
+		Bitmap head = readHead();
+		if (head != null) {
 			groupPhoto = head;
-			fPath = Environment.getExternalStorageDirectory()+"/f_user_photo.png";
-			yPath = Environment.getExternalStorageDirectory()+"/user_photo.png";
+			fPath = Environment.getExternalStorageDirectory()
+					+ "/f_user_photo.png";
+			yPath = Environment.getExternalStorageDirectory()
+					+ "/user_photo.png";
 			upImg.setImageBitmap(head);
 		}
 		upImg.setOnClickListener(new OnClickListener() {
@@ -144,123 +148,125 @@ public class TestMsgActivity extends Activity{
 				showDialog();
 			}
 		});
-		//clickBtn.setText(AUTHORISECATEGORY);
-		//clickBtn.setText(CHATLOGOUT);
-		//clickBtn.setText(JOINGROUP);
-		//clickBtn.setText(MEMBERCOUNT);
-		//clickBtn.setText(SENDPICMSG);
+		// clickBtn.setText(AUTHORISECATEGORY);
+		// clickBtn.setText(CHATLOGOUT);
+		// clickBtn.setText(JOINGROUP);
+		// clickBtn.setText(MEMBERCOUNT);
+		// clickBtn.setText(SENDPICMSG);
 		clickBtn.setText(UPLOADPIC);
-		//clickBtn.setText(GETSCRIPBOXS);
+		// clickBtn.setText(GETSCRIPBOXS);
 		clickBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				if(clickBtn.getText().toString().equals(AUTHORISECATEGORY)){
-					//查询权限分类，判断是否需要权限
+				if (clickBtn.getText().toString().equals(AUTHORISECATEGORY)) {
+					// 查询权限分类，判断是否需要权限
 					clickBtn.setText(LOADING);
 					queryAuthoriseCategory(100);
 					return;
 				}
-				if(clickBtn.getText().toString().equals(HAVEAUTHOREISE)){
-					//查询是否拥有权限
+				if (clickBtn.getText().toString().equals(HAVEAUTHOREISE)) {
+					// 查询是否拥有权限
 					clickBtn.setText(LOADING);
 					queryHaveAuthorise(category);
 					return;
 				}
-				if(clickBtn.getText().toString().equals(ISAPPLY)){
-					//查询是否已申请
+				if (clickBtn.getText().toString().equals(ISAPPLY)) {
+					// 查询是否已申请
 					clickBtn.setText(LOADING);
 					queryIsApply(category);
 				}
-				if(clickBtn.getText().toString().equals(STARTAPPLY)){
-					//申请权限
+				if (clickBtn.getText().toString().equals(STARTAPPLY)) {
+					// 申请权限
 					clickBtn.setText(LOADING);
 					applyAuthorise(category, "hello");
 				}
-				if(clickBtn.getText().toString().equals(UPDATEAPPLY)){
-					//重新申请权限
+				if (clickBtn.getText().toString().equals(UPDATEAPPLY)) {
+					// 重新申请权限
 					clickBtn.setText(LOADING);
 					updateApplyAuthorise(apply);
 				}
-				if(clickBtn.getText().toString().equals(UPLOADPIC)){
-					//创建群聊：上传群照片，创建群，群信息插入觅聊表
+				if (clickBtn.getText().toString().equals(UPLOADPIC)) {
+					// 创建群聊：上传群照片，创建群，群信息插入觅聊表
 					clickBtn.setText(LOADING);
 					createGroup();
 				}
-				/*if(clickBtn.getText().toString().equals(CREATEGROUP)){
-					//创建群聊：上传群照片，创建群，群信息插入觅聊表
-					clickBtn.setText(LOADING);
-					createChat();
-				}*/
-				if(clickBtn.getText().toString().equals(SAVEGROUP)){
-					//创建群聊：上传群照片，群信息插入觅聊表
+				/*
+				 * if(clickBtn.getText().toString().equals(CREATEGROUP)){
+				 * //创建群聊：上传群照片，创建群，群信息插入觅聊表 clickBtn.setText(LOADING);
+				 * createChat(); }
+				 */
+				if (clickBtn.getText().toString().equals(SAVEGROUP)) {
+					// 创建群聊：上传群照片，群信息插入觅聊表
 					clickBtn.setText(LOADING);
 					saveGroupInfo();
 				}
-				if(clickBtn.getText().toString().equals(GETCHAT)){
-					//创建群聊：上传群照片群信息插入觅聊表
+				if (clickBtn.getText().toString().equals(GETCHAT)) {
+					// 创建群聊：上传群照片群信息插入觅聊表
 					clickBtn.setText(LOADING);
 					getChatGroup();
 				}
-				if(clickBtn.getText().toString().equals(JOINGROUP)){
-					//加入当前觅聊
+				if (clickBtn.getText().toString().equals(JOINGROUP)) {
+					// 加入当前觅聊
 					clickBtn.setText(LOADING);
 					joinGroup();
 				}
-				if(clickBtn.getText().toString().equals(MEMBERCOUNT)){
-					//会话成员数
+				if (clickBtn.getText().toString().equals(MEMBERCOUNT)) {
+					// 会话成员数
 					clickBtn.setText(LOADING);
 					getChatMembCount();
 				}
-				if(clickBtn.getText().toString().equals(MEMEBERS)){
-					//会话成员
+				if (clickBtn.getText().toString().equals(MEMEBERS)) {
+					// 会话成员
 					clickBtn.setText(LOADING);
 					getMembers();
 				}
-				if(clickBtn.getText().toString().equals(MEMBERINFO)){
-					//会话成员信息
+				if (clickBtn.getText().toString().equals(MEMBERINFO)) {
+					// 会话成员信息
 					clickBtn.setText(LOADING);
 					getMemberInfo();
 				}
-				if(clickBtn.getText().toString().equals(SENDMSG)){
-					//发送信息
+				if (clickBtn.getText().toString().equals(SENDMSG)) {
+					// 发送信息
 					clickBtn.setText(LOADING);
 					sendMsg(false);
 				}
-				if(clickBtn.getText().toString().equals(SENDPICMSG)){
-					//发送图片信息
+				if (clickBtn.getText().toString().equals(SENDPICMSG)) {
+					// 发送图片信息
 					clickBtn.setText(LOADING);
 					sendPicmsg(false);
 				}
-				if(clickBtn.getText().toString().equals(CHATLOGOUT)){
+				if (clickBtn.getText().toString().equals(CHATLOGOUT)) {
 					clickBtn.setText(LOADING);
-					//退出聊天登录
+					// 退出聊天登录
 					logoutChat();
 				}
-				if(clickBtn.getText().toString().equals(CREATESCRIP)){
-					//创建小纸条
+				if (clickBtn.getText().toString().equals(CREATESCRIP)) {
+					// 创建小纸条
 					clickBtn.setText(LOADING);
 					createScript();
 				}
-				if(clickBtn.getText().toString().equals(GETSCRIPBOXS)){
-					//获取纸条箱
+				if (clickBtn.getText().toString().equals(GETSCRIPBOXS)) {
+					// 获取纸条箱
 					clickBtn.setText(LOADING);
 					getScripBoxs();
 				}
-				if(clickBtn.getText().toString().equals(GETSCRIPS)){
-					//获取纸条箱内小纸条
+				if (clickBtn.getText().toString().equals(GETSCRIPS)) {
+					// 获取纸条箱内小纸条
 					clickBtn.setText(LOADING);
 					getScrips(box);
 				}
 			}
 		});
 	}
-	//创建小纸条
-	public void createScript(){
+
+	// 创建小纸条
+	public void createScript() {
 		ObjUser receiver = null;
 		try {
-			receiver = ObjUser.createWithoutData(ObjUser.class, "55d050e600b0de09f8a0ab89");
+			receiver = ObjUser.createWithoutData(ObjUser.class,
+					"55d050e600b0de09f8a0ab89");
 			ObjScrip scrip = new ObjScrip();
 			scrip.setSender(user);
 			scrip.setReceiver(receiver);
@@ -271,13 +277,13 @@ public class TestMsgActivity extends Activity{
 			list.add(receiver.getObjectId());
 			scrip.setM(list);
 			ObjScriptWrap.createScrip(scrip, new ObjScripInfoCallback() {
-				
+
 				@Override
 				public void callback(ObjScrip scrip, AVException e) {
 					// TODO Auto-generated method stub
-					if( e != null){
+					if (e != null) {
 						clickBtn.setText(LOADFAIL);
-					}else{
+					} else {
 						clickBtn.setText(LOADSUC);
 						scripCurrent = scrip;
 					}
@@ -288,93 +294,99 @@ public class TestMsgActivity extends Activity{
 			e1.printStackTrace();
 		}
 	}
-	//获取所有纸条箱
-	public void getScripBoxs(){
+
+	// 获取所有纸条箱
+	public void getScripBoxs() {
 		ObjScriptWrap.queryScripBox(user, new ObjScripBoxCallback() {
-			
+
 			@Override
 			public void callback(List<ObjScripBox> objects, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					clickBtn.setText(LOADFAIL);
-					return ;
+					return;
 				}
-				if(objects.size()>0){
+				if (objects.size() > 0) {
 					box = objects.get(0);
 					clickBtn.setText(GETSCRIPS);
-				}else{
+				} else {
 					clickBtn.setText(LOADFAIL);
 				}
 			}
 		});
 	}
-	//获取纸条箱内所有小纸条
-	public void getScrips(ObjScripBox box){
+
+	// 获取纸条箱内所有小纸条
+	public void getScrips(ObjScripBox box) {
 		ObjScriptWrap.queryAllScrip(box, new ObjScripCallback() {
-			
+
 			@Override
 			public void callback(List<ObjScrip> objects, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					clickBtn.setText(LOADFAIL);
-					return ;
+					return;
 				}
-				if(objects.size()>0){
+				if (objects.size() > 0) {
 					clickBtn.setText(LOADSUC);
-				}else{
+				} else {
 					clickBtn.setText(LOADFAIL);
 				}
 			}
 		});
 	}
-	AVIMConversation conv = MyApplication.chatClient.getConversation("5644076600b0c060f9704638");
-	//发送信息
-	public void sendMsg(boolean isScrip){
+
+	AVIMConversation conv = MyApplication.chatClient
+			.getConversation("5644076600b0c060f9704638");
+
+	// 发送信息
+	public void sendMsg(boolean isScrip) {
 		AVIMTextMessage msg = new AVIMTextMessage();
 		msg.setText("你好");
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(isScrip){
-			map.put(Constants.SCRIP_ID,scripCurrent.getObjectId());
+		if (isScrip) {
+			map.put(Constants.SCRIP_ID, scripCurrent.getObjectId());
 			map.put(Constants.CHAT_MSG_TYPE, Constants.SHOW_SCRIPT);
 			map.put(Constants.SCRIP_X, 500);
 			map.put(Constants.SCRIP_Y, 100);
-		}else{
-			//测试数据，实际为最新一条消息发送时间
+		} else {
+			// 测试数据，实际为最新一条消息发送时间
 			long l = System.currentTimeMillis() - 10000;
 			map.put(Constants.CHAT_MSG_TYPE, Constants.SHOW_TEXT);
 			map.put(Constants.IS_SHOW_TIME, ChatMsgUtils.isShowChatTime(l));
 		}
 		msg.setAttrs(map);
-		ObjChatMessage.sendChatMsg(conv,msg , new ObjFunBooleanCallback() {
+		ObjChatMessage.sendChatMsg(conv, msg, new ObjFunBooleanCallback() {
 
 			@Override
 			public void callback(boolean result, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					clickBtn.setText(LOADFAIL);
-					return ;
+					return;
 				}
-				if(result){
+				if (result) {
 					clickBtn.setText(LOADSUC);
-				}else{
+				} else {
 					clickBtn.setText(LOADFAIL);
 				}
 			}
 		});
 	}
-	//发送图片消息
-	public void sendPicmsg(boolean isScrip){
+
+	// 发送图片消息
+	public void sendPicmsg(boolean isScrip) {
 		AVIMImageMessage msg;
 		try {
 			msg = new AVIMImageMessage(fPath);
 			Map<String, Object> map = new HashMap<String, Object>();
-			if(isScrip){
-				map.put(Constants.SCRIP_ID,scripCurrent.getObjectId());
+			if (isScrip) {
+				map.put(Constants.SCRIP_ID, scripCurrent.getObjectId());
 				map.put(Constants.CHAT_MSG_TYPE, Constants.SHOW_SCRIPT);
 				map.put(Constants.SCRIP_X, 500);
 				map.put(Constants.SCRIP_Y, 100);
-			}else{
-				//测试数据，实际为最新一条消息发送时间
+			} else {
+				// 测试数据，实际为最新一条消息发送时间
 				long l = System.currentTimeMillis() - 10000;
 				map.put(Constants.CHAT_MSG_TYPE, Constants.SHOW_IMG);
 				map.put(Constants.IS_SHOW_TIME, ChatMsgUtils.isShowChatTime(l));
@@ -385,13 +397,13 @@ public class TestMsgActivity extends Activity{
 				@Override
 				public void callback(boolean result, AVException e) {
 					// TODO Auto-generated method stub
-					if(e != null){
+					if (e != null) {
 						clickBtn.setText(LOADFAIL);
-						return ;
+						return;
 					}
-					if(result){
+					if (result) {
 						clickBtn.setText(LOADSUC);
-					}else{
+					} else {
 						clickBtn.setText(LOADFAIL);
 					}
 				}
@@ -404,11 +416,14 @@ public class TestMsgActivity extends Activity{
 			e1.printStackTrace();
 		}
 	}
+
 	AVFile groupf = null;
-	//创建群
-	public void createGroup(){
+
+	// 创建群
+	public void createGroup() {
 		try {
-			groupf = AVFile.withAbsoluteLocalPath("chat"+user.getObjectId()+Constants.IMG_TYPE, fPath);
+			groupf = AVFile.withAbsoluteLocalPath("chat" + user.getObjectId()
+					+ Constants.IMG_TYPE, fPath);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -416,346 +431,372 @@ public class TestMsgActivity extends Activity{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//上传图片
+		// 上传图片
 		ObjUserPhotoWrap.savePhoto(groupf, new ObjFunBooleanCallback() {
 
 			@Override
 			public void callback(boolean result, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					clickBtn.setText(LOADFAIL);
-					return ;
+					return;
 				}
-				if(!result){
+				if (!result) {
 					clickBtn.setText(LOADFAIL);
 					return;
 
 				}
-				if(MyApplication.isChatLogin){
-					//clickBtn.setText(SAVEGROUP);
+				if (MyApplication.isChatLogin) {
+					// clickBtn.setText(SAVEGROUP);
 					clickBtn.setText(CREATESCRIP);
-				}else{
-					ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
+				} else {
+					ObjChatMessage.connectToChatServer(
+							MyApplication.chatClient,
+							new ObjAvimclientCallback() {
 
-						@Override
-						public void callback(AVIMClient client, AVException e) {
-							// TODO Auto-generated method stub
-							if(e != null){
-								clickBtn.setText(LOADFAIL);
-								return ;
-							}
-							if(client != null){
-								MyApplication.chatClient = client;
-								clickBtn.setText(SAVEGROUP);
-								//clickBtn.setText(CREATESCRIP);
-							}else{
-								clickBtn.setText(LOADFAIL);
-							}
+								@Override
+								public void callback(AVIMClient client,
+										AVException e) {
+									// TODO Auto-generated method stub
+									if (e != null) {
+										clickBtn.setText(LOADFAIL);
+										return;
+									}
+									if (client != null) {
+										MyApplication.chatClient = client;
+										clickBtn.setText(SAVEGROUP);
+										// clickBtn.setText(CREATESCRIP);
+									} else {
+										clickBtn.setText(LOADFAIL);
+									}
+								}
+							});
+				}
+			}
+		});
+	}
+
+	// 创建会话,已改为后台创建
+	/*
+	 * public void createChat(){
+	 * ObjChatMessage.createChat(MyApplication.chatClient,
+	 * Arrays.asList(user.getObjectId()), "chat", new ObjCoversationCallback() {
+	 * 
+	 * @Override public void callback(AVIMConversation conversation, AVException
+	 * e) { // TODO Auto-generated method stub if(e != null){
+	 * clickBtn.setText(LOADFAIL); return ; } if(conversation != null){
+	 * chatConversation = conversation; clickBtn.setText(SAVEGROUP); }else{
+	 * clickBtn.setText(LOADFAIL); } } }); }
+	 */
+	// 保存群信息
+	public void saveGroupInfo() {
+		ObjChatWrap.saveGroupInfo(user, groupf, "zlp_hello",
+				new ObjChatBeanCallback() {
+
+					@Override
+					public void callback(ObjChat object, AVException e) {
+						// TODO Auto-generated method stub
+						if (e != null) {
+							clickBtn.setText(LOADFAIL);
+							return;
 						}
-					});
-				}
-			}
-		});
+						clickBtn.setText(GETCHAT);
+					}
+				});
 	}
-	//创建会话,已改为后台创建
-	/*public void createChat(){
-		ObjChatMessage.createChat(MyApplication.chatClient, Arrays.asList(user.getObjectId()), "chat", new ObjCoversationCallback() {
 
-			@Override
-			public void callback(AVIMConversation conversation, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOADFAIL);
-					return ;
-				}
-				if(conversation != null){
-					chatConversation = conversation;
-					clickBtn.setText(SAVEGROUP);
-				}else{
-					clickBtn.setText(LOADFAIL);
-				}
-			}
-		});
-	}*/
-	//保存群信息
-	public void saveGroupInfo(){
-		ObjChatWrap.saveGroupInfo(user, groupf, "zlp_hello", new ObjChatBeanCallback() {
-
-			@Override
-			public void callback(ObjChat object, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOADFAIL);
-					return ;
-				}
-				clickBtn.setText(GETCHAT);
-			}
-		});
-	}
-	//获取觅聊群
-	public void getChatGroup(){
+	// 获取觅聊群
+	public void getChatGroup() {
 		ObjChatWrap.queryChatList(new ObjChatCallback() {
 
 			@Override
 			public void callback(List<ObjChat> objects, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					clickBtn.setText(LOADFAIL);
-					return ;
+					return;
 				}
-				if(objects.size()>0){
+				if (objects.size() > 0) {
 					conversationId = objects.get(0).getConversationId();
-					if(MyApplication.isChatLogin){
+					if (MyApplication.isChatLogin) {
 						clickBtn.setText(JOINGROUP);
-					}else{
-						ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
+					} else {
+						ObjChatMessage.connectToChatServer(
+								MyApplication.chatClient,
+								new ObjAvimclientCallback() {
 
-							@Override
-							public void callback(AVIMClient client, AVException e) {
-								// TODO Auto-generated method stub
-								if(e != null){
-									clickBtn.setText(LOADFAIL);
-									return ;
-								}
-								if(client != null){
-									MyApplication.chatClient = client;
-									clickBtn.setText(JOINGROUP);
-								}else{
-									clickBtn.setText(LOADFAIL);
-								}
-							}
-						});
+									@Override
+									public void callback(AVIMClient client,
+											AVException e) {
+										// TODO Auto-generated method stub
+										if (e != null) {
+											clickBtn.setText(LOADFAIL);
+											return;
+										}
+										if (client != null) {
+											MyApplication.chatClient = client;
+											clickBtn.setText(JOINGROUP);
+										} else {
+											clickBtn.setText(LOADFAIL);
+										}
+									}
+								});
 					}
-				}else{
+				} else {
 					clickBtn.setText("no chat");
 				}
 			}
 		});
 	}
-	//加入当前觅聊
-	public void joinGroup(){
-		ObjChatMessage.joinChat(MyApplication.chatClient, conv, new ObjFunBooleanCallback() {
 
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOADFAIL);
-					return ;
-				}
-				if(result){
-					clickBtn.setText(LOADSUC);
-				}else{
-					clickBtn.setText(LOADFAIL);
-				}
-			}
-		});
+	// 加入当前觅聊
+	public void joinGroup() {
+		ObjChatMessage.joinChat(MyApplication.chatClient, conv,
+				new ObjFunBooleanCallback() {
+
+					@Override
+					public void callback(boolean result, AVException e) {
+						// TODO Auto-generated method stub
+						if (e != null) {
+							clickBtn.setText(LOADFAIL);
+							return;
+						}
+						if (result) {
+							clickBtn.setText(LOADSUC);
+						} else {
+							clickBtn.setText(LOADFAIL);
+						}
+					}
+				});
 	}
-	//获取会话成员数
-	public void getChatMembCount(){
-		ObjChatMessage.getChatCount(conv , new ObjFunCountCallback() {
+
+	// 获取会话成员数
+	public void getChatMembCount() {
+		ObjChatMessage.getChatCount(conv, new ObjFunCountCallback() {
 
 			@Override
 			public void callback(int count, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					clickBtn.setText(LOADFAIL);
-					return ;
+					return;
 				}
 				countTv.setText(String.valueOf(count));
 				clickBtn.setText(MEMEBERS);
 			}
 		});
 	}
-	//获取会话成员
-	public void getMembers(){
-		ObjChatMessage.getChatMembers(conv,new ObjListCallback() {
+
+	// 获取会话成员
+	public void getMembers() {
+		ObjChatMessage.getChatMembers(conv, new ObjListCallback() {
 
 			@Override
 			public void callback(ArrayList<String> list, AVException e) {
 				// TODO Auto-generated method stub
-				if(list.size() == 0){
+				if (list.size() == 0) {
 					clickBtn.setText(LOADFAIL);
 					return;
 				}
-				for(String s:list){
+				for (String s : list) {
 					memberList.add(s);
 				}
 				clickBtn.setText(MEMBERINFO);
 			}
 		});
 	}
-	//获取成员信息
-	public void getMemberInfo(){
-		ObjUserWrap.getObjUser(memberList.get(0),new ObjUserInfoCallback() {
+
+	// 获取成员信息
+	public void getMemberInfo() {
+		ObjUserWrap.getObjUser(memberList.get(0), new ObjUserInfoCallback() {
 
 			@Override
 			public void callback(ObjUser user, AVException e) {
 				// TODO Auto-generated method stub
-				if(e != null){
+				if (e != null) {
 					clickBtn.setText(LOADFAIL);
-					return ;
+					return;
 				}
 				infoTv.setText(user.getProfileClip().getUrl());
 				clickBtn.setText(LOADSUC);
 			}
 		});
 	}
-	//退出聊天登录
-	public void logoutChat(){
-		ObjChatMessage.connectToChatServer(MyApplication.chatClient, new ObjAvimclientCallback() {
 
-			@Override
-			public void callback(AVIMClient client, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOADFAIL);
-					return ;
-				}
-				if(client != null){
-					clickBtn.setText(LOADSUC);
-				}else{
-					clickBtn.setText(LOADFAIL);
-				}
-			}
-		});
-	}
-	//查询是否需要权限
-	public void queryAuthoriseCategory(int operationNum){
-		ObjAuthoriseWrap.queryAuthoriseCatogory(operationNum, new ObjAuthoriseCategoryCallback() {
+	// 退出聊天登录
+	public void logoutChat() {
+		ObjChatMessage.connectToChatServer(MyApplication.chatClient,
+				new ObjAvimclientCallback() {
 
-			@Override
-			public void callback(List<ObjAuthoriseCategory> objects, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOADFAIL);
-					return;
-				}
-				if(objects.size() ==  0){
-					clickBtn.setText(LOADFAIL);
-					return;
-				}
-				category = objects.get(0);
-				if(category.isNeedAuthorise()){
-					clickBtn.setText(HAVEAUTHOREISE);
-				}else{
-					clickBtn.setText(UPLOADPIC);
-				}
-			}
-		});
+					@Override
+					public void callback(AVIMClient client, AVException e) {
+						// TODO Auto-generated method stub
+						if (e != null) {
+							clickBtn.setText(LOADFAIL);
+							return;
+						}
+						if (client != null) {
+							clickBtn.setText(LOADSUC);
+						} else {
+							clickBtn.setText(LOADFAIL);
+						}
+					}
+				});
 	}
-	//查询是否有权限
-	public void queryHaveAuthorise(ObjAuthoriseCategory category){
-		ObjAuthoriseWrap.queryUserAuthorise(category,user, new ObjFunBooleanCallback() {
 
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOADFAIL);
-					return;
-				}
-				if(result){
-					clickBtn.setText(UPLOADPIC);
-				}else{
-					clickBtn.setText(ISAPPLY);
-				}
-			}
-		});
-	}
-	//查询是否已申请
-	public void queryIsApply(ObjAuthoriseCategory category){
-		ObjAuthoriseWrap.queryApply(user, category, new ObjAuthoriseApplyCallback() {
+	// 查询是否需要权限
+	public void queryAuthoriseCategory(int operationNum) {
+		ObjAuthoriseWrap.queryAuthoriseCatogory(operationNum,
+				new ObjAuthoriseCategoryCallback() {
 
-			@Override
-			public void callback(List<ObjAuthoriseApply> objects, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOADFAIL);
-					return;
-				}
-				if(objects.size() == 0){
-					clickBtn.setText(STARTAPPLY);
-				}else{
-					apply = objects.get(0);
-					clickBtn.setText(UPDATEAPPLY);
-				}
-			}
-		});
+					@Override
+					public void callback(List<ObjAuthoriseCategory> objects,
+							AVException e) {
+						// TODO Auto-generated method stub
+						if (e != null) {
+							clickBtn.setText(LOADFAIL);
+							return;
+						}
+						if (objects.size() == 0) {
+							clickBtn.setText(LOADFAIL);
+							return;
+						}
+						category = objects.get(0);
+						if (category.isNeedAuthorise()) {
+							clickBtn.setText(HAVEAUTHOREISE);
+						} else {
+							clickBtn.setText(UPLOADPIC);
+						}
+					}
+				});
 	}
-	//发起申请
-	public void applyAuthorise(ObjAuthoriseCategory caty,String argument){
-		ObjAuthoriseWrap.applyAuthorise(user, caty, argument, new ObjFunBooleanCallback() {
 
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(e != null){
-					clickBtn.setText(LOADFAIL);
-					return;
-				}
-				if(result){
-					clickBtn.setText(LOADSUC);
-				}else{
-					clickBtn.setText(LOADFAIL);
-				}
-			}
-		});
+	// 查询是否有权限
+	public void queryHaveAuthorise(ObjAuthoriseCategory category) {
+		ObjAuthoriseWrap.queryUserAuthorise(category, user,
+				new ObjFunBooleanCallback() {
+
+					@Override
+					public void callback(boolean result, AVException e) {
+						// TODO Auto-generated method stub
+						if (e != null) {
+							clickBtn.setText(LOADFAIL);
+							return;
+						}
+						if (result) {
+							clickBtn.setText(UPLOADPIC);
+						} else {
+							clickBtn.setText(ISAPPLY);
+						}
+					}
+				});
 	}
-	//重新申请
-	public void updateApplyAuthorise(ObjAuthoriseApply aply){
+
+	// 查询是否已申请
+	public void queryIsApply(ObjAuthoriseCategory category) {
+		ObjAuthoriseWrap.queryApply(user, category,
+				new ObjAuthoriseApplyCallback() {
+
+					@Override
+					public void callback(List<ObjAuthoriseApply> objects,
+							AVException e) {
+						// TODO Auto-generated method stub
+						if (e != null) {
+							clickBtn.setText(LOADFAIL);
+							return;
+						}
+						if (objects.size() == 0) {
+							clickBtn.setText(STARTAPPLY);
+						} else {
+							apply = objects.get(0);
+							clickBtn.setText(UPDATEAPPLY);
+						}
+					}
+				});
+	}
+
+	// 发起申请
+	public void applyAuthorise(ObjAuthoriseCategory caty, String argument) {
+		ObjAuthoriseWrap.applyAuthorise(user, caty, argument,
+				new ObjFunBooleanCallback() {
+
+					@Override
+					public void callback(boolean result, AVException e) {
+						// TODO Auto-generated method stub
+						if (e != null) {
+							clickBtn.setText(LOADFAIL);
+							return;
+						}
+						if (result) {
+							clickBtn.setText(LOADSUC);
+						} else {
+							clickBtn.setText(LOADFAIL);
+						}
+					}
+				});
+	}
+
+	// 重新申请
+	public void updateApplyAuthorise(ObjAuthoriseApply aply) {
 		aply.setFreshStatus(false);
-//		ObjAuthoriseWrap.updateApplyAuthorise(aply, new ObjFunBooleanCallback() {
-//
-//			@Override
-//			public void callback(boolean result, AVException e) {
-//				// TODO Auto-generated method stub
-//				if(e != null){
-//					clickBtn.setText(LOADFAIL);
-//					return;
-//				}
-//				if(result){
-//					clickBtn.setText(LOADSUC);
-//				}else{
-//					clickBtn.setText(LOADFAIL);
-//				}
-//			}
-//		});
+		// ObjAuthoriseWrap.updateApplyAuthorise(aply, new
+		// ObjFunBooleanCallback() {
+		//
+		// @Override
+		// public void callback(boolean result, AVException e) {
+		// // TODO Auto-generated method stub
+		// if(e != null){
+		// clickBtn.setText(LOADFAIL);
+		// return;
+		// }
+		// if(result){
+		// clickBtn.setText(LOADSUC);
+		// }else{
+		// clickBtn.setText(LOADFAIL);
+		// }
+		// }
+		// });
 	}
-	private void showDialog(){
-		final  AlertDialog portraidlg=new AlertDialog.Builder(this).create();
+
+	private void showDialog() {
+		final AlertDialog portraidlg = new AlertDialog.Builder(this).create();
 		portraidlg.show();
-		Window win=portraidlg.getWindow();
+		Window win = portraidlg.getWindow();
 		win.setContentView(R.layout.dialog_show_photo);
-		RadioButton portrait_native=(RadioButton)win.findViewById(R.id.Portrait_native);
+		RadioButton portrait_native = (RadioButton) win
+				.findViewById(R.id.Portrait_native);
 		portrait_native.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Intent intent1=new Intent(Intent.ACTION_PICK,null);
-				intent1.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+				Intent intent1 = new Intent(Intent.ACTION_PICK, null);
+				intent1.setDataAndType(
+						MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
 				startActivityForResult(intent1, 11);
 				portraidlg.dismiss();
 			}
 		});
-		RadioButton portrait_take=(RadioButton)win.findViewById(R.id.Portrait_take);
+		RadioButton portrait_take = (RadioButton) win
+				.findViewById(R.id.Portrait_take);
 		portrait_take.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				//调用摄像头
-				Intent intent2=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
-						"/user_photo.png")));
+				// 调用摄像头
+				Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
+						.fromFile(new File(Environment
+								.getExternalStorageDirectory(),
+								"/user_photo.png")));
 				startActivityForResult(intent2, 22);
 				portraidlg.dismiss();
 			}
 		});
-		View viewTop=win.findViewById(R.id.view_top_dialog_sethead);
-		View viewBottom=win.findViewById(R.id.view_bottom_dialog_sethead);
-		//点击dialog外部，关闭dialog
+		View viewTop = win.findViewById(R.id.view_top_dialog_sethead);
+		View viewBottom = win.findViewById(R.id.view_bottom_dialog_sethead);
+		// 点击dialog外部，关闭dialog
 		viewTop.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -771,41 +812,41 @@ public class TestMsgActivity extends Activity{
 			}
 		});
 
-
-
 	}
+
 	private Bitmap headerPortait;
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		switch (requestCode) {
 		case 11:
-			if(resultCode==this.RESULT_OK){
-				cropPhoto(data.getData());//裁剪图片
+			if (resultCode == this.RESULT_OK) {
+				cropPhoto(data.getData());// 裁剪图片
 			}
-			break ;
+			break;
 		case 22:
-			if(resultCode==this.RESULT_OK){
-				File temp=new File(Environment.getExternalStorageDirectory()
+			if (resultCode == this.RESULT_OK) {
+				File temp = new File(Environment.getExternalStorageDirectory()
 						+ "/user_photo.png");
-				cropPhoto(Uri.fromFile(temp));//裁剪图片
+				cropPhoto(Uri.fromFile(temp));// 裁剪图片
 
 			}
 
 			break;
 		case 33:
-			if(data!=null){
-				Bundle extras=data.getExtras();
-				//裁剪后图片
-				headerPortait=extras.getParcelable("data");
+			if (data != null) {
+				Bundle extras = data.getExtras();
+				// 裁剪后图片
+				headerPortait = extras.getParcelable("data");
 				groupPhoto = headerPortait;
-				if(headerPortait!=null){
-					fPath = saveHeadImg(headerPortait,false);
+				if (headerPortait != null) {
+					fPath = saveHeadImg(headerPortait, false);
 				}
-				//切圆图片
-				headerPortait=BitmapCut.toRoundBitmap(headerPortait);
-				if(headerPortait!=null){
-					yPath = saveHeadImg(headerPortait,true);
+				// 切圆图片
+				headerPortait = BitmapCut.toRoundBitmap(headerPortait);
+				if (headerPortait != null) {
+					yPath = saveHeadImg(headerPortait, true);
 					upImg.setImageBitmap(headerPortait);
 				}
 			}
@@ -816,16 +857,19 @@ public class TestMsgActivity extends Activity{
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	public String saveHeadImg(Bitmap head,boolean isY){
-		FileOutputStream fos=null;
+
+	public String saveHeadImg(Bitmap head, boolean isY) {
+		FileOutputStream fos = null;
 		String path = "";
-		if(isY){
-			path = Environment.getExternalStorageDirectory()+"/user_photo.png";
-		}else{
-			path = Environment.getExternalStorageDirectory()+"/f_user_photo.png";
+		if (isY) {
+			path = Environment.getExternalStorageDirectory()
+					+ "/user_photo.png";
+		} else {
+			path = Environment.getExternalStorageDirectory()
+					+ "/f_user_photo.png";
 		}
 		try {
-			fos=new FileOutputStream(new File(path));
+			fos = new FileOutputStream(new File(path));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -845,7 +889,6 @@ public class TestMsgActivity extends Activity{
 		}
 		return path;
 
-
 	}
 
 	@Override
@@ -855,29 +898,30 @@ public class TestMsgActivity extends Activity{
 		return true;
 	}
 
-
-	public Bitmap readHead(){
-		String file=Environment.getExternalStorageDirectory()+"/user_photo.png";
+	public Bitmap readHead() {
+		String file = Environment.getExternalStorageDirectory()
+				+ "/user_photo.png";
 		return BitmapFactory.decodeFile(file);
 	}
 
 	/**
 	 * 调用拍照的裁剪功能
+	 * 
 	 * @param uri
 	 */
 
-	public void cropPhoto(Uri uri){
-		//调用拍照的裁剪功能
-		Intent intent=new Intent("com.android.camera.action.CROP");
+	public void cropPhoto(Uri uri) {
+		// 调用拍照的裁剪功能
+		Intent intent = new Intent("com.android.camera.action.CROP");
 		intent.setDataAndType(uri, "image/*");
 		intent.putExtra("crop", "true");
-		//aspectX aspectY 是宽和搞的比例
+		// aspectX aspectY 是宽和搞的比例
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
 		// // outputX outputY 是裁剪图片宽高
 		intent.putExtra("outputX", 250);
 		intent.putExtra("outputY", 250);
-		intent.putExtra("return-data",true);
-		startActivityForResult(intent,33);
+		intent.putExtra("return-data", true);
+		startActivityForResult(intent, 33);
 	}
 }

@@ -7,5 +7,5 @@ import com.avos.avoscloud.im.v2.AVIMException;
 
 public interface ObjFunMapCallback {
 
-	void callback(Map<String, Object> map,AVException e);
+	void callback(Map<String, Object> map, AVException e);
 }

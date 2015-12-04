@@ -10,9 +10,10 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
 
-public class ShowSysMsgPhotoActivity extends Activity{
+public class ShowSysMsgPhotoActivity extends Activity {
 	ImageView photoImv;
 	BitmapUtils bitmapUtils;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -22,11 +23,11 @@ public class ShowSysMsgPhotoActivity extends Activity{
 		bitmapUtils = new BitmapUtils(getApplicationContext());
 		photoImv = (ImageView) findViewById(R.id.photo_demail_mine);
 		String imgUrl = getIntent().getStringExtra("photoUrl");
-		if(imgUrl != null){
+		if (imgUrl != null) {
 			bitmapUtils.display(photoImv, imgUrl);
 		}
 		photoImv.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub

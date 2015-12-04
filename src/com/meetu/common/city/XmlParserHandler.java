@@ -6,17 +6,15 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-
-
 public class XmlParserHandler extends DefaultHandler {
 
 	/**
 	 * 存储所有的解析对象
 	 */
 	private List<ProvinceModel> provinceList = new ArrayList<ProvinceModel>();
-	 	  
+
 	public XmlParserHandler() {
-		
+
 	}
 
 	public List<ProvinceModel> getDataList() {
@@ -31,7 +29,7 @@ public class XmlParserHandler extends DefaultHandler {
 	ProvinceModel provinceModel = new ProvinceModel();
 	CityModel cityModel = new CityModel();
 	DistrictModel districtModel = new DistrictModel();
-	
+
 	@Override
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
@@ -57,13 +55,13 @@ public class XmlParserHandler extends DefaultHandler {
 		// 遇到结束标记的时候，会调用这个方法
 		if (qName.equals("district")) {
 			cityModel.getDistrictList().add(districtModel);
-        } else if (qName.equals("city")) {
-        	provinceModel.getCityList().add(cityModel);
-        } else if (qName.equals("province")) {
-        	provinceList.add(provinceModel);
-        }
+		} else if (qName.equals("city")) {
+			provinceModel.getCityList().add(cityModel);
+		} else if (qName.equals("province")) {
+			provinceList.add(provinceModel);
+		}
 	}
-	
+
 	@Override
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {

@@ -5,18 +5,19 @@ import java.lang.ref.SoftReference;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 
-/** 
- * @author  lucifer 
+/**
+ * @author lucifer
  * @date 2015-11-13
- * @return  
+ * @return
  */
 public class BitmapChange {
-	public static Bitmap zoomImg(Bitmap bm, int newWidth){
+	public static Bitmap zoomImg(Bitmap bm, int newWidth) {
 		// 获得图片的宽高
 		SoftReference<Bitmap> sr = new SoftReference<Bitmap>(bm);
 		int width = sr.get().getWidth();
 		int height = sr.get().getHeight();
-		int newHeight = (int)(height * (Float.parseFloat(newWidth+"")/Float.parseFloat(width+"")));
+		int newHeight = (int) (height * (Float.parseFloat(newWidth + "") / Float
+				.parseFloat(width + "")));
 		// 计算缩放比例
 		float scaleWidth = ((float) newWidth) / width;
 		float scaleHeight = ((float) newHeight) / height;
@@ -24,10 +25,10 @@ public class BitmapChange {
 		Matrix matrix = new Matrix();
 		matrix.postScale(scaleWidth, scaleHeight);
 		// 得到新的图片
-		Bitmap newbm = Bitmap.createBitmap(sr.get(), 0, 0, width, height, matrix, true);
+		Bitmap newbm = Bitmap.createBitmap(sr.get(), 0, 0, width, height,
+				matrix, true);
 		SoftReference<Bitmap> srn = new SoftReference<Bitmap>(newbm);
 		return srn.get();
 	}
-
 
 }
