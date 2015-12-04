@@ -636,7 +636,8 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 			intent.putExtra("ConversationStyle", conversationStyle);
 			intent.putExtra("ConversationId", conversationId);
 			intent.putExtra("chatId", objectID);
-			startActivity(intent);
+		//	startActivity(intent);
+			startActivityForResult(intent, 100);
 
 		default:
 			break;
@@ -697,6 +698,13 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 				Bitmap bmp = BitmapFactory.decodeFile(fileName, options);
 
 				saveHeadImg(bmp);
+			}
+			break;
+		case 100:
+			if(resultCode==this.RESULT_OK){
+				
+				setResult(RESULT_OK, getIntent());
+				finish();
 			}
 			break;
 		default:
@@ -1416,5 +1424,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 			e1.printStackTrace();
 		}
 	}
+	
+	
 
 }

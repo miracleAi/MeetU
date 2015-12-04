@@ -303,6 +303,8 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 		switch (v.getId()) {
 
 		case R.id.back_miliao_info_img_rl:
+			Intent data=getIntent();
+			setResult(RESULT_CANCELED, data);
 			finish();
 			break;
 		// 举报觅聊
@@ -329,6 +331,9 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 						log.e("zcq", "退出成功");
 						Toast.makeText(getApplicationContext(), "退出成功", Toast.LENGTH_SHORT).show();
 						userAboutDao.deleteUserTypeUserId(user.getObjectId(), 2, conversationId, user.getObjectId());
+						
+						Intent intent=getIntent();
+						setResult(RESULT_OK, intent);
 						finish();
 					}else {
 						log.e("zcq", "退出失败");
@@ -545,6 +550,17 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 				}
 			});
 		}
+
+@Override
+public void onBackPressed() {
+	// TODO Auto-generated method stub
+	super.onBackPressed();
+	Intent intent=getIntent();
+	setResult(RESULT_CANCELED, intent);
+	finish();
+}
+		
+		
 	
 	
 }
