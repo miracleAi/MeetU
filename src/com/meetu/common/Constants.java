@@ -38,7 +38,7 @@ public class Constants {
 	 * 订单状态
 	 */
 	// 锁定
-	public static final int intOrderStatusLock = 10;
+	public static final int OrderStatusLock = 10;
 	// 支付成功
 	public static final int OrderStatusPaySuccess = 20;
 	// 支付失败

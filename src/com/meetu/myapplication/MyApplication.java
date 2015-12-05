@@ -3,6 +3,8 @@ package com.meetu.myapplication;
 import java.util.Set;
 
 import net.tsz.afinal.FinalBitmap;
+import cn.beecloud.BCPay;
+import cn.beecloud.BeeCloud;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVOSCloud;
@@ -66,7 +68,19 @@ public class MyApplication extends Application {
 		finalBitmap.configLoadingImage(R.drawable.mine_img_loading);
 		finalBitmap.configLoadfailImage(R.drawable.mine_img_loading);
 		// finalBitmap.configBitmapMaxHeight(bitmapHeight);
+		/**
+		 * 第三方支付相关
+		 * */
+		// 推荐在主Activity里的onCreate函数中初始化BeeCloud.
+		BeeCloud.setAppIdAndSecret("3adc89a6-617f-4445-8f23-2b805df90fe4",
+				"2f5add66-01cf-4024-9efe-e4c183f79205");
 
+		// 如果用到微信支付，在用到微信支付的Activity的onCreate函数里调用以下函数.
+		// 第二个参数需要换成你自己的微信AppID.
+		String initInfo = BCPay.initWechatPay(getApplicationContext(), "wxc38cdfe5049cb17e");
+		/**
+		 * 第三方云服务相关
+		 * */
 		log.e("AVOSCloud", "3254");
 		// leancloud子类注册
 		AVObject.registerSubclass(ObjActivity.class);
@@ -94,8 +108,8 @@ public class MyApplication extends Application {
 				"8fpp7j815746jg9x26f0d3c5p76xqkyqm586v2onvx3m2k7a");
 		AVOSCloud.setDebugLogEnabled(true);
 		AVIMMessageManager
-				.registerDefaultMessageHandler(new DefaultMessageHandler(
-						getApplicationContext()));
+		.registerDefaultMessageHandler(new DefaultMessageHandler(
+				getApplicationContext()));
 		// AVIMMessageManager.setConversationEventHandler(new
 		// DefaultMemberHandler(getApplicationContext()));
 
@@ -105,19 +119,19 @@ public class MyApplication extends Application {
 			ObjChatMessage.connectToChatServer(chatClient,
 					new ObjAvimclientCallback() {
 
-						@Override
-						public void callback(AVIMClient client, AVException e) {
-							// TODO Auto-generated method stub
-							if (e != null) {
-								isChatLogin = false;
-								log.e("zcq", "长连接登录失败");
-								return;
-							}
-							chatClient = client;
-							isChatLogin = true;
-							log.e("zcq", "长连接登录成功");
-						}
-					});
+				@Override
+				public void callback(AVIMClient client, AVException e) {
+					// TODO Auto-generated method stub
+					if (e != null) {
+						isChatLogin = false;
+						log.e("zcq", "长连接登录失败");
+						return;
+					}
+					chatClient = client;
+					isChatLogin = true;
+					log.e("zcq", "长连接登录成功");
+				}
+			});
 		}
 	}
 

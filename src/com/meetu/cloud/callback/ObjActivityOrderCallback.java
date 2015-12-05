@@ -7,5 +7,5 @@ import com.avos.avoscloud.AVObject;
 import com.meetu.cloud.object.ObjActivityOrder;
 
 public interface ObjActivityOrderCallback {
-	void callback(List<ObjActivityOrder> objects, AVException e);
+	void callback(ObjActivityOrder object, AVException e);
 }

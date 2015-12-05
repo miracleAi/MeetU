@@ -12,6 +12,7 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.AVQuery.CachePolicy;
+import com.meetu.cloud.callback.ObjActivityOrderCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunObjectsCallback;
 import com.meetu.cloud.callback.ObjUserCallback;
@@ -78,8 +79,8 @@ public class ObjActivityOrderWrap {
 	// 报名
 	public static void signUpActivity(ObjActivity activity, ObjUser user,
 			ObjActivityTicket ticket, int status, String expect,
-			final ObjFunBooleanCallback callback) {
-		ObjActivityOrder order = new ObjActivityOrder();
+			final ObjActivityOrderCallback callback) {
+		final ObjActivityOrder order = new ObjActivityOrder();
 		order.setActivity(activity);
 		order.setUser(user);
 		order.setOrderStatus(status);
@@ -93,11 +94,28 @@ public class ObjActivityOrderWrap {
 			public void done(AVException e) {
 				// TODO Auto-generated method stub
 				if (e == null) {
-					callback.callback(true, null);
+					callback.callback(order, null);
 				} else {
-					callback.callback(false, e);
+					callback.callback(null, e);
 				}
 			}
 		});
+	}
+	//修改订单状态
+	public static void updateOrder(final ObjActivityOrder order,final ObjActivityOrderCallback callback){
+		order.setFetchWhenSave(true);
+		order.saveInBackground(new SaveCallback() {
+			
+			@Override
+			public void done(AVException e) {
+				// TODO Auto-generated method stub
+				if (e == null) {
+					callback.callback(order, null);
+				} else {
+					callback.callback(null, e);
+				}
+			}
+		});
+		
 	}
 }

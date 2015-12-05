@@ -19,6 +19,7 @@ import com.meetu.activity.SetPersonalInformationActivity;
 import com.meetu.bean.ActivityBean;
 import com.meetu.cloud.callback.ObjActivityCallback;
 import com.meetu.cloud.callback.ObjActivityCoverCallback;
+import com.meetu.cloud.callback.ObjActivityOrderCallback;
 import com.meetu.cloud.callback.ObjActivityPhotoCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunObjectsCallback;
@@ -26,6 +27,7 @@ import com.meetu.cloud.callback.ObjTicketCallback;
 import com.meetu.cloud.callback.ObjUserCallback;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityCover;
+import com.meetu.cloud.object.ObjActivityOrder;
 import com.meetu.cloud.object.ObjActivityPhoto;
 import com.meetu.cloud.object.ObjActivityPraise;
 import com.meetu.cloud.object.ObjActivityTicket;
@@ -588,11 +590,10 @@ public class TestActivity extends Activity {
 		}
 		ObjActivityOrderWrap.signUpActivity(activitySign, user, tickets.get(0),
 				Constants.OrderStatusPaySuccess, "hello",
-				new ObjFunBooleanCallback() {
-
+				new ObjActivityOrderCallback() {
+					
 					@Override
-					public void callback(boolean result, AVException e) {
-						// TODO Auto-generated method stub
+					public void callback(ObjActivityOrder object, AVException e) {
 						if (e != null) {
 							clickBtn.setText(LOAD_SUC);
 							Toast.makeText(TestActivity.this, "报名失败", 1000)
@@ -601,6 +602,7 @@ public class TestActivity extends Activity {
 						} else {
 							clickBtn.setText(LOAD_FAIL);
 						}
+					
 					}
 				});
 	}

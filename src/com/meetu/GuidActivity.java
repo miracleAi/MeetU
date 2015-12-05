@@ -5,7 +5,6 @@ import com.meetu.adapter.GuildAdapter;
 import com.meetu.fragment.GuildFragment;
 import com.meetu.view.PageIndicator;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
