@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#66eeeeee"
-    tools:context=".ChangeNameActivity" >
+   
+    android:background="@color/white" >
     <RelativeLayout 
         android:id="@+id/top_changname_rl"
           android:layout_width="match_parent"

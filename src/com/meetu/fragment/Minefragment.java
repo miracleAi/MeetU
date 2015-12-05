@@ -148,7 +148,7 @@ public class Minefragment extends Fragment implements OnPageChangeListener,
 					.findViewById(R.id.mine_btn_profile_iv);
 
 			// Bitmap head=readHead();
-			if (headURl != null) {
+			if (headURl != null&&!headURl.equals("")) {
 				// ivTouxiang.setImageBitmap(head);
 				// 加载网络图片
 				bitmapUtils.display(ivTouxiang, headURl);

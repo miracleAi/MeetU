@@ -32,6 +32,7 @@ import com.avos.avoscloud.LogUtil.log;
 
 import com.meetu.R;
 import com.meetu.R.id;
+import com.meetu.R.layout;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.bean.UserBean;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
@@ -47,8 +48,7 @@ import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
 
 @SuppressLint("NewApi")
-public class ChatmsgsListViewAdapter extends BaseAdapter implements
-		OnClickListener {
+public class ChatmsgsListViewAdapter extends BaseAdapter  {
 
 	private Context mContext;
 	private List<Chatmsgs> chatmsgsList;
@@ -86,7 +86,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter implements
 
 	/**
 	 * 消息状态 style 10 我发的文本消息 12接收的文本消息 11 我发的图片的消息 13接收的图片消息 2新人加入消息 3普通通知消息
-	 * 4活动咨询反馈通知消息 5 消息发送方向
+	 * 4活动咨询反馈通知消息 5 消息发送方向   14 自己加入和踢出提醒
 	 * 
 	 */
 	@Override
@@ -215,6 +215,12 @@ public class ChatmsgsListViewAdapter extends BaseAdapter implements
 				holder.sexImg=(ImageView) convertView.findViewById(R.id.sex_icon_imv);
 				holder.time=(TextView) convertView.findViewById(R.id.time_chat_item_newjoin_tv);
 				break;
+				
+			case 14:
+				convertView=LayoutInflater.from(mContext).inflate(R.layout.chat_my_join_or_exit, null);
+				holder.time=(TextView) convertView.findViewById(R.id.time_my_join_or_exit_remind_tv);
+				holder.content=(TextView) convertView.findViewById(R.id.content_my_join_or_exit_remind_tv);
+				
 			default:
 				break;
 			}
@@ -519,6 +525,14 @@ public class ChatmsgsListViewAdapter extends BaseAdapter implements
 			}
 			
 			break;
+		case 14:
+			//自己 加入和退出的状态提醒
+			
+			log.e("zcq 14", "自己加入消息显示");
+			holder.content.setText(""+item.getContent());
+			
+			holder.time.setText(""+com.meetu.cloud.utils.DateUtils.getFormattedTimeInterval(Long.valueOf(item.getSendTimeStamp())));
+			break;
 
 		}
 
@@ -540,10 +554,6 @@ public class ChatmsgsListViewAdapter extends BaseAdapter implements
 		private RelativeLayout resentLayout;
 	}
 
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-
-	}
+	
 
 }
