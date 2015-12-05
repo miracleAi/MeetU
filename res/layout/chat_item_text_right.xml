@@ -57,6 +57,7 @@
             android:layout_alignRight="@+id/userName_chat_item_tv"
             android:layout_below="@+id/userName_chat_item_tv"
             android:background="@drawable/dialog_blue"
+            android:textColor="@color/white"
             android:text="这是我发的消息" />
         <View
             android:id="@+id/textView2"

@@ -23,6 +23,7 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMConversationEventHandler;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 
@@ -38,10 +39,14 @@ import com.meetu.adapter.ChatmsgsListViewAdapter;
 import com.meetu.bean.SeekChatBean;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjUserInfoCallback;
+import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjChat;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.utils.ChatMsgUtils;
+import com.meetu.cloud.wrap.ObjActivityWrap;
 import com.meetu.cloud.wrap.ObjChatMessage;
+import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
 import com.meetu.common.dismissData;
 import com.meetu.entity.ChatEmoji;
@@ -49,6 +54,7 @@ import com.meetu.entity.Chatmsgs;
 import com.meetu.entity.Messages;
 import com.meetu.fragment.ChatFragment;
 import com.meetu.fragment.HomePagefragment;
+import com.meetu.myapplication.DefaultMemberHandler;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.ChatmsgsDao;
 import com.meetu.sqlite.EmojisDao;
@@ -299,6 +305,8 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 		super.onResume();
 		AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class,
 				msgHandler);
+		AVIMMessageManager
+		.setConversationEventHandler(new MemberChangeHandler());
 
 	}
 
@@ -308,34 +316,13 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 		super.onPause();
 		AVIMMessageManager.unregisterMessageHandler(AVIMTypedMessage.class,
 				msgHandler);
+		AVIMMessageManager
+		.setConversationEventHandler(new DefaultMemberHandler(
+				getApplicationContext()));
 	}
 
 	private void loadData() {
-		// TODO Auto-generated method stub
-		// chatmsgsList=new ArrayList<Chatmsgs>();
-		//
-		// Chatmsgs item=new Chatmsgs();
-		// item.setContent("今天是个好日子");
-		// item.setSendTimeStamp("2015-10-09");
-		// item.setChatMsgType(0);
-		// item.setConversationId("1");
-		// chatmsgsList.add(item);
-		//
-		// Chatmsgs item1=new Chatmsgs();
-		// item1.setContent("明天是个好日子");
-		// item1.setChatMsgType(0);
-		// item1.setSendTimeStamp("2015-10-10");
-		// item.setConversationId("1");
-		// chatmsgsList.add(item1);
 
-		// handler.sendEmptyMessage(1);
-
-		// for(Chatmsgs chatmsgs:chatmsgsList){
-		//
-		//
-		// chatmsgsDao.insert(chatmsgs);
-		//
-		// }
 		// 根据对话id取出相应的缓存消息
 		chatmsgsCacheList = chatmsgsDao.getChatmsgsList(conversationId,
 				user.getObjectId());
@@ -1025,12 +1012,12 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 
 				chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList(
 						conversationId, user.getObjectId()));
-
-				System.err.println(chatmsgsCacheList.get(
-						chatmsgsCacheList.size() - 1).getContent()
-						+ "  id=="
-						+ chatmsgsCacheList.get(chatmsgsCacheList.size() - 1)
-								.getMessageCacheId());
+				log.e("zcq", "chatmsgsCacheList=="+chatmsgsCacheList.size());
+//				System.err.println(chatmsgsCacheList.get(
+//						chatmsgsCacheList.size() - 1).getContent()
+//						+ "  id=="
+//						+ chatmsgsCacheList.get(chatmsgsCacheList.size() - 1)
+//								.getMessageCacheId());
 
 				mChatmsgsAdapter.notifyDataSetChanged();
 
@@ -1047,11 +1034,11 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 				chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList(
 						conversationId, user.getObjectId()));
 
-				System.err.println(chatmsgsCacheList.get(
-						chatmsgsCacheList.size() - 1).getContent()
-						+ "  id=="
-						+ chatmsgsCacheList.get(chatmsgsCacheList.size() - 1)
-								.getMessageCacheId());
+//				System.err.println(chatmsgsCacheList.get(
+//						chatmsgsCacheList.size() - 1).getContent()
+//						+ "  id=="
+//						+ chatmsgsCacheList.get(chatmsgsCacheList.size() - 1)
+//								.getMessageCacheId());
 
 				mChatmsgsAdapter.notifyDataSetChanged();
 
@@ -1424,6 +1411,155 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 			e1.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 群成员变动消息 接收 handle  
+	 * @author lucifer
+	 *
+	 */
+		public class MemberChangeHandler extends AVIMConversationEventHandler {
+
+			@Override
+			public void onInvited(AVIMClient client, AVIMConversation conversation,
+					String str) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onKicked(AVIMClient client, AVIMConversation conversation,
+					String str) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onMemberJoined(AVIMClient client,
+					AVIMConversation conversation, List<String> array, String str) {
+				// 参与者 ，邀请人
+				// 在当前聊天--》1.活动群，判断参与者是否参加活动，不参加不提示。2.普通群：提示
+				// 不在当前聊天--》1.参加，插入数据库。2.插入数据库
+				log.e("zcq", "接收到新人加入消息");
+				handleMemberAdd(client, conversation, array, str);
+			}
+
+			@Override
+			public void onMemberLeft(AVIMClient client,
+					AVIMConversation conversation, List<String> array, String str) {
+				if (!array.contains(user.getObjectId())) {
+					// 被踢出者中不包含自己，不处理
+					return;
+				}
+				// 被踢出人，踢出人
+//				handleMemberRemove(client, conversation, array, str);
+
+			}
+
+		}
+		
+		// 成员加入消息处理
+		public void handleMemberAdd(final AVIMClient client,
+				final AVIMConversation conversation, List<String> array, String str) {
+			int msgType = (Integer) conversation.getAttribute("cType");
+			if (msgType == Constants.ACTYSG) {
+				// 活动群，判断是否参加
+				String actyId = (String) conversation.getAttribute("appendId");
+				for (final String userId : array) {
+					try {
+						ObjActivity acty = ObjActivity.createWithoutData(
+								ObjActivity.class, actyId);
+						ObjUser joinUser = ObjUser.createWithoutData(ObjUser.class,
+								userId);
+						ObjActivityWrap.queryUserJoin(acty, user,
+								new ObjFunBooleanCallback() {
+
+									@Override
+									public void callback(boolean result,
+											AVException e) {
+										if (e != null) {
+											return;
+										}
+										if (result) {
+											// 已参加，保存
+											ObjUserWrap.getObjUser(
+													client.getClientId(),
+													new ObjUserInfoCallback() {
+
+														@Override
+														public void callback(
+																ObjUser joinuser,
+																AVException e) {
+															// TODO Auto-generated
+															// method stub
+															Chatmsgs chatBean = new Chatmsgs();
+															chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
+															chatBean.setNowJoinUserId(client
+																	.getClientId());
+															chatBean.setUid(user
+																	.getObjectId());
+															chatBean.setNowJoinUserId(userId);
+															chatBean.setMessageCacheId(String.valueOf(System
+																	.currentTimeMillis()));
+															chatBean.setSendTimeStamp(String.valueOf(System
+																	.currentTimeMillis()));
+															chatBean.setConversationId(conversation.getConversationId());
+															chatmsgsDao.insert(chatBean);
+															if (conversation
+																	.getConversationId()
+																	.equals(conversationId)) {
+																//TODO  测试显示（实际刷新界面） 消息面板应该也要刷新下界面
+																
+//																memberTv.setText(client
+//																		.getClientId());
+																log.e("zcq", "插入数据库成功");
+																handler.sendEmptyMessage(1);
+															} else {
+																// 未读消息加1,保存未读
+																
+																messagesDao.updateUnread(
+																		user.getObjectId(),
+																		conversation
+																				.getConversationId());
+															}
+														}
+													});
+										} else {
+											// 未参加 直接放弃
+										}
+									}
+								});
+					} catch (AVException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			} else {
+				for (String userId : array) {
+					// 普通群，直接保存
+					Chatmsgs chatBean = new Chatmsgs();
+					chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
+					chatBean.setNowJoinUserId(client.getClientId());
+					chatBean.setUid(user.getObjectId());
+					chatBean.setNowJoinUserId(userId);
+					chatBean.setMessageCacheId(String.valueOf(System
+							.currentTimeMillis()));
+					chatBean.setConversationId(conversation.getConversationId());
+					chatBean.setSendTimeStamp(String.valueOf(System
+							.currentTimeMillis()));
+					chatmsgsDao.insert(chatBean);
+					log.e("zcq", "插入a 数据库成功");
+					if (conversation.getConversationId().equals(conversationId)) {
+						// 测试显示（实际刷新界面） 消息面板也要刷新下界面
+					//	memberTv.setText(client.getClientId());
+						handler.sendEmptyMessage(1);
+					} else {
+						// 未读消息加1,保存未读
+						messagesDao.updateUnread(user.getObjectId(),
+								conversation.getConversationId());
+					}
+				}
+			}
+		}
 	
 	
 

@@ -56,6 +56,7 @@
             android:layout_alignLeft="@+id/userName_chat_item_left_tv"
             android:layout_below="@+id/userName_chat_item_left_tv"
             android:background="@drawable/dialog_gray"
+            android:textColor="@color/black"
            	android:text="这是别人发的消息" />
 
         
