@@ -126,6 +126,8 @@ public class GridRecycleLitterNoteAdapter extends
 				holder.ivNoReadNumber.setText(""
 						+ item.getReceiverUnreadCount());
 			}
+			
+			
 
 		}
 
