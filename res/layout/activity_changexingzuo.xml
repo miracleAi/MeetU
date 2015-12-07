@@ -185,7 +185,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="天平座"
+                android:text="天秤座"
                 android:textColor="#33c6e5" />
         </LinearLayout>
 

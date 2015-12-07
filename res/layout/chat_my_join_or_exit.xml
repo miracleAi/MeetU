@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/white"
+    >
+    <LinearLayout 
+        android:id="@+id/layout_my_join_or_exit_remind_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+        <TextView 
+            android:id="@+id/time_my_join_or_exit_remind_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:textSize="10sp"
+            android:text="20150101"
+            />
+         <TextView 
+            android:id="@+id/content_my_join_or_exit_remind_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:textSize="10sp"
+            android:text="欢迎加入觅聊"
+            />
+        </LinearLayout>
+    
+
+</LinearLayout>

@@ -252,45 +252,10 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 		 */
 		InitViewPager();
 
-		// if(conversationStyle.equals("1")){
-		// //表示 的是活动群聊
-		// message=(Messages) intent.getExtras().getSerializable("Messages");
-		//
-		// title.setText(message.getActyName());
-		//
-		// }
-		// if(conversationStyle.equals("2")){
-		// //表示 的是觅聊
-		// objChat=(ObjChat) intent.getExtras().getSerializable("ObjChat");
-		// message=(Messages) intent.getExtras().getSerializable("Messages");
-		//
 
-		// if(objChat==null){
-		// title.setText(""+message.getActyName());
-		// }else{
-		// title.setText(objChat.getChatTitle());
-		// }
-
-		//
-		// }
 		title.setText("" + jstitle);
 
-		// if(conversationStyle.equals("1")){
-		// int number=userAboutDao.queryUserAbout(""+user.getObjectId(), 3,
-		// conversationId).size();
-		// log.e("lucifer","number=="+
-		// number+" conversationStyle=="+conversationStyle);
-		// userNumber.setText(""+"("+number+")");
-		//
-		// }else if(conversationStyle.equals("2")){
-		// int number=userAboutDao.queryUserAbout(""+user.getObjectId(),
-		// Integer.valueOf(conversationStyle), conversationId).size();
-		// log.e("lucifer","number=="+
-		// number+" conversationStyle=="+conversationStyle);
-		// userNumber.setText(""+"("+number+")");
-		// }
 
-		// userNumber.setText("("+number+")");
 		int number = userAboutDao.queryUserAbout("" + user.getObjectId(), 2,
 				conversationId).size();
 		log.e("lucifer", "number==" + number + " conversationStyle=="
@@ -326,6 +291,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 		// 根据对话id取出相应的缓存消息
 		chatmsgsCacheList = chatmsgsDao.getChatmsgsList(conversationId,
 				user.getObjectId());
+		log.e("zcq chatmsgsCacheList", ""+chatmsgsCacheList.size());
 
 		// handler.sendEmptyMessage(1);
 
@@ -532,37 +498,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 	 * 获取表情a
 	 */
 	private void loadEmoji() {
-		//
-		// try {
-		// InputStream is = getAssets().open("expressionImage_custom.xml");
-		// parser = new XmlEmojifPullHelper();
-		// // parser=new XmlEmojiSaxBookParser();
-		// chatEmojis = parser.parse(is);
-		//
-		// chatEmojisNumber=chatEmojis.size();
-		// staticFacesList = new ArrayList<String>();
-		//
-		// for (ChatEmoji emoji : chatEmojis) {
-		//
-		//
-		// //根据String类型id获取对应资源id
-		// int resID = this.getResources().getIdentifier(emoji.getFaceName(),
-		// "drawable", this.getPackageName());
-		// log.e("lucifer222222","name"+emoji.getFaceName()+" resID=="+resID);
-		// emoji.setId(resID);
-		// staticFacesList.add(""+resID);
-		// }
-		//
-		// } catch (IOException e1) {
-		// log.e("2",e1);
-		// e1.printStackTrace();
-		// }
-		// catch (Exception e) {
-		//
-		// log.e("3", e);
-		// e.printStackTrace();
-		// }
-		//
+	
 
 	}
 
@@ -1448,10 +1384,11 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 					AVIMConversation conversation, List<String> array, String str) {
 				if (!array.contains(user.getObjectId())) {
 					// 被踢出者中不包含自己，不处理
+					log.e("zcq", "被踢出者不包括自己");
 					return;
 				}
 				// 被踢出人，踢出人
-//				handleMemberRemove(client, conversation, array, str);
+				handleMemberRemove(client, conversation, array, str);
 
 			}
 
@@ -1561,6 +1498,49 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 			}
 		}
 	
+		
+		// 被踢出
+		public void handleMemberRemove(AVIMClient client,
+				AVIMConversation conversation, List<String> array, String str) {
+			
+			if (conversation.getConversationId().equals(conversationId)) {
+				log.e("zcq", "进入被踢出回调 在当前回话");
+				// 显示
+//				memberTv.setText("您已被踢出");
+//				// 删除会话缓存
+//				msgDao.deleteConv(user.getObjectId(),
+//						conversation.getConversationId());
+				// 删除消息缓存
+				chatmsgsDao.deleteConversationId(user.getObjectId(),
+						conversation.getConversationId());
+				
+				Chatmsgs chatmsgs=new Chatmsgs();				
+				chatmsgs.setContent("您已被群主踢出");
+				chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
+				chatmsgs.setChatMsgStatus(14);		
+				chatmsgs.setConversationId(conversation.getConversationId());
+				chatmsgs.setUid(user.getObjectId());
+				chatmsgsDao.insert(chatmsgs);
+				
+				handler.sendEmptyMessage(1);
+				
+			} else {
+				log.e("zcq", "进入被踢出回调");
+				// 未读消息加1,保存未读
+				messagesDao.updateUnread(user.getObjectId(),
+						conversation.getConversationId());
+				
+				Chatmsgs chatBean = new Chatmsgs();
+				chatBean.setChatMsgType(14);//
+				chatBean.setNowJoinUserId(client.getClientId());
+				chatBean.setUid(user.getObjectId());
+				chatBean.setMessageCacheId(String.valueOf(System
+						.currentTimeMillis()));
+				chatBean.setConversationId(conversation.getConversationId());
+				chatBean.setContent("您被踢出群聊");
+				chatmsgsDao.insert(chatBean);
+			}
+		}
 	
 
 }

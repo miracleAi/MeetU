@@ -118,8 +118,11 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 			if (currentUser != null) {
 				// 强制类型转换
 				user = AVUser.cast(currentUser, ObjUser.class);
-
-				headURl = user.getProfileClip().getUrl();
+				
+				if(user.getProfileClip()!=null){
+					headURl = user.getProfileClip().getUrl();
+				}
+				
 				log.e("lucifer", "url" + headURl);
 			}
 			initView();

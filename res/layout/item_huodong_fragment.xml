@@ -9,7 +9,8 @@
 <RelativeLayout
     android:id="@+id/top_homepage_item"
     android:layout_width="match_parent"
-    android:layout_height="236dp" >
+    android:layout_height="236dp" 
+    android:background="@color/white">
 
     <ImageView
         android:id="@+id/img_huodong_homepage"

@@ -118,7 +118,7 @@ public class ChangexingzuoActivity extends Activity implements OnClickListener {
 			xingzuo = text2.getText().toString();
 			completeInfo(user);
 			Intent intent2 = new Intent();
-			intent2.putExtra("xingzuo", text2.getText());
+			intent2.putExtra("xingzuo", ""+text2.getText().toString());
 			setResult(RESULT_OK, intent2);
 			finish();
 
@@ -127,7 +127,7 @@ public class ChangexingzuoActivity extends Activity implements OnClickListener {
 			xingzuo = text3.getText().toString();
 			completeInfo(user);
 			Intent intent3 = new Intent();
-			intent3.putExtra("xingzuo", text3.getText());
+			intent3.putExtra("xingzuo", ""+text3.getText());
 			setResult(RESULT_OK, intent3);
 			finish();
 
@@ -136,7 +136,7 @@ public class ChangexingzuoActivity extends Activity implements OnClickListener {
 			xingzuo = text4.getText().toString();
 			completeInfo(user);
 			Intent intent4 = new Intent();
-			intent4.putExtra("xingzuo", text4.getText());
+			intent4.putExtra("xingzuo", ""+text4.getText());
 			setResult(RESULT_OK, intent4);
 			finish();
 
@@ -145,7 +145,7 @@ public class ChangexingzuoActivity extends Activity implements OnClickListener {
 			xingzuo = text5.getText().toString();
 			completeInfo(user);
 			Intent intent5 = new Intent();
-			intent5.putExtra("xingzuo", text5.getText());
+			intent5.putExtra("xingzuo", ""+text5.getText());
 			setResult(RESULT_OK, intent5);
 			finish();
 
@@ -154,7 +154,7 @@ public class ChangexingzuoActivity extends Activity implements OnClickListener {
 			xingzuo = text6.getText().toString();
 			completeInfo(user);
 			Intent intent6 = new Intent();
-			intent6.putExtra("xingzuo", text6.getText());
+			intent6.putExtra("xingzuo", ""+text6.getText());
 			setResult(RESULT_OK, intent6);
 			finish();
 
@@ -163,7 +163,7 @@ public class ChangexingzuoActivity extends Activity implements OnClickListener {
 			xingzuo = text7.getText().toString();
 			completeInfo(user);
 			Intent intent7 = new Intent();
-			intent7.putExtra("xingzuo", text7.getText());
+			intent7.putExtra("xingzuo", ""+text7.getText());
 			setResult(RESULT_OK, intent7);
 			finish();
 			break;
@@ -171,7 +171,7 @@ public class ChangexingzuoActivity extends Activity implements OnClickListener {
 			xingzuo = text8.getText().toString();
 			completeInfo(user);
 			Intent intent8 = new Intent();
-			intent8.putExtra("xingzuo", text8.getText());
+			intent8.putExtra("xingzuo", ""+text8.getText());
 			setResult(RESULT_OK, intent8);
 			finish();
 			break;
@@ -179,7 +179,7 @@ public class ChangexingzuoActivity extends Activity implements OnClickListener {
 			xingzuo = text9.getText().toString();
 			completeInfo(user);
 			Intent intent9 = new Intent();
-			intent9.putExtra("xingzuo", text9.getText());
+			intent9.putExtra("xingzuo", ""+text9.getText());
 			setResult(RESULT_OK, intent9);
 			finish();
 
@@ -188,7 +188,7 @@ public class ChangexingzuoActivity extends Activity implements OnClickListener {
 			xingzuo = text10.getText().toString();
 			completeInfo(user);
 			Intent intent10 = new Intent();
-			intent10.putExtra("xingzuo", text10.getText());
+			intent10.putExtra("xingzuo", ""+text10.getText());
 			setResult(RESULT_OK, intent10);
 			finish();
 
@@ -197,7 +197,7 @@ public class ChangexingzuoActivity extends Activity implements OnClickListener {
 			xingzuo = text11.getText().toString();
 			completeInfo(user);
 			Intent intent11 = new Intent();
-			intent11.putExtra("xingzuo", text11.getText());
+			intent11.putExtra("xingzuo", ""+text11.getText());
 			setResult(RESULT_OK, intent11);
 			finish();
 			break;
@@ -205,7 +205,7 @@ public class ChangexingzuoActivity extends Activity implements OnClickListener {
 			xingzuo = text12.getText().toString();
 			completeInfo(user);
 			Intent intent12 = new Intent();
-			intent12.putExtra("xingzuo", text12.getText());
+			intent12.putExtra("xingzuo",""+ text12.getText());
 			setResult(RESULT_OK, intent12);
 			finish();
 
@@ -244,7 +244,8 @@ public class ChangexingzuoActivity extends Activity implements OnClickListener {
 	 */
 	public void completeInfo(final ObjUser user) {
 
-		user.setNameNick(xingzuo);
+		
+		user.setConstellation(xingzuo);
 
 		// 只上传信息
 		ObjUserWrap.completeUserInfo(user, new ObjFunBooleanCallback() {

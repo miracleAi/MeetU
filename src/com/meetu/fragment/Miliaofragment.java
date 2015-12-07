@@ -32,7 +32,9 @@ import com.meetu.cloud.wrap.ObjAuthoriseWrap;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjChatWrap;
 import com.meetu.common.Constants;
+import com.meetu.entity.Chatmsgs;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.ChatmsgsDao;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DepthPageTransformer;
 import com.meetu.tools.MyZoomOutPageTransformer;
@@ -71,6 +73,8 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 	private int positonNow = 0;// 当前在第几个页面
 
 	private AVIMConversation conv;
+	
+	
 
 	// 网络数据相关
 	private List<ObjChat> objChatsList = new ArrayList<ObjChat>();
@@ -87,6 +91,8 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 	private List<SeekChatBean> seekChatBeansList = new ArrayList<SeekChatBean>();
 
 	private Boolean isAdd = false;
+	
+	ChatmsgsDao chatmsgsDao;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -102,6 +108,8 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 			if (currentUser != null) {
 				user = AVUser.cast(currentUser, ObjUser.class);
 			}
+			chatmsgsDao=new ChatmsgsDao(getActivity());
+			
 			userAboutDao = new UserAboutDao(getActivity());
 			// 获取觅聊列表
 			// getObjChatList();
@@ -454,7 +462,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 	// }
 	//
 	// 加入当前觅聊
-	public void joinGroup(AVIMConversation conversation) {
+	public void joinGroup(final AVIMConversation conversation) {
 		
 		ObjChatMessage.joinChat(MyApplication.chatClient, conversation,
 				new ObjFunBooleanCallback() {
@@ -467,7 +475,17 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 							return;
 						}
 						if (result) {
+							//TODO 更新本地聊天消息本人加入提醒    觅聊卡片中头像更新
 							log.e("zcq", "加入觅聊成功");
+							
+							Chatmsgs chatmsgs=new Chatmsgs();
+							chatmsgs.setContent("欢迎加入觅聊");
+							chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
+							chatmsgs.setChatMsgType(14);
+							chatmsgs.setConversationId(conversation.getConversationId());
+							chatmsgs.setUid(user.getObjectId());
+							chatmsgsDao.insert(chatmsgs);
+							
 							loadData();
 							
 							

@@ -5,12 +5,12 @@
   
  <RelativeLayout
      android:id="@+id/top_mine_photoview_fullscreen_rl"
-     android:layout_width="wrap_content"
+     android:layout_width="match_parent"
      android:layout_height="44dp"
      android:layout_alignParentLeft="true"
      android:layout_alignParentTop="true"
      android:background="@drawable/mine_photoview_fullscreen_navbar_bg"
-     android:gravity="center" >
+     >
 
      <RelativeLayout
          android:id="@+id/back_mine_photoview_fullscreen_rl"
@@ -41,7 +41,7 @@
          android:id="@+id/deldect_mine_photoview_fullscreen_img"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         
+        
          android:src="@drawable/mine_photoview_fullscreen_navbar_btn_delete" />
      </RelativeLayout>
 

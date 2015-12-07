@@ -105,11 +105,12 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 		msgDao.updateUnread(user.getObjectId(),
 				conversation.getConversationId());
 		Chatmsgs chatBean = new Chatmsgs();
-		chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
+		chatBean.setChatMsgType(14);
 		chatBean.setNowJoinUserId(client.getClientId());
 		chatBean.setUid(user.getObjectId());
 		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
 		chatBean.setContent("您被踢出群聊");
+		chatBean.setConversationId(conversation.getConversationId());
 		chatDao.insert(chatBean);
 	}
 }
