@@ -104,28 +104,6 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 		switch (v.getId()) {
 		case R.id.share_system_settings_rl:
 			Toast.makeText(this, "分享", Toast.LENGTH_SHORT).show();
-//<<<<<<< HEAD
-//
-//			break;
-//		case R.id.evaluation_system_settings_rl:
-//			Toast.makeText(this, "评价", Toast.LENGTH_SHORT).show();
-//
-//			break;
-//		case R.id.clear_system_settings_rl:
-//			Toast.makeText(this, "清除", Toast.LENGTH_SHORT).show();
-//
-//			break;
-//		case R.id.checkforupdates_system_settings_rl:
-//			Toast.makeText(this, "检查", Toast.LENGTH_SHORT).show();
-//
-//			break;
-//		case R.id.sign_out_system_settings_rl:
-//			// TODO 清缓存 删除本地 信息
-//			signOut();
-//
-//			finish();
-//
-//=======
 			break;
 		case R.id.evaluation_system_settings_rl:
 			commentApp();

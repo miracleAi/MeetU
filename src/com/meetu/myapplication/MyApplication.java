@@ -81,7 +81,6 @@ public class MyApplication extends Application {
 		/**
 		 * 第三方云服务相关
 		 * */
-		log.e("AVOSCloud", "3254");
 		// leancloud子类注册
 		AVObject.registerSubclass(ObjActivity.class);
 		AVObject.registerSubclass(ObjActivityPraise.class);
