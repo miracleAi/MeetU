@@ -3,7 +3,8 @@ package com.meetu.adapter;
 import java.util.List;
 import java.util.Map;
 
-import com.meetu.R;
+import cc.imeetu.R;
+
 import com.meetu.entity.PhotoWall;
 import com.meetu.tools.DisplayUtils;
 

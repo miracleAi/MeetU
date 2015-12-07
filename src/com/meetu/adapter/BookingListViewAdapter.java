@@ -17,10 +17,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import cc.imeetu.R;
 
 import com.avos.avoscloud.LogUtil.log;
 import com.baidu.location.e.r;
-import com.meetu.R;
 import com.meetu.cloud.object.ObjActivityTicket;
 import com.meetu.entity.Booking;
 import com.meetu.entity.Huodong;

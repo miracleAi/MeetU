@@ -1,5 +1,8 @@
 package com.meetu;
 
+
+import cc.imeetu.R;
+
 import com.meetu.activity.LoginOrRegisterActivity;
 import com.meetu.adapter.GuildAdapter;
 import com.meetu.fragment.GuildFragment;

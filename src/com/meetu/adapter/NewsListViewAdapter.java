@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.tsz.afinal.FinalBitmap;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.format.Time;
@@ -21,13 +20,13 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
+import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.lidroid.xutils.BitmapUtils;
-import com.meetu.R;
 import com.meetu.bean.ActivityBean;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjActivity;

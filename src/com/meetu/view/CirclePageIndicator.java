@@ -16,8 +16,8 @@
  */
 package com.meetu.view;
 
-import com.meetu.R;
 
+import cc.imeetu.R;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;

@@ -3,11 +3,12 @@ package com.meetu;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
-import com.meetu.R;
 import com.meetu.activity.LoginActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
 import com.meetu.cloud.callback.ObjAvimclientCallback;

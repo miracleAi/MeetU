@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.security.auth.PrivateCredentialPermission;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.LogUtil.log;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -30,7 +32,6 @@ import com.baidu.mapapi.map.InfoWindow.OnInfoWindowClickListener;
 import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
-import com.meetu.R;
 import com.meetu.baidumapdemo.MyOrientationListener.OnOrientationListener;
 import com.meetu.bean.ActivityBean;
 

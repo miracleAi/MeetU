@@ -1,7 +1,6 @@
 package com.meetu.activity.messages;
 
-import com.meetu.R;
-
+import cc.imeetu.R;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Gravity;

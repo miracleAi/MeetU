@@ -6,9 +6,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import net.tsz.afinal.FinalBitmap;
+import cc.imeetu.R;
 
 import com.lidroid.xutils.BitmapUtils;
-import com.meetu.R;
 import com.meetu.activity.homepage.HomePageDetialActivity;
 import com.meetu.cloud.object.ObjActivityCover;
 import com.meetu.cloud.object.ObjActivityPhoto;

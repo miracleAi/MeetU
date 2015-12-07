@@ -3,9 +3,10 @@ package com.meetu.activity;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.LogUtil.log;
-import com.meetu.R;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.wrap.ObjUserWrap;
 

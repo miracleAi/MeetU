@@ -43,6 +43,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -50,7 +51,6 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.LogUtil.log;
 import com.lidroid.xutils.BitmapUtils;
-import com.meetu.R;
 import com.meetu.activity.ReportActivity;
 import com.meetu.activity.SystemSettingsActivity;
 import com.meetu.activity.messages.CreateLitterNoteActivity;

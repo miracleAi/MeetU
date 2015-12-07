@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.meetu.R;
 
 public class Info implements Serializable {
 	private static final long serialVersionUID = -1010711775392052966L;

@@ -6,8 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.LogUtil.log;
-import com.meetu.R;
 import com.meetu.tools.BitmapCut;
 
 import android.net.Uri;

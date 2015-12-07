@@ -5,7 +5,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.meetu.R;
+import cc.imeetu.R;
+
 import com.meetu.activity.homepage.HomePageDetialActivity;
 import com.meetu.entity.Notes;
 import com.meetu.entity.PhotoWall;

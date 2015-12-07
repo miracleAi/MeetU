@@ -1,7 +1,6 @@
 package com.meetu.activity;
 
-import com.meetu.R;
-
+import cc.imeetu.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;

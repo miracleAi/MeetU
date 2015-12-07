@@ -3,7 +3,7 @@ package com.meetu.activity.mine;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.meetu.R;
+import cc.imeetu.R;
 
 import com.meetu.entity.Department;
 import com.meetu.entity.Schools;

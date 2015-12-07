@@ -15,7 +15,10 @@ import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.xmlpull.v1.XmlPullParser;
+
+import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -26,14 +29,11 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMConversationEventHandler;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
-
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.baidu.location.h.m;
-import com.meetu.R;
-import com.meetu.R.layout;
 import com.meetu.TestReceiveMsg.MemberChangeHandler;
 import com.meetu.adapter.ChatmsgsListViewAdapter;
 import com.meetu.bean.SeekChatBean;
@@ -66,6 +66,7 @@ import com.meetu.tools.DisplayUtils;
 import com.meetu.tools.StringToDrawbleId;
 import com.meetu.tools.UriToimagePath;
 import com.meetu.tools.UrlLocationToBitmap;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;

@@ -4,7 +4,8 @@ import java.util.List;
 
 import net.tsz.afinal.FinalBitmap;
 
-import com.meetu.R;
+
+import cc.imeetu.R;
 
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.entity.Huodong;

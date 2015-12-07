@@ -3,13 +3,12 @@ package com.meetu.activity.messages;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.baidu.location.e.v;
-import com.meetu.R;
-import com.meetu.R.layout;
-import com.meetu.R.menu;
 import com.meetu.adapter.GridRecycleLitterNoteAdapter;
 import com.meetu.adapter.GridRecycleLitterNoteAdapter.OnLitterNotesItemClickCallBack;
 import com.meetu.adapter.GridRecycleMiLiaoInfoAdapter;

@@ -8,14 +8,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.GetDataCallback;
 import com.avos.avoscloud.ProgressCallback;
 import com.avos.avoscloud.LogUtil.log;
-import com.meetu.R;
-import com.meetu.R.layout;
-import com.meetu.R.menu;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjGlobalCallback;
 import com.meetu.cloud.object.ObjGlobalAndroid;
@@ -107,6 +106,8 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 			break;
 		case R.id.evaluation_system_settings_rl:
 			commentApp();
+			/*shareMsg("meetu", "测试", "测试内容", Environment.getExternalStorageDirectory()
+					+ "/f_user_header.png");*/
 			break;
 		case R.id.clear_system_settings_rl:
 			clearAllCache(getApplicationContext());
@@ -238,8 +239,12 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 	 * */
 
 	public void commentApp() {
+		Uri uri = Uri.parse("market://details?id="+getPackageName());  
+		Intent intent = new Intent(Intent.ACTION_VIEW,uri);  
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+		startActivity(intent);  
 		// 判断360市场是否存在
-		if (isAvilible(SystemSettingsActivity.this, "com.qihoo.appstore")) {
+		/*if (isAvilible(SystemSettingsActivity.this, "com.qihoo.appstore")) {
 			// 市场存在
 			Intent intent = new Intent(Intent.ACTION_VIEW);
 			// 跳转到360市场评分
@@ -253,7 +258,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 		} else {
 			// 市场不存在
 			Toast.makeText(getApplicationContext(), "请下载360手机助手", 0).show();
-		}
+		}*/
 	}
 
 	// 判断市场是否存在的方法
@@ -271,41 +276,31 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 		return pName.contains(packageName);// 判断pName中是否有目标程序的包名，有TRUE，没有FALSE
 
 	}
-
+	//调用系统分享
+	public void shareMsg(String activityTitle, String msgTitle, String msgText,
+			String imgPath) {
+			Intent intent = new Intent(Intent.ACTION_SEND);
+			if (imgPath == null || imgPath.equals("")) {
+			intent.setType("text/plain"); // 纯文本
+			} else {
+			File f = new File(imgPath);
+			if (f != null && f.exists() && f.isFile()) {
+			intent.setType("image/png");
+			Uri u = Uri.fromFile(f);
+			intent.putExtra(Intent.EXTRA_STREAM, u);
+			}
+			}
+			intent.putExtra(Intent.EXTRA_SUBJECT, msgTitle);
+			intent.putExtra(Intent.EXTRA_TEXT, msgText);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(Intent.createChooser(intent, activityTitle));
+			}
 	/**
 	 * 注销登录需要做的操作，删除本地的用户对象 断开application的长连接
 	 * 
 	 * @author lucifer
 	 * @date 2015-11-25
 	 */
-//<<<<<<< HEAD
-//	public void signOut() {
-//		ObjChatMessage.logOutChat(MyApplication.chatClient,
-//				new ObjFunBooleanCallback() {
-//
-//					@Override
-//					public void callback(boolean result, AVException e) {
-//						// TODO Auto-generated method stub
-//						if (e != null) {
-//							log.e("zcq", "退出" + e);
-//							return;
-//						} else if (result) {
-//							log.e("zcq", "长连接注销成功");
-//							ObjUserWrap.logOut();
-//							Toast.makeText(getApplicationContext(), "退出",
-//									Toast.LENGTH_SHORT).show();
-//							Intent intent = new Intent(
-//									SystemSettingsActivity.this,
-//									LoginActivity.class);
-//							intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//							startActivity(intent);
-//						} else {
-//							log.e("zcq", "长连接注销失败");
-//						}
-//
-//					}
-//				});
-//=======
 	public void signOut(){
 		ObjChatMessage.logOutChat(MyApplication.chatClient, new ObjFunBooleanCallback() {
 

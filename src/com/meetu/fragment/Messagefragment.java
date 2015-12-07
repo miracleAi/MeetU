@@ -7,12 +7,12 @@ import java.util.Date;
 import java.util.List;
 
 import junit.framework.Test;
+import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.meetu.R;
 import com.meetu.activity.messages.FollowActivity;
 import com.meetu.activity.messages.LitterNoteActivity;
 import com.meetu.activity.messages.SystemMsgActivity;

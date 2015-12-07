@@ -3,6 +3,8 @@ package com.meetu.activity.messages;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -11,7 +13,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.handmark.pulltorefresh.library.R.layout;
 import com.lidroid.xutils.BitmapUtils;
-import com.meetu.R;
 import com.meetu.activity.homepage.HomePageDetialActivity;
 import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.bean.ActivityBean;

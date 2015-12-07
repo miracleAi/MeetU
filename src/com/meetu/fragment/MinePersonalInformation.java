@@ -3,9 +3,10 @@ package com.meetu.fragment;
 import java.util.Date;
 import java.util.List;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
-import com.meetu.R;
 import com.meetu.activity.ChooseSchoolActivity;
 import com.meetu.activity.mine.ChangeBirthdayActivity;
 import com.meetu.activity.mine.ChangeCityActivity;

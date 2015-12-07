@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.tsz.afinal.FinalBitmap;
+import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
@@ -14,9 +15,6 @@ import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
-import com.meetu.R;
-import com.meetu.R.layout;
-import com.meetu.R.menu;
 import com.meetu.activity.ReportActivity;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
@@ -38,7 +36,6 @@ import com.meetu.common.Constants;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.fragment.MiliaoChannelFragment;
 import com.meetu.fragment.NotesChannelFragment;
-
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.ChatmsgsDao;
 

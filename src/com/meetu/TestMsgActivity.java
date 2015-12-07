@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;

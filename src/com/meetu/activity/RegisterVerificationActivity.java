@@ -3,11 +3,12 @@ package com.meetu.activity;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.LogUtil.log;
 import com.baidu.location.e.r;
 import com.meetu.MainActivity;
-import com.meetu.R;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.cloud.wrap.ObjWrap;

@@ -14,8 +14,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import cc.imeetu.R;
 
-import com.meetu.R;
 import com.meetu.entity.Huodong;
 
 @SuppressLint("NewApi")

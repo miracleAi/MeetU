@@ -1,10 +1,10 @@
 package com.meetu.activity;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
-import com.meetu.R;
-import com.meetu.R.layout;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjChat;
 import com.meetu.cloud.object.ObjReportChat;

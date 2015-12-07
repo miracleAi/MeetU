@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.tsz.afinal.FinalBitmap;
+import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.baidu.a.a.a.c;
-import com.meetu.R;
-
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjScripBox;
 import com.meetu.cloud.object.ObjUser;
@@ -22,7 +21,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
