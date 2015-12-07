@@ -33,6 +33,7 @@ import com.meetu.cloud.wrap.ObjAuthoriseWrap;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjChatWrap;
 import com.meetu.common.Constants;
+import com.meetu.common.PerfectInformation;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.ChatmsgsDao;
@@ -208,9 +209,15 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 		// 申请觅聊
 		case R.id.add_miliao_rl:
 			// queryAuthoriseCategory(100);
-			if (chatBean != null) {
-				cteatMiliao();
+			
+			if(user.isCompleteUserInfo()){
+				if (chatBean != null) {
+					cteatMiliao();
+				}
+			}else{
+				PerfectInformation.showDiolagPerfertInformation(getActivity(), "亲爱的 完善个人信息后才能和小伙伴们玩耍呢");
 			}
+			
 
 			break;
 		// 加入觅聊
@@ -261,7 +268,9 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 			// });
 			// }
 			// }
-
+			if(user.isCompleteUserInfo()){
+			
+			
 			if (seekChatBeansList != null && seekChatBeansList.size() != 0) {
 
 				if (isAdd) {
@@ -294,6 +303,9 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 					log.e("zcq", "没加入过当前觅聊");
 					joinGroup(conv);
 				}
+			}
+			}else{
+				PerfectInformation.showDiolagPerfertInformation(getActivity(), "亲爱的 完善个人信息后才能和小伙伴们玩耍呢");
 			}
 
 			break;
@@ -787,5 +799,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 		userAboutDao.saveUserAboutList(userAboutBeansList);
 
 	}
+	
+	
 
 }

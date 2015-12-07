@@ -18,6 +18,7 @@ import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.meetu.activity.ReportActivity;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
+import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjReportUser;
@@ -110,6 +111,9 @@ public class NotesActivity extends FragmentActivity implements
 	ChatmsgsDao chatmsgsDao;
 
 	MessageactivityHandler msgHandler;
+	
+	private ImageView favorImg;
+	List<UserAboutBean> userAboutBeansList=new ArrayList<UserAboutBean>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +159,8 @@ public class NotesActivity extends FragmentActivity implements
 		// initViewPager();
 
 		getScrips(objScripBox);
+		
+		
 
 	}
 
@@ -198,6 +204,21 @@ public class NotesActivity extends FragmentActivity implements
 		isShowLayout = (RelativeLayout) findViewById(R.id.isShowScript_notes_rl);
 		isShowLayout.setOnClickListener(this);
 		isShowImg = (ImageView) findViewById(R.id.isShowScript_notes_img);
+		favorImg=(ImageView) findViewById(R.id.favor_notes_top_img);
+		
+		
+		if(userAboutBeansList==null||userAboutBeansList.size()==0){
+			favorImg.setVisibility(View.GONE);
+		}else{
+			for(int i=0;i<userAboutBeansList.size();i++){
+				if(userAboutBeansList.get(i).getAboutUserId().equals(userId)){
+					favorImg.setVisibility(View.VISIBLE);
+					break;
+				}else{
+					favorImg.setVisibility(View.GONE);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -484,7 +505,7 @@ public class NotesActivity extends FragmentActivity implements
 							.getUrl());
 				}
 				userName.setText(user.getNameNick());
-				if (user.getGender() == 2) {
+				if (user.getGender() == 1) {
 
 					// 根据性别设置图片
 					Drawable nav_up = getResources().getDrawable(

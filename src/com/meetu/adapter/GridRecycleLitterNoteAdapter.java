@@ -9,12 +9,15 @@ import cc.imeetu.R;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.baidu.a.a.a.c;
+import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjScripBox;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjUserWrap;
+import com.meetu.common.Constants;
 import com.meetu.entity.LitterNotes;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.UserAboutDao;
 
 import android.app.Activity;
 import android.content.Context;
@@ -45,7 +48,8 @@ public class GridRecycleLitterNoteAdapter extends
 	// 当前用户
 	private ObjUser user = new ObjUser();
 	String userId = "";// 对方的id
-
+	UserAboutDao userAboutDao;
+	List<UserAboutBean> userAboutBeansList=new ArrayList<UserAboutBean>();
 	/**
 	 * 单击 和长按接口
 	 * 
@@ -77,6 +81,8 @@ public class GridRecycleLitterNoteAdapter extends
 		} else {
 			return;
 		}
+		userAboutDao=new UserAboutDao(context);
+		userAboutBeansList=userAboutDao.queryUserAbout(user.getObjectId(), Constants.FOLLOW_TYPE, "");
 
 	}
 
@@ -127,6 +133,19 @@ public class GridRecycleLitterNoteAdapter extends
 						+ item.getReceiverUnreadCount());
 			}
 			
+			
+			if(userAboutBeansList==null||userAboutBeansList.size()==0){
+				holder.ivFavor.setVisibility(View.GONE);
+			}else{
+				for(int i=0;i<userAboutBeansList.size();i++){
+					if(userAboutBeansList.get(i).getAboutUserId().equals(userId)){
+						holder.ivFavor.setVisibility(View.VISIBLE);
+						break;
+					}else{
+						holder.ivFavor.setVisibility(View.GONE);
+					}
+				}
+			}
 			
 
 		}

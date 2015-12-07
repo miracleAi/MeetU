@@ -248,18 +248,21 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 		// 专业的修改
 		case R.id.minesetting_major_ll:
 			// 传个学校对象过去 和 完善信息保持一致
-			Schools schools = new Schools();
-			schools.setUnivsId("" + user.getSchoolNum());
-			schools.setUnivsNameString(schoolDao
-					.getschoolName("" + user.getSchoolNum()).get(0)
-					.getUnivsNameString());
-			Intent intent3 = new Intent(getActivity(),
-					ChangeMajorActivity.class);
-			Bundle bundle = new Bundle();
-			bundle.putSerializable("schools", schools);
-			intent3.putExtras(bundle);
-			startActivityForResult(intent3, 3);
-			break;
+			if(user.getSchoolNum()!=0){
+				Schools schools = new Schools();
+				schools.setUnivsId("" + user.getSchoolNum());
+				schools.setUnivsNameString(schoolDao
+						.getschoolName("" + user.getSchoolNum()).get(0)
+						.getUnivsNameString());
+				Intent intent3 = new Intent(getActivity(),
+						ChangeMajorActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putSerializable("schools", schools);
+				intent3.putExtras(bundle);
+				startActivityForResult(intent3, 3);
+				break;
+			}
+			
 		// 家乡的修改
 		case R.id.minesetting_hometown_ll:
 			Intent intent4 = new Intent(getActivity(), ChangeCityActivity.class);

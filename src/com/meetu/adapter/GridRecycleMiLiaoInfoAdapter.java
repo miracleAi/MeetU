@@ -1,5 +1,6 @@
 package com.meetu.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.tsz.afinal.FinalBitmap;
@@ -9,11 +10,14 @@ import com.avos.avoscloud.AVUser;
 import com.meetu.activity.miliao.MiLiaoInfoActivity;
 import com.meetu.adapter.StaggeredMemoryWallAdapter.MyViewHolder;
 import com.meetu.adapter.StaggeredMemoryWallAdapter.OnItemClickCallBack;
+import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.common.Constants;
 import com.meetu.entity.PhotoWall;
 import com.meetu.entity.User;
 import com.meetu.entity.UserAbout;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DisplayUtils;
 
 import android.app.Activity;
@@ -42,7 +46,8 @@ public class GridRecycleMiLiaoInfoAdapter extends
 	// 当前用户
 		private ObjUser user = new ObjUser();
 		AVUser currentUser = AVUser.getCurrentUser();
-
+		List<UserAboutBean> userAboutBeansList=new ArrayList<UserAboutBean>();
+		private UserAboutDao userAboutDao;
 	/**
 	 * 单击 和长按接口
 	 * 
@@ -75,6 +80,7 @@ public class GridRecycleMiLiaoInfoAdapter extends
 		} else {
 			return;
 		}
+		userAboutDao=new UserAboutDao(context);
 	}
 
 	@Override
@@ -99,6 +105,19 @@ public class GridRecycleMiLiaoInfoAdapter extends
 				holder.ivDetele.setVisibility(View.INVISIBLE);
 			} else {
 				holder.ivDetele.setVisibility(View.VISIBLE);
+			}
+			
+			
+			userAboutBeansList=userAboutDao.queryUserAbout(user.getObjectId(), Constants.FOLLOW_TYPE, "");
+			if(userAboutBeansList==null||userAboutBeansList.size()==0){
+				holder.ivFavor.setVisibility(View.GONE);
+			}else{
+				for(int i=0;i<userAboutBeansList.size();i++){
+					if(userAboutBeansList.get(i).getAboutUserId().equals(item.getUserId())){
+						holder.ivFavor.setVisibility(View.VISIBLE);
+						break;
+					}
+				}
 			}
 
 			if (mOnItemClickLitener != null) {

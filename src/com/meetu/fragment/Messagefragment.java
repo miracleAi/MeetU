@@ -26,6 +26,7 @@ import com.meetu.cloud.callback.ObjListCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.common.Constants;
+import com.meetu.common.PerfectInformation;
 import com.meetu.entity.ChatEmoji;
 import com.meetu.entity.Messages;
 import com.meetu.myapplication.MyApplication;
@@ -269,8 +270,13 @@ public class Messagefragment extends Fragment implements OnItemClickListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.litter_notes_fragment_messages_rl:
-			Intent intent = new Intent(getActivity(), LitterNoteActivity.class);
-			startActivity(intent);
+			if(user.isCompleteUserInfo()){
+				Intent intent = new Intent(getActivity(), LitterNoteActivity.class);
+				startActivity(intent);
+			}else{
+				PerfectInformation.showDiolagPerfertInformation(getActivity(), "亲爱的 完善个人信息后才能查看小纸条呢");
+			}
+			
 
 			break;
 		case R.id.system_msg_layout:

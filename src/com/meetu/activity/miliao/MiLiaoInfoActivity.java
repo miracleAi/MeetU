@@ -12,6 +12,7 @@ import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.meetu.activity.ReportActivity;
+import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.adapter.GridRecycleMiLiaoInfoAdapter;
 import com.meetu.adapter.GridRecycleMiLiaoInfoAdapter.OnMiLiaoInfoItemClickCallBack;
 import com.meetu.bean.UserAboutBean;
@@ -368,8 +369,11 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 
 				} else {
 
-					Toast.makeText(this, "点击了位置" + position, Toast.LENGTH_SHORT)
-							.show();
+		//			Toast.makeText(this, "点击了位置" + position, Toast.LENGTH_SHORT)
+		//					.show();
+//					Intent intent=new Intent(MiLiaoInfoActivity.this,UserPagerActivity.class);
+//					intent.putExtra("userId", ""+mList2.get(position).getUserId());
+//					startActivity(intent);
 				}
 			} else {
 				if (position == mList2.size() - 1) {
@@ -400,7 +404,10 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 
 			handler.sendEmptyMessage(1);
 		} else {
-			Toast.makeText(this, "点击了位置" + position, Toast.LENGTH_SHORT).show();
+	//		Toast.makeText(this, "点击了位置" + position, Toast.LENGTH_SHORT).show();
+			Intent intent=new Intent(MiLiaoInfoActivity.this,UserPagerActivity.class);
+			intent.putExtra("userId", ""+mList2.get(position).getUserId());
+			startActivity(intent);
 		}
 
 	}

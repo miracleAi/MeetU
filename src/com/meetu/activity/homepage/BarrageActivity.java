@@ -35,6 +35,7 @@ import com.meetu.cloud.wrap.ObjActivityWrap;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
+import com.meetu.common.PerfectInformation;
 import com.meetu.entity.Barrage;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.UserDao;
@@ -165,6 +166,7 @@ public class BarrageActivity extends Activity {
 		bottomRl = (RelativeLayout) findViewById(R.id.bottom_bottom_barrage_rl);
 		bottomTv = (TextView) findViewById(R.id.bottom_tv);
 		bottomImv = (ImageView) findViewById(R.id.bottom_arrow);
+		
 	}
 
 	private void initChange() {
@@ -244,17 +246,24 @@ public class BarrageActivity extends Activity {
 								.show();
 						break;
 					case Constants.ActyStatusSignUp:
-						Intent intent = new Intent(BarrageActivity.this,
-								JoinActivity.class);
-						Bundle bundle = new Bundle();
-						bundle.putSerializable("activityBean", actyBean);
-						intent.putExtras(bundle);
-						startActivity(intent);
+						
+						if(user.isCompleteUserInfo()){
+							Intent intent = new Intent(BarrageActivity.this,
+									JoinActivity.class);
+							Bundle bundle = new Bundle();
+							bundle.putSerializable("activityBean", actyBean);
+							intent.putExtras(bundle);
+							startActivity(intent);
+						}else{
+							PerfectInformation.showDiolagPerfertInformation(BarrageActivity.this, "亲爱的 只有完善个人信息后才能报名");
+						}
+						
 						break;
 					default:
 						break;
 					}
 				} else {
+					
 					Intent intent = new Intent(BarrageActivity.this,
 							ChatGroupActivity.class);
 					// startActivity(intent);
@@ -686,4 +695,6 @@ public class BarrageActivity extends Activity {
 			super.onMessageReceipt(message, conversation, client);
 		}
 	}
+
+
 }

@@ -56,7 +56,10 @@ import com.meetu.activity.ReportActivity;
 import com.meetu.activity.SystemSettingsActivity;
 import com.meetu.activity.messages.CreateLitterNoteActivity;
 import com.meetu.activity.messages.NotesActivity;
+import com.meetu.activity.messages.ShowSysMsgPhotoActivity;
+import com.meetu.activity.messages.SystemMsgActivity;
 import com.meetu.bean.UserAboutBean;
+import com.meetu.bean.UserBean;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjShieldUser;
@@ -65,11 +68,13 @@ import com.meetu.cloud.wrap.ObjFollowWrap;
 import com.meetu.cloud.wrap.ObjShieldUserWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
+import com.meetu.common.PerfectInformation;
 import com.meetu.entity.Middle;
 import com.meetu.fragment.UserInfoFragment;
 import com.meetu.fragment.UserPhotoFragment;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.UserAboutDao;
+import com.meetu.sqlite.UserDao;
 import com.meetu.tools.BitmapCut;
 import com.meetu.view.CustomViewPager;
 import com.meetu.view.ScrollTabHolder;
@@ -141,6 +146,7 @@ public class UserPagerActivity extends FragmentActivity implements
 	
 	List<UserAboutBean> userAboutBeansList=new ArrayList<UserAboutBean>();
 	UserAboutDao userAboutDao;
+	UserDao userDao;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +161,7 @@ public class UserPagerActivity extends FragmentActivity implements
 		} else {
 			return;
 		}
+		userDao=new UserDao(getApplicationContext());
 		userAboutDao=new UserAboutDao(getApplicationContext());
 		Intent intent = getIntent();
 		// 取到用户的id
@@ -278,6 +285,39 @@ public class UserPagerActivity extends FragmentActivity implements
 					showDialog();
 				} else {
 					log.e("zcq", "此处应放大图片");
+					
+					ArrayList<UserBean> userBeans=userDao.queryUser(userId);
+					
+					if(userBeans!=null&&userBeans.size()!=0){
+						Intent photoIntent = new Intent(UserPagerActivity.this,
+								ShowSysMsgPhotoActivity.class);
+						if(userBeans.get(0).getProfileOrign()!=null){
+								
+								photoIntent.putExtra("photoUrl",userBeans.get(0).getProfileOrign());
+						}
+							startActivity(photoIntent);
+						
+					}else{
+						ObjUserWrap.getObjUser(userId, new ObjUserInfoCallback() {
+
+							@Override
+							public void callback(ObjUser user, AVException e) {
+								if(e!=null){
+									return;
+								}
+								userDao.insertOrReplaceUser(user);
+								Intent photoIntent = new Intent(UserPagerActivity.this,
+										ShowSysMsgPhotoActivity.class);
+								if (user.getProfileClip() != null) {
+									photoIntent.putExtra("photoUrl",user.getProfileOrign().getUrl());
+								}
+								startActivity(photoIntent);
+
+							}
+						});
+					}
+				
+					
 				}
 
 			}
@@ -542,12 +582,18 @@ public class UserPagerActivity extends FragmentActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				log.e("lucifer", "拉黑");
-				if (isShield) {
-					cancelShieldUser(userId);
-				} else {
-					shieldUser(userId);
+				if(userMy.isCompleteUserInfo()){
+					if (isShield) {
+						cancelShieldUser(userId);
+					} else {
+						shieldUser(userId);
+					}
+					popupWindow.dismiss();
+					
+				}else{
+					PerfectInformation.showDiolagPerfertInformation(UserPagerActivity.this, "亲爱的 完善个人信息后才能屏蔽TA呢");
 				}
-				popupWindow.dismiss();
+				
 			}
 		});
 		jubaolayout.setOnClickListener(new OnClickListener() {
@@ -556,13 +602,18 @@ public class UserPagerActivity extends FragmentActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				log.e("lucifer", "举报");
-				// 跳转到举报界面
-				popupWindow.dismiss();
-				Intent intent = new Intent(UserPagerActivity.this,
-						ReportActivity.class);
-				intent.putExtra("flag", "user");
-				intent.putExtra("otherId", userId);
-				startActivity(intent);
+				if(userMy.isCompleteUserInfo()){
+					// 跳转到举报界面
+					popupWindow.dismiss();
+					Intent intent = new Intent(UserPagerActivity.this,
+							ReportActivity.class);
+					intent.putExtra("flag", "user");
+					intent.putExtra("otherId", userId);
+					startActivity(intent);
+				}else{
+					PerfectInformation.showDiolagPerfertInformation(UserPagerActivity.this, "亲爱的 完善个人信息后才能举报TA呢");
+				}
+			
 			}
 		});
 	}
@@ -690,10 +741,15 @@ public class UserPagerActivity extends FragmentActivity implements
 		 * 发送小纸条
 		 */
 		case R.id.user_scrip_imv:
-
-			Intent intent3 = new Intent(this, CreateLitterNoteActivity.class);
-			intent3.putExtra("userId", userId);
-			startActivity(intent3);
+			
+			if(userMy.isCompleteUserInfo()){
+				Intent intent3 = new Intent(this, CreateLitterNoteActivity.class);
+				intent3.putExtra("userId", userId);
+				startActivity(intent3);
+			}else{
+				PerfectInformation.showDiolagPerfertInformation(UserPagerActivity.this, "亲爱的 完善个人信息后才能给TA发送小纸条呢");
+			}
+			
 			break;
 		/**
 		 * 点赞

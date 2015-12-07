@@ -29,6 +29,7 @@ import com.meetu.cloud.wrap.ObjActivityCoverWrap;
 import com.meetu.cloud.wrap.ObjActivityOrderWrap;
 import com.meetu.cloud.wrap.ObjActivityPhotoWrap;
 import com.meetu.cloud.wrap.ObjPraiseWrap;
+import com.meetu.common.PerfectInformation;
 import com.meetu.entity.PhotoWall;
 import com.meetu.entity.Photolunbo;
 import com.meetu.myapplication.MyApplication;
@@ -316,11 +317,16 @@ public class HomePageDetialActivity extends Activity implements
 				Toast.makeText(this, "活动报名已结束", Toast.LENGTH_SHORT).show();
 				break;
 			case 50:
-				Intent intent2 = new Intent(this, JoinActivity.class);
-				Bundle bundle2 = new Bundle();
-				bundle2.putSerializable("activityBean", activityBean);
-				intent2.putExtras(bundle2);
-				startActivity(intent2);
+				if(user.isCompleteUserInfo()){
+					Intent intent2 = new Intent(this, JoinActivity.class);
+					Bundle bundle2 = new Bundle();
+					bundle2.putSerializable("activityBean", activityBean);
+					intent2.putExtras(bundle2);
+					startActivity(intent2);
+				}else{
+					PerfectInformation.showDiolagPerfertInformation(this, "亲爱的 完善个人信息后才能参加活动呢");
+				}
+				
 				break;
 			case 60:
 				Toast.makeText(this, "活动报名已结束", Toast.LENGTH_SHORT).show();
@@ -339,11 +345,18 @@ public class HomePageDetialActivity extends Activity implements
 			startActivity(intent3);
 			break;
 		case R.id.feedback_homepage_detial_img:
-			Intent intent4 = new Intent(this, ActivityFeedbackActivity.class);
-			Bundle bundle4 = new Bundle();
-			bundle4.putSerializable("activityBean", activityBean);
-			intent4.putExtras(bundle4);
-			startActivity(intent4);
+			
+			if(user.isCompleteUserInfo()){
+				Intent intent4 = new Intent(this, ActivityFeedbackActivity.class);
+				Bundle bundle4 = new Bundle();
+				bundle4.putSerializable("activityBean", activityBean);
+				intent4.putExtras(bundle4);
+				startActivity(intent4);
+			}else{
+				PerfectInformation.showDiolagPerfertInformation(this, "亲爱的 完善个人信息后才能参加活动呢");
+			}
+			
+		
 			break;
 		case R.id.barrage_homepage_detial_img:
 			Intent intent5 = new Intent(this, BarrageActivity.class);
