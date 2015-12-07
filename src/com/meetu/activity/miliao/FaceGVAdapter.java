@@ -3,8 +3,9 @@ package com.meetu.activity.miliao;
 import java.io.IOException;
 import java.util.List;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.LogUtil.log;
-import com.meetu.R;
 import com.meetu.entity.ChatEmoji;
 import com.meetu.tools.StringToDrawable;
 import com.meetu.tools.zhuanhuan;

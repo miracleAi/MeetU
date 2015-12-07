@@ -9,8 +9,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.imeetu.R;
+
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
-import com.meetu.R;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;

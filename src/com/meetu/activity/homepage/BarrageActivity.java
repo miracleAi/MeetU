@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
@@ -18,7 +20,6 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.lidroid.xutils.BitmapUtils;
-import com.meetu.R;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.bean.ActivityBean;
 import com.meetu.bean.BarrageMsgBean;

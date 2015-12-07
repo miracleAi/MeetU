@@ -3,9 +3,8 @@ package com.meetu.activity.miliao;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.meetu.R;
-import com.meetu.R.layout;
-import com.meetu.R.menu;
+import cc.imeetu.R;
+
 import com.meetu.adapter.MiLiaoUsersListAdapter;
 import com.meetu.entity.User;
 

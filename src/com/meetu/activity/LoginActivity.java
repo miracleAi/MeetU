@@ -1,11 +1,12 @@
 package com.meetu.activity;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.meetu.MainActivity;
-import com.meetu.R;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.callback.ObjFunEnumCallback;
 import com.meetu.cloud.callback.ObjFunObjectCallback;

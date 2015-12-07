@@ -3,9 +3,9 @@ package com.meetu.adapter;
 import java.util.List;
 
 import net.tsz.afinal.FinalBitmap;
+import cc.imeetu.R;
 
 import com.avos.avoscloud.AVUser;
-import com.meetu.R;
 import com.meetu.activity.miliao.MiLiaoInfoActivity;
 import com.meetu.adapter.StaggeredMemoryWallAdapter.MyViewHolder;
 import com.meetu.adapter.StaggeredMemoryWallAdapter.OnItemClickCallBack;
@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;

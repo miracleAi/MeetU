@@ -3,13 +3,11 @@ package com.meetu.activity.homepage;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
-import com.meetu.R;
-import com.meetu.R.drawable;
-import com.meetu.R.id;
-import com.meetu.R.layout;
 import com.meetu.adapter.MemoryPhotoAdapter;
 import com.meetu.adapter.MinePhotoAdapter;
 import com.meetu.bean.ActivityBean;

@@ -3,8 +3,8 @@ package com.meetu.adapter;
 import java.util.List;
 
 import net.tsz.afinal.FinalBitmap;
+import cc.imeetu.R;
 
-import com.meetu.R;
 import com.meetu.activity.mine.FavorListActivity;
 import com.meetu.activity.mine.MinephotoActivity;
 import com.meetu.cloud.object.ObjActivityPhoto;

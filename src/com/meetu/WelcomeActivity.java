@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.meetu.R;
 import com.meetu.activity.LoginActivity;
 import com.meetu.activity.LoginOrRegisterActivity;
 import com.meetu.activity.RegisterActivity;

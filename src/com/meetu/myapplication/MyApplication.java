@@ -3,6 +3,7 @@ package com.meetu.myapplication;
 import java.util.Set;
 
 import net.tsz.afinal.FinalBitmap;
+import cc.imeetu.R;
 import cn.beecloud.BCPay;
 import cn.beecloud.BeeCloud;
 
@@ -20,7 +21,6 @@ import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.lidroid.xutils.BitmapUtils;
-import com.meetu.R;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityCover;

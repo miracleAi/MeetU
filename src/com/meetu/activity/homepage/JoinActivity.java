@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.tsz.afinal.FinalBitmap;
+import cc.imeetu.R;
 import cn.beecloud.BCPay;
 import cn.beecloud.async.BCCallback;
 import cn.beecloud.async.BCResult;
@@ -16,9 +17,6 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.meetu.R;
-import com.meetu.R.layout;
-import com.meetu.R.menu;
 import com.meetu.adapter.BookingListViewAdapter;
 import com.meetu.bean.ActivityBean;
 import com.meetu.cloud.callback.ObjActivityOrderCallback;
@@ -122,6 +120,7 @@ OnItemClickListener {
 						 */
 
 						Toast.makeText(JoinActivity.this, toastMsg, Toast.LENGTH_LONG).show();
+						log.d("mytest", "微信支付"+toastMsg);
 						updateOrder(Constants.OrderStatusPayFail);
 					} else if (result.equals(BCPayResult.RESULT_UNKNOWN)) {
 						//可能出现在支付宝8000返回状态

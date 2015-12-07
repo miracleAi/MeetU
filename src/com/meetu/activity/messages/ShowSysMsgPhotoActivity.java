@@ -1,7 +1,8 @@
 package com.meetu.activity.messages;
 
+import cc.imeetu.R;
+
 import com.lidroid.xutils.BitmapUtils;
-import com.meetu.R;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -22,8 +22,9 @@ package com.meetu.common.city;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.meetu.R;
 
+
+import cc.imeetu.R;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Canvas;

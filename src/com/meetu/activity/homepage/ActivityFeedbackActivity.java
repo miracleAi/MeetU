@@ -1,13 +1,12 @@
 package com.meetu.activity.homepage;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.lidroid.xutils.BitmapUtils;
-import com.meetu.R;
-import com.meetu.R.layout;
-import com.meetu.R.menu;
 import com.meetu.bean.ActivityBean;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjActivity;

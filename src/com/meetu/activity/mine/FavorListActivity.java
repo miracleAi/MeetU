@@ -3,7 +3,8 @@ package com.meetu.activity.mine;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.meetu.R;
+import cc.imeetu.R;
+
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;

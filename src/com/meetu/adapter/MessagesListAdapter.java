@@ -2,10 +2,10 @@ package com.meetu.adapter;
 
 import java.util.List;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
-import com.meetu.R;
-
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.common.EmojisRelevantUtils;

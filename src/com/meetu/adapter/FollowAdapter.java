@@ -3,10 +3,10 @@ package com.meetu.adapter;
 import java.util.ArrayList;
 
 import net.tsz.afinal.FinalBitmap;
+import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
 import com.lidroid.xutils.BitmapUtils;
-import com.meetu.R;
 import com.meetu.bean.UserBean;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjUser;

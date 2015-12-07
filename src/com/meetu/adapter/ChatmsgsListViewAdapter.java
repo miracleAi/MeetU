@@ -25,14 +25,11 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
+import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
-
-import com.meetu.R;
-import com.meetu.R.id;
-import com.meetu.R.layout;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.bean.UserBean;
 import com.meetu.cloud.callback.ObjUserInfoCallback;

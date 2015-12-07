@@ -3,8 +3,9 @@ package com.meetu.activity.mine;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.LogUtil.log;
-import com.meetu.R;
 import com.meetu.common.SchoolDao;
 import com.meetu.entity.Schools;
 

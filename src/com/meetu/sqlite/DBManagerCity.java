@@ -6,8 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.meetu.R;
 
+
+import cc.imeetu.R;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
@@ -21,7 +22,7 @@ import android.util.Log;
 public class DBManagerCity {
 	private final int BUFFER_SIZE = 400000;
 	public static final String DB_NAME = "city.db"; // 保存的数据库文件名
-	public static final String PACKAGE_NAME = "com.meetu";
+	public static final String PACKAGE_NAME = "cc.imeetu";
 	public static final String DB_PATH = "/data"
 			+ Environment.getDataDirectory().getAbsolutePath() + "/"
 			+ PACKAGE_NAME; // 在手机里存放数据库的位置

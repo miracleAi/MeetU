@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.tsz.afinal.FinalBitmap;
+import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
@@ -16,7 +17,6 @@ import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
-import com.meetu.R;
 import com.meetu.activity.messages.InputDialog;
 import com.meetu.activity.messages.InputDialog.SendMessageCallback;
 import com.meetu.activity.messages.NotesActivity;
@@ -36,7 +36,6 @@ import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjScriptWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
-
 import com.meetu.entity.ChatEmoji;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.myapplication.MyApplication;
@@ -49,7 +48,6 @@ import com.meetu.tools.StringToDrawbleId;
 import com.tencent.open.cgireport.reportItem;
 
 import android.R.integer;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;

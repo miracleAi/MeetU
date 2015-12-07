@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
-import com.meetu.R;
-import com.meetu.R.layout;
 import com.meetu.adapter.StaggeredHomeAdapter;
 import com.meetu.adapter.StaggeredMemoryWallAdapter;
 import com.meetu.adapter.StaggeredMemoryWallAdapter.OnItemClickCallBack;

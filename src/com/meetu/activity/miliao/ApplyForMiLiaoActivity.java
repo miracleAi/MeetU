@@ -2,13 +2,12 @@ package com.meetu.activity.miliao;
 
 import java.util.List;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
-import com.meetu.R;
-import com.meetu.R.layout;
-import com.meetu.R.menu;
 import com.meetu.bean.SeekChatInfoBean;
 import com.meetu.cloud.callback.ObjAuthoriseApplyCallback;
 import com.meetu.cloud.callback.ObjAuthoriseCategoryCallback;

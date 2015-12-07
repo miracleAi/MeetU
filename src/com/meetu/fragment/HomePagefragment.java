@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.tsz.afinal.FinalBitmap;
+import cc.imeetu.R;
 
-import com.meetu.R;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
@@ -30,7 +30,6 @@ import com.meetu.cloud.wrap.ObjActivityWrap;
 import com.meetu.cloud.wrap.ObjPraiseWrap;
 import com.meetu.common.Constants;
 import com.meetu.entity.Huodong;
-
 import com.meetu.sqlite.ActivityDao;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DensityUtil;

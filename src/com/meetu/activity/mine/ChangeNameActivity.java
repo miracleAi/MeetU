@@ -1,9 +1,10 @@
 package com.meetu.activity.mine;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.meetu.MainActivity;
-import com.meetu.R;
 import com.meetu.activity.SetPersonalInformation2Activity;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjUser;

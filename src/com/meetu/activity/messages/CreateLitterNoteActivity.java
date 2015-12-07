@@ -8,15 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.tsz.afinal.FinalBitmap;
+import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
-import com.meetu.R;
-import com.meetu.R.id;
-import com.meetu.R.layout;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjScripInfoCallback;

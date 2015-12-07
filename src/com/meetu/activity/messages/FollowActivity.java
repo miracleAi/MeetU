@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cc.imeetu.R;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
-import com.meetu.R;
 import com.meetu.adapter.ViewPagerAdapter;
 import com.meetu.cloud.callback.ObjFunMapCallback;
 import com.meetu.cloud.object.ObjUser;
