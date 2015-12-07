@@ -10,13 +10,21 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.meetu.R;
 import com.meetu.activity.LoginActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
+import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjUserCallback;
+import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjChatMessage;
+import com.meetu.cloud.wrap.ObjFollowWrap;
 import com.meetu.common.ChatConnection;
+import com.meetu.common.Constants;
 import com.meetu.db.TabDb;
+import com.meetu.entity.UserAbout;
 import com.meetu.fragment.MineUpfragment;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.UserAboutDao;
+import com.meetu.sqlite.UserDao;
 import com.meetu.tools.SystemBarTintManager;
 import com.meetu.view.ScrollTabHolder;
 
@@ -55,7 +63,13 @@ public class MainActivity extends FragmentActivity implements
 	private String pageString;
 
 	public static MineUpfragment fMineUpfragment;
-
+	
+	// 当前用户
+		ObjUser user = new ObjUser();
+		AVUser currentUser = AVUser.getCurrentUser();
+	UserAboutDao userAboutDao;
+	UserDao userDao;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -86,6 +100,14 @@ public class MainActivity extends FragmentActivity implements
 		// fMineUpfragment=new MineUpfragment();
 
 		ChatConnection.isConnection();
+		userAboutDao=new UserAboutDao(this);
+		userDao=new UserDao(this);
+		if (currentUser != null) {
+			// 强制类型转换
+			user = AVUser.cast(currentUser, ObjUser.class);
+		}
+		
+		getMyFollowUser();
 
 	}
 
@@ -199,6 +221,50 @@ public class MainActivity extends FragmentActivity implements
 		if ((Intent.FLAG_ACTIVITY_CLEAR_TOP & intent.getFlags()) != 0) {
 			finish();
 		}
+	}
+	
+	/**
+	 * 获得我关注过的用户的列表
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-7
+	 */
+	public void getMyFollowUser(){
+		log.e("zcq", "正在加载我关注的人");
+		ObjFollowWrap.getFollowee(user, new ObjUserCallback() {
+			
+			@Override
+			public void callback(List<ObjUser> objects, AVException e) {
+				if(e!=null){
+					log.e("zcq", e);
+					return;
+				}
+				if(objects==null){
+					
+				}else{
+					
+					log.e("zcq", "objects.size()=="+objects.size());
+					ArrayList<UserAboutBean> userAboutBeanList;
+					userAboutBeanList=new ArrayList<UserAboutBean>();
+					for(int i=0;i<objects.size();i++){
+						UserAboutBean userAboutBean=new UserAboutBean();
+						userAboutBean.setUserId(user.getObjectId());
+						userAboutBean.setAboutColetctionId("");
+						userAboutBean.setAboutType(Constants.FOLLOW_TYPE);
+						userAboutBean.setAboutUserId(objects.get(i).getObjectId());
+						userAboutBeanList.add(userAboutBean);
+						
+						userDao.insertOrReplaceUser(objects.get(i));
+					}
+					
+					userAboutDao.saveUserAboutList(userAboutBeanList);
+					
+				}
+				
+				
+			}
+		});
+		
 	}
 
 }

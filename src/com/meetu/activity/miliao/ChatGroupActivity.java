@@ -1382,6 +1382,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 			@Override
 			public void onMemberLeft(AVIMClient client,
 					AVIMConversation conversation, List<String> array, String str) {
+				log.e("zcq", "接收到踢出消息");
 				if (!array.contains(user.getObjectId())) {
 					// 被踢出者中不包含自己，不处理
 					log.e("zcq", "被踢出者不包括自己");

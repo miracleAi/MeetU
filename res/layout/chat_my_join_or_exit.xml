@@ -19,8 +19,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"
+            android:textColor="#a0a0a0"
             android:textSize="10sp"
-            android:text="20150101"
+            android:text=""
             />
          <TextView 
             android:id="@+id/content_my_join_or_exit_remind_tv"
@@ -29,6 +30,7 @@
             android:layout_marginTop="5dp"
             android:layout_centerHorizontal="true"
             android:textSize="10sp"
+            android:textColor="#a0a0a0"
             android:text="欢迎加入觅聊"
             />
         </LinearLayout>

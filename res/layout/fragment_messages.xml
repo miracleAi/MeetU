@@ -141,8 +141,17 @@
                 android:text="小纸条"
                 android:textColor="#606366"
                 android:textSize="12dp" />
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_below="@+id/textView4"
+                android:layout_centerHorizontal="true"
+                android:textColor="#a0a0a0"
+                android:textSize="12sp"
+                android:text="也许会有故事呢"/>
 
-            <LinearLayout
+    <!--         <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textView4"
@@ -169,7 +178,7 @@
                     android:text="个小纸条"
                     android:textColor="#a0a0a0"
                     android:textSize="12sp" />
-            </LinearLayout>
+            </LinearLayout> -->
         </RelativeLayout>
     </LinearLayout>
 

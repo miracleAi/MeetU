@@ -62,6 +62,7 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 	public void onMemberLeft(AVIMClient client, AVIMConversation conversation,
 			List<String> array, String str) {
 		// TODO Auto-generated method stub
+		log.e("zcq", "进入全局监听踢出");
 		if (AVUser.getCurrentUser() == null) {
 			return;
 		}

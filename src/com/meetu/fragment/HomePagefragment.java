@@ -106,7 +106,8 @@ public class HomePagefragment extends Fragment implements
 	private ObjActivity objActivity = null;
 	private UserAboutDao userAboutDao;
 	private ArrayList<UserAboutBean> userAboutBeanList = new ArrayList<UserAboutBean>();
-
+	
+	private RelativeLayout cityLayout;
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -225,6 +226,9 @@ public class HomePagefragment extends Fragment implements
 			// loadData(1,pageSize);
 
 			initView();
+			
+			cityLayout=(RelativeLayout) view.findViewById(R.id.adress_homepage_fragment_rl);
+			cityLayout.setOnClickListener(this);
 		}
 		ViewGroup parent = (ViewGroup) view.getParent();
 		if (parent != null) {
@@ -498,7 +502,9 @@ public class HomePagefragment extends Fragment implements
 			startActivity(intent);
 
 			break;
-
+		case R.id.adress_homepage_fragment_rl:
+			Toast.makeText(getActivity(), " 亲爱的 暂时仅开放北京 小U正在飞往其他城市哦", Toast.LENGTH_LONG).show();
+			break;
 		default:
 			break;
 		}

@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.tsz.afinal.FinalBitmap;
 import android.annotation.SuppressLint;
@@ -55,10 +56,12 @@ import com.meetu.activity.ReportActivity;
 import com.meetu.activity.SystemSettingsActivity;
 import com.meetu.activity.messages.CreateLitterNoteActivity;
 import com.meetu.activity.messages.NotesActivity;
+import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjShieldUser;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjFollowWrap;
 import com.meetu.cloud.wrap.ObjShieldUserWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
@@ -66,6 +69,7 @@ import com.meetu.entity.Middle;
 import com.meetu.fragment.UserInfoFragment;
 import com.meetu.fragment.UserPhotoFragment;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.BitmapCut;
 import com.meetu.view.CustomViewPager;
 import com.meetu.view.ScrollTabHolder;
@@ -133,6 +137,10 @@ public class UserPagerActivity extends FragmentActivity implements
 	TextView jubaoTv;
 	RelativeLayout laheilayout;
 	RelativeLayout jubaolayout;
+	boolean isFollow=false;//对该用户是否关注、点赞
+	
+	List<UserAboutBean> userAboutBeansList=new ArrayList<UserAboutBean>();
+	UserAboutDao userAboutDao;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +155,7 @@ public class UserPagerActivity extends FragmentActivity implements
 		} else {
 			return;
 		}
-
+		userAboutDao=new UserAboutDao(getApplicationContext());
 		Intent intent = getIntent();
 		// 取到用户的id
 		userId = intent.getStringExtra("userId");
@@ -155,6 +163,20 @@ public class UserPagerActivity extends FragmentActivity implements
 		if (userMy.getObjectId().equals(userId)) {
 			isMyself = true;
 		}
+		
+		userAboutBeansList=userAboutDao.queryUserAbout(userMy.getObjectId(), Constants.FOLLOW_TYPE, "");
+		if(userAboutBeansList==null||userAboutBeansList.size()==0){
+			isFollow=false;
+		}else{
+			for(int i=0;i<userAboutBeansList.size();i++){
+				if(userAboutBeansList.get(i).getAboutUserId().equals(userId)){
+					isFollow=true;
+					break;
+				}
+			}
+		}
+		
+		
 
 		MyApplication app = (MyApplication) this.getApplicationContext();
 		finalBitmap = app.getFinalBitmap();
@@ -183,6 +205,11 @@ public class UserPagerActivity extends FragmentActivity implements
 			}
 		});
 		setupAdapter();
+		
+		if(isFollow==true){
+			
+			userLikeImv.setImageResource(R.drawable.mine_photoview_btn_like_hl);
+		}
 	}
 
 	private void initValues() {
@@ -203,6 +230,7 @@ public class UserPagerActivity extends FragmentActivity implements
 		backImv = (ImageView) findViewById(R.id.user_back_imv);
 		setImv = (ImageView) findViewById(R.id.user_set_imv);
 		userLikeImv = (ImageView) findViewById(R.id.user_like_imv);
+		userLikeImv.setOnClickListener(this);
 		userProfileImv = (ImageView) findViewById(R.id.user_profile_iv);
 		userGenderImv = (ImageView) findViewById(R.id.user_gender_imv);
 		userScripImv = (ImageView) findViewById(R.id.user_scrip_imv);
@@ -667,6 +695,17 @@ public class UserPagerActivity extends FragmentActivity implements
 			intent3.putExtra("userId", userId);
 			startActivity(intent3);
 			break;
+		/**
+		 * 点赞
+		 */
+		case R.id.user_like_imv:
+			if(!isFollow){
+				followInUser();
+			}else{
+				dismissFollowUser();
+			}
+			
+			break;
 		default:
 			break;
 		}
@@ -986,6 +1025,68 @@ public class UserPagerActivity extends FragmentActivity implements
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		finish();
+	}
+	
+	/**
+	 * 关注用户
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-7
+	 */
+	public void followInUser(){
+		ObjFollowWrap.followIn(userMy, userId, new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e!=null){
+					log.e("zcq  关注", e);
+					return;
+				}
+				if(result){
+					log.e("zcq", "关注成功");
+					Toast.makeText(getApplicationContext(), "关注成功", Toast.LENGTH_SHORT).show();
+					isFollow=true;
+					userLikeImv.setImageResource(R.drawable.mine_photoview_btn_like_hl);
+				}else{
+					log.e("zcq", "关注失败");
+					Toast.makeText(getApplicationContext(), "关注失败", Toast.LENGTH_SHORT).show();
+				}
+				
+			}
+		});
+	}
+	
+	/**
+	 * 取消关注用户
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-7
+	 */
+	public void dismissFollowUser(){
+		
+		ObjFollowWrap.unFollow(userMy, userId, new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				if(e!=null){
+					log.e("zcq  取消关注", e);
+					return;
+				}
+				if(result){
+					//取消关注后   需要  换图片 改变状态  从缓存的关注列表中删除该用户
+					log.e("zcq", "取消关注成功");
+					Toast.makeText(getApplicationContext(), "取消关注成功", Toast.LENGTH_SHORT).show();
+					isFollow=false;
+					userLikeImv.setImageResource(R.drawable.mine_photoview_btn_like_nor2x);
+					
+					userAboutDao.deleteUserTypeUserId(userMy.getObjectId(), Constants.FOLLOW_TYPE, "", userId);
+				}else{
+					log.e("zcq", "取消关注失败");
+					Toast.makeText(getApplicationContext(), "取消关注失败", Toast.LENGTH_SHORT).show();
+				}				
+			}
+		});
 	}
 
 }
