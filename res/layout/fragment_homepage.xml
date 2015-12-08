@@ -74,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
-            android:text="0已报名"
+            android:text="0人报名"
             android:textColor="#ffffff"
             android:textSize="15sp" />
 

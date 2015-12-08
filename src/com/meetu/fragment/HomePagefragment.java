@@ -479,11 +479,11 @@ public class HomePagefragment extends Fragment implements
 				itemNow = actyListCache.size() - 1;
 				int number = userAboutDao.queryUserAbout(user.getObjectId(), 3,
 						actyListCache.get(itemNow).getConversationId()).size();
-				numberAll.setText("" + number);
+				numberAll.setText("" + number+"人报名");
 			} else {
 				int number = userAboutDao.queryUserAbout(user.getObjectId(), 3,
 						actyListCache.get(itemNow).getConversationId()).size();
-				numberAll.setText("" + number);
+				numberAll.setText("" + number+"人报名");
 			}
 
 		}

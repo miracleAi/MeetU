@@ -10,6 +10,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+
 import com.lidroid.xutils.BitmapUtils;
 import com.meetu.adapter.JoinUserAdapter;
 import com.meetu.adapter.JoinUserFavorAdapter;
@@ -78,6 +79,9 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 	private TextView noneTextView;
 	private TextView failTextView;
 	private RelativeLayout allLayout;
+	
+	private RelativeLayout MYtopLayout,myLayout;
+	private boolean isJoin=false;//是否加入了当前活动
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,11 +108,10 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 
 		initLoadActivity(activityBean.getActyId());
 		
-		allLayout=(RelativeLayout) findViewById(R.id.all_join_users_activity_rl);
-		noneOrFailLayout=(RelativeLayout) findViewById(R.id.none_or_fail_join_users_rl);
-		noneTextView=(TextView) findViewById(R.id.none_join_users_tv);
-		failTextView=(TextView) findViewById(R.id.fail_join_users_tv);
-
+	
+		
+		
+		initView();
 		loadData();
 		loadData2();
 		mlistViewAll = (ListView) super
@@ -122,16 +125,20 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 		adapterfavor = new JoinUserFavorAdapter(this, userFavorList);
 		mListViewFavor.setAdapter(adapterfavor);
 
-		initView();
-	}
-
-	private void loadData2() {
+	//	isJoin();
 		
-	
-
+		initalize();
+		
 	}
-
-	private void initView() {
+	
+	/**
+	 * 初始化加载内容
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-8
+	 */
+	private void initalize() {
+		// TODO Auto-generated method stub
 		// 动态设置listview 高度
 		RelativeLayout.LayoutParams rlAll = (LayoutParams) mlistViewAll
 				.getLayoutParams();
@@ -149,7 +156,44 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 		numberFavor.setText("(" + userFavorList.size() + ")");
 		numberAll = (TextView) super.findViewById(R.id.number_all_joinUser);
 		numberAll.setText("(" + userList.size() + ")");
+		
+		// TODO 此处应该是报名后的真实名字
+		userName.setText(user.getNameNick());
+		
+		userSchool.setText(user.getSchool());
+		sexPhoto = (ImageView) super
+				.findViewById(R.id.user_sex_huodong_join_img);
+		if (user.getGender() == 2) {
+			sexPhoto.setImageResource(R.drawable.acty_joinlist_img_female);
+		} else {
+
+		}
+		
+		if(user.getProfileClip()!=null){
+			finalBitmap.display(myPHotoHead, user.getProfileClip().getUrl());
+		}
+	}
+
+	private void loadData2() {
+		
+	
+
+	}
+/**
+ * 控件
+ *   
+ * @author lucifer
+ * @date 2015-12-8
+ */
+	private void initView() {
+
 		// 点击事件处理
+		
+		allLayout=(RelativeLayout) findViewById(R.id.all_join_users_activity_rl);
+		noneOrFailLayout=(RelativeLayout) findViewById(R.id.none_or_fail_join_users_rl);
+		noneTextView=(TextView) findViewById(R.id.none_join_users_tv);
+		failTextView=(TextView) findViewById(R.id.fail_join_users_tv);
+		
 		backLayout = (RelativeLayout) super
 				.findViewById(R.id.back_joinUsers_homepager_rl);
 		backLayout.setOnClickListener(this);
@@ -160,24 +204,16 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 				.findViewById(R.id.sign_joinUsers_homepager_img);
 		myPHotoHead = (ImageView) super
 				.findViewById(R.id.photo_head_my_join_users_huodong_tv);
-
-		finalBitmap.display(myPHotoHead, user.getProfileClip().getUrl());
-
+		
 		userName = (TextView) super
 				.findViewById(R.id.name_user_huodong_join_tv);
-		// TODO 此处应该是报名后的真实名字
-		userName.setText(user.getNameNick());
 		userSchool = (TextView) super
 				.findViewById(R.id.school_user_huodong_join_tv);
-		userSchool.setText(user.getSchool());
-		sexPhoto = (ImageView) super
-				.findViewById(R.id.user_sex_huodong_join_img);
-		if (user.getGender() == 2) {
-			sexPhoto.setImageResource(R.drawable.acty_joinlist_img_female);
-		} else {
-
-		}
 		numberJoin = (TextView) super.findViewById(R.id.number_join_huodong_tv);
+		
+		myLayout=(RelativeLayout) findViewById(R.id.center2_joinUsers_rl);
+		MYtopLayout=(RelativeLayout) findViewById(R.id.top_join_user_rl);
+		
 
 	}
 
@@ -237,11 +273,23 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 							userList.addAll(objects);
 							log.e("zcq 有人", "userList==" + userList.size());
 							queryFollowAndOrder(activity);
+							for(int i=0;i<objects.size();i++){
+								if(user.getObjectId().equals(objects.get(i).getObjectId())){
+									isJoin=true;
+									break;
+								}
+								
+							}
+							
 							noneOrFailLayout.setVisibility(View.GONE);
 							allLayout.setVisibility(View.VISIBLE);
+							if(isJoin==true){
+								signLayout.setVisibility(View.VISIBLE);
+								myLayout.setVisibility(View.VISIBLE);
+								MYtopLayout.setVisibility(View.VISIBLE);
+							}
 							
-							
-						//	handler.sendEmptyMessage(1);
+							handler.sendEmptyMessage(1);
 							log.e("zcq", "objects==" + objects.size());
 						}else{
 							log.e("zcq 没人", "没有成员啊");
@@ -286,7 +334,7 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 				adapter.notifyDataSetChanged();
 				log.e("lucifer", "shuaxin");
 				adapterfavor.notifyDataSetChanged();
-				initView();
+				initalize();
 				break;
 
 			default:
@@ -315,6 +363,32 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 			e.printStackTrace();
 		}
 
+	}
+	
+	public void isJoin(){
+		ObjActivityOrderWrap.queryActivitySignUp(objActivity, new ObjUserCallback() {
+			
+			@Override
+			public void callback(List<ObjUser> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if(e!=null){
+					log.e("zcq 请求失败", e);
+					return;
+				}
+				if(objects!=null&&objects.size()>0){
+					for(int i=0;i<objects.size();i++){
+						if(user.getObjectId().equals(objects.get(i).getObjectId())){
+							isJoin=true;
+							break;
+						}
+						
+					}
+					
+				}else{
+					log.e("zcq","活动参加的人获取失败");
+				}
+			}
+		});
 	}
 
 }

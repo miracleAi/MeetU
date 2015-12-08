@@ -8,7 +8,7 @@
         android:id="@+id/top_changname_rl"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:gravity="center" >
+        >
 
         <RelativeLayout
             android:id="@+id/back_joinUsers_homepager_rl"
@@ -45,6 +45,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/kongjianruoqu_bg"
+            android:visibility="gone"
             android:gravity="center" >
 
             <TextView
@@ -77,13 +78,14 @@
                 android:id="@+id/all_join_users_activity_rl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone" >
+                >
 
                 <RelativeLayout
-                    android:id="@+id/relativeLayout1"
+                    android:id="@+id/top_join_user_rl"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_alignParentLeft="true" >
+                    android:layout_alignParentLeft="true" 
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/imageView1"
@@ -111,7 +113,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/relativeLayout1" >
+                    android:layout_below="@+id/top_join_user_rl" 
+                   android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/photo_head_my_join_users_huodong_tv"
@@ -299,7 +302,8 @@
                 android:id="@+id/none_or_fail_join_users_rl"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center" >
+                android:gravity="center" 
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:layout_width="match_parent"

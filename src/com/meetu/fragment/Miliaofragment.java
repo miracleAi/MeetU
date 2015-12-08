@@ -507,7 +507,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 							chatmsgs.setUid(user.getObjectId());
 							chatmsgsDao.insert(chatmsgs);
 							
-							loadData();
+	//						loadData();
 							
 							
 							Intent intent2 = new Intent(getActivity(),
