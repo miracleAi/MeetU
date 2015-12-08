@@ -107,6 +107,7 @@ public class ObjActivityOrderWrap {
 				.getQuery(ObjActivityOrder.class);
 		query.whereEqualTo("activity", activity);
 		query.whereEqualTo("user", user);
+		query.whereEqualTo("orderStatus", Constants.OrderStatusPaySuccess);
 		query.findInBackground(new FindCallback<ObjActivityOrder>() {
 			
 			@Override
