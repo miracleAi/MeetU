@@ -41,8 +41,8 @@ public class ObjActivityOrderWrap {
 		query.whereContainedIn("orderStatus", numbers);
 		query.orderByAscending("userGender");
 		query.orderByDescending("userNo");
-		query.setCachePolicy(CachePolicy.CACHE_ELSE_NETWORK);
-		query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
+//		query.setCachePolicy(CachePolicy.CACHE_ELSE_NETWORK);
+//		query.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
 		query.limit(1000);
 		query.findInBackground(new FindCallback<ObjActivityOrder>() {
 

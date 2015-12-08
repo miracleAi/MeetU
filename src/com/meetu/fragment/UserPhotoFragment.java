@@ -16,7 +16,10 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
@@ -62,6 +65,11 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements
 	private static final String ARG_POSITION = "position";
 	private static String userId;
 	private static Boolean isMyself = false;
+	
+	//空状态、
+		private RelativeLayout noneOrFailLayout;
+		private TextView noneTextView;
+		private TextView failTextView;
 
 	public UserPhotoFragment() {
 		// TODO Auto-generated constructor stub
@@ -111,6 +119,10 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements
 			// }
 			view = inflater.inflate(R.layout.fragment_mine_photo_wall, null);
 			mPosition = getArguments().getInt(ARG_POSITION);
+			
+			noneOrFailLayout=(RelativeLayout) view.findViewById(R.id.none_or_mine_photo_fragment_rl);
+			noneTextView=(TextView) view.findViewById(R.id.none_mine_photo_fragment_tv);
+			failTextView=(TextView) view.findViewById(R.id.fail_mine_photo_fragment_tv);
 			initView();
 			loaddata();
 		}
@@ -169,8 +181,20 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements
 							AVException e) {
 						// TODO Auto-generated method stub
 						if (e != null) {
+							noneOrFailLayout.setVisibility(View.VISIBLE);
+							noneTextView.setVisibility(View.GONE);
+							failTextView.setVisibility(View.VISIBLE);
+							noneOrFailLayout.setOnClickListener(new OnClickListener() {
+								
+								@Override
+								public void onClick(View arg0) {
+									// TODO Auto-generated method stub
+									loaddata();
+								}
+							});
 							return;
-						} else if (objects != null) {
+						} 
+						if (objects != null&&objects.size()>0) {
 							objUserPhotos.addAll(objects);
 							// mAdapter=new StaggeredHomeAdapter(getActivity(),
 							// objUserPhotos);
@@ -180,7 +204,12 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements
 									+ objUserPhotos.get(0).getPhoto().getUrl());
 							log.e("zcq", ""
 									+ objUserPhotos.get(0).getPraiseCount());
+							noneOrFailLayout.setVisibility(View.GONE);
 							handler.sendEmptyMessage(1);
+						}else{
+							noneOrFailLayout.setVisibility(View.VISIBLE);
+							noneTextView.setVisibility(View.VISIBLE);
+							failTextView.setVisibility(View.GONE);
 						}
 
 					}

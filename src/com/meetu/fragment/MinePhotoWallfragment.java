@@ -60,6 +60,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -85,6 +87,11 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 	private int mScrollY;
 	private int mPosition;
 	private static final String ARG_POSITION = "position";
+	
+	//空状态、
+	private RelativeLayout noneOrFailLayout;
+	private TextView noneTextView;
+	private TextView failTextView;
 
 	public static Fragment newInstance(int position) {
 		MinePhotoWallfragment fragment = new MinePhotoWallfragment();
@@ -121,6 +128,10 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 			}
 			view = inflater.inflate(R.layout.fragment_mine_photo_wall, null);
 			mPosition = getArguments().getInt(ARG_POSITION);
+			
+			noneOrFailLayout=(RelativeLayout) view.findViewById(R.id.none_or_mine_photo_fragment_rl);
+			noneTextView=(TextView) view.findViewById(R.id.none_mine_photo_fragment_tv);
+			failTextView=(TextView) view.findViewById(R.id.fail_mine_photo_fragment_tv);
 			initView();
 			loaddata();
 		}
@@ -153,6 +164,7 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 				}
 			}
 		});
+		
 	}
 
 	public void setGridViewHeightaListener(
@@ -174,8 +186,20 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 			public void callback(List<ObjUserPhoto> objects, AVException e) {
 
 				if (e != null) {
+					noneOrFailLayout.setVisibility(View.VISIBLE);
+					noneTextView.setVisibility(View.GONE);
+					failTextView.setVisibility(View.VISIBLE);
+					noneOrFailLayout.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View arg0) {
+							// TODO Auto-generated method stub
+							loaddata();
+						}
+					});
 					return;
-				} else if (objects != null) {
+				} 
+				if (objects != null&&objects.size()>0) {
 					objUserPhotos.addAll(objects);
 					// mAdapter=new StaggeredHomeAdapter(getActivity(),
 					// objUserPhotos);
@@ -183,7 +207,12 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 					log.e("lucifer", "我的照片数量" + objUserPhotos.size() + "url=="
 							+ objUserPhotos.get(0).getPhoto().getUrl());
 					log.e("zcq", "" + objUserPhotos.get(0).getPraiseCount());
+					noneOrFailLayout.setVisibility(View.GONE);
 					handler.sendEmptyMessage(1);
+				}else{
+					noneOrFailLayout.setVisibility(View.VISIBLE);
+					noneTextView.setVisibility(View.VISIBLE);
+					failTextView.setVisibility(View.GONE);
 				}
 
 			}

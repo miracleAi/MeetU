@@ -40,6 +40,7 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 
@@ -58,6 +59,11 @@ public class MemoryWallActivity extends Activity implements
 	// 当前用户
 	ObjUser user = new ObjUser();
 	AVUser currentUser = AVUser.getCurrentUser();
+	
+	//空状态
+	private RelativeLayout noneOrFailLayout;
+	private TextView noneTextView;
+	private TextView failtTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +81,9 @@ public class MemoryWallActivity extends Activity implements
 		}
 
 		initLoadActivity(activityBean.getActyId());
+		noneOrFailLayout=(RelativeLayout) findViewById(R.id.none_or_fail_memory_wall_rl);
+		noneTextView=(TextView) findViewById(R.id.none_memory_wall_tv);
+		failtTextView=(TextView) findViewById(R.id.fail_memory_wall_tv);
 		initView();
 	}
 
@@ -168,16 +177,33 @@ public class MemoryWallActivity extends Activity implements
 							AVException e) {
 						// TODO Auto-generated method stub
 						if (e != null) {
-							log.e("zcq", e);
+							log.e("zcq 加载失败", e);
+							noneOrFailLayout.setVisibility(View.VISIBLE);
+							noneTextView.setVisibility(View.GONE);
+							failtTextView.setVisibility(View.VISIBLE);
+							noneOrFailLayout.setOnClickListener(new OnClickListener() {
+								
+								@Override
+								public void onClick(View arg0) {
+									// TODO Auto-generated method stub
+									loaddata();
+								}
+							});
 						} else if (objects != null && objects.size() > 0) {
-
+							
+							
+							noneOrFailLayout.setVisibility(View.GONE);
 							photoList.addAll(objects);
+							handler.sendEmptyMessage(1);
 						} else {
 							// Toast.makeText(getApplicationContext(), "数据加载失败",
 							// 1000).show();
+							noneOrFailLayout.setVisibility(View.VISIBLE);
+							noneTextView.setVisibility(View.VISIBLE);
+							failtTextView.setVisibility(View.GONE);
 						}
 
-						handler.sendEmptyMessage(1);
+						
 					}
 				});
 

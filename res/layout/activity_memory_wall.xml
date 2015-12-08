@@ -52,8 +52,54 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="2dp"
+        
          >
     </android.support.v7.widget.RecyclerView>
+    
+     
+        <RelativeLayout
+        android:id="@+id/none_or_fail_memory_wall_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_memorywall_rl"
+        android:gravity="center" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+             >
+
+            <ImageView
+                android:id="@+id/none_memory_wall_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/emptystatus_memorieswall_img_phiz" />
+
+            <TextView
+                android:id="@+id/none_memory_wall_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/none_memory_wall_img"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:text="回忆还没有沉淀下来呢，小U争执采集中~"
+                android:textColor="@color/textclor"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/fail_memory_wall_tv"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/none_memory_wall_img"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:text="回忆墙加载失败 点击重新加载"
+                android:textColor="@color/textclor" />
+        </RelativeLayout>
+    </RelativeLayout>
 
      <ImageView
          android:id="@+id/barrage_memorywall_img"

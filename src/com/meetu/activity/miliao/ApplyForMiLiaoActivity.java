@@ -132,6 +132,7 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 				} else {
 					// 没申请过
 					categorys = getObjAuthoriseCategoryById("" + categoryId);
+					log.e("zcq categoryId", categoryId);
 					applyAuthorise(categorys, content.getText().toString());
 				}
 				finish();

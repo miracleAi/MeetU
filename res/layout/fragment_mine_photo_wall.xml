@@ -4,26 +4,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#80eeeeee" >
-  <!--   
-    <com.handmark.pulltorefresh.library.PullToRefreshGridView
-        android:id="@+id/newsList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/group_va_tab"
-        android:dividerHeight="1px"
-        android:numColumns="2"
-        test:ptrMode="both" >
-    </com.handmark.pulltorefresh.library.PullToRefreshGridView>
-      -->
-      <android.support.v7.widget.RecyclerView
+
+ 
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/id_RecyclerView"
         android:layout_width="match_parent"
-       	android:scrollbars="vertical"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="2dp"
-         >
+        android:scrollbars="vertical" >
     </android.support.v7.widget.RecyclerView>
-   
+
+    <RelativeLayout
+        android:id="@+id/none_or_mine_photo_fragment_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_miliao_rl"
+        android:gravity="bottom" 
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="100dp" >
+
+            <ImageView
+                android:id="@+id/none_mine_photo_fragment_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/emptystatus_photoview_mine_img_phiz" />
+
+            <TextView
+                android:id="@+id/none_mine_photo_fragment_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/none_mine_photo_fragment_img"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:text="上传照片，马上会获得更多人的关注哦"
+                android:textColor="@color/textclor"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/fail_mine_photo_fragment_tv"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/none_mine_photo_fragment_img"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:text="照片加载失败 点击重新加载"
+                android:textColor="@color/textclor" />
+        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

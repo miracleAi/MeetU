@@ -107,6 +107,9 @@ public class HomePagefragment extends Fragment implements
 	private ArrayList<UserAboutBean> userAboutBeanList = new ArrayList<UserAboutBean>();
 	
 	private RelativeLayout cityLayout;
+	
+	//所有用户数量
+	private List<String> userAllNumberList=new ArrayList<String>();
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub

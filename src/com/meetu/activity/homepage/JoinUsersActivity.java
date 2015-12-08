@@ -72,6 +72,12 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 	private ArrayList<ObjUser> userFavorList = new ArrayList<ObjUser>();
 
 	private ActivityDao actyDao;
+	
+	//空状态
+	private RelativeLayout noneOrFailLayout;
+	private TextView noneTextView;
+	private TextView failTextView;
+	private RelativeLayout allLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +103,11 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 				"activityBean.getActyId()==" + activityBean.getActyId());
 
 		initLoadActivity(activityBean.getActyId());
+		
+		allLayout=(RelativeLayout) findViewById(R.id.all_join_users_activity_rl);
+		noneOrFailLayout=(RelativeLayout) findViewById(R.id.none_or_fail_join_users_rl);
+		noneTextView=(TextView) findViewById(R.id.none_join_users_tv);
+		failTextView=(TextView) findViewById(R.id.fail_join_users_tv);
 
 		loadData();
 		loadData2();
@@ -115,20 +126,8 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 	}
 
 	private void loadData2() {
-		// joinUsersFavorList=new ArrayList<User>();
-		// User item=new User();
-		// item.setName("刘亦菲");
-		// item.setSchool("北京大学");
-		// item.setSex("女");
-		// item.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		// joinUsersFavorList.add(item);
-		//
-		// User item1=new User();
-		// item1.setName("李连杰");
-		// item1.setSchool("清华大学");
-		// item1.setSex("男");
-		// item1.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		// joinUsersFavorList.add(item1);
+		
+	
 
 	}
 
@@ -183,49 +182,7 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 	}
 
 	private void loadData() {
-		// joinUsersList=new ArrayList<User>();
-		// User item=new User();
-		// item.setName("刘亦菲");
-		// item.setSchool("北京大学");
-		// item.setSex("女");
-		// item.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		// joinUsersList.add(item);
-		//
-		// User item1=new User();
-		// item1.setName("李连杰");
-		// item1.setSchool("清华大学");
-		// item1.setSex("男");
-		// item1.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		// joinUsersList.add(item1);
-		//
-		// User item2=new User();
-		// item2.setName("赵子龙");
-		// item2.setSchool("北京大学");
-		// item2.setSex("男");
-		// item2.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		// joinUsersList.add(item2);
-		//
-		// User item3=new User();
-		// item3.setName("赵子龙");
-		// item3.setSchool("北京大学");
-		// item3.setSex("男");
-		// item3.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		// joinUsersList.add(item3);
-		//
-		// User item4=new User();
-		// item4.setName("赵子龙");
-		// item4.setSchool("北京大学");
-		// item4.setSex("男");
-		// item4.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		// joinUsersList.add(item4);
-		//
-		//
-		// User item5=new User();
-		// item5.setName("赵子龙");
-		// item5.setSchool("北京大学");
-		// item5.setSex("男");
-		// item5.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		// joinUsersList.add(item5);
+
 
 		queryOrderUsers(objActivity);
 
@@ -263,14 +220,35 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 					public void callback(List<ObjUser> objects, AVException e) {
 						if (e != null) {
 							log.e("zcq", e);
+							noneOrFailLayout.setVisibility(View.VISIBLE);
+							noneTextView.setVisibility(View.GONE);
+							failTextView.setVisibility(View.VISIBLE);
+							noneOrFailLayout.setOnClickListener(new OnClickListener() {
+								
+								@Override
+								public void onClick(View arg0) {
+									// TODO Auto-generated method stub
+									loadData();
+								}
+							});
 							return;
-						} else if (objects != null) {
+						} 
+						if (objects != null&&objects.size()>0) {
 							userList.addAll(objects);
-							log.e("zcq", "userList==" + userList.size());
+							log.e("zcq 有人", "userList==" + userList.size());
 							queryFollowAndOrder(activity);
-
-							handler.sendEmptyMessage(1);
+							noneOrFailLayout.setVisibility(View.GONE);
+							allLayout.setVisibility(View.VISIBLE);
+							
+							
+						//	handler.sendEmptyMessage(1);
 							log.e("zcq", "objects==" + objects.size());
+						}else{
+							log.e("zcq 没人", "没有成员啊");
+							noneOrFailLayout.setVisibility(View.VISIBLE);
+							noneTextView.setVisibility(View.VISIBLE);
+							failTextView.setVisibility(View.GONE);
+							
 						}
 
 					}
