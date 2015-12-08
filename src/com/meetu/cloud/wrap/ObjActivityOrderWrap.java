@@ -101,7 +101,30 @@ public class ObjActivityOrderWrap {
 			}
 		});
 	}
-	//修改订单状态
+	//查询我是否报名，若报名返回订单
+	public static void queryIsOrder(ObjActivity activity,ObjUser user,final ObjActivityOrderCallback callback){
+		AVQuery<ObjActivityOrder> query = AVObject
+				.getQuery(ObjActivityOrder.class);
+		query.whereEqualTo("activity", activity);
+		query.whereEqualTo("user", user);
+		query.findInBackground(new FindCallback<ObjActivityOrder>() {
+			
+			@Override
+			public void done(List<ObjActivityOrder> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					callback.callback(null, e);
+					return;
+				}
+				if(objects!= null && objects.size()>0){
+					callback.callback(objects.get(0), null);
+				}else{
+					callback.callback(null, new AVException(0, "未参加活动"));
+				}
+			}
+		});
+	}
+	//修改订单（修改订单中属性，重新保存即可）
 	public static void updateOrder(final ObjActivityOrder order,final ObjActivityOrderCallback callback){
 		order.setFetchWhenSave(true);
 		order.saveInBackground(new SaveCallback() {

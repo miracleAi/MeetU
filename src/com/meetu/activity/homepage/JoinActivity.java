@@ -108,6 +108,7 @@ OnItemClickListener {
 					if (result.equals(BCPayResult.RESULT_SUCCESS)) {
 						Toast.makeText(JoinActivity.this, "用户支付成功", Toast.LENGTH_LONG).show();
 						updateOrder(Constants.OrderStatusPaySuccess);
+						
 					} else if (result.equals(BCPayResult.RESULT_CANCEL)){
 						Toast.makeText(JoinActivity.this, "用户取消支付", Toast.LENGTH_LONG).show();
 						updateOrder(Constants.OrderStatusPayFail);
