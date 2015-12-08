@@ -62,11 +62,6 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// 去除title
-		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		// 全屏
-		super.getWindow();
 		setContentView(R.layout.activity_system_settings);
 		globalObject = new ObjGlobalAndroid();
 		initView();
@@ -183,6 +178,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 					try {
 						FileOutputStream fos = new FileOutputStream(file);
 						fos.write(data);
+						//下载完成后自动弹出安装
 						Intent intent = new Intent(Intent.ACTION_VIEW);  
 				        intent.setDataAndType(Uri.fromFile(new File(Environment  
 				                .getExternalStorageDirectory()+"/meetu", "MeetU.apk")),  
@@ -235,7 +231,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 		return dir.delete();
 	} 
 	/**
-	 * 进入360市场评分
+	 * 进入市场评分
 	 * */
 
 	public void commentApp() {

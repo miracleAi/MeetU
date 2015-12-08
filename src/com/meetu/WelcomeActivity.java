@@ -79,7 +79,7 @@ public class WelcomeActivity extends Activity {
 		handler = new Handler();
 		// 导入数据库
 		dbHelper = new DBManager(this);
-		dbHelper.openDatabase();
+		dbHelper.openDatabase(); 
 		dbHelper.closeDatabase();
 
 		dbHelperCity = new DBManagerCity(this);
