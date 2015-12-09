@@ -435,7 +435,7 @@ public class HomePagefragment extends Fragment implements
 	}
 
 	private int pageNo = 1;
-	private int pageSize = 3;
+	private int pageSize = 5;
 
 	@Override
 	public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {

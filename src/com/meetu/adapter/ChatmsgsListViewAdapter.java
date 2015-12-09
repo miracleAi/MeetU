@@ -135,6 +135,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter  {
 			holder = new ViewHolder();
 			log.e("zcq", "item.getChatMsgType()==" + item.getChatMsgType());
 			log.e("zcq", "item.getClientId()==" + item.getClientId());
+			log.e("zcq", "item.getContent()==" + item.getContent());
 			switch (item.getChatMsgType()) {
 
 			case 10:
