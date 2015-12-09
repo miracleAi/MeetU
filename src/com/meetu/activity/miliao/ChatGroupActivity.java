@@ -117,7 +117,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ChatGroupActivity extends Activity implements OnClickListener,
-		OnItemClickListener {
+OnItemClickListener {
 	private Context context;
 	private RelativeLayout backLayout;
 	private ImageView face;
@@ -231,8 +231,8 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 		number = intent.getStringExtra("number");
 		objectID = intent.getStringExtra("objectId");
 		timeOver=Long.valueOf(intent.getStringExtra("TimeOver"));
-		
-		
+
+
 		seekChatBean = (SeekChatBean) intent
 				.getSerializableExtra("SeekChatBean");
 
@@ -272,7 +272,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 		AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class,
 				msgHandler);
 		AVIMMessageManager
-		.setConversationEventHandler(new MemberChangeHandler());
+		.setConversationEventHandler(new MemberChangeHandler(getApplicationContext()));
 
 	}
 
@@ -352,9 +352,9 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 				 * 隐藏默认输入软键盘
 				 */
 				((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
-						.hideSoftInputFromWindow(ChatGroupActivity.this
-								.getCurrentFocus().getWindowToken(),
-								InputMethodManager.HIDE_NOT_ALWAYS);
+				.hideSoftInputFromWindow(ChatGroupActivity.this
+						.getCurrentFocus().getWindowToken(),
+						InputMethodManager.HIDE_NOT_ALWAYS);
 
 				Chatmsgs item = chatmsgsCacheList.get(position);
 				if (item.getChatMsgType() == 0 || item.getChatMsgType() == 1) {
@@ -370,23 +370,23 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 		});
 
 		mChatmsgsListView
-				.setOnItemLongClickListener(new OnItemLongClickListener() {
+		.setOnItemLongClickListener(new OnItemLongClickListener() {
 
-					@Override
-					public boolean onItemLongClick(AdapterView<?> arg0,
-							View arg1, int position, long arg3) {
-						// TODO Auto-generated method stub
-						Chatmsgs item = chatmsgsCacheList.get(position);
-						showDialog(item);
-						log.e("lucifer" + "长按" + item.getContent() + " id=="
-								+ item.getMessageCacheId());
-						return false;
-					}
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0,
+					View arg1, int position, long arg3) {
+				// TODO Auto-generated method stub
+				Chatmsgs item = chatmsgsCacheList.get(position);
+				showDialog(item);
+				log.e("lucifer" + "长按" + item.getContent() + " id=="
+						+ item.getMessageCacheId());
+				return false;
+			}
 
-				});
+		});
 
 		mChatmsgsListView
-				.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+		.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 		mChatmsgsListView.setStackFromBottom(true);
 
 		sendlLayout = (RelativeLayout) super
@@ -403,14 +403,14 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 		userNumber = (TextView) super
 				.findViewById(R.id.number_user_fragment_chat_tv);
 		timeOverTextView=(TextView) findViewById(R.id.time_remind_miliao_tv);
-//		timeOverTextView.setOnClickListener(this);
-		
+		//		timeOverTextView.setOnClickListener(this);
+
 		if(dismissData.getDismissData(timeOver)==null){
 			timeLayout.setVisibility(View.GONE);
 		}else{
 			timeOverTextView.setText(""+dismissData.getDismissData(timeOver));
 		}
-	
+
 
 	}
 
@@ -499,7 +499,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 	 * 获取表情a
 	 */
 	private void loadEmoji() {
-	
+
 
 	}
 
@@ -516,9 +516,9 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 				 * 隐藏默认输入软键盘
 				 */
 				((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
-						.hideSoftInputFromWindow(ChatGroupActivity.this
-								.getCurrentFocus().getWindowToken(),
-								InputMethodManager.HIDE_NOT_ALWAYS);
+				.hideSoftInputFromWindow(ChatGroupActivity.this
+						.getCurrentFocus().getWindowToken(),
+						InputMethodManager.HIDE_NOT_ALWAYS);
 
 				faceLayout.setVisibility(View.VISIBLE);
 				faceBoolean = true;
@@ -540,14 +540,14 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 				faceBoolean = false;
 			}
 			break;
-		/**
-		 * 点击发送按钮
-		 */
+			/**
+			 * 点击发送按钮
+			 */
 		case R.id.send_chat_fragment_rl:
 			// 发送消息
 			sendChatmessage();
 			break;
-		// 图片消息
+			// 图片消息
 		case R.id.chat_photo_container_img:
 			sendChatPhotoMessage();
 			break;
@@ -560,7 +560,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 			intent.putExtra("ConversationStyle", conversationStyle);
 			intent.putExtra("ConversationId", conversationId);
 			intent.putExtra("chatId", objectID);
-		//	startActivity(intent);
+			//	startActivity(intent);
 			startActivityForResult(intent, 100);
 
 		default:
@@ -626,7 +626,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 			break;
 		case 100:
 			if(resultCode==this.RESULT_OK){
-				
+
 				setResult(RESULT_OK, getIntent());
 				finish();
 			}
@@ -791,7 +791,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 		subList.addAll(chatEmojis
 				.subList(position * (columns * rows - 1),
 						(columns * rows - 1) * (position + 1) > chatEmojis
-								.size() ? chatEmojis.size()
+						.size() ? chatEmojis.size()
 								: (columns * rows - 1) * (position + 1)));
 
 		/**
@@ -950,17 +950,17 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 				chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList(
 						conversationId, user.getObjectId()));
 				log.e("zcq", "chatmsgsCacheList=="+chatmsgsCacheList.size());
-//				System.err.println(chatmsgsCacheList.get(
-//						chatmsgsCacheList.size() - 1).getContent()
-//						+ "  id=="
-//						+ chatmsgsCacheList.get(chatmsgsCacheList.size() - 1)
-//								.getMessageCacheId());
+				//				System.err.println(chatmsgsCacheList.get(
+				//						chatmsgsCacheList.size() - 1).getContent()
+				//						+ "  id=="
+				//						+ chatmsgsCacheList.get(chatmsgsCacheList.size() - 1)
+				//								.getMessageCacheId());
 
 				mChatmsgsAdapter.notifyDataSetChanged();
 
 				// ListView数据更新后，自动滚动到底部
 				mChatmsgsListView
-						.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+				.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 
 				refreshComplete();
 				break;
@@ -971,11 +971,11 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 				chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList(
 						conversationId, user.getObjectId()));
 
-//				System.err.println(chatmsgsCacheList.get(
-//						chatmsgsCacheList.size() - 1).getContent()
-//						+ "  id=="
-//						+ chatmsgsCacheList.get(chatmsgsCacheList.size() - 1)
-//								.getMessageCacheId());
+				//				System.err.println(chatmsgsCacheList.get(
+				//						chatmsgsCacheList.size() - 1).getContent()
+				//						+ "  id=="
+				//						+ chatmsgsCacheList.get(chatmsgsCacheList.size() - 1)
+				//								.getMessageCacheId());
 
 				mChatmsgsAdapter.notifyDataSetChanged();
 
@@ -1032,7 +1032,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 	 */
 	private static void dealExpression(Context context,
 			SpannableString spannableString, Pattern patten, int start)
-			throws Exception {
+					throws Exception {
 		Matcher matcher = patten.matcher(spannableString);
 		while (matcher.find()) {
 			String key = matcher.group();
@@ -1126,7 +1126,7 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 	 * 
 	 */
 	public class MessageHandler extends
-			AVIMTypedMessageHandler<AVIMTypedMessage> {
+	AVIMTypedMessageHandler<AVIMTypedMessage> {
 
 		@Override
 		public void onMessage(AVIMTypedMessage message,
@@ -1293,21 +1293,21 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 		ObjChatMessage.sendChatMsg(conversation, msg,
 				new ObjFunBooleanCallback() {
 
-					@Override
-					public void callback(boolean result, AVException e) {
-						if (e != null) {
-							log.e("zcq", e);
-						} else if (result) {
-							log.e("zcq", "文本消息发送成功");
-							handler.sendEmptyMessage(1);
+			@Override
+			public void callback(boolean result, AVException e) {
+				if (e != null) {
+					log.e("zcq", e);
+				} else if (result) {
+					log.e("zcq", "文本消息发送成功");
+					handler.sendEmptyMessage(1);
 
-						} else {
-							log.e("zcq", "文本消息发送失败");
-							handler.sendEmptyMessage(1);
-						}
+				} else {
+					log.e("zcq", "文本消息发送失败");
+					handler.sendEmptyMessage(1);
+				}
 
-					}
-				});
+			}
+		});
 	}
 
 	// 发送图片消息
@@ -1325,224 +1325,145 @@ public class ChatGroupActivity extends Activity implements OnClickListener,
 			msg.setAttrs(map);
 			ObjChatMessage.sendPicMsg(conversation, msg,
 					new ObjFunBooleanCallback() {
-						@Override
-						public void callback(boolean result, AVException e) {
-							// TODO Auto-generated method stub
-							if (e != null) {
-								log.e("zcq", e);
-								return;
-							}
-							if (result) {
-								log.e("zcq", "图片消息发送成功");
-								handler.sendEmptyMessage(1);
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if (e != null) {
+						log.e("zcq", e);
+						return;
+					}
+					if (result) {
+						log.e("zcq", "图片消息发送成功");
+						handler.sendEmptyMessage(1);
 
-							} else {
-								log.e("zcq", "图片消息发送失败");
-								handler.sendEmptyMessage(1);
-							}
-						}
-					});
+					} else {
+						log.e("zcq", "图片消息发送失败");
+						handler.sendEmptyMessage(1);
+					}
+				}
+			});
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 群成员变动消息 接收 handle  
 	 * @author lucifer
 	 *
 	 */
-		public class MemberChangeHandler extends AVIMConversationEventHandler {
+	public class MemberChangeHandler extends AVIMConversationEventHandler {
+		
+		public MemberChangeHandler(Context context) {
+			// TODO Auto-generated constructor stub
+		}
 
-			@Override
-			public void onInvited(AVIMClient client, AVIMConversation conversation,
-					String str) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onKicked(AVIMClient client, AVIMConversation conversation,
-					String str) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onMemberJoined(AVIMClient client,
-					AVIMConversation conversation, List<String> array, String str) {
-				// 参与者 ，邀请人
-				// 在当前聊天--》1.活动群，判断参与者是否参加活动，不参加不提示。2.普通群：提示
-				// 不在当前聊天--》1.参加，插入数据库。2.插入数据库
-				log.e("zcq", "接收到新人加入消息");
-				handleMemberAdd(client, conversation, array, str);
-			}
-
-			@Override
-			public void onMemberLeft(AVIMClient client,
-					AVIMConversation conversation, List<String> array, String str) {
-				log.e("zcq", "接收到踢出消息");
-				if (!array.contains(user.getObjectId())) {
-					// 被踢出者中不包含自己，不处理
-					log.e("zcq", "被踢出者不包括自己");
-					return;
-				}
-				// 被踢出人，踢出人
-				handleMemberRemove(client, conversation, array, str);
-
-			}
+		@Override
+		public void onInvited(AVIMClient client, AVIMConversation conversation,
+				String str) {
+			// TODO Auto-generated method stub
 
 		}
-		
-		// 成员加入消息处理
-		public void handleMemberAdd(final AVIMClient client,
-				final AVIMConversation conversation, List<String> array, String str) {
-			int msgType = (Integer) conversation.getAttribute("cType");
-			if (msgType == Constants.ACTYSG) {
-				// 活动群，判断是否参加
-				String actyId = (String) conversation.getAttribute("appendId");
-				for (final String userId : array) {
-					try {
-						ObjActivity acty = ObjActivity.createWithoutData(
-								ObjActivity.class, actyId);
-						ObjUser joinUser = ObjUser.createWithoutData(ObjUser.class,
-								userId);
-						ObjActivityWrap.queryUserJoin(acty, user,
-								new ObjFunBooleanCallback() {
 
-									@Override
-									public void callback(boolean result,
-											AVException e) {
-										if (e != null) {
-											return;
-										}
-										if (result) {
-											// 已参加，保存
-											ObjUserWrap.getObjUser(
-													client.getClientId(),
-													new ObjUserInfoCallback() {
+		@Override
+		public void onKicked(AVIMClient client, AVIMConversation conversation,
+				String str) {
+			// TODO Auto-generated method stub
 
-														@Override
-														public void callback(
-																ObjUser joinuser,
-																AVException e) {
-															// TODO Auto-generated
-															// method stub
-															Chatmsgs chatBean = new Chatmsgs();
-															chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
-															chatBean.setNowJoinUserId(client
-																	.getClientId());
-															chatBean.setUid(user
-																	.getObjectId());
-															chatBean.setNowJoinUserId(userId);
-															chatBean.setMessageCacheId(String.valueOf(System
-																	.currentTimeMillis()));
-															chatBean.setSendTimeStamp(String.valueOf(System
-																	.currentTimeMillis()));
-															chatBean.setConversationId(conversation.getConversationId());
-															chatmsgsDao.insert(chatBean);
-															if (conversation
-																	.getConversationId()
-																	.equals(conversationId)) {
-																//TODO  测试显示（实际刷新界面） 消息面板应该也要刷新下界面
-																
-//																memberTv.setText(client
-//																		.getClientId());
-																log.e("zcq", "插入数据库成功");
-																handler.sendEmptyMessage(1);
-															} else {
-																// 未读消息加1,保存未读
-																
-																messagesDao.updateUnread(
-																		user.getObjectId(),
-																		conversation
-																				.getConversationId());
-															}
-														}
-													});
-										} else {
-											// 未参加 直接放弃
-										}
-									}
-								});
-					} catch (AVException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			} else {
-				for (String userId : array) {
-					// 普通群，直接保存
-					Chatmsgs chatBean = new Chatmsgs();
-					chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
-					chatBean.setNowJoinUserId(client.getClientId());
-					chatBean.setUid(user.getObjectId());
-					chatBean.setNowJoinUserId(userId);
-					chatBean.setMessageCacheId(String.valueOf(System
-							.currentTimeMillis()));
-					chatBean.setConversationId(conversation.getConversationId());
-					chatBean.setSendTimeStamp(String.valueOf(System
-							.currentTimeMillis()));
-					chatmsgsDao.insert(chatBean);
-					log.e("zcq", "插入a 数据库成功");
-					if (conversation.getConversationId().equals(conversationId)) {
-						// 测试显示（实际刷新界面） 消息面板也要刷新下界面
-					//	memberTv.setText(client.getClientId());
-						handler.sendEmptyMessage(1);
-					} else {
-						// 未读消息加1,保存未读
-						messagesDao.updateUnread(user.getObjectId(),
-								conversation.getConversationId());
-					}
-				}
-			}
 		}
-	
-		
-		// 被踢出
-		public void handleMemberRemove(AVIMClient client,
+
+		@Override
+		public void onMemberJoined(AVIMClient client,
 				AVIMConversation conversation, List<String> array, String str) {
-			
+			// 参与者 ，邀请人
+			// 在当前聊天--》1.活动群，判断参与者是否参加活动，不参加不提示。2.普通群：提示
+			// 不在当前聊天--》1.参加，插入数据库。2.插入数据库
+			log.e("zcq", "接收到新人加入消息");
+			handleMemberAdd(client, conversation, array, str);
+		}
+
+		@Override
+		public void onMemberLeft(AVIMClient client, AVIMConversation conversation,
+				List<String> array, String str) {
+			log.e("zcq", "接收到踢出消息");
+			if (!array.contains(user.getObjectId())) {
+				// 被踢出者中不包含自己，不处理
+				log.e("zcq", "被踢出者不包括自己");
+				return;
+			}
+			// 被踢出人，踢出人
+			handleMemberRemove(client, conversation, array, str);
+
+		}
+
+	}
+
+	// 成员加入消息处理
+	public void handleMemberAdd(final AVIMClient client,
+			final AVIMConversation conversation, List<String> array, String str) {
+		for (String userId : array) {
+			Chatmsgs chatBean = new Chatmsgs();
+			chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
+			chatBean.setNowJoinUserId(client.getClientId());
+			chatBean.setUid(user.getObjectId());
+			chatBean.setNowJoinUserId(userId);
+			chatBean.setMessageCacheId(String.valueOf(System
+					.currentTimeMillis()));
+			chatBean.setConversationId(conversation.getConversationId());
+			chatBean.setSendTimeStamp(String.valueOf(System
+					.currentTimeMillis()));
+			chatmsgsDao.insert(chatBean);
+			log.e("zcq", "插入a 数据库成功");
 			if (conversation.getConversationId().equals(conversationId)) {
-				log.e("zcq", "进入被踢出回调 在当前回话");
-				// 显示
-//				memberTv.setText("您已被踢出");
-//				// 删除会话缓存
-//				msgDao.deleteConv(user.getObjectId(),
-//						conversation.getConversationId());
-				// 删除消息缓存
-				chatmsgsDao.deleteConversationId(user.getObjectId(),
-						conversation.getConversationId());
-				
-				Chatmsgs chatmsgs=new Chatmsgs();				
-				chatmsgs.setContent("您已被群主踢出");
-				chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
-				chatmsgs.setChatMsgStatus(14);		
-				chatmsgs.setConversationId(conversation.getConversationId());
-				chatmsgs.setUid(user.getObjectId());
-				chatmsgsDao.insert(chatmsgs);
-				
 				handler.sendEmptyMessage(1);
-				
 			} else {
-				log.e("zcq", "进入被踢出回调");
 				// 未读消息加1,保存未读
 				messagesDao.updateUnread(user.getObjectId(),
 						conversation.getConversationId());
-				
-				Chatmsgs chatBean = new Chatmsgs();
-				chatBean.setChatMsgType(14);//
-				chatBean.setNowJoinUserId(client.getClientId());
-				chatBean.setUid(user.getObjectId());
-				chatBean.setMessageCacheId(String.valueOf(System
-						.currentTimeMillis()));
-				chatBean.setConversationId(conversation.getConversationId());
-				chatBean.setContent("您被踢出群聊");
-				chatmsgsDao.insert(chatBean);
 			}
 		}
-	
+	}
+
+
+	// 被踢出
+	public void handleMemberRemove(AVIMClient client,
+			AVIMConversation conversation, List<String> array, String str) {
+
+		if (conversation.getConversationId().equals(conversationId)) {
+			log.e("zcq", "进入被踢出回调 在当前回话");
+			// 删除消息缓存
+			chatmsgsDao.deleteConversationId(user.getObjectId(),
+					conversation.getConversationId());
+
+			Chatmsgs chatmsgs=new Chatmsgs();				
+			chatmsgs.setContent("您已被群主踢出");
+			chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
+			chatmsgs.setChatMsgStatus(14);		
+			chatmsgs.setConversationId(conversation.getConversationId());
+			chatmsgs.setUid(user.getObjectId());
+			chatmsgsDao.insert(chatmsgs);
+
+			handler.sendEmptyMessage(1);
+
+		} else {
+			log.e("zcq", "进入被踢出回调");
+			// 未读消息加1,保存未读
+			messagesDao.updateUnread(user.getObjectId(),
+					conversation.getConversationId());
+
+			Chatmsgs chatBean = new Chatmsgs();
+			chatBean.setChatMsgType(14);//
+			chatBean.setNowJoinUserId(client.getClientId());
+			chatBean.setUid(user.getObjectId());
+			chatBean.setMessageCacheId(String.valueOf(System
+					.currentTimeMillis()));
+			chatBean.setConversationId(conversation.getConversationId());
+			chatBean.setContent("您被踢出群聊");
+			chatmsgsDao.insert(chatBean);
+		}
+	}
+
 
 }

@@ -65,6 +65,7 @@ OnItemClickListener {
 	private BookingListViewAdapter adapter;
 	private LinearLayout payLayout;
 	private RelativeLayout paylRelativeLayout, payweixin, payzhifubao;
+	private RelativeLayout payJoinedLayout;
 	private RelativeLayout visibleCenten4;
 
 	// 网络数据相关
@@ -83,9 +84,8 @@ OnItemClickListener {
 	private EditText nameEditText;
 
 	// 获取活动报名信息
-	boolean isFirstLoad = false;
-	boolean isSecondLoad = false;
 	private boolean isJoin = false;// 是否报名
+	private int ticketPrice = 0;
 	//订单实体
 	ObjActivityOrder activityOrder = new ObjActivityOrder();
 	//支付方式标记
@@ -108,7 +108,7 @@ OnItemClickListener {
 					if (result.equals(BCPayResult.RESULT_SUCCESS)) {
 						Toast.makeText(JoinActivity.this, "用户支付成功", Toast.LENGTH_LONG).show();
 						updateOrder(Constants.OrderStatusPaySuccess);
-						
+
 					} else if (result.equals(BCPayResult.RESULT_CANCEL)){
 						Toast.makeText(JoinActivity.this, "用户取消支付", Toast.LENGTH_LONG).show();
 						updateOrder(Constants.OrderStatusPayFail);
@@ -154,29 +154,17 @@ OnItemClickListener {
 		Bundle bundle = intent.getExtras();
 		activityBean = (ActivityBean) bundle.getSerializable("activityBean");
 		initLoadActivity(activityBean.getActyId());
-		// 数据加载
-		loaddate();
-
+		//检查是否报名
+		checkISjoinActivity();
 		// 事件绑定处理
 		initView();
 
 	}
 
 	private void initLoadActivity(String activityId) {
-		log.e("zcq", "activityId==" + activityId);
 		try {
 			objActivity = AVObject.createWithoutData(ObjActivity.class,
 					activityId);
-			// ObjActivityCoverWrap.queryActivityCover(objActivity, new
-			// ObjActivityCoverCallback() {
-			//
-			// @Override
-			// public void callback(List<ObjActivityCover> objects, AVException
-			// e) {
-			// // TODO Auto-generated method stub
-			//
-			// }
-			// });
 		} catch (AVException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -200,6 +188,7 @@ OnItemClickListener {
 		paylRelativeLayout = (RelativeLayout) super
 				.findViewById(R.id.pay_join_homepager_rl);
 		paylRelativeLayout.setOnClickListener(this);
+		payJoinedLayout = (RelativeLayout) findViewById(R.id.pay_joined_layout);
 		payweixin = (RelativeLayout) super.findViewById(R.id.pay_weixin_rl);
 		payweixin.setOnClickListener(this);
 		payzhifubao = (RelativeLayout) super.findViewById(R.id.pay_zhifubao_rl);
@@ -224,14 +213,28 @@ OnItemClickListener {
 
 		nameEditText = (EditText) super.findViewById(R.id.name_join_et);
 	}
+	//根据报名状态改变view
+	public void updateView(){
+		if(isJoin){
+			for(int i = 0;i<tickets.size();i++){
+				if(ticketPrice == tickets.get(i).getPrice()){
+					adapter.setSelectedPosition(i);
+					selectedPosition = i;
+					adapter.notifyDataSetChanged();
+				}
+			}
+			ticketPrice = 0;
+			payJoinedLayout.setVisibility(View.VISIBLE);
+			payLayout.setVisibility(View.GONE);
+			paylRelativeLayout.setVisibility(View.GONE);
+		}else{
+			payJoinedLayout.setVisibility(View.GONE);
+			payLayout.setVisibility(View.VISIBLE);
+			paylRelativeLayout.setVisibility(View.GONE);
+		}
+	}
 
 	private void loaddate() {
-		// booklist=new ArrayList<Booking>();
-		// booklist.add(new Booking(11,"在校生",0,"99"));
-		// booklist.add(new Booking(22,"校友",10,"199"));
-		// booklist.add(new Booking(33,"投资人士",10,"免费"));
-		// booklist.add(new Booking(33,"其他",0,"999"));
-
 		// 获取票种信息
 		ObjActivityWrap.queryTicket(objActivity, new ObjTicketCallback() {
 
@@ -249,7 +252,6 @@ OnItemClickListener {
 					String ss = tickets.get(0).getTicketTitle();
 					log.e("zcq", "name==" + ss);
 					handler.sendEmptyMessage(1);
-					// secondTv.setText(ss);
 				}
 			}
 		});
@@ -265,17 +267,24 @@ OnItemClickListener {
 			break;
 		case R.id.pay_join_homepager_rl:
 			// TODO 免费活动
-			checkISjoinActivity(true);
+			//支付状态为成功
+			if(!isJoin){
+				joinActivity(Constants.OrderStatusPaySuccess);
+			}
 			break;
 		case R.id.pay_weixin_rl:
-			payMethord = "weixin";
-			checkISjoinActivity(false);
-			Toast.makeText(this, "点击了微信支付", Toast.LENGTH_SHORT).show();
+			if(!isJoin){
+				payMethord = "weixin";
+				//支付状态为锁定
+				joinActivity(Constants.OrderStatusLock);
+			}
 			break;
 		case R.id.pay_zhifubao_rl:
-			payMethord = "zhifubao";
-			checkISjoinActivity(false);
-			Toast.makeText(this, "点击了支付宝支付", Toast.LENGTH_SHORT).show();
+			if(!isJoin){
+				payMethord = "zhifubao";
+				//支付状态为锁定
+				joinActivity(Constants.OrderStatusLock);
+			}
 			break;
 		default:
 			break;
@@ -285,22 +294,22 @@ OnItemClickListener {
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long id) {
-		// Toast.makeText(this,"position "+position+" id "+id,
-		// Toast.LENGTH_SHORT).show();
-		adapter.setSelectedPosition(position);
-		selectedPosition = position;
-		if (tickets.get(position).getPrice() == 0) {
-			payLayout.setVisibility(View.INVISIBLE);
-			paylRelativeLayout.setVisibility(View.VISIBLE);
-			visibleCenten4.setVisibility(View.INVISIBLE);
-		} else {
-			payLayout.setVisibility(View.VISIBLE);
-			paylRelativeLayout.setVisibility(View.INVISIBLE);
-			visibleCenten4.setVisibility(View.VISIBLE);
+		if(!isJoin){
+			adapter.setSelectedPosition(position);
+			selectedPosition = position;
+			if (tickets.get(position).getPrice() == 0) {
+				payLayout.setVisibility(View.INVISIBLE);
+				paylRelativeLayout.setVisibility(View.VISIBLE);
+				payJoinedLayout.setVisibility(View.GONE);
+				visibleCenten4.setVisibility(View.INVISIBLE);
+			} else {
+				payLayout.setVisibility(View.VISIBLE);
+				paylRelativeLayout.setVisibility(View.INVISIBLE);
+				payJoinedLayout.setVisibility(View.GONE);
+				visibleCenten4.setVisibility(View.VISIBLE);
+			}
+			adapter.notifyDataSetChanged();
 		}
-
-		adapter.notifyDataSetChanged();
-
 	}
 
 	Handler handler = new Handler() {
@@ -317,7 +326,7 @@ OnItemClickListener {
 						* DensityUtil.dip2px(JoinActivity.this, 70);
 				listView.setLayoutParams(params);
 				adapter.notifyDataSetChanged();
-
+				updateView();
 				break;
 			}
 		}
@@ -330,34 +339,23 @@ OnItemClickListener {
 	 * @author lucifer
 	 * @date 2015-11-13
 	 */
-	private void checkISjoinActivity(final boolean isFree) {
+	private void checkISjoinActivity() {
 		// 查询是否报名
-		ObjActivityWrap.queryUserJoin(objActivity, user,
-				new ObjFunBooleanCallback() {
-
+		ObjActivityOrderWrap.queryIsOrder(objActivity, user, new ObjActivityOrderCallback() {
+			
 			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				isFirstLoad = true;
-				if (isFirstLoad && isSecondLoad) {
-
-				}
+			public void callback(ObjActivityOrder object, AVException e) {
 				if (e != null) {
 					return;
-				} else if (result) {
+				} 
+				if(object != null){
 					isJoin = true;
-					Toast.makeText(getApplicationContext(),
-							"您已经报名过此活动", Toast.LENGTH_SHORT).show();
-				} else {
+					ticketPrice = object.getTicket().getPrice();
+				}else{
 					isJoin = false;
-					if(isFree){
-						//支付状态为成功
-						joinActivity(Constants.OrderStatusPaySuccess);
-					}else{
-						//支付状态为锁定
-						joinActivity(Constants.OrderStatusLock);
-					}
 				}
+				// 数据加载
+				loaddate();
 			}
 		});
 	}
@@ -390,6 +388,7 @@ OnItemClickListener {
 											"报名成功",
 											Toast.LENGTH_SHORT)
 											.show();
+									updateView();
 									return;
 								}
 								if(payMethord.equals("weixin")){
@@ -419,6 +418,8 @@ OnItemClickListener {
 				// TODO Auto-generated method stub
 				if(e == null){
 					activityOrder = order;
+					isJoin = true;
+					updateView();
 				}
 			}
 		});

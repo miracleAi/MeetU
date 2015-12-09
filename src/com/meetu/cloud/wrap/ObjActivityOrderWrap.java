@@ -120,7 +120,7 @@ public class ObjActivityOrderWrap {
 				if(objects!= null && objects.size()>0){
 					callback.callback(objects.get(0), null);
 				}else{
-					callback.callback(null, new AVException(0, "未参加活动"));
+					callback.callback(null, null);
 				}
 			}
 		});

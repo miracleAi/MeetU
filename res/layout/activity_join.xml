@@ -13,14 +13,16 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="20dp" >
+            android:paddingBottom="20dp"
+             >
 
             <RelativeLayout
                 android:id="@+id/top_join_rl"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:background="@color/pwhite"
-                android:gravity="center" >
+                android:gravity="center"
+                 >
 
                 <RelativeLayout
                     android:id="@+id/back_join_homepager_rl"
@@ -72,7 +74,8 @@
                 android:layout_height="120dp"
                 android:layout_below="@id/view1_join_rl"
                 android:layout_margin="10dp"
-                android:background="@color/pwhite" >
+                android:background="@color/pwhite"
+                >
 
                 <ImageView
                     android:id="@+id/photo_join_homepager"
@@ -307,7 +310,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_below="@id/center3_join_rl"
-                android:visibility="invisible"
+                android:visibility="gone"
                 android:gravity="center" >
 
                 <View
@@ -395,7 +398,7 @@
                 android:layout_margin="20dp"
                 android:layout_marginBottom="16dp"
                 android:background="#00acee"
-                android:visibility="visible">
+                android:visibility="invisible">
 
                 <TextView
                     android:id="@+id/textView13"
@@ -408,19 +411,19 @@
                     android:textColor="#ffffff"
                     android:textSize="16dp" />
             </RelativeLayout>
-            <!--
+            
             <RelativeLayout 
-                android:id="@+id/pay_join_homepager"
+                android:id="@+id/pay_joined_layout"
                 android:layout_below="@id/center4_join_rl"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:layout_margin="20dp"
+                android:visibility="gone"
                 android:layout_marginBottom="16dp"
                 android:background="@color/gainsboro"
                 >
 
                 <TextView
-                    android:id="@+id/textView13"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -430,7 +433,7 @@
                     android:textSize="16dp"
                     android:text="报名成功" /> 
                 </RelativeLayout>
-            -->
+           
 
         </RelativeLayout>
     </ScrollView>

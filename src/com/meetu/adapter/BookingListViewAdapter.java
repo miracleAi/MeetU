@@ -62,22 +62,18 @@ public class BookingListViewAdapter extends BaseAdapter implements
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		Log.d("lucifer", "getCount()");
-		// return newsList.size();
 		return newsList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		Log.d("lucifer", "getItem()");
 		return newsList.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
 		// TODO Auto-generated method stub
-		Log.d("lucifer", "getItemId()");
 		return position;
 	}
 
@@ -89,9 +85,6 @@ public class BookingListViewAdapter extends BaseAdapter implements
 		ObjActivityTicket item = newsList.get(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
-			// //��layout.xmlת��ΪView
-			// switch(item.getStyle()){
-			// case 0:
 			convertView = LayoutInflater.from(mContext).inflate(
 					R.layout.item_buypiao, null);
 
@@ -115,7 +108,6 @@ public class BookingListViewAdapter extends BaseAdapter implements
 		holder.tvDesc.setText("" + item.getTicketDescription());
 		int number = Integer.valueOf(item.getTicketCount())
 				- Integer.valueOf(item.getTicketSaleCount());
-		log.e("zcq", "number==" + number);
 		if (number <= 0) {
 			holder.noTickets.setVisibility(View.VISIBLE);
 			holder.tvPrice.setTextColor(mContext.getResources().getColor(
