@@ -57,8 +57,8 @@ public class ObjActivityTicket extends AVObject {
 		return this.getString(TICKETDESCRIPTION);
 	}
 
-	public int getPrice() {
-		return this.getInt(PRICE);
+	public float getPrice() {
+		return this.getInt(PRICE)/100;
 	}
 
 	public String getPriceVip() {

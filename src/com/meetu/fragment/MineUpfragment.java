@@ -668,7 +668,7 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 											if (result) {
 												// clickBtn.setText(LOAD_SUC);
 												Toast.makeText(getActivity(),
-														"save 上传成功", 1000)
+														"头像已上传", 1000)
 														.show();
 												// 更新头像
 												headURl = user.getProfileClip()
@@ -681,7 +681,7 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 											} else {
 												// clickBtn.setText(LOAD_FAIL);
 												Toast.makeText(getActivity(),
-														"save 上传失败", 1000)
+														"上传头像失败", 1000)
 														.show();
 											}
 										}

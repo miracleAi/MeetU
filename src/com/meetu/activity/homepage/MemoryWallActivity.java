@@ -196,8 +196,6 @@ public class MemoryWallActivity extends Activity implements
 							photoList.addAll(objects);
 							handler.sendEmptyMessage(1);
 						} else {
-							// Toast.makeText(getApplicationContext(), "数据加载失败",
-							// 1000).show();
 							noneOrFailLayout.setVisibility(View.VISIBLE);
 							noneTextView.setVisibility(View.VISIBLE);
 							failtTextView.setVisibility(View.GONE);

@@ -5,9 +5,12 @@ import java.util.List;
 
 import cc.imeetu.R;
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.adapter.MinePhotoAdapter;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjUserPhoto;
+import com.meetu.cloud.wrap.ObjUserPhotoWrap;
 import com.meetu.entity.PhotoWall;
 
 import android.os.Bundle;
@@ -40,6 +43,7 @@ public class MinephotoActivity extends Activity implements OnClickListener,
 	private List<ObjUserPhoto> objUserPhotos = new ArrayList<ObjUserPhoto>();
 	private String userId;// 用户的id
 	private boolean isMyself = true;// 用来标记是否从我自己的页面跳过来的
+	private int positionNow = -1;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -54,6 +58,7 @@ public class MinephotoActivity extends Activity implements OnClickListener,
 		itemid = super.getIntent().getStringExtra("id");
 		pid = super.getIntent().getStringExtra("id");
 		id = Integer.parseInt(itemid);
+		positionNow = id;
 		log.e("zcq", "id==" + itemid);
 		objUserPhotos = (List<ObjUserPhoto>) this.getIntent()
 				.getSerializableExtra("photolist");
@@ -62,7 +67,7 @@ public class MinephotoActivity extends Activity implements OnClickListener,
 
 		photoUrl = intent.getStringExtra("url");
 
-		if (userId == null) {
+		if (userId != null) {
 			isMyself = false;
 		}
 		initView();
@@ -90,7 +95,6 @@ public class MinephotoActivity extends Activity implements OnClickListener,
 		// favor = (ImageView) super.findViewById(R.id.favor_minephoto_mine);
 		// favor.setOnClickListener(this);
 		viewPager = (ViewPager) super.findViewById(R.id.viewpager_photo);
-		load();
 		adapter = new MinePhotoAdapter(this, objUserPhotos, userId);
 		viewPager.setAdapter(adapter);
 		viewPager.setOnPageChangeListener(this);
@@ -104,22 +108,38 @@ public class MinephotoActivity extends Activity implements OnClickListener,
 
 	}
 
-	private void load() {
-
-	}
-
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.back_mine_photoview_fullscreen_rl:
 			finish();
-
 			break;
 		case R.id.deldect_mine_photoview_fullscreen_rl:
-
-			Toast.makeText(this, "进行删除操作", Toast.LENGTH_SHORT).show();
-
+			Toast.makeText(MinephotoActivity.this,"正在删除", 1000).show();
+			ObjUserPhotoWrap.deleteUserPhoto(objUserPhotos.get(positionNow),new ObjFunBooleanCallback() {
+				
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(result){
+						Toast.makeText(MinephotoActivity.this, "已删除", 1000).show();
+						objUserPhotos.remove(positionNow);
+						adapter = new MinePhotoAdapter(MinephotoActivity.this, objUserPhotos, userId);
+						viewPager.setAdapter(adapter);
+						if(objUserPhotos.size() == 0){
+							//回到主页需要刷新UU秀墙
+							finish();
+						}else if(positionNow > objUserPhotos.size()-1){
+							viewPager.setCurrentItem(positionNow-1);
+						}else{
+							viewPager.setCurrentItem(positionNow);
+						}
+					}else{
+						Toast.makeText(MinephotoActivity.this, "删除失败", 1000).show();
+					}
+				}
+			});
 			break;
 
 		default:
@@ -143,7 +163,7 @@ public class MinephotoActivity extends Activity implements OnClickListener,
 	@Override
 	public void onPageSelected(int arg0) {
 		// TODO Auto-generated method stub
-
+		positionNow = arg0;
 	}
 
 }

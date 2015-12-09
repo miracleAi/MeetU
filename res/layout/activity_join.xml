@@ -7,22 +7,19 @@
     <ScrollView
         android:id="@+id/scrollview_join_homepager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" 
-        >
+        android:layout_height="match_parent" >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="20dp"
-             >
+            android:paddingBottom="20dp" >
 
             <RelativeLayout
                 android:id="@+id/top_join_rl"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:background="@color/pwhite"
-                android:gravity="center"
-                 >
+                android:gravity="center" >
 
                 <RelativeLayout
                     android:id="@+id/back_join_homepager_rl"
@@ -74,8 +71,7 @@
                 android:layout_height="120dp"
                 android:layout_below="@id/view1_join_rl"
                 android:layout_margin="10dp"
-                android:background="@color/pwhite"
-                >
+                android:background="@color/pwhite" >
 
                 <ImageView
                     android:id="@+id/photo_join_homepager"
@@ -83,7 +79,7 @@
                     android:layout_height="80dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/acty_join_img_thumbnails" />
 
@@ -141,8 +137,9 @@
                 android:layout_below="@id/center1_join_rl"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:background="@color/pwhite"
                 android:paddingBottom="20dp"
-                android:background="@color/pwhite" >
+                 >
 
                 <RelativeLayout
                     android:id="@+id/name_join_rl"
@@ -172,54 +169,53 @@
                         android:layout_toRightOf="@+id/name_join_tv"
                         android:background="@null"
                         android:hint="告诉我你的真实名字"
+                        android:textColor="#606366"
                         android:textColorHint="#cccccc"
                         android:textSize="15sp" >
                     </EditText>
                 </RelativeLayout>
 
-                
                 <ImageView
-                        android:id="@+id/imageView1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/name_join_rl"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginTop="8dp"
-                        android:src="@drawable/acty_join_card2_img_line_blue" />
-                <RelativeLayout
-                    android:id="@+id/wish_join_rl"
-                     	android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/name_join_rl"
-                        android:layout_marginLeft="12dp"
-                      
-                        android:layout_marginTop="32dp">
-                <TextView
-                    android:id="@+id/wish_join_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:drawableLeft="@drawable/mine_alter_img_point_blue"
-                    android:drawablePadding="5dp"
-                    android:text="愿望"
-                    android:textColor="#606366"
-                    android:textSize="15sp" />
-
-               
-
-                <EditText
-                    android:id="@+id/wish_join_et"
+                    android:id="@+id/imageView1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/wish_join_tv"
-                    android:background="@null"
-                    android:layout_marginLeft="10dp"
-                    android:hint="告诉我你的期待(选填)"
-                    android:textColorHint="#cccccc"
-                    android:textSize="15sp" />
-              
-                 </RelativeLayout>
+                    android:layout_below="@+id/name_join_rl"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/acty_join_card2_img_line_blue" />
+
+                <RelativeLayout
+                    android:id="@+id/wish_join_rl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/name_join_rl"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="32dp" >
+
+                    <TextView
+                        android:id="@+id/wish_join_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:drawableLeft="@drawable/mine_alter_img_point_blue"
+                        android:drawablePadding="5dp"
+                        android:text="愿望"
+                        android:textColor="#606366"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/wish_join_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/wish_join_tv"
+                        android:background="@null"
+                        android:hint="告诉我你的期待(选填)"
+                        android:textColor="#606366"
+                        android:textColorHint="#cccccc"
+                        android:textSize="15sp" />
+                </RelativeLayout>
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -236,9 +232,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/wish_join_rl"
+                    android:layout_alignParentBottom="true"
                     android:layout_alignTop="@+id/imageView2"
                     android:layout_marginTop="18.5dp"
-                    android:layout_alignParentBottom="true"
                     android:drawableLeft="@drawable/img_point_red"
                     android:drawablePadding="5dp"
                     android:text="描述一下你心中的Ta,你的兴趣，喜欢的水果......"
@@ -271,18 +267,6 @@
                         android:text="票种选择"
                         android:textColor="#606366"
                         android:textSize="15sp" />
-
-                   <!--  <TextView
-                        android:id="@+id/textView10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignTop="@+id/textView9"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginTop="1dp"
-                        android:text="会员价格"
-                        android:textColor="#33c6e5"
-                        android:textSize="12sp" /> -->
                 </RelativeLayout>
 
                 <View
@@ -305,88 +289,97 @@
                     android:scrollingCache="false" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/center4_join_rl"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/center3_join_rl"
-                android:visibility="gone"
-                android:gravity="center" >
-
-                <View
-                    android:id="@+id/left_center4_join_view"
-                    android:layout_width="40dp"
-                    android:layout_height="1px"
-                    android:layout_marginTop="40dp"
-                    android:background="#bfbfbf" />
-
-                <TextView
-                    android:id="@+id/textView11"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="32dp"
-                    android:layout_toRightOf="@+id/left_center4_join_view"
-                    android:text="请选择支付方式"
-                    android:textColor="#bfbfbf"
-                    android:textSize="13sp" />
-
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="1px"
-                    android:layout_marginTop="40dp"
-                    android:layout_toRightOf="@+id/textView11"
-                    android:background="#bfbfbf" />
-            </RelativeLayout>
-
             <LinearLayout
                 android:id="@+id/pay_join_homepager_ll"
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_below="@id/center4_join_rl"
-                android:layout_margin="20dp"
-                android:layout_marginBottom="16dp"
-                android:background="@color/gainsboro"
-                android:orientation="horizontal"
-                android:visibility="invisible" >
+                android:layout_height="wrap_content"
+                android:layout_below="@id/center3_join_rl"
+                android:layout_marginTop="32dp"
+                android:orientation="vertical"
+                android:visibility="gone" >
 
                 <RelativeLayout
-                    android:id="@+id/pay_weixin_rl"
-                    android:layout_width="160dp"
+                    android:id="@+id/center4_join_rl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center" >
+
+                    <View
+                        android:id="@+id/left_center4_join_view"
+                        android:layout_width="40dp"
+                        android:layout_height="0.5dp"
+                        android:layout_centerVertical="true"
+                        android:background="#bfbfbf" />
+
+                    <TextView
+                        android:id="@+id/textView11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toRightOf="@+id/left_center4_join_view"
+                        android:text="请选择支付方式"
+                        android:textColor="#bfbfbf"
+                        android:textSize="13sp" />
+
+                    <View
+                        android:layout_width="40dp"
+                        android:layout_height="0.5dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toRightOf="@+id/textView11"
+                        android:background="#bfbfbf" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="44dp"
-                    android:layout_weight="1"
-                    android:background="#0bc7b4"
-                    android:gravity="center" >
+                    android:layout_below="@id/center4_join_rl"
+                    android:layout_marginBottom="36dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/gainsboro"
+                    android:orientation="horizontal" >
 
-                    <TextView
-                        android:id="@+id/textView12" 
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/pay_weixin_rl"
+                        android:layout_width="160dp"
                         android:layout_height="44dp"
-                        android:drawableLeft="@drawable/acty_join_img_wechat"
-                        android:gravity="center"
-                        android:text="微信支付"
-                        android:textColor="#ffffff"
-                        android:textSize="15sp" />  
-                </RelativeLayout>
+                        android:layout_weight="1"
+                        android:background="#0bc7b4"
+                        android:gravity="center" >
 
-                <RelativeLayout
-                    android:id="@+id/pay_zhifubao_rl"
-                    android:layout_width="160dp"
-                    android:layout_height="44dp" 
-                    android:layout_weight="1"
-                    android:background="#00acee"
-                    android:gravity="center" >
+                        <TextView
+                            android:id="@+id/textView12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:drawableLeft="@drawable/acty_join_img_wechat"
+                            android:gravity="center"
+                            android:text="微信支付"
+                            android:textColor="#ffffff"
+                            android:textSize="15sp" />
+                    </RelativeLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/pay_zhifubao_rl"
+                        android:layout_width="160dp"
                         android:layout_height="44dp"
-                        android:drawableLeft="@drawable/acty_join_img_alipay"
-                        android:gravity="center"
-                        android:text="支付宝支付"
-                        android:textColor="#ffffff"
-                        android:textSize="15sp" />
-                </RelativeLayout>
+                        android:layout_weight="1"
+                        android:background="#00acee"
+                        android:gravity="center" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:drawableLeft="@drawable/acty_join_img_alipay"
+                            android:gravity="center"
+                            android:text="支付宝支付"
+                            android:textColor="#ffffff"
+                            android:textSize="15sp" />
+                    </RelativeLayout>
+                </LinearLayout>
             </LinearLayout>
 
             <RelativeLayout
@@ -394,11 +387,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:layout_alignParentBottom="true"
-                android:layout_below="@id/center4_join_rl"
-                android:layout_margin="20dp"
-                android:layout_marginBottom="16dp"
-                android:background="#00acee"
-                android:visibility="invisible">
+                android:layout_below="@id/center3_join_rl"
+                android:layout_marginBottom="36dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="64dp"
+                android:background="#00acee" >
 
                 <TextView
                     android:id="@+id/textView13"
@@ -411,17 +405,18 @@
                     android:textColor="#ffffff"
                     android:textSize="16dp" />
             </RelativeLayout>
-            
-            <RelativeLayout 
+
+            <RelativeLayout
                 android:id="@+id/pay_joined_layout"
-                android:layout_below="@id/center4_join_rl"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:layout_margin="20dp"
-                android:visibility="gone"
-                android:layout_marginBottom="16dp"
+                android:layout_below="@id/center3_join_rl"
+                android:layout_marginBottom="36dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="64dp"
                 android:background="@color/gainsboro"
-                >
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -429,12 +424,10 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:drawableLeft="@drawable/acty_join_img_tickmark"
+                    android:text="报名成功"
                     android:textColor="#ffffff"
-                    android:textSize="16dp"
-                    android:text="报名成功" /> 
-                </RelativeLayout>
-           
-
+                    android:textSize="16dp" />
+            </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
 

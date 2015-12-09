@@ -254,12 +254,12 @@ public class ChangexingzuoActivity extends Activity implements OnClickListener {
 			@Override
 			public void callback(boolean result, AVException e) {
 				if (result) {
-					Toast.makeText(getApplicationContext(), "星座修改成功", 1000)
+					Toast.makeText(getApplicationContext(), "已保存", 1000)
 							.show();
 
 					finish();
 				} else {
-					Toast.makeText(getApplicationContext(), "星座修改失败", 1000)
+					Toast.makeText(getApplicationContext(), "保存失败", 1000)
 							.show();
 				}
 			}

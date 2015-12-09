@@ -156,7 +156,7 @@
           android:id="@+id/back_barrage_img"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-		android:src="@drawable/navi_close_blue" />
+		android:src="@drawable/navi_close_ffffff" />
       </RelativeLayout>
 
       <TextView
@@ -180,7 +180,7 @@
           android:id="@+id/userjoin_barrary_img"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-
+          android:visibility="gone"
           android:src="@drawable/acty_barrage_navi_btn_joinlist_2x" />
       </RelativeLayout>
       

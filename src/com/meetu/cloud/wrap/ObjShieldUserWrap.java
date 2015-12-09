@@ -9,6 +9,7 @@ import com.avos.avoscloud.DeleteCallback;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjUserShieldCallback;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjShieldUser;
 import com.meetu.cloud.object.ObjUser;
@@ -19,6 +20,7 @@ public class ObjShieldUserWrap {
 	// 屏蔽用户
 	public static void shieldUser(ObjShieldUser shieldUser,
 			final ObjFunBooleanCallback callback) {
+		shieldUser.setFetchWhenSave(true);
 		shieldUser.saveInBackground(new SaveCallback() {
 
 			@Override
@@ -72,6 +74,27 @@ public class ObjShieldUserWrap {
 					callback.callback(true, null);
 				} else {
 					callback.callback(false, null);
+				}
+			}
+		});
+	}
+	//获取屏蔽列表
+	public static void queryShieldList(ObjUser otherUser,final ObjUserShieldCallback callback){
+		AVQuery<ObjShieldUser> query = AVObject.getQuery(ObjShieldUser.class);
+		query.whereEqualTo("shieldUser", otherUser);
+		query.findInBackground(new FindCallback<ObjShieldUser>() {
+			
+			@Override
+			public void done(List<ObjShieldUser> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if( e != null){
+					callback.callback(objects, e);
+					return;
+				}
+				if(objects != null && objects.size()>0){
+					callback.callback(objects, null);
+				}else{
+					callback.callback(null, new AVException(0, "获取失败"));
 				}
 			}
 		});

@@ -75,13 +75,14 @@ import com.meetu.fragment.UserPhotoFragment;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.sqlite.UserDao;
+import com.meetu.sqlite.UserShieldDao;
 import com.meetu.tools.BitmapCut;
 import com.meetu.view.CustomViewPager;
 import com.meetu.view.ScrollTabHolder;
 import com.meetu.view.SlidingTabLayout;
 
 public class UserPagerActivity extends FragmentActivity implements
-		ScrollTabHolder, OnClickListener {
+ScrollTabHolder, OnClickListener {
 	// 控件相关
 	private ImageView backImv;
 	private ImageView setImv;
@@ -135,25 +136,26 @@ public class UserPagerActivity extends FragmentActivity implements
 	// 上传 信息 头像相关
 	private String fHeadPath = "";
 	private String yHeadPath = "";
-	// 标记是否屏蔽
+	// 标记是否屏蔽此用户
 	private boolean isShield = false;
+	//标记我是否被屏蔽
+	private boolean beShield = false;
 	// popwindow相关
 	TextView laheiTv;
 	TextView jubaoTv;
 	RelativeLayout laheilayout;
 	RelativeLayout jubaolayout;
 	boolean isFollow=false;//对该用户是否关注、点赞
-	
+
 	List<UserAboutBean> userAboutBeansList=new ArrayList<UserAboutBean>();
 	UserAboutDao userAboutDao;
 	UserDao userDao;
+	UserShieldDao shieldDao;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		super.getWindow();
 		setContentView(R.layout.userpager_layout);
 		if (currentUser != null) {
 			// 强制类型转换
@@ -161,6 +163,7 @@ public class UserPagerActivity extends FragmentActivity implements
 		} else {
 			return;
 		}
+		shieldDao = new UserShieldDao(getApplicationContext());
 		userDao=new UserDao(getApplicationContext());
 		userAboutDao=new UserAboutDao(getApplicationContext());
 		Intent intent = getIntent();
@@ -170,7 +173,8 @@ public class UserPagerActivity extends FragmentActivity implements
 		if (userMy.getObjectId().equals(userId)) {
 			isMyself = true;
 		}
-		
+		//被屏蔽者为用户自己，第二个参数
+		beShield = shieldDao.queryIsShield(userId,userMy.getObjectId());
 		userAboutBeansList=userAboutDao.queryUserAbout(userMy.getObjectId(), Constants.FOLLOW_TYPE, "");
 		if(userAboutBeansList==null||userAboutBeansList.size()==0){
 			isFollow=false;
@@ -182,8 +186,8 @@ public class UserPagerActivity extends FragmentActivity implements
 				}
 			}
 		}
-		
-		
+
+
 
 		MyApplication app = (MyApplication) this.getApplicationContext();
 		finalBitmap = app.getFinalBitmap();
@@ -212,9 +216,9 @@ public class UserPagerActivity extends FragmentActivity implements
 			}
 		});
 		setupAdapter();
-		
+
 		if(isFollow==true){
-			
+
 			userLikeImv.setImageResource(R.drawable.mine_photoview_btn_like_hl);
 		}
 	}
@@ -285,18 +289,18 @@ public class UserPagerActivity extends FragmentActivity implements
 					showDialog();
 				} else {
 					log.e("zcq", "此处应放大图片");
-					
+
 					ArrayList<UserBean> userBeans=userDao.queryUser(userId);
-					
+
 					if(userBeans!=null&&userBeans.size()!=0){
 						Intent photoIntent = new Intent(UserPagerActivity.this,
 								ShowSysMsgPhotoActivity.class);
 						if(userBeans.get(0).getProfileOrign()!=null){
-								
-								photoIntent.putExtra("photoUrl",userBeans.get(0).getProfileOrign());
+
+							photoIntent.putExtra("photoUrl",userBeans.get(0).getProfileOrign());
 						}
-							startActivity(photoIntent);
-						
+						startActivity(photoIntent);
+
 					}else{
 						ObjUserWrap.getObjUser(userId, new ObjUserInfoCallback() {
 
@@ -316,8 +320,8 @@ public class UserPagerActivity extends FragmentActivity implements
 							}
 						});
 					}
-				
-					
+
+
 				}
 
 			}
@@ -589,11 +593,11 @@ public class UserPagerActivity extends FragmentActivity implements
 						shieldUser(userId);
 					}
 					popupWindow.dismiss();
-					
+
 				}else{
 					PerfectInformation.showDiolagPerfertInformation(UserPagerActivity.this, "亲爱的 完善个人信息后才能屏蔽TA呢");
 				}
-				
+
 			}
 		});
 		jubaolayout.setOnClickListener(new OnClickListener() {
@@ -613,7 +617,7 @@ public class UserPagerActivity extends FragmentActivity implements
 				}else{
 					PerfectInformation.showDiolagPerfertInformation(UserPagerActivity.this, "亲爱的 完善个人信息后才能举报TA呢");
 				}
-			
+
 			}
 		});
 	}
@@ -631,24 +635,24 @@ public class UserPagerActivity extends FragmentActivity implements
 			ObjShieldUserWrap.shieldUser(shieldUser,
 					new ObjFunBooleanCallback() {
 
-						@Override
-						public void callback(boolean result, AVException e) {
-							// TODO Auto-generated method stub
-							if (e != null) {
-								Toast.makeText(getApplicationContext(), "操作失败",
-										1000).show();
-								return;
-							}
-							if (result) {
-								isShield = true;
-								Toast.makeText(getApplicationContext(), "已拉黑",
-										1000).show();
-							} else {
-								Toast.makeText(getApplicationContext(), "操作失败",
-										1000).show();
-							}
-						}
-					});
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if (e != null) {
+						Toast.makeText(getApplicationContext(), "操作失败",
+								1000).show();
+						return;
+					}
+					if (result) {
+						isShield = true;
+						Toast.makeText(getApplicationContext(), "已拉黑",
+								1000).show();
+					} else {
+						Toast.makeText(getApplicationContext(), "操作失败",
+								1000).show();
+					}
+				}
+			});
 		} catch (AVException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -665,24 +669,24 @@ public class UserPagerActivity extends FragmentActivity implements
 			ObjShieldUserWrap.unShieldUser(userMy, otherUser,
 					new ObjFunBooleanCallback() {
 
-						@Override
-						public void callback(boolean result, AVException e) {
-							// TODO Auto-generated method stub
-							if (e != null) {
-								Toast.makeText(getApplicationContext(), "操作失败",
-										1000).show();
-								return;
-							}
-							if (result) {
-								isShield = false;
-								Toast.makeText(getApplicationContext(),
-										"已取消拉黑", 1000).show();
-							} else {
-								Toast.makeText(getApplicationContext(), "取消失败",
-										1000).show();
-							}
-						}
-					});
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if (e != null) {
+						Toast.makeText(getApplicationContext(), "操作失败",
+								1000).show();
+						return;
+					}
+					if (result) {
+						isShield = false;
+						Toast.makeText(getApplicationContext(),
+								"已取消拉黑", 1000).show();
+					} else {
+						Toast.makeText(getApplicationContext(), "取消失败",
+								1000).show();
+					}
+				}
+			});
 		} catch (AVException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -730,6 +734,7 @@ public class UserPagerActivity extends FragmentActivity implements
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+
 			break;
 		case R.id.update_userpager_img:
 			Intent intent = new Intent(Intent.ACTION_PICK, null);
@@ -737,11 +742,14 @@ public class UserPagerActivity extends FragmentActivity implements
 					"image/*");
 			startActivityForResult(intent, 00);
 			break;
-		/**
-		 * 发送小纸条
-		 */
+			/**
+			 * 发送小纸条
+			 */
 		case R.id.user_scrip_imv:
-			
+			if(beShield){
+				Toast.makeText(UserPagerActivity.this, "您已被对方用户屏蔽", 1000).show();
+				return;
+			}
 			if(userMy.isCompleteUserInfo()){
 				Intent intent3 = new Intent(this, CreateLitterNoteActivity.class);
 				intent3.putExtra("userId", userId);
@@ -749,18 +757,18 @@ public class UserPagerActivity extends FragmentActivity implements
 			}else{
 				PerfectInformation.showDiolagPerfertInformation(UserPagerActivity.this, "亲爱的 完善个人信息后才能给TA发送小纸条呢");
 			}
-			
+
 			break;
-		/**
-		 * 点赞
-		 */
+			/**
+			 * 点赞
+			 */
 		case R.id.user_like_imv:
 			if(!isFollow){
 				followInUser();
 			}else{
 				dismissFollowUser();
 			}
-			
+
 			break;
 		default:
 			break;
@@ -1002,33 +1010,33 @@ public class UserPagerActivity extends FragmentActivity implements
 							ObjUserWrap.completeUserInfo(user,
 									new ObjFunBooleanCallback() {
 
-										@Override
-										public void callback(boolean result,
-												AVException e) {
-											// TODO Auto-generated method stub
-											if (result) {
-												// clickBtn.setText(LOAD_SUC);
-												Toast.makeText(
-														getApplicationContext(),
-														"save 上传成功", 1000)
-														.show();
-												// 更新头像
-												headURl = user.getProfileClip()
-														.getUrl();
-												log.e("lucifer", "url"
-														+ headURl);
-												bitmapUtils.display(ivTouxiang,
-														headURl);
+								@Override
+								public void callback(boolean result,
+										AVException e) {
+									// TODO Auto-generated method stub
+									if (result) {
+										// clickBtn.setText(LOAD_SUC);
+										Toast.makeText(
+												getApplicationContext(),
+												"save 上传成功", 1000)
+												.show();
+										// 更新头像
+										headURl = user.getProfileClip()
+												.getUrl();
+										log.e("lucifer", "url"
+												+ headURl);
+										bitmapUtils.display(ivTouxiang,
+												headURl);
 
-											} else {
-												// clickBtn.setText(LOAD_FAIL);
-												Toast.makeText(
-														getApplicationContext(),
-														"save 上传失败", 1000)
-														.show();
-											}
-										}
-									});
+									} else {
+										// clickBtn.setText(LOAD_FAIL);
+										Toast.makeText(
+												getApplicationContext(),
+												"save 上传失败", 1000)
+												.show();
+									}
+								}
+							});
 						}
 					});
 				}
@@ -1045,7 +1053,7 @@ public class UserPagerActivity extends FragmentActivity implements
 	}
 
 	public Bitmap getThumbnail(Uri uri, int size) throws FileNotFoundException,
-			IOException {
+	IOException {
 		InputStream input = this.getContentResolver().openInputStream(uri);
 		BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
 		onlyBoundsOptions.inJustDecodeBounds = true;
@@ -1082,7 +1090,7 @@ public class UserPagerActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 		finish();
 	}
-	
+
 	/**
 	 * 关注用户
 	 *   
@@ -1091,28 +1099,27 @@ public class UserPagerActivity extends FragmentActivity implements
 	 */
 	public void followInUser(){
 		ObjFollowWrap.followIn(userMy, userId, new ObjFunBooleanCallback() {
-			
+
 			@Override
 			public void callback(boolean result, AVException e) {
 				// TODO Auto-generated method stub
 				if(e!=null){
-					log.e("zcq  关注", e);
 					return;
 				}
 				if(result){
 					log.e("zcq", "关注成功");
-					Toast.makeText(getApplicationContext(), "关注成功", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), "已关注", Toast.LENGTH_SHORT).show();
 					isFollow=true;
 					userLikeImv.setImageResource(R.drawable.mine_photoview_btn_like_hl);
 				}else{
 					log.e("zcq", "关注失败");
 					Toast.makeText(getApplicationContext(), "关注失败", Toast.LENGTH_SHORT).show();
 				}
-				
+
 			}
 		});
 	}
-	
+
 	/**
 	 * 取消关注用户
 	 *   
@@ -1120,9 +1127,9 @@ public class UserPagerActivity extends FragmentActivity implements
 	 * @date 2015-12-7
 	 */
 	public void dismissFollowUser(){
-		
+
 		ObjFollowWrap.unFollow(userMy, userId, new ObjFunBooleanCallback() {
-			
+
 			@Override
 			public void callback(boolean result, AVException e) {
 				if(e!=null){
@@ -1131,11 +1138,11 @@ public class UserPagerActivity extends FragmentActivity implements
 				}
 				if(result){
 					//取消关注后   需要  换图片 改变状态  从缓存的关注列表中删除该用户
-					log.e("zcq", "取消关注成功");
+					log.e("zcq", "取消关注");
 					Toast.makeText(getApplicationContext(), "取消关注成功", Toast.LENGTH_SHORT).show();
 					isFollow=false;
 					userLikeImv.setImageResource(R.drawable.mine_photoview_btn_like_nor2x);
-					
+
 					userAboutDao.deleteUserTypeUserId(userMy.getObjectId(), Constants.FOLLOW_TYPE, "", userId);
 				}else{
 					log.e("zcq", "取消关注失败");

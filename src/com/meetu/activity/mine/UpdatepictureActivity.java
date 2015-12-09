@@ -111,7 +111,6 @@ public class UpdatepictureActivity extends Activity implements OnClickListener {
 			// 获得要上传的图片的bitmap
 			upPhoto = Middle.bimaBitmap;
 			picture.setImageBitmap(Middle.bimaBitmap);
-			Toast.makeText(this, "正在上传图片", 1000).show();
 			upLoadUserPhoto(user);
 
 		}
@@ -199,17 +198,15 @@ public class UpdatepictureActivity extends Activity implements OnClickListener {
 				// TODO Auto-generated method stub
 				if (e != null) {
 					// clickBtn.setText(LOAD_FAIL);
-					Toast.makeText(UpdatepictureActivity.this, "照片上传失败",
+					Toast.makeText(UpdatepictureActivity.this, "发表失败",
 							Toast.LENGTH_SHORT).show();
 				}
 				if (result) {
-					Toast.makeText(UpdatepictureActivity.this, "照片上传成功",
-							Toast.LENGTH_SHORT).show();
 					isEnd = true;
 
 				} else {
 					// clickBtn.setText(LOAD_FAIL);
-					Toast.makeText(UpdatepictureActivity.this, "照片上传失败",
+					Toast.makeText(UpdatepictureActivity.this, "发表失败",
 							Toast.LENGTH_SHORT).show();
 				}
 			}
@@ -237,16 +234,16 @@ public class UpdatepictureActivity extends Activity implements OnClickListener {
 						if (e != null) {
 							// clickBtn.setText(LOAD_FAIL);
 							Toast.makeText(UpdatepictureActivity.this,
-									"照片信息提交失败", Toast.LENGTH_SHORT).show();
+									"发表失败", Toast.LENGTH_SHORT).show();
 						}
 						if (result) {
 							// clickBtn.setText(LOAD_SUC);
 							Toast.makeText(UpdatepictureActivity.this,
-									"照片信息提交成功", Toast.LENGTH_SHORT).show();
+									"已发表", Toast.LENGTH_SHORT).show();
 						} else {
 							// clickBtn.setText(LOAD_FAIL);
 							Toast.makeText(UpdatepictureActivity.this,
-									"照片信息提交失败", Toast.LENGTH_SHORT).show();
+									"发表失败", Toast.LENGTH_SHORT).show();
 						}
 					}
 				});

@@ -28,6 +28,7 @@ import com.meetu.cloud.object.ObjActivityTicket;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjActivityOrderWrap;
 import com.meetu.cloud.wrap.ObjActivityWrap;
+import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
 import com.meetu.entity.Booking;
 import com.meetu.myapplication.MyApplication;
@@ -66,7 +67,6 @@ OnItemClickListener {
 	private LinearLayout payLayout;
 	private RelativeLayout paylRelativeLayout, payweixin, payzhifubao;
 	private RelativeLayout payJoinedLayout;
-	private RelativeLayout visibleCenten4;
 
 	// 网络数据相关
 	// 某项活动的票种列表
@@ -82,10 +82,14 @@ OnItemClickListener {
 	private ImageView photoHuodong;
 	private TextView title, titleDesc, timeStart;
 	private EditText nameEditText;
+	private EditText hopeEditText;
 
 	// 获取活动报名信息
 	private boolean isJoin = false;// 是否报名
-	private int ticketPrice = 0;
+	//若已报名，票价
+	private float ticketPrice = 0;
+	//若已报名此处为愿望
+	private String hopeStr = "";
 	//订单实体
 	ObjActivityOrder activityOrder = new ObjActivityOrder();
 	//支付方式标记
@@ -106,11 +110,10 @@ OnItemClickListener {
 	                      所有支付渠道建议以服务端的状态金额为准，此处返回的RESULT_SUCCESS仅仅代表手机端支付成功
 					 */
 					if (result.equals(BCPayResult.RESULT_SUCCESS)) {
-						Toast.makeText(JoinActivity.this, "用户支付成功", Toast.LENGTH_LONG).show();
+						Toast.makeText(JoinActivity.this, "报名成功", Toast.LENGTH_LONG).show();
 						updateOrder(Constants.OrderStatusPaySuccess);
-
 					} else if (result.equals(BCPayResult.RESULT_CANCEL)){
-						Toast.makeText(JoinActivity.this, "用户取消支付", Toast.LENGTH_LONG).show();
+						Toast.makeText(JoinActivity.this, "报名失败", Toast.LENGTH_LONG).show();
 						updateOrder(Constants.OrderStatusPayFail);
 					}else if (result.equals(BCPayResult.RESULT_FAIL)) {
 						String toastMsg = "支付失败, 原因: " + bcPayResult.getErrCode() +
@@ -120,8 +123,7 @@ OnItemClickListener {
 						 * 以下是正常流程，请按需处理失败信息
 						 */
 
-						Toast.makeText(JoinActivity.this, toastMsg, Toast.LENGTH_LONG).show();
-						log.d("mytest", "微信支付"+toastMsg);
+						Toast.makeText(JoinActivity.this, "报名失败", Toast.LENGTH_LONG).show();
 						updateOrder(Constants.OrderStatusPayFail);
 					} else if (result.equals(BCPayResult.RESULT_UNKNOWN)) {
 						//可能出现在支付宝8000返回状态
@@ -193,8 +195,6 @@ OnItemClickListener {
 		payweixin.setOnClickListener(this);
 		payzhifubao = (RelativeLayout) super.findViewById(R.id.pay_zhifubao_rl);
 		payzhifubao.setOnClickListener(this);
-		visibleCenten4 = (RelativeLayout) super
-				.findViewById(R.id.center4_join_rl);
 
 		title = (TextView) super.findViewById(R.id.title_huodong_join_tv);
 		titleDesc = (TextView) super
@@ -212,10 +212,17 @@ OnItemClickListener {
 		fianlBitmap.display(photoHuodong, activityBean.getActivityCover());
 
 		nameEditText = (EditText) super.findViewById(R.id.name_join_et);
+		hopeEditText = (EditText) findViewById(R.id.wish_join_et);
+		if(user.getNameReal() != null){
+			nameEditText.setText(user.getNameReal());
+			nameEditText.setSelection(user.getNameReal().length());
+		}
 	}
 	//根据报名状态改变view
 	public void updateView(){
 		if(isJoin){
+			ticketPrice = activityOrder.getTicket().getPrice();
+			hopeStr = activityOrder.getUserExpect();
 			for(int i = 0;i<tickets.size();i++){
 				if(ticketPrice == tickets.get(i).getPrice()){
 					adapter.setSelectedPosition(i);
@@ -223,17 +230,34 @@ OnItemClickListener {
 					adapter.notifyDataSetChanged();
 				}
 			}
+			hopeEditText.setText(hopeStr);
+			hopeStr = "";
 			ticketPrice = 0;
 			payJoinedLayout.setVisibility(View.VISIBLE);
 			payLayout.setVisibility(View.GONE);
 			paylRelativeLayout.setVisibility(View.GONE);
 		}else{
 			payJoinedLayout.setVisibility(View.GONE);
-			payLayout.setVisibility(View.VISIBLE);
-			paylRelativeLayout.setVisibility(View.GONE);
+			payLayout.setVisibility(View.GONE);
+			paylRelativeLayout.setVisibility(View.VISIBLE);
 		}
 	}
+	//根据输入姓名修改用户真实姓名
+	private void updateUserName() {
+		// TODO Auto-generated method stub
+		if(nameEditText.getText().toString().length()>0 
+				&& !user.getNameReal().equals(nameEditText.getText().toString())){
+			user.setNameReal(nameEditText.getText().toString());
+			ObjUserWrap.completeUserInfo(user, new ObjFunBooleanCallback() {
 
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+
+				}
+			});
+		}
+	}
 	private void loaddate() {
 		// 获取票种信息
 		ObjActivityWrap.queryTicket(objActivity, new ObjTicketCallback() {
@@ -295,18 +319,20 @@ OnItemClickListener {
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long id) {
 		if(!isJoin){
+			if(tickets.get(position).getTicketCount()<=0){
+				Toast.makeText(JoinActivity.this, "亲爱的，这个票种竟然没啦", 1000).show();
+				return;
+			}
 			adapter.setSelectedPosition(position);
 			selectedPosition = position;
 			if (tickets.get(position).getPrice() == 0) {
-				payLayout.setVisibility(View.INVISIBLE);
+				payLayout.setVisibility(View.GONE);
 				paylRelativeLayout.setVisibility(View.VISIBLE);
 				payJoinedLayout.setVisibility(View.GONE);
-				visibleCenten4.setVisibility(View.INVISIBLE);
 			} else {
 				payLayout.setVisibility(View.VISIBLE);
-				paylRelativeLayout.setVisibility(View.INVISIBLE);
+				paylRelativeLayout.setVisibility(View.GONE);
 				payJoinedLayout.setVisibility(View.GONE);
-				visibleCenten4.setVisibility(View.VISIBLE);
 			}
 			adapter.notifyDataSetChanged();
 		}
@@ -342,7 +368,7 @@ OnItemClickListener {
 	private void checkISjoinActivity() {
 		// 查询是否报名
 		ObjActivityOrderWrap.queryIsOrder(objActivity, user, new ObjActivityOrderCallback() {
-			
+
 			@Override
 			public void callback(ObjActivityOrder object, AVException e) {
 				if (e != null) {
@@ -350,7 +376,7 @@ OnItemClickListener {
 				} 
 				if(object != null){
 					isJoin = true;
-					ticketPrice = object.getTicket().getPrice();
+					activityOrder = object;
 				}else{
 					isJoin = false;
 				}
@@ -363,49 +389,55 @@ OnItemClickListener {
 	 * 报名参加活动
 	 * */
 	public void joinActivity(final int orderState){
-		if (nameEditText.getText().length() != 0) {
-			ObjActivityOrderWrap.signUpActivity(
-					objActivity, user,
-					tickets.get(selectedPosition),
-					orderState,
-					nameEditText.getText().toString(),
-					new ObjActivityOrderCallback() {
+		if (hopeEditText.getText().length() == 0) {
+			Toast.makeText(getApplicationContext(),
+					"请先完成报名信息", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		if(selectedPosition == -1){
+			Toast.makeText(getApplicationContext(),
+					"填写报名信息选择票种才能报名", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		ObjActivityOrderWrap.signUpActivity(
+				objActivity, user,
+				tickets.get(selectedPosition),
+				orderState,
+				hopeEditText.getText().toString(),
+				new ObjActivityOrderCallback() {
 
-						@Override
-						public void callback(ObjActivityOrder order, AVException e) {
-							if (e != null) {
+					@Override
+					public void callback(ObjActivityOrder order, AVException e) {
+						if (e != null) {
+							Toast.makeText(
+									getApplicationContext(),
+									"报名失败",
+									Toast.LENGTH_SHORT)
+									.show();
+						} else {
+							isJoin = true;
+							activityOrder = order;
+							if(orderState == Constants.OrderStatusPaySuccess){
 								Toast.makeText(
 										getApplicationContext(),
-										"报名失败，请检查网络",
+										"报名成功",
 										Toast.LENGTH_SHORT)
 										.show();
-							} else {
-								isJoin = true;
-								activityOrder = order;
-								if(orderState == Constants.OrderStatusPaySuccess){
-									Toast.makeText(
-											getApplicationContext(),
-											"报名成功",
-											Toast.LENGTH_SHORT)
-											.show();
-									updateView();
-									return;
-								}
-								if(payMethord.equals("weixin")){
-									payMethord = "";
-									payWeiXin(activityOrder.getObjectId(),tickets.get(selectedPosition).getPrice());
-								}else if(payMethord.equals("zhifubao")){
-									payMethord = "";
-									payZfb(activityOrder.getObjectId(),tickets.get(selectedPosition).getPrice());
-								}
+								updateUserName();
+								updateView();
+								return;
 							}
-
+							if(payMethord.equals("weixin")){
+								payMethord = "";
+								payWeiXin(activityOrder.getObjectId(),tickets.get(selectedPosition).getPrice());
+							}else if(payMethord.equals("zhifubao")){
+								payMethord = "";
+								payZfb(activityOrder.getObjectId(),tickets.get(selectedPosition).getPrice());
+							}
 						}
-					});
-		} else {
-			Toast.makeText(getApplicationContext(),
-					"请填写你的真实姓名", Toast.LENGTH_SHORT).show();
-		}
+
+					}
+				});
 
 	}
 	//修改订单状态
@@ -425,7 +457,7 @@ OnItemClickListener {
 		});
 	}
 	//支付宝支付
-	protected void payZfb(String orderId,int price) {
+	protected void payZfb(String orderId,float price) {
 		// TODO Auto-generated method stub
 		Map<String, String> mapOptional = new HashMap<String, String>();
 		mapOptional.put("phone", "android");
@@ -438,7 +470,7 @@ OnItemClickListener {
 				bcCallback);
 	}
 	//微信支付
-	protected void payWeiXin(String orderId,int price) {
+	protected void payWeiXin(String orderId,float price) {
 		// TODO Auto-generated method stub
 		//对于微信支付, 手机内存太小会有OutOfResourcesException造成的卡顿, 以致无法完成支付
 		//这个是微信自身存在的问题

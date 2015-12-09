@@ -106,7 +106,8 @@ public class ActivityFeedbackActivity extends Activity implements
 		quedingLayout.setOnClickListener(this);
 		content = (EditText) super.findViewById(R.id.content_feedback_et);
 		time = (TextView) super.findViewById(R.id.time_feedback_tv);
-		time.setText(DateUtils.getDateToString(System.currentTimeMillis()));
+		//time.setText(DateUtils.getDateToString(System.currentTimeMillis()));
+		time.setText(DateUtils.getDateToString(activityBean.getTimeStop()));
 		title = (TextView) super.findViewById(R.id.title_feedback_tv);
 		title.setText("" + activityBean.getTitle());
 		photoHead = (ImageView) super
@@ -130,10 +131,10 @@ public class ActivityFeedbackActivity extends Activity implements
 			public void callback(boolean result, AVException e) {
 				// TODO Auto-generated method stub
 				if (e != null || result == false) {
-					Toast.makeText(ActivityFeedbackActivity.this, "提交失败哦", 1000)
+					Toast.makeText(ActivityFeedbackActivity.this, "反馈发送失败，请重试", 1000)
 							.show();
 				} else {
-					Toast.makeText(ActivityFeedbackActivity.this, "提交成功", 1000)
+					Toast.makeText(ActivityFeedbackActivity.this, "小U收到反馈了，谢谢啦", 1000)
 							.show();
 					finish();
 				}
@@ -159,9 +160,8 @@ public class ActivityFeedbackActivity extends Activity implements
 			finish();
 			break;
 		case R.id.queding_feedback_homepager_rl:
-			// Toast.makeText(this, "提交数据", Toast.LENGTH_SHORT).show();
 			if (content.getText().length() == 0) {
-				Toast.makeText(this, "请填写内容", 1000).show();
+				Toast.makeText(this, "请填写反馈内容", 1000).show();
 			} else {
 				saveFeedBack();
 			}

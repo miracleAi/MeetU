@@ -144,32 +144,6 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 
 	}
 
-	// // 查询是否已申请
-	// public void queryIsApply(final SeekChatInfoBean chatInfoBean) {
-	// ObjAuthoriseWrap.queryApply(user, category,
-	// new ObjAuthoriseApplyCallback() {
-	//
-	// @Override
-	// public void callback(List<ObjAuthoriseApply> objects,
-	// AVException e) {
-	// // TODO Auto-generated method stub
-	// if (e != null) {
-	// log.e("zcq", e);
-	// return;
-	// }
-	// if (objects.size() == 0) {
-	// // 没申请过
-	// applyAuthorise(category, content.getText()
-	// .toString());
-	// } else {
-	// // 申请过
-	// apply = objects.get(0);
-	// updateApplyAuthorise(apply, content.getText()
-	// .toString());
-	// }
-	// }
-	// });
-	// }
 
 	// 发起申请
 	/**
@@ -195,12 +169,12 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 						}
 						if (result) {
 							log.e("zcq", "发起申请成功");
-							Toast.makeText(getApplicationContext(), "发起申请成功",
+							Toast.makeText(getApplicationContext(), "小U收到申请啦",
 									Toast.LENGTH_SHORT).show();
 						} else {
 							log.e("zcq", "发起申请失败，请检查网络");
 							Toast.makeText(getApplicationContext(),
-									"发起申请失败，请检查网络", Toast.LENGTH_SHORT).show();
+									"申请发送失败", Toast.LENGTH_SHORT).show();
 						}
 					}
 				});
@@ -221,12 +195,12 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 						}
 						if (result) {
 							log.e("zcq", "重新发起申请成功");
-							Toast.makeText(getApplicationContext(), "重新发起申请成功",
+							Toast.makeText(getApplicationContext(), "小U收到申请啦",
 									Toast.LENGTH_SHORT).show();
 						} else {
 							log.e("zcq", "重新发起申请失败，请检查网络");
 							Toast.makeText(getApplicationContext(),
-									"重新发起申请失败，请检查网络", Toast.LENGTH_SHORT)
+									"申请发送失败", Toast.LENGTH_SHORT)
 									.show();
 						}
 					}

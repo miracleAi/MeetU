@@ -55,12 +55,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class Miliaofragment extends Fragment implements OnPageChangeListener,
-		OnClickListener {
+OnClickListener {
 	// viewpager相关
 	private View view;
 	private ViewPager viewPager;
@@ -74,8 +75,8 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 	private int positonNow = 0;// 当前在第几个页面
 
 	private AVIMConversation conv;
-	
-	
+
+
 
 	// 网络数据相关
 	private List<ObjChat> objChatsList = new ArrayList<ObjChat>();
@@ -92,13 +93,15 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 	private List<SeekChatBean> seekChatBeansList = new ArrayList<SeekChatBean>();
 
 	private Boolean isAdd = false;
-	
+
 	ChatmsgsDao chatmsgsDao;
-	
+
 	//空状态相关
 	private RelativeLayout noneFailLayout;//空状态背景
 	private TextView nonoTextView;//没有数据文字
 	private TextView failTextView;//加载失败文字
+	private ImageView miliaoImv;
+	private TextView joinChatTv;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -115,14 +118,16 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 				user = AVUser.cast(currentUser, ObjUser.class);
 			}
 			chatmsgsDao=new ChatmsgsDao(getActivity());
-			
+
 			userAboutDao = new UserAboutDao(getActivity());
 			// 获取觅聊列表
 			// getObjChatList();
-			
+
 			noneFailLayout=(RelativeLayout) view.findViewById(R.id.none_or_fail_miliao_fragment_rl);
 			nonoTextView=(TextView) view.findViewById(R.id.none_miliao_fragment_tv);
 			failTextView=(TextView) view.findViewById(R.id.fail_miliao_fragment_tv);
+			miliaoImv = (ImageView) view.findViewById(R.id.join_miliao_img);
+			joinChatTv = (TextView) view.findViewById(R.id.join_chat_tv);
 			loadData();
 			viewPager = (ViewPager) view.findViewById(R.id.vpNewsList_miliao);
 			// 设置viewpage的切换动画
@@ -204,7 +209,6 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 		numberPosition.setText("" + (position + 1));
 		// 传过去当前页面
 		positonNow = position;
-
 		isAddconvesition();
 
 		conv = MyApplication.chatClient.getConversation(""
@@ -218,7 +222,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 		// 申请觅聊
 		case R.id.add_miliao_rl:
 			// queryAuthoriseCategory(100);
-			
+
 			if(user.isCompleteUserInfo()){
 				if (chatBean != null) {
 					cteatMiliao();
@@ -226,93 +230,66 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 			}else{
 				PerfectInformation.showDiolagPerfertInformation(getActivity(), "亲爱的 完善个人信息后才能和小伙伴们玩耍呢");
 			}
-			
+
 
 			break;
-		// 加入觅聊
+			// 加入觅聊
 		case R.id.join_miliao_rl:
-			// TODO 使用测试 clientId ConversationId 进行对话
-			//
-			// if(isJoin(objChatsList.get(positonNow).getConversationId())==true){
-			// log.e("zcq","已经加入过当前觅聊");
-			//
-			// Intent intent2=new Intent(getActivity(),ChatGroupActivity.class);
-			// intent2.putExtra("ConversationId",
-			// ""+objChatsList.get(positonNow).getConversationId());
-			// //传对话的类型 1 表示活动群聊 2 表示觅聊 3 表示单聊
-			// intent2.putExtra("ConversationStyle", ""+2);
-			// intent2.putExtra("title",
-			// ""+objChatsList.get(positonNow).getChatTitle());
-			// Bundle bundle=new Bundle();
-			// bundle.putSerializable("ObjChat", objChatsList.get(positonNow));
-			// intent2.putExtras(bundle);
-			// startActivity(intent2);
-			//
-			// }else{
-			//
-			//
-			// if(MyApplication.isChatLogin){
-			// //已经建立了长连接
-			// log.e("zcq", "已经建立过长连接");
-			// joinGroup(conv);
-			// }else{
-			// ObjChatMessage.connectToChatServer(MyApplication.chatClient, new
-			// ObjAvimclientCallback() {
-			//
-			// @Override
-			// public void callback(AVIMClient client, AVException e) {
-			// if(e != null){
-			// log.e("zcq", e);
-			// return ;
-			// }
-			// if(client != null){
-			// MyApplication.chatClient = client;
-			// log.e("zcq", "连接聊天长连接成功");
-			// joinGroup(conv);
-			// }else{
-			// log.e("zcq", "连接聊天长连接失败");
-			// Toast.makeText(getActivity(), "请检查网络重新加入", 1000).show();
-			// }
-			// }
-			// });
-			// }
-			// }
-			if(user.isCompleteUserInfo()){
-			
-			
-			if (seekChatBeansList != null && seekChatBeansList.size() != 0) {
 
-				if (isAdd) {
-					log.e("zcq", "已经加入过当前觅聊");
-					Intent intent2 = new Intent(getActivity(),
-							ChatGroupActivity.class);
-					intent2.putExtra("ConversationId", ""
-							+ seekChatBeansList.get(positonNow)
-									.getConversationId());
-					// 传对话的类型 1 表示活动群聊 2 表示觅聊 3 表示单聊
-					intent2.putExtra("ConversationStyle", "" + 2);
-					intent2.putExtra("title",
-							"" + seekChatBeansList.get(positonNow).getTitle());
-					intent2.putExtra("number",
-							""
-									+ seekChatBeansList.get(positonNow)
-											.getMembers().size());
-					intent2.putExtra("objectId",
-							seekChatBeansList.get(positonNow).getObjectId());// 觅聊id
-					intent2.putExtra("TimeOver", ""+seekChatBeansList.get(positonNow).getTimeChatStop());
-					
-					log.e("zcq timeover", ""+seekChatBeansList.get(positonNow).getTimeChatStop());
-					
-					Bundle bundle = new Bundle();
-					bundle.putSerializable("SeekChatBean",
-							seekChatBeansList.get(positonNow));
-					intent2.putExtras(bundle);
-					startActivity(intent2);
-				} else {
-					log.e("zcq", "没加入过当前觅聊");
-					joinGroup(conv);
+			if(user.isCompleteUserInfo()){
+
+
+				if (seekChatBeansList != null && seekChatBeansList.size() != 0) {
+
+					if (isAdd) {
+						miliaoImv.setImageResource(R.drawable.miliao_in);
+						List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
+								Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
+						if(memList.size()<5){
+							joinChatTv.setText("等待开启");
+							Toast.makeText(getActivity(), "觅聊尚未开启", 1000).show();
+							return;
+						}
+						log.e("zcq", "已经加入过当前觅聊");
+						joinChatTv.setText("进入觅聊");
+						Intent intent2 = new Intent(getActivity(),
+								ChatGroupActivity.class);
+						intent2.putExtra("ConversationId", ""
+								+ seekChatBeansList.get(positonNow)
+								.getConversationId());
+						// 传对话的类型 1 表示活动群聊 2 表示觅聊 3 表示单聊
+						intent2.putExtra("ConversationStyle", "" + 2);
+						intent2.putExtra("title",
+								"" + seekChatBeansList.get(positonNow).getTitle());
+						intent2.putExtra("number",
+								""
+										+ seekChatBeansList.get(positonNow)
+										.getMembers().size());
+						intent2.putExtra("objectId",
+								seekChatBeansList.get(positonNow).getObjectId());// 觅聊id
+						intent2.putExtra("TimeOver", ""+seekChatBeansList.get(positonNow).getTimeChatStop());
+
+						log.e("zcq timeover", ""+seekChatBeansList.get(positonNow).getTimeChatStop());
+
+						Bundle bundle = new Bundle();
+						bundle.putSerializable("SeekChatBean",
+								seekChatBeansList.get(positonNow));
+						intent2.putExtras(bundle);
+						startActivity(intent2);
+					} else {
+						log.e("zcq", "没加入过当前觅聊");
+						miliaoImv.setImageResource(R.drawable.chat_navi_btn_joinchat);
+						List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(),
+								Constants.CONVERSATION_TYPE,seekChatBeansList.get(positonNow).getConversationId());
+						if(memList.size() >= 500){
+							joinChatTv.setText("人数已满");
+							Toast.makeText(getActivity(), "觅聊人数已满", 1000).show();
+							return;
+						}
+						joinChatTv.setText("加入觅聊");
+						joinGroup(conv);
+					}
 				}
-			}
 			}else{
 				PerfectInformation.showDiolagPerfertInformation(getActivity(), "亲爱的 完善个人信息后才能和小伙伴们玩耍呢");
 			}
@@ -325,34 +302,6 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 
 	}
 
-	/**
-	 * 获取觅聊列表
-	 * 
-	 * @author lucifer
-	 * @date 2015-11-16
-	 */
-	// private void getObjChatList(){
-	// ObjChatWrap.queryChatList(new ObjChatCallback() {
-	//
-	// @Override
-	// public void callback(List<ObjChat> objects, AVException e) {
-	// if(e!=null){
-	// log.e("zcq", e);
-	// return;
-	// }else if(objects!=null){
-	// objChatsList.clear();
-	// objChatsList.addAll(objects);
-	// log.e("zcq",
-	// "objChatsList=="+objChatsList.size()+" objects=="+objects.size());
-	// numberAll.setText(""+objChatsList.size());
-	// handler.sendEmptyMessage(1);
-	//
-	// }
-	//
-	// }
-	// });
-	//
-	// }
 	Handler handler = new Handler() {
 
 		@Override
@@ -370,362 +319,235 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 
 	};
 
-	// 查询是否有权限
-	// public void queryHaveAuthorise(final ObjAuthoriseCategory category){
-	// ObjAuthoriseWrap.queryUserAuthorise(category,user, new
-	// ObjFunBooleanCallback() {
-	//
-	// @Override
-	// public void callback(boolean result, AVException e) {
-	// // TODO Auto-generated method stub
-	// if(e != null){
-	// log.e("zcq", e);
-	// return;
-	// }
-	// if(result){
-	// // clickBtn.setText(UPLOADPIC);
-	// log.e("zcq", "有权限");
-	//
-	// }else{
-	// // clickBtn.setText(ISAPPLY);
-	// log.e("zcq", "木有权限");
-	//
-	// Intent intent=new Intent(getActivity(),ApplyForMiLiaoActivity.class);
-	// Bundle bundle=new Bundle();
-	// bundle.putSerializable("category", category);
-	// intent.putExtras(bundle);
-	// startActivity(intent);
-	// }
-	// }
-	// });
-	// }
-	//
-	// //查询是否需要权限
-	// public void queryAuthoriseCategory(int operationNum){
-	// ObjAuthoriseWrap.queryAuthoriseCatogory(operationNum, new
-	// ObjAuthoriseCategoryCallback() {
-	// @Override
-	// public void callback(List<ObjAuthoriseCategory> objects, AVException e) {
-	// // TODO Auto-generated method stub
-	// if(e != null){
-	// log.e("zcq", e);
-	// return;
-	// }else if(objects.size() == 0){
-	// log.e("zcq", "数据加载失败");
-	// return;
-	// }else{
-	// category = objects.get(0);
-	// if(category.isNeedAuthorise()){
-	//
-	// //queryHaveAuthorise(category);
-	// queryIsApply(category);
-	// }else{
-	//
-	//
-	// }
-	// }
-	//
-	// }
-	// });
-	// }
-	// //查询是否已申请
-	// public void queryIsApply(final ObjAuthoriseCategory category){
-	// ObjAuthoriseWrap.queryApply(user, category, new
-	// ObjAuthoriseApplyCallback() {
-	//
-	// @Override
-	// public void callback(List<ObjAuthoriseApply> objects, AVException e) {
-	// // TODO Auto-generated method stub
-	// if(e != null){
-	// log.e("zcq", e);
-	// return;
-	// }
-	// if(objects.size() == 0){
-	// //没申请过
-	// log.e("zcq", "木有权限");
-	// Intent intent=new Intent(getActivity(),ApplyForMiLiaoActivity.class);
-	// startActivity(intent);
-	// }else{
-	// //申请过
-	// apply = objects.get(0);
-	// if(apply.getApplyResult()==2){
-	// //表示有权限创建觅聊
-	// log.e("zcq", "有权限");
-	//
-	// Intent intent=new Intent(getActivity(),CreationChatActivity.class);
-	// startActivityForResult(intent, 100);
-	// }else{
-	// log.e("zcq", "木有权限");
-	// Intent intent=new Intent(getActivity(),ApplyForMiLiaoActivity.class);
-	// startActivity(intent);
-	// }
-	// }
-	// }
-	// });
-	// }
-	//
-	//
-	// @Override
-	// public void onActivityResult(int requestCode, int resultCode,
-	// Intent data) {
-	// switch (requestCode) {
-	// case 100:
-	// if(resultCode==getActivity().RESULT_OK){
-	// //TODO 创建 觅聊成功 应刷新viewpager中数据
-	// log.e("zcq", "回传成功，该刷新viewpager数据了");
-	// }
-	//
-	// break;
-	//
-	// default:
-	// break;
-	// }
-	// }
-	//
 	// 加入当前觅聊
 	public void joinGroup(final AVIMConversation conversation) {
-		
+
 		ObjChatMessage.joinChat(MyApplication.chatClient, conversation,
 				new ObjFunBooleanCallback() {
 
-					@Override
-					public void callback(boolean result, AVException e) {
-						// TODO Auto-generated method stub
-						if (e != null) {
-							log.e("zcq", e);
-							return;
-						}
-						if (result) {
-							//TODO 更新本地聊天消息本人加入提醒    觅聊卡片中头像更新
-							log.e("zcq", "加入觅聊成功");
-							
-							Chatmsgs chatmsgs=new Chatmsgs();
-							chatmsgs.setContent("欢迎加入觅聊");
-							chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
-							chatmsgs.setChatMsgType(14);
-							chatmsgs.setConversationId(conversation.getConversationId());
-							chatmsgs.setUid(user.getObjectId());
-							chatmsgsDao.insert(chatmsgs);
-							
-	//						loadData();
-							
-							
-							Intent intent2 = new Intent(getActivity(),
-									ChatGroupActivity.class);
-							intent2.putExtra("ConversationId", ""
-									+ seekChatBeansList.get(positonNow)
-											.getConversationId());
-							// 传对话的类型 1 表示活动群聊 2 表示觅聊 3 表示单聊
-							intent2.putExtra("ConversationStyle", "" + 2);
-							intent2.putExtra("title", ""
-									+ seekChatBeansList.get(positonNow)
-											.getTitle());
-							intent2.putExtra("number", ""
-									+ seekChatBeansList.get(positonNow)
-											.getMembers().size() + 1);
-							intent2.putExtra("objectId",
-									seekChatBeansList.get(positonNow)
-											.getObjectId());// 觅聊id
-							intent2.putExtra("TimeOver",""+ seekChatBeansList.get(positonNow).getTimeChatStop());
-							Bundle bundle = new Bundle();
-							bundle.putSerializable("SeekChatBean",
-									seekChatBeansList.get(positonNow));
-							intent2.putExtras(bundle);
-							startActivity(intent2);
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					log.e("zcq", e);
+					return;
+				}
+				if (result) {
+					//TODO 更新本地聊天消息本人加入提醒    觅聊卡片中头像更新
+					log.e("zcq", "加入觅聊成功");
+					Chatmsgs chatmsgs=new Chatmsgs();
+					chatmsgs.setContent("欢迎加入觅聊");
+					chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
+					chatmsgs.setChatMsgType(14);
+					chatmsgs.setConversationId(conversation.getConversationId());
+					chatmsgs.setUid(user.getObjectId());
+					chatmsgsDao.insert(chatmsgs);
+					UserAboutBean aboutBean = new UserAboutBean();
+					aboutBean.setUserId(user.getObjectId());
+					aboutBean.setAboutUserId(user.getObjectId());
+					aboutBean.setAboutType(Constants.CONVERSATION_TYPE);
+					aboutBean.setAboutColetctionId(conversation.getConversationId());
+					userAboutDao.saveUserAboutBean(aboutBean);
 
-						
-							// TODO 应该只刷新成员 省流量
-							// handler.sendEmptyMessage(1);
-						} else {
-							log.e("zcq", "加入觅聊失败 ，请检查网络");
-						}
+					List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
+							Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
+					miliaoImv.setImageResource(R.drawable.miliao_in);
+					if(memList.size()<5){
+						joinChatTv.setText("等待开启");
+						return;
+					}else{
+						joinChatTv.setText("进入觅聊");
 					}
-				});
+					Intent intent2 = new Intent(getActivity(),
+							ChatGroupActivity.class);
+					intent2.putExtra("ConversationId", ""
+							+ seekChatBeansList.get(positonNow)
+							.getConversationId());
+					// 传对话的类型 1 表示活动群聊 2 表示觅聊 3 表示单聊
+					intent2.putExtra("ConversationStyle", "" + 2);
+					intent2.putExtra("title", ""
+							+ seekChatBeansList.get(positonNow)
+							.getTitle());
+					intent2.putExtra("number", ""
+							+ seekChatBeansList.get(positonNow)
+							.getMembers().size() + 1);
+					intent2.putExtra("objectId",
+							seekChatBeansList.get(positonNow)
+							.getObjectId());// 觅聊id
+					intent2.putExtra("TimeOver",""+ seekChatBeansList.get(positonNow).getTimeChatStop());
+					Bundle bundle = new Bundle();
+					bundle.putSerializable("SeekChatBean",
+							seekChatBeansList.get(positonNow));
+					intent2.putExtras(bundle);
+					startActivity(intent2);
+				} else {
+					log.e("zcq", "加入觅聊失败 ，请检查网络");
+				}
+			}
+		});
 	}
 
-	// /**
-	// * 判断是否加入过当前觅聊
-	// * @return
-	// * @author lucifer
-	// * @date 2015-11-18
-	// */
-	// private boolean isJoin(String colectionId){
-	//
-	// userAboutBeansList=new ArrayList<UserAboutBean>();
-	// userAboutBeansList.addAll(userAboutDao.queryUserAbout(user.getObjectId(),
-	// Constants.CONVERSATION_TYPE, colectionId));
-	// for(UserAboutBean userAboutBean :userAboutBeansList){
-	// if(user.getObjectId().equals(userAboutBean.getAboutUserId())){
-	//
-	// return true;
-	// }
-	// }
-	//
-	// return false;
-	//
-	// }
-	//
 
 	public void loadData() {
 		ObjChatWrap.queryChatInfo(user, System.currentTimeMillis(), 999,
 				new ObjFunMapCallback() {
 
-					@SuppressWarnings("unchecked")
-					@Override
-					public void callback(Map<String, Object> object,
-							AVException e) {
+			@SuppressWarnings("unchecked")
+			@Override
+			public void callback(Map<String, Object> object,
+					AVException e) {
 
-						if (e != null) {
-							//获取失败，点击屏幕重新加载
-							
-							log.e("zcq 加载失败异常", e);
-							noneFailLayout.setVisibility(View.VISIBLE);
-							nonoTextView.setVisibility(View.GONE);
-							failTextView.setVisibility(View.VISIBLE);
-							
-							noneFailLayout.setOnClickListener(new OnClickListener() {
-								
-								@Override
-								public void onClick(View arg0) {
-									// TODO Auto-generated method stub
-									loadData();
-									
-								}
-							});
-							return;
-						}
-						if(object==null){
-							//没获取到数据
-							noneFailLayout.setVisibility(View.VISIBLE);
-							nonoTextView.setVisibility(View.VISIBLE);
-							failTextView.setVisibility(View.GONE);
-							
-						}else{
-							noneFailLayout.setVisibility(View.GONE);
-							
-							chatBean = new SeekChatInfoBean();
-							log.d("mytest", "result=" + object);
-							chatBean.setNeedAuthorise((Boolean) object
-									.get("needAuthorise"));
-							log.d("mytest",
-									"NeedAuthorise=" + chatBean.getNeedAuthorise());
-							if (chatBean.getNeedAuthorise()) {
-								// 需要授权
-								chatBean.setIsApply((Boolean) object.get("isApply"));
-								log.d("mytest", "isApply=" + chatBean.getIsApply());
-								if (chatBean.getIsApply()) {
-									// 已经申请
-									chatBean.setFreshStatus((Boolean) object
-											.get("freshStatus"));
-									log.d("mytest",
-											"freshStatus="
-													+ chatBean.getFreshStatus());
-									chatBean.setApplyResult((Integer) object
-											.get("applyResult"));
-									log.d("mytest",
-											"applyResult="
-													+ chatBean.getApplyResult());
-									chatBean.setApplyReply((String) object
-											.get("applyReply"));
-									log.d("mytest",
-											"applyReply="
-													+ chatBean.getApplyReply());
-									chatBean.setArgument((String) object
-											.get("argument"));
-									log.d("mytest",
-											"argument=" + chatBean.getArgument());
-									chatBean.setApplyId((String) object
-											.get("applyId"));
-									log.d("mytest",
-											"applyId=" + chatBean.getApplyId());
-									chatBean.setAuthoriseCategoryId((String) object
-											.get("authoriseCategoryId"));
-									log.d("mytest",
-											"applyId="
-													+ chatBean
-															.getAuthoriseCategoryId());
-								} else {
-									// 未申请
-									chatBean.setAuthoriseCategoryId((String) object
-											.get("authoriseCategoryId"));
-									log.d("mytest",
-											"applyId="
-													+ chatBean
-															.getAuthoriseCategoryId());
-								}
-							} else {
-								// 不需要授权，直接创建
-							}
-							// 有觅聊
-							chatBean.setSeekChatCount((Integer) object
-									.get("seekChatCount"));
-							log.d("mytest",
-									"seekChatCount" + chatBean.getSeekChatCount());
-							if (chatBean.getSeekChatCount() == 0) {
-								return;
-							}
-							// createAt是Date类型，timeChatStop为long类型，取值是注意
-							chatBean.setChatList((List<Map<String, Object>>) object
-									.get("seekChats"));
-							log.d("mytest", "seekChats=" + chatBean.getChatList());
+				if (e != null) {
+					//获取失败，点击屏幕重新加载
 
-							seekChatBeansList = new ArrayList<SeekChatBean>();
+					log.e("zcq 加载失败异常", e);
+					noneFailLayout.setVisibility(View.VISIBLE);
+					nonoTextView.setVisibility(View.GONE);
+					failTextView.setVisibility(View.VISIBLE);
 
-							for (int i = 0; i < chatBean.getSeekChatCount(); i++) {
-								SeekChatBean bean = new SeekChatBean();
-								List<Map<String, Object>> members = (List<Map<String, Object>>) chatBean
-										.getChatList().get(i).get("members");
-								bean.setMembers(members);
-								log.d("mytest", "members" + members);
+					noneFailLayout.setOnClickListener(new OnClickListener() {
 
-								bean.setConversationId((String) chatBean
-										.getChatList().get(i).get("conversationId"));
-								log.d("mytest",
-										"conversationId" + bean.getConversationId());
-								AVUser avUser = (AVUser) chatBean.getChatList()
-										.get(i).get("creator");
-								bean.setCreator(AVUser.cast(avUser, ObjUser.class));
-								log.d("mytest", "creator" + bean.getCreator());
-								bean.setFolloweeCount((Integer) chatBean
-										.getChatList().get(i).get("followeeCount"));
-								log.d("mytest",
-										"followeeCount" + bean.getFolloweeCount());
-								Date date = (Date) chatBean.getChatList().get(i)
-										.get("createdAt");
-								bean.setCreateAt(date.getTime());
-								log.d("mytest", "createdAt" + bean.getCreateAt());
-								bean.setObjectId((String) chatBean.getChatList()
-										.get(i).get("objectId"));
-								log.d("mytest", "objectId" + bean.getObjectId());
-								bean.setPictureUrl((String) chatBean.getChatList()
-										.get(i).get("pictureUrl"));
-								log.d("mytest", "pictureUrl" + bean.getPictureUrl());
-								bean.setTitle((String) chatBean.getChatList()
-										.get(i).get("title"));
-								log.d("mytest", "title" + bean.getTitle());
-								bean.setTimeChatStop((Long) chatBean.getChatList()
-										.get(i).get("timeChatStop"));
-								log.d("mytest",
-										"timeChatStop" + bean.getTimeChatStop());
-
-								seekChatBeansList.add(bean);
-								
-								//缓存觅聊成员
-								List<String> userList=new ArrayList<String>();
-								for(int j=0;j<bean.getMembers().size();j++){
-									userList.add(""+bean.getMembers().get(j).get("userId"));
-								}
-								getMember(userList,""+bean.getConversationId());
-
-							}
-
-							numberAll.setText("" + seekChatBeansList.size());
-							handler.sendEmptyMessage(1);
+						@Override
+						public void onClick(View arg0) {
+							// TODO Auto-generated method stub
+							loadData();
 
 						}
-						
+					});
+					return;
+				}
+				if(object==null){
+					//没获取到数据
+					noneFailLayout.setVisibility(View.VISIBLE);
+					nonoTextView.setVisibility(View.VISIBLE);
+					failTextView.setVisibility(View.GONE);
+
+				}else{
+					noneFailLayout.setVisibility(View.GONE);
+
+					chatBean = new SeekChatInfoBean();
+					log.d("mytest", "result=" + object);
+					chatBean.setNeedAuthorise((Boolean) object
+							.get("needAuthorise"));
+					log.d("mytest",
+							"NeedAuthorise=" + chatBean.getNeedAuthorise());
+					if (chatBean.getNeedAuthorise()) {
+						// 需要授权
+						chatBean.setIsApply((Boolean) object.get("isApply"));
+						log.d("mytest", "isApply=" + chatBean.getIsApply());
+						if (chatBean.getIsApply()) {
+							// 已经申请
+							chatBean.setFreshStatus((Boolean) object
+									.get("freshStatus"));
+							log.d("mytest",
+									"freshStatus="
+											+ chatBean.getFreshStatus());
+							chatBean.setApplyResult((Integer) object
+									.get("applyResult"));
+							log.d("mytest",
+									"applyResult="
+											+ chatBean.getApplyResult());
+							chatBean.setApplyReply((String) object
+									.get("applyReply"));
+							log.d("mytest",
+									"applyReply="
+											+ chatBean.getApplyReply());
+							chatBean.setArgument((String) object
+									.get("argument"));
+							log.d("mytest",
+									"argument=" + chatBean.getArgument());
+							chatBean.setApplyId((String) object
+									.get("applyId"));
+							log.d("mytest",
+									"applyId=" + chatBean.getApplyId());
+							chatBean.setAuthoriseCategoryId((String) object
+									.get("authoriseCategoryId"));
+							log.d("mytest",
+									"applyId="
+											+ chatBean
+											.getAuthoriseCategoryId());
+						} else {
+							// 未申请
+							chatBean.setAuthoriseCategoryId((String) object
+									.get("authoriseCategoryId"));
+							log.d("mytest",
+									"applyId="
+											+ chatBean
+											.getAuthoriseCategoryId());
+						}
+					} else {
+						// 不需要授权，直接创建
 					}
-				});
+					// 有觅聊
+					chatBean.setSeekChatCount((Integer) object
+							.get("seekChatCount"));
+					log.d("mytest",
+							"seekChatCount" + chatBean.getSeekChatCount());
+					if (chatBean.getSeekChatCount() == 0) {
+						return;
+					}
+					// createAt是Date类型，timeChatStop为long类型，取值是注意
+					chatBean.setChatList((List<Map<String, Object>>) object
+							.get("seekChats"));
+					log.d("mytest", "seekChats=" + chatBean.getChatList());
+
+					seekChatBeansList = new ArrayList<SeekChatBean>();
+
+					for (int i = 0; i < chatBean.getSeekChatCount(); i++) {
+						SeekChatBean bean = new SeekChatBean();
+						List<Map<String, Object>> members = (List<Map<String, Object>>) chatBean
+								.getChatList().get(i).get("members");
+						bean.setMembers(members);
+						log.d("mytest", "members" + members);
+
+						bean.setConversationId((String) chatBean
+								.getChatList().get(i).get("conversationId"));
+						log.d("mytest",
+								"conversationId" + bean.getConversationId());
+						AVUser avUser = (AVUser) chatBean.getChatList()
+								.get(i).get("creator");
+						bean.setCreator(AVUser.cast(avUser, ObjUser.class));
+						log.d("mytest", "creator" + bean.getCreator());
+						bean.setFolloweeCount((Integer) chatBean
+								.getChatList().get(i).get("followeeCount"));
+						log.d("mytest",
+								"followeeCount" + bean.getFolloweeCount());
+						Date date = (Date) chatBean.getChatList().get(i)
+								.get("createdAt");
+						bean.setCreateAt(date.getTime());
+						log.d("mytest", "createdAt" + bean.getCreateAt());
+						bean.setObjectId((String) chatBean.getChatList()
+								.get(i).get("objectId"));
+						log.d("mytest", "objectId" + bean.getObjectId());
+						bean.setPictureUrl((String) chatBean.getChatList()
+								.get(i).get("pictureUrl"));
+						log.d("mytest", "pictureUrl" + bean.getPictureUrl());
+						bean.setTitle((String) chatBean.getChatList()
+								.get(i).get("title"));
+						log.d("mytest", "title" + bean.getTitle());
+						bean.setTimeChatStop((Long) chatBean.getChatList()
+								.get(i).get("timeChatStop"));
+						log.d("mytest",
+								"timeChatStop" + bean.getTimeChatStop());
+
+						seekChatBeansList.add(bean);
+
+						//缓存觅聊成员
+						List<String> userList=new ArrayList<String>();
+						for(int j=0;j<bean.getMembers().size();j++){
+							userList.add(""+bean.getMembers().get(j).get("userId"));
+						}
+						getMember(userList,""+bean.getConversationId());
+
+					}
+
+					numberAll.setText("" + seekChatBeansList.size());
+					handler.sendEmptyMessage(1);
+
+				}
+
+			}
+		});
 	}
 
 	public void cteatMiliao() {
@@ -740,10 +562,6 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 					log.e("zcq", "申请还没通过");
 					Intent intent = new Intent(getActivity(),
 							ApplyForMiLiaoActivity.class);
-					// Bundle bundle=new Bundle();
-					// bundle.putSerializable("chatBean", chatBean);
-					// intent.putExtras(bundle);
-
 					intent.putExtra("isApply", "" + 1);// 已经申请
 					intent.putExtra("applyId", chatBean.getApplyId());
 					intent.putExtra("CategoryId",
@@ -761,7 +579,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 				intent.putExtra("isApply", "0");
 				intent.putExtra("applyId", chatBean.getApplyId());
 				intent.putExtra("CategoryId", chatBean.getAuthoriseCategoryId());
-				
+
 				log.e("zcq CategoryId"+""+chatBean.getAuthoriseCategoryId());
 				intent.putExtra("ApplyReply", chatBean.getApplyReply());
 				startActivity(intent);
@@ -783,16 +601,36 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 	 */
 	public void isAddconvesition() {
 		List<String> list = new ArrayList<String>();
-		for (int i = 0; i < seekChatBeansList.get(positonNow).getMembers()
-				.size(); i++) {
-			list.add(""
-					+ seekChatBeansList.get(positonNow).getMembers().get(i)
-							.get("userId"));
+		SeekChatBean chatBean = seekChatBeansList.get(positonNow);
+		List<UserAboutBean> aboutlist = userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, chatBean.getConversationId());
+		for (int i = 0; i < aboutlist.size(); i++) {
+			list.add(aboutlist.get(i).getAboutUserId());
 		}
 		for (String string : list) {
 			if (user.getObjectId().equals(string)) {
 				isAdd = true;
 				break;
+			}else{
+				isAdd = false;
+			}
+		}
+		if(isAdd){
+			miliaoImv.setImageResource(R.drawable.miliao_in);
+			List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
+					Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
+			if(memList.size()<5){
+				joinChatTv.setText("等待开启");
+			}else{
+				joinChatTv.setText("进入觅聊");
+			}
+		}else{
+			miliaoImv.setImageResource(R.drawable.chat_navi_btn_joinchat);
+			List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
+					Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
+			if(memList.size()>=500){
+				joinChatTv.setText("人数已满");
+			}else{
+				joinChatTv.setText("加入觅聊");
 			}
 		}
 	}
@@ -813,7 +651,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 		super.onActivityResult(requestCode, resultCode, data);
 
 	}
-	
+
 	/**
 	 * 查询对话成员 插到本地
 	 * 
@@ -822,10 +660,8 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 	 * @date 2015-11-28
 	 */
 	public void getMember(List<String> list,String conversationId) {
-
+		log.d("mytest", "wode====="+list.size());
 		userAboutBeansList = new ArrayList<UserAboutBean>();
-
-	//	List<String> list = covn.getMembers();
 		if (list != null) {
 			for (String string : list) {
 				UserAboutBean item = new UserAboutBean();
@@ -840,9 +676,9 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 		userAboutDao.deleteByType(user.getObjectId(), 2,
 				conversationId);
 		userAboutDao.saveUserAboutList(userAboutBeansList);
-
+		
 	}
-	
-	
+
+
 
 }

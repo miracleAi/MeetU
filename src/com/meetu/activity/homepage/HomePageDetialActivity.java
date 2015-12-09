@@ -314,7 +314,7 @@ public class HomePageDetialActivity extends Activity implements
 		case R.id.join_homepager_detial_img:
 			switch (activityBean.getStatus()) {
 			case 40:
-				Toast.makeText(this, "活动报名已结束", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "活动正在进行中，停止报名", Toast.LENGTH_SHORT).show();
 				break;
 			case 50:
 				if(user.isCompleteUserInfo()){
@@ -329,7 +329,7 @@ public class HomePageDetialActivity extends Activity implements
 				
 				break;
 			case 60:
-				Toast.makeText(this, "活动报名已结束", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "报名已结束", Toast.LENGTH_SHORT).show();
 				break;
 
 			default:
@@ -591,7 +591,7 @@ public class HomePageDetialActivity extends Activity implements
 															|| result == false) {
 														Toast.makeText(
 																getApplicationContext(),
-																"取消失败，请检查网络",
+																"取消点赞失败",
 																1000).show();
 													} else {
 														// 插入到本地数据库 成功
@@ -600,7 +600,7 @@ public class HomePageDetialActivity extends Activity implements
 														// 1);
 														Toast.makeText(
 																getApplicationContext(),
-																"取消点赞成功", 1000)
+																"取消点赞", 1000)
 																.show();
 
 														favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
@@ -635,7 +635,7 @@ public class HomePageDetialActivity extends Activity implements
 															|| result == false) {
 														Toast.makeText(
 																getApplicationContext(),
-																"点赞失败，请检查网络",
+																"点赞失败",
 																1000).show();
 													} else {
 														// 插入到本地数据库 成功

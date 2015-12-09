@@ -191,14 +191,14 @@ public class MemoryPhotoActivity extends Activity implements
 															if (e != null) {
 																log.e("zcq", e);
 															} else if (result) {
-																log.e("zcq",
-																		"取消点赞成功");
+																Toast.makeText(MemoryPhotoActivity.this, "取消点赞", 1000)
+																.show();
 																MemoryWallActivity.handler
 																		.sendEmptyMessage(1);
 
 															} else {
-																log.e("zcq",
-																		"取消点赞失败");
+																Toast.makeText(MemoryPhotoActivity.this, "取消点赞失败", 1000)
+																.show();
 																MemoryWallActivity.handler
 																		.sendEmptyMessage(1);
 															}
@@ -226,12 +226,13 @@ public class MemoryPhotoActivity extends Activity implements
 													if (e != null) {
 														log.e("zcq", e);
 													} else if (result) {
-														log.e("zcq", "点赞成功");
-
+														Toast.makeText(MemoryPhotoActivity.this, "点赞成功", 1000)
+														.show();
 														MemoryWallActivity.handler
 																.sendEmptyMessage(1);
 													} else {
-														log.e("zcq", "点赞失败");
+														Toast.makeText(MemoryPhotoActivity.this, "点赞失败", 1000)
+														.show();
 														MemoryWallActivity.handler
 																.sendEmptyMessage(1);
 													}

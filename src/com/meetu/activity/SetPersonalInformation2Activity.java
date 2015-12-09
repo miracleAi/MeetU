@@ -789,7 +789,7 @@ public class SetPersonalInformation2Activity extends BaseActivity implements
 							// clickBtn.setText(LOAD_SUC);
 
 							Toast.makeText(getApplicationContext(),
-									"save 上传成功", 1000).show();
+									"已保存", 1000).show();
 							Intent intent = new Intent(
 									SetPersonalInformation2Activity.this,
 									MainActivity.class);
@@ -797,7 +797,7 @@ public class SetPersonalInformation2Activity extends BaseActivity implements
 						} else {
 							// clickBtn.setText(LOAD_FAIL);
 							Toast.makeText(getApplicationContext(),
-									"save 上传失败", 1000).show();
+									"保存失败", 1000).show();
 						}
 					}
 				});

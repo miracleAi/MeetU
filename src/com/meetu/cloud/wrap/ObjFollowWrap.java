@@ -76,10 +76,10 @@ public class ObjFollowWrap {
 					callback.callback(null, e);
 					return;
 				}
-				if (null == objects) {
-					callback.callback(null, new AVException(0, "查询关注列表失败"));
-				} else {
+				if (null != objects && objects.size()>0) {
 					callback.callback(objects, null);
+				} else {
+					callback.callback(null, new AVException(0, "未查到相关信息"));
 				}
 			}
 		});

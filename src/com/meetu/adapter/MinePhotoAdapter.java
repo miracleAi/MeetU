@@ -12,9 +12,13 @@ import com.lidroid.xutils.BitmapUtils;
 import com.meetu.MainActivity;
 import com.meetu.activity.mine.FavorListActivity;
 import com.meetu.activity.mine.MinephotoActivity;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjUserCallback;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.object.ObjUserPhoto;
+import com.meetu.cloud.wrap.ObjPraiseWrap;
+import com.meetu.cloud.wrap.ObjUserPhotoWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.entity.PhotoWall;
 import com.meetu.myapplication.MyApplication;
@@ -95,7 +99,6 @@ public class MinePhotoAdapter extends PagerAdapter {
 	public Object instantiateItem(ViewGroup container, int position) {
 		// TODO Auto-generated method stub
 		ObjUserPhoto item = Newslist.get(position);
-
 		log.e("zcq", "" + photoUrl);
 		View view = LayoutInflater.from(mContext).inflate(
 				R.layout.item_minephoto_viewpager, null);
@@ -107,6 +110,7 @@ public class MinePhotoAdapter extends PagerAdapter {
 				.findViewById(R.id.favorNumber_item_minephoto);
 		favorNumber.setText("" + item.getPraiseCount());
 		ImageView img = (ImageView) view.findViewById(R.id.photo_demail_mine);
+		ImageView photoDownImv = (ImageView) view.findViewById(R.id.photo_down_img);
 
 		RelativeLayout.LayoutParams params = (LayoutParams) img
 				.getLayoutParams();
@@ -120,8 +124,10 @@ public class MinePhotoAdapter extends PagerAdapter {
 		}
 
 		if (isMyself == false) {
-			getUserInfo(userId, view);
+			photoDownImv.setVisibility(View.GONE);
+			getUserInfo(item,userId, view);
 		} else {
+			photoDownImv.setVisibility(View.VISIBLE);
 			TextView name = (TextView) view
 					.findViewById(R.id.name_mine_photoview_fullscreen);
 			name.setText("" + userMy.getNameNick());
@@ -129,9 +135,15 @@ public class MinePhotoAdapter extends PagerAdapter {
 					.findViewById(R.id.nameheader_mine_photoview_fullscreen_img);
 			RelativeLayout favorLayout = (RelativeLayout) view
 					.findViewById(R.id.favor_minephoto_mine_rl);
+			ImageView favorImv = (ImageView) view.findViewById(R.id.favor_minephoto_mine);
+			if(item.getPraiseCount()==0){
+				favorImv.setImageResource(R.drawable.mine_photoview_fullscreen_btn_like_nor);
+			}else{
+				favorImv.setImageResource(R.drawable.mine_photoview_fullscreen_btn_like_hl);
+			}
 			if (userMy.getProfileClip() != null) {
 				finalBitmap
-						.display(photoHead, userMy.getProfileClip().getUrl());
+				.display(photoHead, userMy.getProfileClip().getUrl());
 			}
 			favorLayout.setOnClickListener(new View.OnClickListener() {
 
@@ -145,7 +157,6 @@ public class MinePhotoAdapter extends PagerAdapter {
 			});
 
 		}
-
 		container.addView(view);
 		return view;
 	}
@@ -157,60 +168,79 @@ public class MinePhotoAdapter extends PagerAdapter {
 	 * @author lucifer
 	 * @date 2015-11-17
 	 */
-	private void getUserInfo(String objId, final View view) {
+	private void getUserInfo(final ObjUserPhoto photo,String objId, final View view) {
 		ObjUserWrap.getObjUser(objId, new ObjUserInfoCallback() {
 
 			@Override
 			public void callback(ObjUser user, AVException e) {
 				if (e != null) {
 					return;
-				} else if (user != null) {
+				} 
+				if (user != null) {
 					userObjUser = user;
-
+					boolean isFavor = false;
 					TextView name = (TextView) view
 							.findViewById(R.id.name_mine_photoview_fullscreen);
 					name.setText("" + userMy.getNameNick());
 
 					ImageView photoHead = (ImageView) view
 							.findViewById(R.id.nameheader_mine_photoview_fullscreen_img);
-					// bitmapUtils.display(photoHead,
-					// user.getProfileClip().getUrl());
-
-					log.e("zcq", "isMyself==" + isMyself);
-					if (isMyself == true) {
-						log.e("zcq", "wode" + "" + user.getProfileClip());
-						if (userMy.getProfileClip() != null) {
-							finalBitmap.display(photoHead, userMy
-									.getProfileClip().getUrl());
-						}
-					} else {
-						log.e("zcq", "nide");
-						if (userObjUser.getProfileClip() != null) {
-							finalBitmap.display(photoHead, userObjUser
-									.getProfileClip().getUrl());
-						}
-					}
-
-					/**
-					 * viewpager 内部事件监听处理
-					 */
-
-					RelativeLayout favorLayout = (RelativeLayout) view
+					final ImageView favorImv = (ImageView) view.findViewById(R.id.favor_minephoto_mine);
+					final RelativeLayout favorLayout = (RelativeLayout) view
 							.findViewById(R.id.favor_minephoto_mine_rl);
-					favorLayout.setOnClickListener(new View.OnClickListener() {
+					if (userObjUser.getProfileClip() != null) {
+						finalBitmap.display(photoHead, userObjUser
+								.getProfileClip().getUrl());
+					}
+					ObjUserPhotoWrap.queryUserPhotoPraise(photo, userMy, new ObjFunBooleanCallback() {
 
 						@Override
-						public void onClick(View arg0) {
+						public void callback(boolean result, AVException e) {
+							// TODO Auto-generated method stub
+							if(result){
+								favorImv.setImageResource(R.drawable.mine_photoview_fullscreen_btn_like_hl);
+								favorLayout.setOnClickListener(new View.OnClickListener() {
 
-							// 图片点赞 给用户
-							Toast.makeText(mContext, "dianzan", 1000).show();
+									@Override
+									public void onClick(View arg0) {
+										ObjUserPhotoWrap.cancelPraiseUserPhoto(photo, userMy, new ObjFunBooleanCallback() {
+											
+											@Override
+											public void callback(boolean result, AVException e) {
+												// TODO Auto-generated method stub
+												if(result){
+													Toast.makeText(mContext, "取消点赞", 1000).show();
+												}else{
+													Toast.makeText(mContext, "取消点赞失败", 1000).show();
+												}
+											}
+										});
+									}
+								});
+							}else{
+								favorImv.setImageResource(R.drawable.mine_photoview_fullscreen_btn_like_nor);
+								favorLayout.setOnClickListener(new View.OnClickListener() {
 
+									@Override
+									public void onClick(View arg0) {
+										ObjUserPhotoWrap.praiseUserPhoto(photo, userMy, new ObjFunBooleanCallback() {
+
+											@Override
+											public void callback(boolean result, AVException e) {
+												// TODO Auto-generated method stub
+												if(result){
+													Toast.makeText(mContext, "点赞成功", 1000).show();
+												}else{
+													Toast.makeText(mContext, "点赞失败", 1000).show();
+												}
+											}
+										});
+									}
+								});
+							}
 						}
 					});
-
-				} else {
-					return;
-				}
+				} 
 
 			}
 		});

@@ -291,8 +291,6 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 			break;
 		case 1:
 			if (resultCode == getActivity().RESULT_OK) {
-				Toast.makeText(getActivity(), "学校 专业修改成功", Toast.LENGTH_SHORT)
-						.show();
 				String schoolID = data.getExtras().getString("schools");
 				String majorID = data.getExtras().getString("departments");
 				String schoolName = schoolDao.getschoolName(schoolID).get(0)
@@ -315,8 +313,6 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 			break;
 		case 3:
 			if (resultCode == getActivity().RESULT_OK) {
-				Toast.makeText(getActivity(), "专业修改成功", Toast.LENGTH_SHORT)
-						.show();
 				String major = data.getExtras().getString("department");
 				usermajor.setText(schoolDao
 						.getDepartmentsName("" + user.getSchoolNum(), major)
@@ -326,8 +322,6 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 			break;
 		case 4:
 			if (resultCode == getActivity().RESULT_OK) {
-				Toast.makeText(getActivity(), "家乡修改成功", Toast.LENGTH_SHORT)
-						.show();
 				String hometown = data.getExtras().getString("city");
 				userhometown.setText(hometown);
 			}

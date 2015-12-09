@@ -15,9 +15,12 @@ import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjUserCallback;
+import com.meetu.cloud.callback.ObjUserShieldCallback;
+import com.meetu.cloud.object.ObjShieldUser;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjFollowWrap;
+import com.meetu.cloud.wrap.ObjShieldUserWrap;
 import com.meetu.common.ChatConnection;
 import com.meetu.common.Constants;
 import com.meetu.db.TabDb;
@@ -26,6 +29,7 @@ import com.meetu.fragment.MineUpfragment;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.sqlite.UserDao;
+import com.meetu.sqlite.UserShieldDao;
 import com.meetu.tools.SystemBarTintManager;
 import com.meetu.view.ScrollTabHolder;
 
@@ -70,6 +74,7 @@ public class MainActivity extends FragmentActivity implements
 		AVUser currentUser = AVUser.getCurrentUser();
 	UserAboutDao userAboutDao;
 	UserDao userDao;
+	UserShieldDao shieldDao;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -103,11 +108,12 @@ public class MainActivity extends FragmentActivity implements
 		ChatConnection.isConnection();
 		userAboutDao=new UserAboutDao(this);
 		userDao=new UserDao(this);
+		shieldDao = new UserShieldDao(this);
 		if (currentUser != null) {
 			// 强制类型转换
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
-		
+		getShieldList();
 		getMyFollowUser();
 
 	}
@@ -223,7 +229,22 @@ public class MainActivity extends FragmentActivity implements
 			finish();
 		}
 	}
-	
+	/**
+	 * 湖区屏蔽我的用户的列表
+	 * */
+	public void getShieldList(){
+		ObjShieldUserWrap.queryShieldList(user, new ObjUserShieldCallback() {
+			
+			@Override
+			public void callback(List<ObjShieldUser> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if(objects != null){
+					shieldDao.deleteByUser(user.getObjectId());
+					shieldDao.saveShieldList(objects);
+				}
+			}
+		});
+	}
 	/**
 	 * 获得我关注过的用户的列表
 	 *   
@@ -243,7 +264,6 @@ public class MainActivity extends FragmentActivity implements
 				if(objects==null){
 					
 				}else{
-					
 					log.e("zcq", "objects.size()=="+objects.size());
 					ArrayList<UserAboutBean> userAboutBeanList;
 					userAboutBeanList=new ArrayList<UserAboutBean>();

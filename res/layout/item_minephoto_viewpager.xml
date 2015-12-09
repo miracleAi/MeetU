@@ -42,21 +42,19 @@
             android:id="@+id/favor_minephoto_mine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            
             android:layout_marginRight="8dp"
             android:layout_toLeftOf="@+id/favorNumber_item_minephoto"
-            android:src="@drawable/mine_photoview_fullscreen_btn_like_hl" />
+            android:src="@drawable/mine_photoview_fullscreen_btn_like_nor" />
 
         <TextView
             android:id="@+id/favorNumber_item_minephoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-           
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/imageView3"
+            android:layout_toLeftOf="@+id/photo_down_img"
             android:text="1280" />
          <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/photo_down_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"            
             android:layout_alignParentRight="true"

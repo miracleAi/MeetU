@@ -190,16 +190,16 @@ public class ReportActivity extends Activity implements OnClickListener {
 				public void callback(boolean result, AVException e) {
 					// TODO Auto-generated method stub
 					if (e != null) {
-						Toast.makeText(getApplicationContext(), "操作失败", 1000)
+						Toast.makeText(getApplicationContext(), "举报失败", 1000)
 								.show();
 						return;
 					}
 					if (result) {
-						Toast.makeText(getApplicationContext(), "举报成功", 1000)
+						Toast.makeText(getApplicationContext(), "小U收到举报啦", 1000)
 								.show();
 						finish();
 					} else {
-						Toast.makeText(getApplicationContext(), "操作失败", 1000)
+						Toast.makeText(getApplicationContext(), "举报失败", 1000)
 								.show();
 					}
 				}

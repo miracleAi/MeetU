@@ -344,20 +344,6 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 	 */
 
 	public void cropPhoto(Uri uri) {
-		// //调用拍照的裁剪功能
-		// Intent intent=new Intent("com.android.camera.action.CROP");
-		// intent.setDataAndType(uri, "image/*");
-		// intent.putExtra("crop", "true");
-		// //裁剪框的比例，1：1
-		// intent.putExtra("aspectX", 1);
-		// intent.putExtra("aspectY", 1);
-		// // // outputX outputY 是裁剪后图片宽高
-		// intent.putExtra("outputX", 550);
-		// intent.putExtra("outputY", 516);
-		// intent.putExtra("return-data",true);
-		// // log.e("lucifer",
-		// "PhotoWidth="+PhotoWidth+"  PhotoHight"+PhotoHight);
-		// startActivityForResult(intent,33);
 
 		// 调用拍照的裁剪功能
 		Intent intent = new Intent("com.android.camera.action.CROP");
@@ -444,8 +430,10 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 						// TODO Auto-generated method stub
 						if (e != null) {
 							// clickBtn.setText(LOADFAIL);
+							Toast.makeText(CreationChatActivity.this, "觅聊创建失败", 1000).show();
 							return;
 						} else {
+							Toast.makeText(CreationChatActivity.this, "觅聊已创建", 1000).show();
 							Intent intent = getIntent();
 							setResult(RESULT_OK, intent);
 							finish();

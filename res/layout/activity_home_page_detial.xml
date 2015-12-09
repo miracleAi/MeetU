@@ -425,7 +425,7 @@
             android:id="@+id/back_homepage_detial"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/mine_alter_btn_back" />
+            android:src="@drawable/navi_btn_back_white" />
     </RelativeLayout>
 
     <TextView

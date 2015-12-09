@@ -1021,7 +1021,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 				if (result) {
 					// clickBtn.setText(LOADSUC);
 					log.e("zcq", "发送成功");
-					Toast.makeText(getActivity(), "发送成功", Toast.LENGTH_SHORT)
+					Toast.makeText(getActivity(), "已发送", Toast.LENGTH_SHORT)
 							.show();
 				} else {
 					// clickBtn.setText(LOADFAIL);

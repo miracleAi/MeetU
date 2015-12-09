@@ -158,7 +158,7 @@ public class HomePagefragment extends Fragment implements
 									// TODO Auto-generated method stub
 									if (e != null || result == false) {
 										Toast.makeText(getActivity(),
-												"点赞失败，请检查网络", 1000).show();
+												"点赞失败", 1000).show();
 									} else {
 										// 插入到本地数据库 成功
 										activityDao.updateIsFavor(user
@@ -189,13 +189,13 @@ public class HomePagefragment extends Fragment implements
 										AVException e) {
 									if (e != null || result == false) {
 										Toast.makeText(getActivity(),
-												"取消失败，请检查网络", 1000).show();
+												"取消点赞失败", 1000).show();
 									} else {
 										// 插入到本地数据库 成功
 										activityDao.updateIsFavor(user
 												.getObjectId(), actyListCache
 												.get(position).getActyId(), 1);
-										Toast.makeText(getActivity(), "取消点赞成功",
+										Toast.makeText(getActivity(), "取消点赞",
 												1000).show();
 										// holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
 										actyListCache.clear();
@@ -402,7 +402,6 @@ public class HomePagefragment extends Fragment implements
 		intent.putExtras(bundle);
 		log.e("position", "position=" + position);
 		startActivity(intent);
-		// Toast.makeText(getActivity(), ""+id, Toast.LENGTH_SHORT).show();
 
 	}
 
@@ -439,7 +438,6 @@ public class HomePagefragment extends Fragment implements
 
 	@Override
 	public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-		// Toast.makeText(getActivity(), "下拉加载数据", Toast.LENGTH_SHORT).show();
 		pageNo = 1;
 		// load(1, pageSize);
 		loadData();
@@ -447,7 +445,6 @@ public class HomePagefragment extends Fragment implements
 
 	@Override
 	public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-		// Toast.makeText(getActivity(), "上拉加载数据", Toast.LENGTH_SHORT).show();
 		pageNo++;
 		load(pageNo, pageSize);
 
@@ -494,7 +491,6 @@ public class HomePagefragment extends Fragment implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.usernumber_homepage_rl:
-			// Toast.makeText(getActivity(), "进入报名列表",
 			// Toast.LENGTH_SHORT).show();
 			// TODO 要传入实时滑动到的那个activity
 			Intent intent = new Intent(getActivity(), JoinUsersActivity.class);

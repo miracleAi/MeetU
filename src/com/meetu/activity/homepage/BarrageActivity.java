@@ -101,7 +101,7 @@ public class BarrageActivity extends Activity {
 	// 父组件的高度
 	private int validHeightSpace;
 	// 控件相关
-	private ImageView headPhoto;
+	private ImageView headPhoto,barrageBack;
 	private TextView uName, uContent, topTitle, timeTv;
 	private RelativeLayout back, userJoinList;
 	// 底部布局
@@ -166,7 +166,16 @@ public class BarrageActivity extends Activity {
 		bottomRl = (RelativeLayout) findViewById(R.id.bottom_bottom_barrage_rl);
 		bottomTv = (TextView) findViewById(R.id.bottom_tv);
 		bottomImv = (ImageView) findViewById(R.id.bottom_arrow);
+		barrageBack = (ImageView) findViewById(R.id.back_barrage_img);
 		
+		barrageBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
 	}
 
 	private void initChange() {
@@ -517,7 +526,7 @@ public class BarrageActivity extends Activity {
 	public BarrageMsgBean getBottomBean() {
 		return bottomBean;
 	}
-
+	
 	public void initBottom(BarrageMsgBean bean, boolean isClick) {
 		if (null != bean.getUserAvator() && !("").equals(bean.getUserAvator())) {
 			bitmapUtils.display(headPhoto, bean.getUserAvator());
@@ -535,7 +544,7 @@ public class BarrageActivity extends Activity {
 		if (isClick) {
 			handler.postDelayed(bottomRunnable, 8000);
 		} else {
-			handler.postDelayed(bottomRunnable, 5000);
+			handler.postDelayed(bottomRunnable, 4000);
 		}
 	}
 

@@ -266,7 +266,7 @@ public class ChangeCityActivity extends BaseActivity implements
 				@Override
 				public void callback(boolean result, AVException e) {
 					if (result) {
-						Toast.makeText(getApplicationContext(), "家乡修改成功", 1000)
+						Toast.makeText(getApplicationContext(), "已保存", 1000)
 								.show();
 						Intent intent = new Intent();
 						intent.putExtra("city", mCurrentProviceName
@@ -277,13 +277,13 @@ public class ChangeCityActivity extends BaseActivity implements
 								+ mCurrentCityName + mCurrentDistrictName);
 
 					} else {
-						Toast.makeText(getApplicationContext(), "家乡修改失败", 1000)
+						Toast.makeText(getApplicationContext(), "保存失败", 1000)
 								.show();
 					}
 				}
 			});
 		} else {
-			Toast.makeText(getApplicationContext(), "修改不成功", 1000).show();
+			Toast.makeText(getApplicationContext(), "保存失败", 1000).show();
 		}
 
 	}

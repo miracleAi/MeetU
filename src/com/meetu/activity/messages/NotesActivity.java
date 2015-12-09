@@ -39,6 +39,7 @@ import com.meetu.fragment.MiliaoChannelFragment;
 import com.meetu.fragment.NotesChannelFragment;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.ChatmsgsDao;
+import com.meetu.sqlite.UserShieldDao;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -70,7 +71,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class NotesActivity extends FragmentActivity implements
-		OnPageChangeListener, OnClickListener {
+OnPageChangeListener, OnClickListener {
 	private ViewPager mViewPager;
 	private BoardPageFragmentAdapter adapter = null;
 	private List<Fragment> fragmentList = new ArrayList<Fragment>();
@@ -103,7 +104,7 @@ public class NotesActivity extends FragmentActivity implements
 	private String userId = "";// 对方id
 
 	private FinalBitmap finalBitmap;
-	// 标记是否已拉黑改用户
+	// 标记是否屏蔽此用户
 	private boolean isShield = false;
 
 	List<ObjScrip> objScripsList = new ArrayList<ObjScrip>();
@@ -111,9 +112,10 @@ public class NotesActivity extends FragmentActivity implements
 	ChatmsgsDao chatmsgsDao;
 
 	MessageactivityHandler msgHandler;
-	
+
 	private ImageView favorImg;
 	List<UserAboutBean> userAboutBeansList=new ArrayList<UserAboutBean>();
+	private UserShieldDao shieldDao;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +127,7 @@ public class NotesActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_notes);
 		objScripBox = (ObjScripBox) getIntent().getExtras().getSerializable(
 				"ObjScripBox");
+		shieldDao = new UserShieldDao(getApplicationContext());
 		if (currentUser != null) {
 			user = AVUser.cast(currentUser, ObjUser.class);
 		} else {
@@ -159,8 +162,8 @@ public class NotesActivity extends FragmentActivity implements
 		// initViewPager();
 
 		getScrips(objScripBox);
-		
-		
+
+
 
 	}
 
@@ -205,8 +208,8 @@ public class NotesActivity extends FragmentActivity implements
 		isShowLayout.setOnClickListener(this);
 		isShowImg = (ImageView) findViewById(R.id.isShowScript_notes_img);
 		favorImg=(ImageView) findViewById(R.id.favor_notes_top_img);
-		
-		
+
+
 		if(userAboutBeansList==null||userAboutBeansList.size()==0){
 			favorImg.setVisibility(View.GONE);
 		}else{
@@ -293,6 +296,7 @@ public class NotesActivity extends FragmentActivity implements
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+
 			break;
 
 		case R.id.isShowScript_notes_rl:
@@ -300,17 +304,17 @@ public class NotesActivity extends FragmentActivity implements
 			if (isShow == true) {
 				isShow = false;
 				isShowImg
-						.setImageResource(R.drawable.massage_letters_show_btn_hide_hl);
+				.setImageResource(R.drawable.massage_letters_show_btn_hide_hl);
 				for (int i = 0; i < objScripsList.size(); i++) {
 					// 暴力 拿到 fragment
 					((NotesChannelFragment) fragmentList.get(i))
-							.removeAllView();
+					.removeAllView();
 				}
 
 			} else {
 				isShow = true;
 				isShowImg
-						.setImageResource(R.drawable.massage_letters_show_btn_hide_nor);
+				.setImageResource(R.drawable.massage_letters_show_btn_hide_nor);
 				for (int i = 0; i < objScripsList.size(); i++) {
 					// 暴力 拿到 fragment
 					((NotesChannelFragment) fragmentList.get(i)).showAllView();
@@ -396,24 +400,24 @@ public class NotesActivity extends FragmentActivity implements
 			ObjShieldUserWrap.shieldUser(shieldUser,
 					new ObjFunBooleanCallback() {
 
-						@Override
-						public void callback(boolean result, AVException e) {
-							// TODO Auto-generated method stub
-							if (e != null) {
-								Toast.makeText(getApplicationContext(), "操作失败",
-										1000).show();
-								return;
-							}
-							if (result) {
-								isShield = true;
-								Toast.makeText(getApplicationContext(), "已拉黑",
-										1000).show();
-							} else {
-								Toast.makeText(getApplicationContext(), "操作失败",
-										1000).show();
-							}
-						}
-					});
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if (e != null) {
+						Toast.makeText(getApplicationContext(), "拉黑失败",
+								1000).show();
+						return;
+					}
+					if (result) {
+						isShield = true;
+						Toast.makeText(getApplicationContext(), "已拉黑",
+								1000).show();
+					} else {
+						Toast.makeText(getApplicationContext(), "拉黑失败",
+								1000).show();
+					}
+				}
+			});
 		} catch (AVException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -430,24 +434,24 @@ public class NotesActivity extends FragmentActivity implements
 			ObjShieldUserWrap.unShieldUser(user, otherUser,
 					new ObjFunBooleanCallback() {
 
-						@Override
-						public void callback(boolean result, AVException e) {
-							// TODO Auto-generated method stub
-							if (e != null) {
-								Toast.makeText(getApplicationContext(), "操作失败",
-										1000).show();
-								return;
-							}
-							if (result) {
-								isShield = false;
-								Toast.makeText(getApplicationContext(),
-										"已取消拉黑", 1000).show();
-							} else {
-								Toast.makeText(getApplicationContext(), "取消失败",
-										1000).show();
-							}
-						}
-					});
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if (e != null) {
+						Toast.makeText(getApplicationContext(), "取消拉黑失败",
+								1000).show();
+						return;
+					}
+					if (result) {
+						isShield = false;
+						Toast.makeText(getApplicationContext(),
+								"已取消拉黑", 1000).show();
+					} else {
+						Toast.makeText(getApplicationContext(), "取消拉黑失败",
+								1000).show();
+					}
+				}
+			});
 		} catch (AVException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -483,7 +487,7 @@ public class NotesActivity extends FragmentActivity implements
 		View curFocusView = getCurrentFocus();
 		if (curFocusView != null) {
 			((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
-					.hideSoftInputFromWindow(curFocusView.getWindowToken(), 0);
+			.hideSoftInputFromWindow(curFocusView.getWindowToken(), 0);
 		}
 	}
 
@@ -587,7 +591,7 @@ public class NotesActivity extends FragmentActivity implements
 	 * 
 	 */
 	public class MessageactivityHandler extends
-			AVIMTypedMessageHandler<AVIMTypedMessage> {
+	AVIMTypedMessageHandler<AVIMTypedMessage> {
 
 		@Override
 		public void onMessage(AVIMTypedMessage message,

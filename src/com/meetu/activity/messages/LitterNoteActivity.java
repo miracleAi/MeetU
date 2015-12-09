@@ -17,6 +17,7 @@ import com.meetu.cloud.object.ObjScripBox;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjScriptWrap;
 import com.meetu.entity.LitterNotes;
+import com.meetu.sqlite.UserShieldDao;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +31,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 public class LitterNoteActivity extends Activity implements
 		OnLitterNotesItemClickCallBack, OnClickListener {
@@ -48,6 +50,7 @@ public class LitterNoteActivity extends Activity implements
 	private List<ObjScripBox> objScripBoxList = new ArrayList<ObjScripBox>();
 
 	private List<ObjUser> objUsersList = new ArrayList<ObjUser>();// 数组，包含小纸条发送双方
+	private UserShieldDao shieldDao;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class LitterNoteActivity extends Activity implements
 		}
 
 		// loadData();
+		shieldDao = new UserShieldDao(this);
 		getScripBoxs();
 		initView();
 		initAdapter();
@@ -89,21 +93,6 @@ public class LitterNoteActivity extends Activity implements
 
 	}
 
-	private void loadData() {
-		// TODO Auto-generated method stub
-		// LitterNotes item=new LitterNotes();
-		// mdata.add(item);
-		// LitterNotes item2=new LitterNotes();
-		// mdata.add(item2);
-		// LitterNotes item3=new LitterNotes();
-		// mdata.add(item3);
-		// mdata.add(item3);
-		// mdata.add(item3);
-		// mdata.add(item3);
-		// mdata.add(item3);
-		// mdata.add(item3);
-
-	}
 
 	/**
 	 * item 点击
@@ -111,12 +100,22 @@ public class LitterNoteActivity extends Activity implements
 	@Override
 	public void onItemClick(int id) {
 		log.e("lucifer", "id=" + id);
-		Intent intent = new Intent(this, NotesActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putSerializable("ObjScripBox", objScripBoxList.get(id));
-		intent.putExtras(bundle);
-		startActivity(intent);
-
+		boolean isShield = false;
+		ObjScripBox box = objScripBoxList.get(id);
+		if(user.getObjectId().equals(box.getUsers().get(0))){
+			isShield = shieldDao.queryIsShield(box.getUsers().get(1).getObjectId(), user.getObjectId());
+		}else{
+			isShield = shieldDao.queryIsShield(objScripBoxList.get(id).getUsers().get(0).getObjectId(), user.getObjectId());
+		}
+		if(isShield){
+			Toast.makeText(LitterNoteActivity.this, "您已被对方用户屏蔽", 1000).show();
+		}else{
+			Intent intent = new Intent(this, NotesActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putSerializable("ObjScripBox", box);
+			intent.putExtras(bundle);
+			startActivity(intent);
+		}
 	}
 
 	@Override

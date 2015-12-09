@@ -76,7 +76,6 @@ public class ChangeNameActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		// 点击确定
 		case R.id.mine_changename_wancheng_rl:
-
 			completeInfo(user);
 
 			break;
@@ -119,14 +118,14 @@ public class ChangeNameActivity extends Activity implements OnClickListener {
 			@Override
 			public void callback(boolean result, AVException e) {
 				if (result) {
-					Toast.makeText(getApplicationContext(), "save 名字修改成功", 1000)
+					Toast.makeText(getApplicationContext(), "已保存", 1000)
 							.show();
 					Intent intent = new Intent();
 					intent.putExtra("name", nameEditText.getText().toString());
 					ChangeNameActivity.this.setResult(RESULT_OK, intent);
 					finish();
 				} else {
-					Toast.makeText(getApplicationContext(), "save 名字修改失败", 1000)
+					Toast.makeText(getApplicationContext(), "保存失败", 1000)
 							.show();
 				}
 			}

@@ -23,8 +23,11 @@ public class UserShieldDao {
 	}
 
 	// 插入列表
-	public void saveShieldList(ArrayList<ObjShieldUser> list) {
+	public void saveShieldList(List<ObjShieldUser> list) {
 		SQLiteDatabase sdb = helper.getWritableDatabase();
+		if(list.size() == 0){
+			return;
+		}
 		for (int i = 0; i < list.size(); i++) {
 			ObjShieldUser objShieldUser = list.get(i);
 			UserShieldBean bean = new UserShieldBean();
@@ -38,7 +41,6 @@ public class UserShieldDao {
 		}
 		sdb.close();
 	}
-
 	// 查询是否被某用户屏蔽
 	public boolean queryIsShield(String userId, String shieldUserId) {
 		SQLiteDatabase sdb = helper.getWritableDatabase();
@@ -57,7 +59,7 @@ public class UserShieldDao {
 	// 根据用户清除屏蔽列表缓存
 	public void deleteByUser(String userId) {
 		SQLiteDatabase sdb = helper.getWritableDatabase();
-		sdb.delete(Constants.USER_SHIELD_TB, Constants.USERID + "=?",
+		sdb.delete(Constants.USER_SHIELD_TB, Constants.SHIELD_USER_ID + "=?",
 				new String[] { userId });
 		sdb.close();
 	}

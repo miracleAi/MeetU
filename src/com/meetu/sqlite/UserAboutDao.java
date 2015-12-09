@@ -33,6 +33,16 @@ public class UserAboutDao {
 		}
 		sdb.close();
 	}
+	public void saveUserAboutBean(UserAboutBean bean) {
+		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
+		ContentValues cv = new ContentValues();
+		cv.put(Constants.USERID, bean.getUserId());
+		cv.put(Constants.ABOUTTYPE, bean.getAboutType());
+		cv.put(Constants.ABOUTUSERID, bean.getAboutUserId());
+		cv.put(Constants.ABOUTCOLECTIONID, bean.getAboutColetctionId());
+		sdb.insert(Constants.USERABOUT_CACHE_TB, null, cv);
+		sdb.close();
+	}
 
 	// 查询指定集合
 	public ArrayList<UserAboutBean> queryUserAbout(String userId,
@@ -99,7 +109,7 @@ public class UserAboutDao {
 	 * @date 2015-12-4
 	 */
 	public void deleteUserTypeUserId(String userId,int aboutType,String convercationId,String deleteUserId){
-		
+
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
 		sdb.delete(Constants.USERABOUT_CACHE_TB, Constants.USERID
 				+ "=? and " + Constants.ABOUTTYPE + "=? and " + Constants.ABOUTUSERID + "=?", new String[] {
@@ -107,8 +117,8 @@ public class UserAboutDao {
 		sdb.close();
 		log.e("zcq", "删除数据库成员成功");
 	}
-	
-	
+
+
 	// 查询参加活动并且我关注的人
 	/*
 	 * public ArrayList<UserAboutBean> queryOrderAndFollowUser(String userId,int

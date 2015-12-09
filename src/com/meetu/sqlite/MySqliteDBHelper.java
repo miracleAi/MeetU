@@ -245,7 +245,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		userSb.append(")");
 		db.execSQL(userSb.toString());
 		/**
-		 * 首页活动缓存表
+		 * 屏蔽我的人缓存表
 		 * */
 		StringBuffer userShieldTb = new StringBuffer();
 		userShieldTb.append("create table if not exists ");
