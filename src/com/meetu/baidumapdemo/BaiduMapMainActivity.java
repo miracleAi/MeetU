@@ -106,6 +106,8 @@ public class BaiduMapMainActivity extends Activity {
 		LocationLongtitude = Double.valueOf(activityBean
 				.getLocationLongtitude()) / 100000000;
 		LocationLatitude = Double.valueOf(activityBean.getLocationLatitude()) / 100000000;
+		
+		log.e("zcq", "LocationLongtitude"+LocationLongtitude+"LocationLatitude"+LocationLatitude);
 		this.context = this;
 		loadInfo();
 		initView();
@@ -178,6 +180,8 @@ public class BaiduMapMainActivity extends Activity {
 				mMarkerLy.setVisibility(View.GONE);
 			}
 		});
+		
+		addOverlays(infoList);;
 
 	}
 
@@ -194,16 +198,16 @@ public class BaiduMapMainActivity extends Activity {
 	}
 
 	private void initkongjian() {
-		addressButton = (Button) super
-				.findViewById(R.id.address_baidumap_detial);
-		addressButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				addOverlays(infoList);
-
-			}
-		});
+//		addressButton = (Button) super
+//				.findViewById(R.id.address_baidumap_detial);
+//		addressButton.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				addOverlays(infoList);
+//
+//			}
+//		});
 		back = (ImageView) super.findViewById(R.id.back_baidumap);
 		back.setOnClickListener(new OnClickListener() {
 

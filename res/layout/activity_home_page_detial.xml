@@ -183,6 +183,7 @@
 
 
 				<RelativeLayout
+				     android:id="@+id/userNumber_homePagedetial_rl"
 				    android:layout_width="38dp"
                     android:layout_height="38dp"              
                     android:background="@drawable/acty_show_btn_numberofpeople_nor">

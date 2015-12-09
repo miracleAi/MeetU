@@ -117,6 +117,7 @@ public class HomePageDetialActivity extends Activity implements
 	private boolean isCancleFavorNow=false;//判断是否在当前界面操作了取消点赞
 	
 	private TextView timeTextView;
+	private RelativeLayout userLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -273,6 +274,19 @@ public class HomePageDetialActivity extends Activity implements
 		
 		timeTextView.setText(DateUtils.getActivityTimeStart(activityBean.getTimeStart())+"~"
 				+DateUtils.getActivityTimeStop(activityBean.getTimeStop()));
+		userLayout=(RelativeLayout) findViewById(R.id.userNumber_homePagedetial_rl);
+		
+		userLayout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				Intent intent=new Intent(HomePageDetialActivity.this,JoinUsersActivity.class);
+				intent.putExtra("activityBean", activityBean);
+				startActivity(intent);
+				
+			}
+		});
+		
 	}
 
 	/**
