@@ -5,6 +5,7 @@ import java.util.List;
 
 import cc.imeetu.R;
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.activity.ChooseSchoolActivity;
@@ -14,7 +15,9 @@ import com.meetu.activity.mine.ChangeMajorActivity;
 import com.meetu.activity.mine.ChangeNameActivity;
 import com.meetu.activity.mine.ChangeSchoolActivity;
 import com.meetu.activity.mine.ChangexingzuoActivity;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.SchoolDao;
 import com.meetu.entity.Schools;
 import com.meetu.sqlite.CityDao;
@@ -293,13 +296,41 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 			if (resultCode == getActivity().RESULT_OK) {
 				String schoolID = data.getExtras().getString("schools");
 				String majorID = data.getExtras().getString("departments");
-				String schoolName = schoolDao.getschoolName(schoolID).get(0)
+				final String schoolName = schoolDao.getschoolName(schoolID).get(0)
 						.getUnivsNameString();
-				String majorName = schoolDao
+				final String majorName = schoolDao
 						.getDepartmentsName(schoolID, majorID).get(0)
 						.getDepartmentName();
-				userschool.setText(schoolName);
-				usermajor.setText(majorName);
+				user.setSchool(schoolName);
+				// 学校编码，查询数据库
+				user.setSchoolNum(1001);
+				// 学校所在地编码，查数据库
+				user.setSchoolLocation(Long.valueOf(schoolID));
+				// 此处为专业分类名称
+				user.setDepartment(majorName);
+				// 专业分类编码，数据库查询
+				user.setDepartmentId(Integer.valueOf(majorID));
+				ObjUserWrap.completeUserInfo(user, new ObjFunBooleanCallback() {
+					
+					@Override
+					public void callback(boolean result, AVException e) {
+						// TODO Auto-generated method stub
+						if(e!=null){
+							Toast.makeText(getActivity(), "修改失败", Toast.LENGTH_SHORT).show();
+							return;
+						}
+						if(result){
+							Toast.makeText(getActivity(), "修改成功", Toast.LENGTH_SHORT).show();
+							userschool.setText(schoolName);
+							usermajor.setText(majorName);
+						}else{
+							Toast.makeText(getActivity(), "修改失败", Toast.LENGTH_SHORT).show();
+						}
+						
+					}
+				});
+				
+				
 			}
 			break;
 		case 2:

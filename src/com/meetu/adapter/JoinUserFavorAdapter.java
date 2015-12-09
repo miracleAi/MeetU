@@ -7,16 +7,19 @@ import net.tsz.afinal.FinalBitmap;
 
 import cc.imeetu.R;
 
+import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.entity.Huodong;
 import com.meetu.entity.User;
 import com.meetu.myapplication.MyApplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -56,7 +59,7 @@ public class JoinUserFavorAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
-		ObjUser item = joinUsersList.get(position);
+		final ObjUser item = joinUsersList.get(position);
 
 		if (convertView == null) {
 			holder = new ViewHolder();
@@ -77,7 +80,20 @@ public class JoinUserFavorAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		finalBitmap.display(holder.ivImgUrl, item.getProfileClip().getUrl());
+		if(item.getProfileClip()!=null){
+			finalBitmap.display(holder.ivImgUrl, item.getProfileClip().getUrl());
+		}
+		holder.ivImgUrl.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent=new Intent(mContext,UserPagerActivity.class);
+				intent.putExtra("userId", ""+item.getObjectId());
+				mContext.startActivity(intent);
+			}
+		});
+		
 		holder.tvName.setText("" + item.getNameNick());
 		holder.tvSchool.setText("" + item.getSchool());
 		holder.tvWeizhi.setText("" + position);

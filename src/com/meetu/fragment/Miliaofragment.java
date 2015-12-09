@@ -631,6 +631,7 @@ OnClickListener {
 				joinChatTv.setText("人数已满");
 			}else{
 				joinChatTv.setText("加入觅聊");
+				isAdd=false;
 			}
 		}
 	}

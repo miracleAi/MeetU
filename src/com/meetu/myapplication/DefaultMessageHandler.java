@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
@@ -62,6 +63,8 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		Chatmsgs chatBean = new Chatmsgs();
 		int msgType = (Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
 		int derection = ChatMsgUtils.getDerection(msg.getMessageIOType());
+		
+		log.e("zcq ", "application 接收到文本消息 "+"msgType =="+msgType+" derection=="+derection);
 		if (msgType == Constants.SHOW_SCRIPT) {
 			chatBean.setChatMsgType(Constants.SHOW_SCRIPT);
 			String script = (String) msg.getAttrs().get(Constants.SCRIP_ID);
@@ -78,6 +81,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 					&& derection == Constants.IOTYPE_IN) {
 				chatBean.setChatMsgType(Constants.SHOW_RECV_TEXT);
 			} else {
+				
 				chatBean.setChatMsgType(msgType);
 			}
 			boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
@@ -110,10 +114,13 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		int derection = ChatMsgUtils.getDerection(msg.getMessageIOType());
 		if (msgType == Constants.SHOW_IMG && derection == Constants.IOTYPE_OUT) {
 			chatBean.setChatMsgType(Constants.SHOW_SEND_IMG);
+			log.e("zcq", "application"+"图片msgType插入=="+Constants.SHOW_SEND_IMG);
 		} else if (msgType == Constants.SHOW_IMG
 				&& derection == Constants.IOTYPE_IN) {
 			chatBean.setChatMsgType(Constants.SHOW_RECV_IMG);
+			log.e("zcq", "application"+"图片msgType插入=="+Constants.SHOW_RECV_IMG);
 		} else {
+			log.e("zcq", "application"+"图片msgType插入=="+msgType);
 			chatBean.setChatMsgType(msgType);
 		}
 		chatBean.setUid(AVUser.getCurrentUser().getObjectId());

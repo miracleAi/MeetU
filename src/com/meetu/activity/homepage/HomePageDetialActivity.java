@@ -13,6 +13,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+
 import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.adapter.PhotoPagerAdapter;
 import com.meetu.baidumapdemo.BaiduMapMainActivity;
@@ -25,6 +26,7 @@ import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityCover;
 import com.meetu.cloud.object.ObjActivityPhoto;
 import com.meetu.cloud.object.ObjUser;
+
 import com.meetu.cloud.wrap.ObjActivityCoverWrap;
 import com.meetu.cloud.wrap.ObjActivityOrderWrap;
 import com.meetu.cloud.wrap.ObjActivityPhotoWrap;
@@ -33,6 +35,8 @@ import com.meetu.common.PerfectInformation;
 import com.meetu.entity.PhotoWall;
 import com.meetu.entity.Photolunbo;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.ActivityDao;
+import com.meetu.tools.DateUtils;
 import com.meetu.tools.DensityUtil;
 import com.meetu.view.MyScrollView;
 import com.meetu.view.MyScrollView.OnScrollListener;
@@ -40,6 +44,7 @@ import com.meetu.view.MyScrollView.OnScrollListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.R.bool;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -103,6 +108,15 @@ public class HomePageDetialActivity extends Activity implements
 	ArrayList<ObjUser> userList = new ArrayList<ObjUser>();
 
 	private FinalBitmap finalBitmap;
+	
+	private RelativeLayout favorLayout;
+	private ActivityDao activityDao;
+	
+	private boolean isFavor=false;//是否对该活动点赞
+	private boolean isFavorNow=false;//判断是否在当前界面操作了点赞
+	private boolean isCancleFavorNow=false;//判断是否在当前界面操作了取消点赞
+	
+	private TextView timeTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +133,7 @@ public class HomePageDetialActivity extends Activity implements
 			// 强制类型转换
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
+		activityDao=new ActivityDao(this);
 		MyApplication app = (MyApplication) this.getApplicationContext();
 		finalBitmap = app.getFinalBitmap();
 		log.e("zcq", "activityBean" + activityBean.getLocationLongtitude()
@@ -131,7 +146,7 @@ public class HomePageDetialActivity extends Activity implements
 		initLoad();
 		mhighty = DensityUtil.dip2px(this, 250 - 44);
 		// 点赞相关处理
-		isFavor(user, objActivity);
+		isFavorActivity(user, objActivity);
 		queryOrderUsers(objActivity);
 	}
 
@@ -213,6 +228,8 @@ public class HomePageDetialActivity extends Activity implements
 				.findViewById(R.id.top_homepage_detial_rl);
 		titleTop = (TextView) super
 				.findViewById(R.id.title_top_homepager_detial_tv);
+		
+		titleTop.setText("" + activityBean.getTitle());
 
 		address = (TextView) super
 				.findViewById(R.id.address_home_page_detial_tv);
@@ -249,6 +266,13 @@ public class HomePageDetialActivity extends Activity implements
 				.findViewById(R.id.userhead_seven_heomePageDetial_img);
 		userNumber = (TextView) super
 				.findViewById(R.id.userNumber_homePagedetial_tv);
+		favorLayout=(RelativeLayout) findViewById(R.id.favor_home_page_detial_rl);
+		favorLayout.setOnClickListener(this);
+		timeTextView=(TextView) findViewById(R.id.time_homepage_detial_tv);
+		
+		
+		timeTextView.setText(DateUtils.getActivityTimeStart(activityBean.getTimeStart())+"~"
+				+DateUtils.getActivityTimeStop(activityBean.getTimeStop()));
 	}
 
 	/**
@@ -420,6 +444,14 @@ public class HomePageDetialActivity extends Activity implements
 			seven.putExtra("userId", userList.get(6).getObjectId());
 			startActivity(seven);
 			break;
+		case R.id.favor_home_page_detial_rl:
+			//点赞操作
+			if(isFavor){
+				cancleFavorActivity();
+			}else{
+				favorActivity();
+			}
+			break;
 
 		default:
 			break;
@@ -541,28 +573,34 @@ public class HomePageDetialActivity extends Activity implements
 			// animator.start();
 			titleTop.setVisibility(View.VISIBLE);
 			titleTop.setTextColor(this.getResources().getColor(
-					R.color.text_changehui));
+					R.color.barrage_acty_end_bg));
+			favorNumber.setTextColor(this.getResources().getColor(R.color.tablebar_check));
+//			if(isFavor==false){
+//				favorImg.setImageResource(R.drawable.acty_show_navi_btn_like_line_nor);
+//				
+//			}
 		} else {
 			topLayout.setBackgroundColor(this.getResources().getColor(
 					R.color.relativelayout_yuan));
 			titleTop.setVisibility(View.INVISIBLE);
-			// ObjectAnimator animator = ObjectAnimator.ofFloat(topLayout,
-			// "alpha", 0.5f, 0f);
-			// animator.setDuration(1000);
-			// animator.start();
+			favorNumber.setTextColor(this.getResources().getColor(R.color.white));
+//			if(isFavor==false){
+//				favorImg.setImageResource(R.drawable.acty_show_navi_btn_like_hl);
+//				
+//			}
 		}
 
 	}
 
 	/**
 	 * 点赞操作
-	 * 
+	 * 查询我是否对活动点赞
 	 * @param user
 	 * @param objActivity
 	 * @author lucifer
 	 * @date 2015-11-16
 	 */
-	private void isFavor(final ObjUser user, final ObjActivity objActivity) {
+	private void isFavorActivity(final ObjUser user, final ObjActivity objActivity) {
 		ObjPraiseWrap.queryActivityFavor(user, objActivity,
 				new ObjFunBooleanCallback() {
 
@@ -572,89 +610,98 @@ public class HomePageDetialActivity extends Activity implements
 							log.e("zcq", e);
 						} else if (result) {
 							// 点赞过
+							isFavor=true;
 							favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
-							favorImg.setOnClickListener(new OnClickListener() {
+//<<<<<<< HEAD
+//							favorImg.setOnClickListener(new OnClickListener() {
+//
+//								@Override
+//								public void onClick(View arg0) {
+//
+//									// 修改云端
+//									ObjPraiseWrap.cancelPraiseActivity(user,
+//											objActivity,
+//											new ObjFunBooleanCallback() {
+//
+//												@Override
+//												public void callback(
+//														boolean result,
+//														AVException e) {
+//													if (e != null
+//															|| result == false) {
+//														Toast.makeText(
+//																getApplicationContext(),
+//																"取消点赞失败",
+//																1000).show();
+//													} else {
+//														// 插入到本地数据库 成功
+//														// activityDao.updateIsFavor(user.getObjectId(),
+//														// actyListCache.get(position).getActyId(),
+//														// 1);
+//														Toast.makeText(
+//																getApplicationContext(),
+//																"取消点赞", 1000)
+//																.show();
+//
+//														favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
+//														isFavor(user,
+//																objActivity);
+//													}
+//												}
+//											});
+//								}
+//							});
+//						} else {
+//							// 没点赞
+//							favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
+//							favorImg.setOnClickListener(new OnClickListener() {
+//
+//								@Override
+//								public void onClick(View arg0) {
+//									// TODO Auto-generated method stub
+//
+//									// 修改云端
+//									ObjPraiseWrap.praiseActivity(user,
+//											objActivity,
+//											new ObjFunBooleanCallback() {
+//
+//												@Override
+//												public void callback(
+//														boolean result,
+//														AVException e) {
+//													// TODO Auto-generated
+//													// method stub
+//													if (e != null
+//															|| result == false) {
+//														Toast.makeText(
+//																getApplicationContext(),
+//																"点赞失败",
+//																1000).show();
+//													} else {
+//														// 插入到本地数据库 成功
+//														// activityDao.updateIsFavor(user.getObjectId(),
+//														// actyListCache.get(position).getActyId(),
+//														// 1);
+//														Toast.makeText(
+//																getApplicationContext(),
+//																"点赞成功", 1000)
+//																.show();
+//														favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+//														isFavor(user,
+//																objActivity);
+//
+//													}
+//												}
+//											});
+//								}
+//							});
+//=======
 
-								@Override
-								public void onClick(View arg0) {
-
-									// 修改云端
-									ObjPraiseWrap.cancelPraiseActivity(user,
-											objActivity,
-											new ObjFunBooleanCallback() {
-
-												@Override
-												public void callback(
-														boolean result,
-														AVException e) {
-													if (e != null
-															|| result == false) {
-														Toast.makeText(
-																getApplicationContext(),
-																"取消点赞失败",
-																1000).show();
-													} else {
-														// 插入到本地数据库 成功
-														// activityDao.updateIsFavor(user.getObjectId(),
-														// actyListCache.get(position).getActyId(),
-														// 1);
-														Toast.makeText(
-																getApplicationContext(),
-																"取消点赞", 1000)
-																.show();
-
-														favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
-														isFavor(user,
-																objActivity);
-													}
-												}
-											});
-								}
-							});
 						} else {
 							// 没点赞
 							favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
-							favorImg.setOnClickListener(new OnClickListener() {
 
-								@Override
-								public void onClick(View arg0) {
-									// TODO Auto-generated method stub
 
-									// 修改云端
-									ObjPraiseWrap.praiseActivity(user,
-											objActivity,
-											new ObjFunBooleanCallback() {
-
-												@Override
-												public void callback(
-														boolean result,
-														AVException e) {
-													// TODO Auto-generated
-													// method stub
-													if (e != null
-															|| result == false) {
-														Toast.makeText(
-																getApplicationContext(),
-																"点赞失败",
-																1000).show();
-													} else {
-														// 插入到本地数据库 成功
-														// activityDao.updateIsFavor(user.getObjectId(),
-														// actyListCache.get(position).getActyId(),
-														// 1);
-														Toast.makeText(
-																getApplicationContext(),
-																"点赞成功", 1000)
-																.show();
-														favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
-														isFavor(user,
-																objActivity);
-
-													}
-												}
-											});
-								}
-							});
 						}
 
 					}
@@ -725,6 +772,116 @@ public class HomePageDetialActivity extends Activity implements
 					}
 				});
 
+	}
+	/**
+	 * 点赞
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-9
+	 */
+	public void favorActivity(){
+		// 修改云端
+		ObjPraiseWrap.praiseActivity(user,
+				objActivity,
+				new ObjFunBooleanCallback() {
+
+					@Override
+					public void callback(
+							boolean result,
+							AVException e) {
+						// TODO Auto-generated
+						// method stub
+						if (e != null
+								|| result == false) {
+							Toast.makeText(
+									getApplicationContext(),
+									"点赞失败，请检查网络",
+									1000).show();
+						} else {
+							isFavor=true;
+							isFavorNow=true;
+							// 插入到本地数据库 成功
+							// activityDao.updateIsFavor(user.getObjectId(),
+							// actyListCache.get(position).getActyId(),
+							// 1);
+							Toast.makeText(
+									getApplicationContext(),
+									"点赞成功", 1000)
+									.show();
+							if(isCancleFavorNow){
+								int number=activityBean.getPraiseCount();
+								activityDao.updateFavourNumber(user.getObjectId(), activityBean.getActyId(), number);
+								favorNumber.setText(""+number);
+							}else{
+								int number=activityBean.getPraiseCount()+1;
+								activityDao.updateFavourNumber(user.getObjectId(), activityBean.getActyId(), number);
+								favorNumber.setText(""+number);
+							}
+							
+							favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+							
+//							isFavor(user,
+//									objActivity);
+
+						}
+					}
+				});
+		
+	}
+	/**
+	 * 取消点赞
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-9
+	 */
+	public void cancleFavorActivity(){
+		// 修改云端
+		ObjPraiseWrap.cancelPraiseActivity(user,
+				objActivity,
+				new ObjFunBooleanCallback() {
+
+					@Override
+					public void callback(
+							boolean result,
+							AVException e) {
+						if (e != null
+								|| result == false) {
+							Toast.makeText(
+									getApplicationContext(),
+									"取消失败，请检查网络",
+									1000).show();
+						} else {
+							// 插入到本地数据库 成功
+							// activityDao.updateIsFavor(user.getObjectId(),
+							// actyListCache.get(position).getActyId(),
+							// 1);
+							isFavor=false;
+							isCancleFavorNow=true;
+							Toast.makeText(
+									getApplicationContext(),
+									"取消点赞成功", 1000)
+									.show();
+							//改变当前activity 缓存的点赞数量
+							
+							if(isFavorNow){
+								int number=activityBean.getPraiseCount();
+								
+								activityDao.updateFavourNumber(user.getObjectId(), activityBean.getActyId(), number);
+								favorNumber.setText(""+number);
+							}else{
+								int number=activityBean.getPraiseCount()-1;								
+								activityDao.updateFavourNumber(user.getObjectId(), activityBean.getActyId(), number);
+								favorNumber.setText(""+number);
+							}
+							
+
+							favorImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
+							
+//							isFavor(user,
+//									objActivity);
+						}
+					}
+				});
 	}
 
 }

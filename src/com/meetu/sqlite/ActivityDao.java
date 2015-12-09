@@ -62,6 +62,25 @@ public class ActivityDao {
 				userId, activityId });
 		sdb.close();
 	}
+	/**
+	 * 更新本地数据库点赞数量
+	 * @param userId
+	 * @param activityId
+	 * @param flag  
+	 * @author lucifer
+	 * @date 2015-12-9
+	 */
+	public void updateFavourNumber(String userId, String activityId, int flag){
+		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(Constants.PRAISECOUNT, flag);
+		sdb.update(Constants.ACTIVITY_CACHE_TB, values, Constants.USERID
+				+ "=? and " + Constants.ACTIVITYID + "=?", new String[] {
+				userId, activityId });
+		sdb.close();
+		
+	}
+	
 
 	// 修改活动列表关注人数项
 	public void updateOrderFollow(String userId, int index, int count) {

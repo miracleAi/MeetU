@@ -148,6 +148,7 @@ public class NewsListViewAdapter extends BaseAdapter {
 					.findViewById(R.id.favour_hongdong_fragment_img);
 			holder.praiseCount = (TextView) convertView
 					.findViewById(R.id.praiseCount_huodong_fragment_tv);
+			holder.favorLayout=(RelativeLayout) convertView.findViewById(R.id.favour_hongdong_fragment_rl);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -169,8 +170,9 @@ public class NewsListViewAdapter extends BaseAdapter {
 
 		// new ImageLoader().showImageByThread(holder.ivImgUrl, item.getImg());
 		// mImageLoader.showImageByAsyncTask(holder.ivImgUrl, item.getImg());
-		holder.tvTilte.setText(item.getTitle());
-		holder.tvAdress.setText(item.getLocationAddress());
+		holder.tvTilte.setText(item.getTitle()+"---"+item.getTitleSub());
+		holder.tvAdress.setText( "地址: "
+				+ item.getLocationPlace());
 		holder.tvStarTime
 				.setText(DateUtils.getDateToString(item.getTimeStart()));
 		holder.praiseCount.setText("" + item.getPraiseCount());
@@ -198,7 +200,7 @@ public class NewsListViewAdapter extends BaseAdapter {
 							// 表示已经点赞
 							holder.favourImg
 									.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
-							holder.favourImg
+							holder.favorLayout
 									.setOnClickListener(new OnClickListener() {
 
 										@Override
@@ -213,7 +215,7 @@ public class NewsListViewAdapter extends BaseAdapter {
 							// 表示未点赞
 							holder.favourImg
 									.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
-							holder.favourImg
+							holder.favorLayout
 									.setOnClickListener(new OnClickListener() {
 
 										@Override
@@ -264,6 +266,7 @@ public class NewsListViewAdapter extends BaseAdapter {
 		private TextView tvStarTime;
 		private ImageView favourImg;// 点赞图片
 		private TextView praiseCount;// 点赞数量
+		private RelativeLayout favorLayout;//点赞布局
 	}
 
 	/**
