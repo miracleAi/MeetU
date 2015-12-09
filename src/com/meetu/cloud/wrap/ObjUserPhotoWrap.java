@@ -1,5 +1,6 @@
 package com.meetu.cloud.wrap;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.SaveCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjUserCallback;
 import com.meetu.cloud.callback.ObjUserPhotoCallback;
 import com.meetu.cloud.object.ObjActivityPhoto;
 import com.meetu.cloud.object.ObjTableName;
@@ -215,6 +217,35 @@ public class ObjUserPhotoWrap {
 					callback.callback(true, null);
 				} else {
 					callback.callback(false, e);
+				}
+			}
+		});
+	}
+	/**
+	 * 查询用户照片点赞人列表
+	 * */
+	public static void queryPhotoPraiseUsers(ObjUserPhoto photo,final ObjUserCallback callback){
+		AVQuery<ObjUserPhotoPraise> query = AVObject.getQuery(ObjUserPhotoPraise.class);
+		query.whereEqualTo("userPhoto", photo);
+		query.include("praiseUser");
+		query.findInBackground(new FindCallback<ObjUserPhotoPraise>() {
+			
+			@Override
+			public void done(List<ObjUserPhotoPraise> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					callback.callback(null, e);
+					return;
+				}
+				if(objects != null && objects.size()>0){
+					List<ObjUser> userList = new ArrayList<ObjUser>();
+					for(ObjUserPhotoPraise ph:objects){
+						ObjUser user = ph.getPraiseUser();
+						userList.add(user);
+					}
+					callback.callback(userList, null);
+				}else{
+					callback.callback(null, new AVException(0, "点赞列表为空"));
 				}
 			}
 		});
