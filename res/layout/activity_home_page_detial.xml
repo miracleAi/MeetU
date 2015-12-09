@@ -328,6 +328,11 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:background="#0000" />
+                <View 
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_below="@id/contentWebView"
+                    android:background="#00000000"/>
             </RelativeLayout>
         </RelativeLayout>
     </com.meetu.view.MyScrollView>
@@ -397,6 +402,7 @@
         android:textColor="#d1ffffff"
         android:text="100" />
     <RelativeLayout
+        android:id="@+id/favor_home_page_detial_rl"
         android:layout_width="34dp"
         android:layout_height="34dp"
         android:layout_alignParentTop="true"
@@ -409,7 +415,7 @@
             android:id="@+id/favor_home_page_detial_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/acty_show_navi_btn_like_hl" />
+            android:src="@drawable/acty_cardimg_btn_like_nor" />
     </RelativeLayout>
 
     <RelativeLayout

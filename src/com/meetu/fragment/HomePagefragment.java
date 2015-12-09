@@ -108,6 +108,9 @@ public class HomePagefragment extends Fragment implements
 	
 	private RelativeLayout cityLayout;
 	
+	//网络操作点击 管理
+	private boolean ischeckFavor=false;//当前操作网络是否正在请求中
+	
 	//所有用户数量
 	private List<String> userAllNumberList=new ArrayList<String>();
 	@Override
@@ -141,73 +144,86 @@ public class HomePagefragment extends Fragment implements
 			adapter = new NewsListViewAdapter(super.getActivity(),
 					actyListCache);
 
-			// 点赞回调
-			adapter.setOnItemImageFavorClickCallBack(new OnItemImageFavorClickCallBack() {
+			if(ischeckFavor==false){
+				ischeckFavor=true;
+				// 点赞回调
+				adapter.setOnItemImageFavorClickCallBack(new OnItemImageFavorClickCallBack() {
 
-				@Override
-				public void onItemImageFavorClick(final int position) {
-					// TODO Auto-generated method stub
-					initLoadActivity(actyListCache.get(position).getActyId());
-					// 修改云端
-					ObjPraiseWrap.praiseActivity(user, objActivity,
-							new ObjFunBooleanCallback() {
+					@Override
+					public void onItemImageFavorClick(final int position) {
+						// TODO Auto-generated method stub
+						initLoadActivity(actyListCache.get(position).getActyId());
+						// 修改云端
+						ObjPraiseWrap.praiseActivity(user, objActivity,
+								new ObjFunBooleanCallback() {
 
-								@Override
-								public void callback(boolean result,
-										AVException e) {
-									// TODO Auto-generated method stub
-									if (e != null || result == false) {
-										Toast.makeText(getActivity(),
-												"点赞失败，请检查网络", 1000).show();
-									} else {
-										// 插入到本地数据库 成功
-										activityDao.updateIsFavor(user
-												.getObjectId(), actyListCache
-												.get(position).getActyId(), 1);
-										Toast.makeText(getActivity(), "点赞成功",
-												1000).show();
+									@Override
+									public void callback(boolean result,
+											AVException e) {
+										// TODO Auto-generated method stub
+										if (e != null || result == false) {
+											Toast.makeText(getActivity(),
+													"点赞失败，请检查网络", 1000).show();
+											ischeckFavor=false;
+										} else {
+											// 插入到本地数据库 成功
+											activityDao.updateIsFavor(user
+													.getObjectId(), actyListCache
+													.get(position).getActyId(), 1);
+											Toast.makeText(getActivity(), "点赞成功",
+													1000).show();
+											int number=actyListCache.get(position).getPraiseCount()+1;
+											activityDao.updateFavourNumber(user.getObjectId(), actyListCache.get(position).getActyId(), number);
 
-										actyListCache.clear();
-										actyListCache.addAll(actyDao
-												.queryActys(user.getObjectId()));
-										adapter.notifyDataSetChanged();
+											actyListCache.clear();
+											actyListCache.addAll(actyDao
+													.queryActys(user.getObjectId()));
+											adapter.notifyDataSetChanged();
+											ischeckFavor=false;
+										}
 									}
-								}
-							});
-				}
+								});
+					}
 
-				@Override
-				public void onItemCancleImageFavorClick(final int position) {
-					// 获取当前activity
-					initLoadActivity(actyListCache.get(position).getActyId());
-					// 修改云端
-					ObjPraiseWrap.cancelPraiseActivity(user, objActivity,
-							new ObjFunBooleanCallback() {
+					@Override
+					public void onItemCancleImageFavorClick(final int position) {
+						// 获取当前activity
+						initLoadActivity(actyListCache.get(position).getActyId());
+						// 修改云端
+						ObjPraiseWrap.cancelPraiseActivity(user, objActivity,
+								new ObjFunBooleanCallback() {
 
-								@Override
-								public void callback(boolean result,
-										AVException e) {
-									if (e != null || result == false) {
-										Toast.makeText(getActivity(),
-												"取消失败，请检查网络", 1000).show();
-									} else {
-										// 插入到本地数据库 成功
-										activityDao.updateIsFavor(user
-												.getObjectId(), actyListCache
-												.get(position).getActyId(), 1);
-										Toast.makeText(getActivity(), "取消点赞成功",
-												1000).show();
-										// holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
-										actyListCache.clear();
-										actyListCache.addAll(actyDao
-												.queryActys(user.getObjectId()));
-										adapter.notifyDataSetChanged();
+									@Override
+									public void callback(boolean result,
+											AVException e) {
+										if (e != null || result == false) {
+											Toast.makeText(getActivity(),
+													"取消失败，请检查网络", 1000).show();
+											ischeckFavor=false;
+										} else {
+											// 插入到本地数据库 成功
+											activityDao.updateIsFavor(user
+													.getObjectId(), actyListCache
+													.get(position).getActyId(), 1);
+											Toast.makeText(getActivity(), "取消点赞成功",
+													1000).show();
+											int number=actyListCache.get(position).getPraiseCount()-1;
+											activityDao.updateFavourNumber(user.getObjectId(), actyListCache.get(position).getActyId(), number);
+											
+											// holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
+											actyListCache.clear();
+											actyListCache.addAll(actyDao
+													.queryActys(user.getObjectId()));
+											adapter.notifyDataSetChanged();
+											ischeckFavor=false;
+										}
 									}
-								}
-							});
+								});
 
-				}
-			});
+					}
+				});
+			}
+	
 
 			lvNewsList.setAdapter(adapter);
 			lvNewsList.setMode(Mode.BOTH);
