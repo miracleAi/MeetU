@@ -33,5 +33,22 @@ public class DateUtils {
 		}
 		return date.getTime();
 	}
+	
+	
+	/* 时间戳转换活动开始时间
+	 * */
+	public static String getActivityTimeStart(long time) {
+		Date d = new Date(time);
+		sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return sf.format(d);
+	}
+	/* 
+	 * 时间戳转换活动结束时间
+	 * */
+	public static String getActivityTimeStop(long time) {
+		Date d = new Date(time);
+		sf = new SimpleDateFormat("HH:mm:ss");
+		return sf.format(d);
+	}
 
 }

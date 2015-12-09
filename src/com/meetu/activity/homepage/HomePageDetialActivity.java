@@ -26,6 +26,7 @@ import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityCover;
 import com.meetu.cloud.object.ObjActivityPhoto;
 import com.meetu.cloud.object.ObjUser;
+
 import com.meetu.cloud.wrap.ObjActivityCoverWrap;
 import com.meetu.cloud.wrap.ObjActivityOrderWrap;
 import com.meetu.cloud.wrap.ObjActivityPhotoWrap;
@@ -35,6 +36,7 @@ import com.meetu.entity.PhotoWall;
 import com.meetu.entity.Photolunbo;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.ActivityDao;
+import com.meetu.tools.DateUtils;
 import com.meetu.tools.DensityUtil;
 import com.meetu.view.MyScrollView;
 import com.meetu.view.MyScrollView.OnScrollListener;
@@ -113,6 +115,8 @@ public class HomePageDetialActivity extends Activity implements
 	private boolean isFavor=false;//是否对该活动点赞
 	private boolean isFavorNow=false;//判断是否在当前界面操作了点赞
 	private boolean isCancleFavorNow=false;//判断是否在当前界面操作了取消点赞
+	
+	private TextView timeTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -264,6 +268,11 @@ public class HomePageDetialActivity extends Activity implements
 				.findViewById(R.id.userNumber_homePagedetial_tv);
 		favorLayout=(RelativeLayout) findViewById(R.id.favor_home_page_detial_rl);
 		favorLayout.setOnClickListener(this);
+		timeTextView=(TextView) findViewById(R.id.time_homepage_detial_tv);
+		
+		
+		timeTextView.setText(DateUtils.getActivityTimeStart(activityBean.getTimeStart())+"~"
+				+DateUtils.getActivityTimeStop(activityBean.getTimeStop()));
 	}
 
 	/**

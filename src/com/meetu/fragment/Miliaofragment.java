@@ -783,6 +783,7 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 	 */
 	public void isAddconvesition() {
 		List<String> list = new ArrayList<String>();
+		
 		for (int i = 0; i < seekChatBeansList.get(positonNow).getMembers()
 				.size(); i++) {
 			list.add(""
@@ -793,6 +794,8 @@ public class Miliaofragment extends Fragment implements OnPageChangeListener,
 			if (user.getObjectId().equals(string)) {
 				isAdd = true;
 				break;
+			}else{
+				isAdd=false;
 			}
 		}
 	}
