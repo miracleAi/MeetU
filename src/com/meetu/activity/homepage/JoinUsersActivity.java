@@ -15,15 +15,21 @@ import com.lidroid.xutils.BitmapUtils;
 import com.meetu.adapter.JoinUserAdapter;
 import com.meetu.adapter.JoinUserFavorAdapter;
 import com.meetu.bean.ActivityBean;
+import com.meetu.bean.UserAboutBean;
+import com.meetu.cloud.callback.ObjActivityOrderCallback;
 import com.meetu.cloud.callback.ObjFunObjectsCallback;
 import com.meetu.cloud.callback.ObjUserCallback;
 import com.meetu.cloud.object.ObjActivity;
+import com.meetu.cloud.object.ObjActivityOrder;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjActivityOrderWrap;
 import com.meetu.cloud.wrap.ObjFollowWrap;
+import com.meetu.common.Constants;
 import com.meetu.entity.User;
+import com.meetu.entity.UserAbout;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.ActivityDao;
+import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DensityUtil;
 
 import android.os.Bundle;
@@ -43,6 +49,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 
 public class JoinUsersActivity extends Activity implements OnItemClickListener,
@@ -82,6 +89,12 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 	
 	private RelativeLayout MYtopLayout,myLayout;
 	private boolean isJoin=false;//是否加入了当前活动
+	ObjActivityOrder objActivityOrder;
+	private TextView title;
+	private RelativeLayout myFavorLayout;
+	private TextView signTextView;
+	private boolean isCanSign=true;//是否可以签到
+	UserAboutDao userAboutDao;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +108,7 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 			// 强制类型转换
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
+		userAboutDao=new UserAboutDao(this);
 		bitmapUtils = new BitmapUtils(this);
 		MyApplication app = (MyApplication) this.getApplication();
 		finalBitmap = app.getFinalBitmap();
@@ -125,7 +139,7 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 		adapterfavor = new JoinUserFavorAdapter(this, userFavorList);
 		mListViewFavor.setAdapter(adapterfavor);
 
-	//	isJoin();
+		isJoin();
 		
 		initalize();
 		
@@ -172,6 +186,14 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 		if(user.getProfileClip()!=null){
 			finalBitmap.display(myPHotoHead, user.getProfileClip().getUrl());
 		}
+		
+		title.setText(""+activityBean.getTitle());
+		
+		if(System.currentTimeMillis()<activityBean.getTimeStart()){
+			
+			isCanSign=false;
+			signTextView.setTextColor(this.getResources().getColor(R.color.textclor));
+		}
 	}
 
 	private void loadData2() {
@@ -199,6 +221,7 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 		backLayout.setOnClickListener(this);
 		signLayout = (RelativeLayout) super
 				.findViewById(R.id.sign_joinUsers_homepager_rl);
+		
 		signLayout.setOnClickListener(this);
 		signImageView = (ImageView) super
 				.findViewById(R.id.sign_joinUsers_homepager_img);
@@ -214,7 +237,10 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 		myLayout=(RelativeLayout) findViewById(R.id.center2_joinUsers_rl);
 		MYtopLayout=(RelativeLayout) findViewById(R.id.top_join_user_rl);
 		
-
+		title=(TextView) super.findViewById(R.id.title_joinUsers_homepager_img);
+		myFavorLayout=(RelativeLayout) super.findViewById(R.id.center3_joinUsers_rl);
+		signTextView=(TextView) findViewById(R.id.sign_joinUsers_homepager_tv);
+		
 	}
 
 	private void loadData() {
@@ -237,8 +263,15 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 
 			break;
 		case R.id.sign_joinUsers_homepager_rl:
-			signImageView
-					.setImageResource(R.drawable.acty_joinlist_img_checkedin);
+			//签到操作 活动开始之后
+			if(isCanSign){
+				sign();
+				
+			}else{
+				Toast.makeText(getApplicationContext(), "还未到签到时间哦", Toast.LENGTH_SHORT).show();
+			}
+			
+//			signImageView.setImageResource(R.drawable.acty_joinlist_img_checkedin);
 			break;
 
 		default:
@@ -273,21 +306,38 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 							userList.addAll(objects);
 							log.e("zcq 有人", "userList==" + userList.size());
 							queryFollowAndOrder(activity);
-							for(int i=0;i<objects.size();i++){
-								if(user.getObjectId().equals(objects.get(i).getObjectId())){
-									isJoin=true;
-									break;
+							
+							List<UserAboutBean> userAbouts=new ArrayList<UserAboutBean>();
+							
+							userAbouts=userAboutDao.queryUserAbout(user.getObjectId(), 1, "");
+							
+							if(userAbouts!=null&&userAbouts.size()>0){
+								for(int i=0;i<objects.size();i++){
+									for(int j=0;j<userAbouts.size();j++){
+										if(objects.get(i).getObjectId().equals(""+userAbouts.get(j).getAboutUserId())){
+											userFavorList.add(objects.get(i));
+											break;
+										}
+									}
 								}
 								
+								if(userFavorList!=null&&userFavorList.size()>0){
+									myFavorLayout.setVisibility(View.VISIBLE);
+									
+									log.e("zcq", "userFavorList==" + userFavorList.size());
+								//	handler.sendEmptyMessage(1);
+								}
+								
+								
+							}else{
+								log.e("zcq", "活动没有你关注的人");
 							}
+							
+							
 							
 							noneOrFailLayout.setVisibility(View.GONE);
 							allLayout.setVisibility(View.VISIBLE);
-							if(isJoin==true){
-								signLayout.setVisibility(View.VISIBLE);
-								myLayout.setVisibility(View.VISIBLE);
-								MYtopLayout.setVisibility(View.VISIBLE);
-							}
+
 							
 							handler.sendEmptyMessage(1);
 							log.e("zcq", "objects==" + objects.size());
@@ -313,7 +363,12 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 			public void callback(List<ObjUser> objects, AVException e) {
 				if (e != null) {
 					log.e("zcq", e);
-				} else if (objects != null) {
+					return;
+				} 
+				log.e("zcq", "objects.size()=="+objects.size());
+				if (objects != null&&objects.size()>0) {
+					
+					myFavorLayout.setVisibility(View.VISIBLE);
 					userFavorList.addAll(objects);
 					log.e("zcq", "userFavorList==" + userList.size());
 					handler.sendEmptyMessage(1);
@@ -365,29 +420,58 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 
 	}
 	
+	/**
+	 * 查询自己是否已经报名成功且是否签到
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-9
+	 */
 	public void isJoin(){
-		ObjActivityOrderWrap.queryActivitySignUp(objActivity, new ObjUserCallback() {
+		ObjActivityOrderWrap.queryIsOrder(objActivity, user, new ObjActivityOrderCallback() {
 			
 			@Override
-			public void callback(List<ObjUser> objects, AVException e) {
+			public void callback(ObjActivityOrder object, AVException e) {
 				// TODO Auto-generated method stub
 				if(e!=null){
-					log.e("zcq 请求失败", e);
-					return;
+					log.e("zcq", e);
 				}
-				if(objects!=null&&objects.size()>0){
-					for(int i=0;i<objects.size();i++){
-						if(user.getObjectId().equals(objects.get(i).getObjectId())){
-							isJoin=true;
-							break;
-						}
-						
-					}
+				if(object!=null){
+					objActivityOrder=object;
+					//
+					isJoin=true;
 					
-				}else{
-					log.e("zcq","活动参加的人获取失败");
+					if(isJoin==true){
+						signLayout.setVisibility(View.VISIBLE);
+						myLayout.setVisibility(View.VISIBLE);
+						MYtopLayout.setVisibility(View.VISIBLE);
+					}
 				}
+				
 			}
+		});
+	}
+	/**
+	 * 签到
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-9
+	 */
+	public void sign(){
+		objActivityOrder.setOrderStatus(Constants.OrderStatusArrive);
+		ObjActivityOrderWrap.updateOrder(objActivityOrder, new ObjActivityOrderCallback() {
+			
+			@Override
+			public void callback(ObjActivityOrder object, AVException e) {
+				// TODO Auto-generated method stub
+				if(e!=null){
+					log.e("zcq", e);
+				}
+				if(object!=null){
+					signImageView.setImageResource(R.drawable.acty_joinlist_img_checkedin);
+					Toast.makeText(getApplicationContext(), "签到成功", Toast.LENGTH_SHORT).show();
+				}
+				
+			};
 		});
 	}
 
