@@ -13,10 +13,10 @@
 
         <RelativeLayout
             android:id="@+id/add_miliao_rl"
-            android:layout_width="44dp"
+            android:layout_width="64dp"
             android:layout_height="44dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
+            
             android:background="@drawable/kongjianruoqu_bg"
             android:gravity="center" >
 
@@ -137,7 +137,7 @@
             android:id="@+id/numberPosition_miliao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1"
+            android:text="0"
             android:textColor="#bfbfbf"
             android:textSize="10dp" />
 
@@ -154,7 +154,7 @@
             android:id="@+id/numberAll_miliao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1"
+            android:text="0"
             android:textColor="#bfbfbf"
             android:textSize="10dp" />
     </LinearLayout>

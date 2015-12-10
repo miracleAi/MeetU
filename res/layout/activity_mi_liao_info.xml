@@ -39,14 +39,14 @@
                 </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/title_info_chatList_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:text="觅聊消息"
+                    android:text="觅聊信息"
                     android:textColor="#a0a0a0"
-                    android:textSize="19sp" />
+                    android:textSize="18sp" />
             </RelativeLayout>
 
             <View
@@ -92,12 +92,13 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/imageView1rl"
                     android:layout_centerHorizontal="true"                 
-                    android:layout_marginTop="14dp" >
+                    android:layout_marginTop="14dp"
+                    android:visibility="gone" >
                      <TextView
                         android:id="@+id/name_miliao_info_tv_huodong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="zcq"
+                        android:text="zc"
                         android:layout_centerHorizontal="true"
                         android:layout_alignParentTop="true"
                         android:textColor="#ffffff"
@@ -127,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/imageView1rl"
                     android:layout_centerHorizontal="true"
-                    android:visibility="gone"
+                    
                     android:layout_marginTop="14dp" >
                 <RelativeLayout
                     android:id="@+id/name_miliao_info_rl"
@@ -141,11 +142,11 @@
                         android:id="@+id/name_miliao_info_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="zcq"
+                        android:text="z"
                         android:textColor="#ffffff"
                         android:textSize="15sp" />
 
-                    <TextView
+                  <!--   <TextView
                         android:id="@+id/name2_miliao_info_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -154,7 +155,7 @@
                         android:layout_toRightOf="@id/name_miliao_info_tv"
                         android:text="(群主)"
                         android:textColor="#ffffff"
-                        android:textSize="11sp" />
+                        android:textSize="11sp" /> -->
                 </RelativeLayout>
 
                 <View
@@ -177,7 +178,7 @@
                         android:id="@+id/numberAll_user_miliao_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="10"
+                        android:text="0"
                         android:textColor="#ffffff"
                         android:textSize="12sp" />
 
@@ -201,7 +202,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
-                        android:text="2"
+                        android:text="0"
                         android:textColor="#ffffff"
                         android:textSize="12sp" />
 

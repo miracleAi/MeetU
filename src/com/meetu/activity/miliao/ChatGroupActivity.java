@@ -202,6 +202,8 @@ OnItemClickListener {
 	private UserAboutDao userAboutDao;
 	private List<UserAboutBean> userAboutBeans = new ArrayList<UserAboutBean>();
 	private SeekChatBean seekChatBean = null;
+	
+	private RelativeLayout emojiLayout,pictureLayout,cameraLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -304,14 +306,15 @@ OnItemClickListener {
 		userlayout.setOnClickListener(this);
 		emojiHigh = DensityUtil.dip2px(this, 24);
 		emojiWeight = DensityUtil.dip2px(this, 24);
-		emojiChatHight = DensityUtil.dip2px(this, 40);
-		emojiChatWeight = DensityUtil.dip2px(this, 40);
+		emojiChatHight = DensityUtil.dip2px(this, 60);
+		emojiChatWeight = DensityUtil.dip2px(this, 60);
 		sd = new SimpleDateFormat("MM-dd HH:mm");
 		backLayout = (RelativeLayout) super
 				.findViewById(R.id.back_miliao_chat_rl);
 		backLayout.setOnClickListener(this);
 		face = (ImageView) super.findViewById(R.id.chat_face_container_img);
-		face.setOnClickListener(this);
+		emojiLayout=(RelativeLayout) findViewById(R.id.chat_face_container_rl);
+		emojiLayout.setOnClickListener(this);
 		faceLayout = (LinearLayout) super
 				.findViewById(R.id.chat_face_container);
 		listviewLayout = (RelativeLayout) super
@@ -320,6 +323,10 @@ OnItemClickListener {
 		mEditText = (EditText) super.findViewById(R.id.input_chat_fragment_et);
 
 		mEditText.setOnClickListener(this);
+		/**
+		 * 监听输入框内文字的变化
+		 */
+		mEditText.addTextChangedListener(textWatcher);
 
 		// 表情相关
 		// 表情布局
@@ -395,9 +402,11 @@ OnItemClickListener {
 		send = (ImageView) super.findViewById(R.id.send_chat_fragment_img);
 
 		photo = (ImageView) super.findViewById(R.id.chat_photo_container_img);
-		photo.setOnClickListener(this);
+		pictureLayout=(RelativeLayout) findViewById(R.id.chat_photo_container_rl);
+		pictureLayout.setOnClickListener(this);
 		camera = (ImageView) super.findViewById(R.id.chat_camera_container_img);
-		camera.setOnClickListener(this);
+		cameraLayout=(RelativeLayout) findViewById(R.id.chat_camera_container_rl);
+		cameraLayout.setOnClickListener(this);
 		timeLayout=(LinearLayout) findViewById(R.id.time_remind_miliao_ll);
 		title = (TextView) super.findViewById(R.id.title_fragment_chat_tv);
 		userNumber = (TextView) super
@@ -410,6 +419,8 @@ OnItemClickListener {
 		}else{
 			timeOverTextView.setText(""+dismissData.getDismissData(timeOver));
 		}
+		
+		
 
 
 	}
@@ -510,7 +521,7 @@ OnItemClickListener {
 			finish();
 
 			break;
-		case R.id.chat_face_container_img:
+		case R.id.chat_face_container_rl:
 			if (faceBoolean == false) {
 				/**
 				 * 隐藏默认输入软键盘
@@ -548,10 +559,10 @@ OnItemClickListener {
 			sendChatmessage();
 			break;
 			// 图片消息
-		case R.id.chat_photo_container_img:
+		case R.id.chat_photo_container_rl:
 			sendChatPhotoMessage();
 			break;
-		case R.id.chat_camera_container_img:
+		case R.id.chat_camera_container_rl:
 			sendChatCameraMessage();
 			break;
 		case R.id.userList_miliao_chat_rl:
@@ -1118,6 +1129,36 @@ OnItemClickListener {
 
 		void onCorpusDeleted();
 	}
+	
+	/**
+	 * 监听输入框内文字的变化
+	 */
+	public  TextWatcher textWatcher=new TextWatcher() {
+		
+		@Override
+		public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+				int arg3) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void afterTextChanged(Editable arg0) {
+			
+			if(arg0.length()>0){
+				send.setImageResource(R.drawable.message_groupchat_btn_send_hl);
+			}else{
+				send.setImageResource(R.drawable.message_groupchat_btn_send_nor);
+			}
+			
+		}
+	};
 
 	/**
 	 * 用来接收消息的handle

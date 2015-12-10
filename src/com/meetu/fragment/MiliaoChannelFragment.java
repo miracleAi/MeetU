@@ -118,6 +118,8 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 		// 觅聊总人数头像
 		numberUserAll = (TextView) view
 				.findViewById(R.id.number_user_fragment_miliao_channel_tv);
+		
+		photoManager.setOnClickListener(this);
 
 		if (seekChatBean.getCreator().getProfileClip() != null) {
 			log.e("zcq", "设置头像");

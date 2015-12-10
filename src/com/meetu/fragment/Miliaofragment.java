@@ -162,7 +162,7 @@ OnClickListener {
 		joinLayout.setOnClickListener(this);
 		// TODO 此处应设置为卡片的总数量。
 
-		numberPosition.setText("" + 1);
+//		numberPosition.setText("" + 1);
 	}
 
 	/**
@@ -423,6 +423,7 @@ OnClickListener {
 					failTextView.setVisibility(View.GONE);
 
 				}else{
+					
 					noneFailLayout.setVisibility(View.GONE);
 
 					chatBean = new SeekChatInfoBean();
@@ -542,7 +543,9 @@ OnClickListener {
 					}
 
 					numberAll.setText("" + seekChatBeansList.size());
+					numberPosition.setText("" + 1);
 					handler.sendEmptyMessage(1);
+					
 
 				}
 
@@ -586,6 +589,7 @@ OnClickListener {
 			}
 
 		} else {
+			
 			Intent intent = new Intent(getActivity(),
 					CreationChatActivity.class);
 			startActivityForResult(intent, 100);

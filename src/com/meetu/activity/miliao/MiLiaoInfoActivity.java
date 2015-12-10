@@ -78,7 +78,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 	List<ObjUser> userList = new ArrayList<ObjUser>();
 	private List<UserAboutBean> beanList = new ArrayList<UserAboutBean>();
 	// 当前用户
-	private ObjUser user = new ObjUser();
+	private ObjUser userMY = new ObjUser();
 	AVUser currentUser = AVUser.getCurrentUser();
 	private AVIMConversation conv;
 	FinalBitmap finalBitmap;
@@ -86,6 +86,10 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 	private RelativeLayout miliaoLayout, qunliaoLayout;// 用来 标记不同的view显示
 	String chatId = "";
 	private RelativeLayout exitLayout;
+	private TextView titleTextView;
+	private TextView favorNumber;
+	
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +110,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 		userAboutDao = new UserAboutDao(this);
 		if (currentUser != null) {
 			// 强制类型转换
-			user = AVUser.cast(currentUser, ObjUser.class);
+			userMY = AVUser.cast(currentUser, ObjUser.class);
 		} else {
 			return;
 		}
@@ -114,6 +118,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 
 		// loadData2();
 		initView();
+		log.e("zcq conversationStyle", ""+conversationStyle);
 
 		if (conversationStyle.equals("" + Constants.CONVERSATION_TYPE)) {
 			ObjChatMessage.getChatCreater(conv, new ObjFunStringCallback() {
@@ -125,10 +130,16 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 						return;
 					} else if (s != null || s != "") {
 
-						getUserInfo(s);
-						if (s.equals(user.getObjectId())) {
+						
+						if (s.equals(userMY.getObjectId())) {
 							// 如果用户的id和创建者的id 相等 就是觅聊创建者
 							isCreator = true;
+							if(userMY.getProfileClip()!=null){
+								finalBitmap.display(userCreator, userMY.getProfileClip().getUrl());								
+							}
+							xiaoUname.setText(userMY.getNameNick());
+						}else{
+							getUserInfo(s);
 						}
 					}
 
@@ -137,16 +148,19 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 			qunliaoLayout.setVisibility(View.GONE);
 			miliaoLayout.setVisibility(View.VISIBLE);
 			reportLayout.setVisibility(View.VISIBLE);
+			titleTextView.setText("觅聊信息");
 		} else if (conversationStyle.equals("1")) {
-			if (user.getProfileClip() != null) {
+			if (userMY.getProfileClip() != null) {
 				finalBitmap
-						.display(userCreator, user.getProfileClip().getUrl());
+						.display(userCreator, userMY.getProfileClip().getUrl());
 			}
 
 			qunliaoLayout.setVisibility(View.VISIBLE);
 			miliaoLayout.setVisibility(View.GONE);
 			reportLayout.setVisibility(View.GONE);
-			xiaoUname.setText(user.getNameNick());
+//			xiaoUname.setText(""+userMY.getNameNick());
+			userCreatorName.setText(userMY.getNameNick());
+			titleTextView.setText("活动群聊");
 		}
 
 		loadData();
@@ -160,7 +174,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 		// }
 		if (conversationStyle.equals("2") && isCreator == true) {
 
-			numberAll.setText("" + mlist.size());
+			
 			if (mlist != null) {
 				mList2.addAll(mlist);
 			}
@@ -170,52 +184,40 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 			item.setDeleteImg(R.drawable.massage_groupchatmember_btn_remove);
 			mList2.add(item);
 		} else {
+			int favorNM=0;
+			numberAll.setText("" + mlist.size());
+			
 			if (mlist != null) {
 				mList2.addAll(mlist);
+				List<UserAboutBean> userAboutBeansList=userAboutDao.queryUserAbout(userMY.getObjectId(), 1, "");
+				
+				for(int i=0;i<mlist.size();i++){
+					for(int j=0;j<userAboutBeansList.size();j++){
+						if(mlist.get(i).getUserId().equals(userAboutBeansList.get(j).getAboutUserId())){
+							favorNM++;
+							break;
+						}
+					}
+				}
 			}
+			
+			favorNumber.setText(""+favorNM);
 		}
 
 	}
 
 	private void loadData() {
-		// TODO Auto-generated method stub
-		// mlist=new ArrayList<User>();
-		// User item=new User();
-		// item.setName("张三");
-		// item.setUserid("1");
-		// item.setHeadPhoto(R.drawable.chat_img_sponsor_profiles_default);
-		// mlist.add(item);
-		//
-		// User item2=new User();
-		// item2.setName("里四1");
-		// item2.setHeadPhoto(R.drawable.chat_img_sponsor_profiles_default);
-		// mlist.add(item2);
-		//
-		// User item3=new User();
-		// item3.setName("里四2");
-		// item3.setHeadPhoto(R.drawable.chat_img_sponsor_profiles_default);
-		// mlist.add(item3);
-		//
-		// User item4=new User();
-		// item4.setName("里四3");
-		// item4.setHeadPhoto(R.drawable.chat_img_sponsor_profiles_default);
-		// mlist.add(item4);
-		//
-		// User item5=new User();
-		// item5.setName("里四4");
-		// item5.setHeadPhoto(R.drawable.chat_img_sponsor_profiles_default);
-		// mlist.add(item5);
-		//
+
 		// 加载网络数据
 		objUsersList = new ArrayList<ObjUser>();
 		if (conversationStyle.equals("1")) {
 			// 活动群聊
 
-			beanList = userAboutDao.queryUserAbout(user.getObjectId(),
+			beanList = userAboutDao.queryUserAbout(userMY.getObjectId(),
 					Constants.CONVERSATION_TYPE, conversationId);
 		} else if (conversationStyle.equals("2")) {
 			// 觅聊群聊
-			beanList = userAboutDao.queryUserAbout(user.getObjectId(),
+			beanList = userAboutDao.queryUserAbout(userMY.getObjectId(),
 					Constants.CONVERSATION_TYPE, conversationId);
 
 		}
@@ -289,11 +291,14 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 				.findViewById(R.id.center4_miliao_info_rl);
 		reportLayout.setOnClickListener(this);
 		miliaoLayout = (RelativeLayout) super
-				.findViewById(R.id.name_miliao_info_rl);
-		qunliaoLayout = (RelativeLayout) super
 				.findViewById(R.id.name_miliao_info_qunliao_rl);
+		qunliaoLayout = (RelativeLayout) super
+				.findViewById(R.id.name_miliao_info_rl);
 		xiaoUname = (TextView) super
 				.findViewById(R.id.name_miliao_info_tv_huodong);
+		titleTextView=(TextView) findViewById(R.id.title_info_chatList_tv);
+		favorNumber=(TextView) findViewById(R.id.numberFavor_user_miliao_info);
+		
 	}
 
 	@Override
@@ -328,7 +333,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 					if(result){
 						log.e("zcq", "退出成功");
 						Toast.makeText(getApplicationContext(), "退出成功", Toast.LENGTH_SHORT).show();
-						userAboutDao.deleteUserTypeUserId(user.getObjectId(), 2, conversationId, user.getObjectId());
+						userAboutDao.deleteUserTypeUserId(userMY.getObjectId(), 2, conversationId, userMY.getObjectId());
 						
 						Intent intent=getIntent();
 						setResult(RESULT_OK, intent);
@@ -391,7 +396,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 					mList2.add(item);
 
 				} else {
-					if(!mList2.get(position).getUserId().equals(user.getObjectId())){
+					if(!mList2.get(position).getUserId().equals(userMY.getObjectId())){
 						deleteUser(mList2.get(position).getUserId());
 						mList2.remove(position);
 					}else{
@@ -515,12 +520,16 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 
 			@Override
 			public void callback(ObjUser user, AVException e) {
+				if(e!=null){
+					log.e("zcq", e);
+					return;
+				}
 
 				if (user.getProfileClip() != null) {
 					finalBitmap.display(userCreator, user.getProfileClip()
 							.getUrl());
 				}
-				userCreatorName.setText(user.getNameNick());
+				xiaoUname.setText(user.getNameNick());
 
 			}
 		});
@@ -545,7 +554,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 					if(result){
 						log.e("zcq", "踢出成功");
 						Toast.makeText(getApplicationContext(), "踢出成功", Toast.LENGTH_SHORT).show();
-						userAboutDao.deleteUserTypeUserId(user.getObjectId(), 2, conversationId, memberId);
+						userAboutDao.deleteUserTypeUserId(userMY.getObjectId(), 2, conversationId, memberId);
 					}else{
 						log.e("zcq", "踢出失败");
 						Toast.makeText(getApplicationContext(), "踢出失败", Toast.LENGTH_SHORT).show();

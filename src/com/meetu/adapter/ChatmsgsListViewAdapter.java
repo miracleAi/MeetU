@@ -10,6 +10,7 @@ import net.tsz.afinal.FinalBitmap;
 import android.R.string;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -31,6 +32,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.activity.miliao.ChatGroupActivity;
+import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.bean.UserBean;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjUser;
@@ -45,7 +47,7 @@ import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
 
 @SuppressLint("NewApi")
-public class ChatmsgsListViewAdapter extends BaseAdapter  {
+public class ChatmsgsListViewAdapter extends BaseAdapter {
 
 	private Context mContext;
 	private List<Chatmsgs> chatmsgsList;
@@ -71,19 +73,19 @@ public class ChatmsgsListViewAdapter extends BaseAdapter  {
 		mMaxItemWidth = DisplayUtils.getWindowWidth(mContext)
 				- DensityUtil.dip2px(mContext, 110);
 		mMinItemWidth = DensityUtil.dip2px(mContext, 44);
-		
-		if(currentUser!=null){
+
+		if (currentUser != null) {
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
 
 		MyApplication app = (MyApplication) context.getApplicationContext();
 		finalBitmap = app.getFinalBitmap();
-		userDao=new UserDao(context);
+		userDao = new UserDao(context);
 	}
 
 	/**
 	 * 消息状态 style 10 我发的文本消息 12接收的文本消息 11 我发的图片的消息 13接收的图片消息 2新人加入消息 3普通通知消息
-	 * 4活动咨询反馈通知消息 5 消息发送方向   14 自己加入和踢出提醒
+	 * 4活动咨询反馈通知消息 5 消息发送方向 14 自己加入和踢出提醒
 	 * 
 	 */
 	@Override
@@ -204,21 +206,30 @@ public class ChatmsgsListViewAdapter extends BaseAdapter  {
 				holder.resentLayout = (RelativeLayout) convertView
 						.findViewById(R.id.fail_chat_item_photo_left_rl);
 				break;
-				
+
 			case 2:
-				convertView=LayoutInflater.from(mContext).inflate(R.layout.chat_item_newjoin_remind, null);
-				holder.userHeadPhoto=(ImageView) convertView.findViewById(R.id.msg_photo_img);
-				holder.userSchool=(TextView) convertView.findViewById(R.id.content_chat_item_newjoin_tv);
-				holder.userName=(TextView) convertView.findViewById(R.id.name_chat_item_newjoin_tv);
-				holder.sexImg=(ImageView) convertView.findViewById(R.id.sex_icon_imv);
-				holder.time=(TextView) convertView.findViewById(R.id.time_chat_item_newjoin_tv);
+				convertView = LayoutInflater.from(mContext).inflate(
+						R.layout.chat_item_newjoin_remind, null);
+				holder.userHeadPhoto = (ImageView) convertView
+						.findViewById(R.id.msg_photo_img);
+				holder.userSchool = (TextView) convertView
+						.findViewById(R.id.content_chat_item_newjoin_tv);
+				holder.userName = (TextView) convertView
+						.findViewById(R.id.name_chat_item_newjoin_tv);
+				holder.sexImg = (ImageView) convertView
+						.findViewById(R.id.sex_icon_imv);
+				holder.time = (TextView) convertView
+						.findViewById(R.id.time_chat_item_newjoin_tv);
 				break;
-				
+
 			case 14:
-				convertView=LayoutInflater.from(mContext).inflate(R.layout.chat_my_join_or_exit, null);
-				holder.time=(TextView) convertView.findViewById(R.id.time_my_join_or_exit_remind_tv);
-				holder.content=(TextView) convertView.findViewById(R.id.content_my_join_or_exit_remind_tv);
-				
+				convertView = LayoutInflater.from(mContext).inflate(
+						R.layout.chat_my_join_or_exit, null);
+				holder.time = (TextView) convertView
+						.findViewById(R.id.time_my_join_or_exit_remind_tv);
+				holder.content = (TextView) convertView
+						.findViewById(R.id.content_my_join_or_exit_remind_tv);
+
 			default:
 				break;
 			}
@@ -227,8 +238,6 @@ public class ChatmsgsListViewAdapter extends BaseAdapter  {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-
-	
 
 		switch (item.getChatMsgType()) {
 		case 10:
@@ -241,7 +250,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter  {
 			if (item.getIsShowTime() == 1) {
 				long time = Long.parseLong(item.getSendTimeStamp());
 				Date date = new Date(time);
-				sd = new SimpleDateFormat("MM-dd HH:mm");
+				sd = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 				String string = sd.format(date);
 				// log.e(""+date+", "+sd.format(date)+", time=="+item.getSendTimeStamp());
 				holder.time.setText(string);
@@ -250,86 +259,91 @@ public class ChatmsgsListViewAdapter extends BaseAdapter  {
 			if (item.getIsShowTime() == 0) {
 				holder.timeLayout.setVisibility(View.GONE);
 			}
-//			ObjUserWrap.getObjUser(item.getClientId(),
-//					new ObjUserInfoCallback() {
-//
-//						@Override
-//						public void callback(ObjUser user, AVException e) {
-//							// TODO Auto-generated method stub
-//							if (e != null) {
-//								log.e("zcq", e);
-//
-//							} else if (user != null) {
-//
-//								holder.userName.setText(user.getNameNick());
-//								finalBitmap.display(holder.userHeadPhoto, user
-//										.getProfileClip().getUrl());
-//
-//							} else {
-//								log.e("zcq", "个人信息获取失败");
-//							}
-//						}
-//					});
-			if (item.getClientId() != null
-					&& !("").equals(item.getClientId())) {
-				log.e("zcq id", "userId=="+user.getObjectId()+" itemClientId=="+item.getClientId());
-				if(user.getObjectId().equals(item.getClientId())){
-					holder.userName.setText(""+user.getNameNick());
-				//	log.e("zcq", "是我自己发的消息");
-					if(user.getProfileClip()!=null){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-				//		log.e("zcq", "是我自己发的消息");
-						finalBitmap.display(holder.userHeadPhoto, user.getProfileClip().getUrl());
+			holder.userHeadPhoto.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(mContext,
+							UserPagerActivity.class);
+					intent.putExtra("userId", item.getClientId());
+					mContext.startActivity(intent);
+				}
+			});
+
+			if (item.getClientId() != null && !("").equals(item.getClientId())) {
+				log.e("zcq id", "userId==" + user.getObjectId()
+						+ " itemClientId==" + item.getClientId());
+				if (user.getObjectId().equals(item.getClientId())) {
+					holder.userName.setText("" + user.getNameNick());
+					// log.e("zcq", "是我自己发的消息");
+					if (user.getProfileClip() != null) {
+						// log.e("zcq", "是我自己发的消息");
+						finalBitmap.display(holder.userHeadPhoto, user
+								.getProfileClip().getUrl());
 					}
-				}else{
-					
-					log.e("zcq", "别人发的消息");
-				
-				ArrayList<UserBean> list = userDao.queryUser(item.getClientId());
-				if (null != list && list.size() > 0) {
-				
-					if (!list.get(0).getProfileClip().equals("")) {
-						finalBitmap.display(holder.userHeadPhoto, list.get(0).getProfileClip());
-					}
-					holder.userName.setText(""+list.get(0).getNameNick());
-				
 				} else {
-					ObjUserWrap.getObjUser(item.getNowJoinUserId(),
-							new ObjUserInfoCallback() {
 
-								@Override
-								public void callback(ObjUser objuser,
-										AVException e) {
-									// TODO Auto-generated method stub
-									if (e == null) {
-										userDao.insertOrReplaceUser(objuser);
-										ArrayList<UserBean> list2 = userDao.queryUser(item.getClientId());
-										if (null != list2 && list2.size() > 0) {										
-											if (!list2.get(0).getProfileClip().equals("")) {
-												finalBitmap.display(holder.userHeadPhoto,list2.get(0).getProfileClip());
+					log.e("zcq", "别人发的消息");
+
+					ArrayList<UserBean> list = userDao.queryUser(item
+							.getClientId());
+					if (null != list && list.size() > 0) {
+
+						if (!list.get(0).getProfileClip().equals("")) {
+							finalBitmap.display(holder.userHeadPhoto,
+									list.get(0).getProfileClip());
+						}
+						holder.userName.setText("" + list.get(0).getNameNick());
+
+					} else {
+						ObjUserWrap.getObjUser(item.getClientId(),
+								new ObjUserInfoCallback() {
+
+									@Override
+									public void callback(ObjUser objuser,
+											AVException e) {
+										// TODO Auto-generated method stub
+										if (e == null) {
+											userDao.insertOrReplaceUser(objuser);
+											ArrayList<UserBean> list2 = userDao
+													.queryUser(item
+															.getClientId());
+											if (null != list2
+													&& list2.size() > 0) {
+												if (!list2.get(0)
+														.getProfileClip()
+														.equals("")) {
+													finalBitmap
+															.display(
+																	holder.userHeadPhoto,
+																	list2.get(0)
+																			.getProfileClip());
+												}
+												holder.userName.setText(""
+														+ list2.get(0)
+																.getNameNick());
+
 											}
-											holder.userName.setText(""+list2.get(0).getNameNick());
-									
-
 										}
 									}
-								}
-							});
-				}
+								});
+					}
 				}
 			}
 			break;
 
 		case 11:
-			
-			if(item.getImgMsgImageUrl()!=null&&!item.getImgMsgImageUrl().equals("")){
+
+			if (item.getImgMsgImageUrl() != null
+					&& !item.getImgMsgImageUrl().equals("")) {
 				finalBitmap.display(holder.photo, item.getImgMsgImageUrl());
 			}
-			
 
 			if (item.getIsShowTime() == 1) {
 				long time = Long.parseLong(item.getSendTimeStamp());
 				Date date = new Date(time);
-				sd = new SimpleDateFormat("MM-dd HH:mm");
+				sd = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 				String string = sd.format(date);
 				// log.e(""+date+", "+sd.format(date)+", time=="+item.getSendTimeStamp());
 				holder.time.setText(string);
@@ -338,79 +352,40 @@ public class ChatmsgsListViewAdapter extends BaseAdapter  {
 			if (item.getIsShowTime() == 0) {
 				holder.timeLayout.setVisibility(View.GONE);
 			}
-//			ObjUserWrap.getObjUser(item.getClientId(),
-//					new ObjUserInfoCallback() {
-//
-//						@Override
-//						public void callback(ObjUser user, AVException e) {
-//							// TODO Auto-generated method stub
-//							if (e != null) {
-//								log.e("zcq", e);
-//
-//							} else if (user != null) {
-//
-//								holder.userName.setText(user.getNameNick());
-//								finalBitmap.display(holder.userHeadPhoto, user
-//										.getProfileClip().getUrl());
-//
-//							} else {
-//								log.e("zcq", "个人信息获取失败");
-//							}
-//						}
-//					});
-			
-			if(user.getObjectId().equals(item.getClientId())){
-				holder.userName.setText(""+user.getNameNick());
-				if(user.getProfileClip()!=null){
-					finalBitmap.display(holder.userHeadPhoto, user.getProfileClip().getUrl());
+
+			holder.userHeadPhoto.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(mContext,
+							UserPagerActivity.class);
+					intent.putExtra("userId", item.getClientId());
+					mContext.startActivity(intent);
 				}
-			
-//			if (item.getClientId() != null
-//					&& !("").equals(item.getClientId())) {
-//				ArrayList<UserBean> list = userDao.queryUser(item.getClientId());
-//				if (null != list && list.size() > 0) {
-//				
-//					if (!list.get(0).getProfileClip().equals("")) {
-//						finalBitmap.display(holder.userHeadPhoto, list.get(0).getProfileClip());
-//					}
-//					holder.userName.setText(""+list.get(0).getNameNick());
-//				
-//				} else {
-//					ObjUserWrap.getObjUser(item.getNowJoinUserId(),
-//							new ObjUserInfoCallback() {
-//
-//								@Override
-//								public void callback(ObjUser objuser,
-//										AVException e) {
-//									// TODO Auto-generated method stub
-//									if (e == null) {
-//										userDao.insertOrReplaceUser(objuser);
-//										ArrayList<UserBean> list2 = userDao.queryUser(item.getClientId());
-//										if (null != list2 && list2.size() > 0) {										
-//											if (!list2.get(0).getProfileClip().equals("")) {
-//												finalBitmap.display(holder.userHeadPhoto,list2.get(0).getProfileClip());
-//											}
-//											holder.userName.setText(""+list2.get(0).getNameNick());
-//									
-//
-//										}
-//									}
-//								}
-//							});
-//				}
+			});
+
+			if (user.getObjectId().equals(item.getClientId())) {
+				holder.userName.setText("" + user.getNameNick());
+				if (user.getProfileClip() != null) {
+					finalBitmap.display(holder.userHeadPhoto, user
+							.getProfileClip().getUrl());
+				}
+
+
 			}
-		
 
 			break;
 		case 13:
-			if(item.getImgMsgImageUrl()!=null&&!item.getImgMsgImageUrl().equals("")){
+			if (item.getImgMsgImageUrl() != null
+					&& !item.getImgMsgImageUrl().equals("")) {
 				finalBitmap.display(holder.photo, item.getImgMsgImageUrl());
 			}
-			
+
 			if (item.getIsShowTime() == 1) {
 				long time = Long.parseLong(item.getSendTimeStamp());
 				Date date = new Date(time);
-				sd = new SimpleDateFormat("MM-dd HH:mm");
+				sd = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 				String string = sd.format(date);
 				// log.e(""+date+", "+sd.format(date)+", time=="+item.getSendTimeStamp());
 				holder.time.setText(string);
@@ -419,36 +394,29 @@ public class ChatmsgsListViewAdapter extends BaseAdapter  {
 			if (item.getIsShowTime() == 0) {
 				holder.timeLayout.setVisibility(View.GONE);
 			}
-//			ObjUserWrap.getObjUser(item.getClientId(),
-//					new ObjUserInfoCallback() {
-//
-//						@Override
-//						public void callback(ObjUser user, AVException e) {
-//							// TODO Auto-generated method stub
-//							if (e != null) {
-//								log.e("zcq", e);
-//
-//							} else if (user != null) {
-//
-//								holder.userName.setText(user.getNameNick());
-//								finalBitmap.display(holder.userHeadPhoto, user
-//										.getProfileClip().getUrl());
-//
-//							} else {
-//								log.e("zcq", "个人信息获取失败");
-//							}
-//						}
-//					});
-			if (item.getClientId() != null
-					&& !("").equals(item.getClientId())) {
-				ArrayList<UserBean> list = userDao.queryUser(item.getClientId());
+
+			holder.userHeadPhoto.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(mContext,
+							UserPagerActivity.class);
+					intent.putExtra("userId", item.getClientId());
+					mContext.startActivity(intent);
+				}
+			});
+			if (item.getClientId() != null && !("").equals(item.getClientId())) {
+				ArrayList<UserBean> list = userDao
+						.queryUser(item.getClientId());
 				if (null != list && list.size() > 0) {
-				
+
 					if (!list.get(0).getProfileClip().equals("")) {
-						finalBitmap.display(holder.userHeadPhoto, list.get(0).getProfileClip());
+						finalBitmap.display(holder.userHeadPhoto, list.get(0)
+								.getProfileClip());
 					}
-					holder.userName.setText(""+list.get(0).getNameNick());
-				
+					holder.userName.setText("" + list.get(0).getNameNick());
+
 				} else {
 					ObjUserWrap.getObjUser(item.getNowJoinUserId(),
 							new ObjUserInfoCallback() {
@@ -459,13 +427,20 @@ public class ChatmsgsListViewAdapter extends BaseAdapter  {
 									// TODO Auto-generated method stub
 									if (e == null) {
 										userDao.insertOrReplaceUser(objuser);
-										ArrayList<UserBean> list2 = userDao.queryUser(item.getClientId());
-										if (null != list2 && list2.size() > 0) {										
-											if (!list2.get(0).getProfileClip().equals("")) {
-												finalBitmap.display(holder.userHeadPhoto,list2.get(0).getProfileClip());
+										ArrayList<UserBean> list2 = userDao
+												.queryUser(item.getClientId());
+										if (null != list2 && list2.size() > 0) {
+											if (!list2.get(0).getProfileClip()
+													.equals("")) {
+												finalBitmap
+														.display(
+																holder.userHeadPhoto,
+																list2.get(0)
+																		.getProfileClip());
 											}
-											holder.userName.setText(""+list2.get(0).getNameNick());
-									
+											holder.userName.setText(""
+													+ list2.get(0)
+															.getNameNick());
 
 										}
 									}
@@ -475,61 +450,78 @@ public class ChatmsgsListViewAdapter extends BaseAdapter  {
 			}
 
 			break;
-			
+
 		case 2:
 			// TODO 设置他人头像 需要封装个方法。多处使用
 			try {
-				
-			
-			long time = Long.parseLong(item.getSendTimeStamp());
-			holder.time.setText(com.meetu.cloud.utils.DateUtils.getFormattedTimeInterval(time));
-			
-			if (item.getNowJoinUserId() != null
-					&& !("").equals(item.getNowJoinUserId())) {
-				ArrayList<UserBean> list = userDao.queryUser(item.getNowJoinUserId());
-				if (null != list && list.size() > 0) {
-				
-					if (!list.get(0).getProfileClip().equals("")) {
-						finalBitmap.display(holder.userHeadPhoto, list.get(0).getProfileClip());
-					}
-					holder.userName.setText(""+list.get(0).getNameNick());
-					holder.userSchool.setText(""+list.get(0).getSchool());
-				} else {
-					ObjUserWrap.getObjUser(item.getNowJoinUserId(),
-							new ObjUserInfoCallback() {
 
-								@Override
-								public void callback(ObjUser objuser,
-										AVException e) {
-									// TODO Auto-generated method stub
-									if (e == null) {
-										userDao.insertOrReplaceUser(objuser);
-										ArrayList<UserBean> list2 = userDao.queryUser(item.getNowJoinUserId());
-										if (null != list2 && list2.size() > 0) {										
-											if (!list2.get(0).getProfileClip().equals("")) {
-												finalBitmap.display(holder.userHeadPhoto,list2.get(0).getProfileClip());
+				long time = Long.parseLong(item.getSendTimeStamp());
+				holder.time.setText(com.meetu.cloud.utils.DateUtils
+						.getFormattedTimeInterval(time));
+
+				if (item.getNowJoinUserId() != null
+						&& !("").equals(item.getNowJoinUserId())) {
+					ArrayList<UserBean> list = userDao.queryUser(item
+							.getNowJoinUserId());
+					if (null != list && list.size() > 0) {
+
+						if (!list.get(0).getProfileClip().equals("")) {
+							finalBitmap.display(holder.userHeadPhoto,
+									list.get(0).getProfileClip());
+						}
+						holder.userName.setText("" + list.get(0).getNameNick());
+						holder.userSchool.setText("" + list.get(0).getSchool());
+					} else {
+						ObjUserWrap.getObjUser(item.getNowJoinUserId(),
+								new ObjUserInfoCallback() {
+
+									@Override
+									public void callback(ObjUser objuser,
+											AVException e) {
+										// TODO Auto-generated method stub
+										if (e == null) {
+											userDao.insertOrReplaceUser(objuser);
+											ArrayList<UserBean> list2 = userDao.queryUser(item
+													.getNowJoinUserId());
+											if (null != list2
+													&& list2.size() > 0) {
+												if (!list2.get(0)
+														.getProfileClip()
+														.equals("")) {
+													finalBitmap
+															.display(
+																	holder.userHeadPhoto,
+																	list2.get(0)
+																			.getProfileClip());
+												}
+												holder.userName.setText(""
+														+ list2.get(0)
+																.getNameNick());
+												holder.userSchool.setText(""
+														+ list2.get(0)
+																.getSchool());
+
 											}
-											holder.userName.setText(""+list2.get(0).getNameNick());
-											holder.userSchool.setText(""+list2.get(0).getSchool());
-
 										}
 									}
-								}
-							});
+								});
+					}
 				}
-			}
 			} catch (Exception e) {
 				log.e("zcq 新人加入异常", e);
 			}
-			
+
 			break;
 		case 14:
-			//自己 加入和退出的状态提醒
-			
+			// 自己 加入和退出的状态提醒
+
 			log.e("zcq 14", "自己加入消息显示");
-			holder.content.setText(""+item.getContent());
-			
-			holder.time.setText(""+com.meetu.cloud.utils.DateUtils.getFormattedTimeInterval(Long.valueOf(item.getSendTimeStamp())));
+			holder.content.setText("" + item.getContent());
+
+			holder.time.setText(""
+					+ com.meetu.cloud.utils.DateUtils
+							.getFormattedTimeInterval(Long.valueOf(item
+									.getSendTimeStamp())));
 			break;
 
 		}
@@ -551,7 +543,5 @@ public class ChatmsgsListViewAdapter extends BaseAdapter  {
 		private ImageView failPhoto;
 		private RelativeLayout resentLayout;
 	}
-
-	
 
 }
