@@ -496,11 +496,15 @@ public class HomePagefragment extends Fragment implements
 				itemNow = actyListCache.size() - 1;
 				int number = userAboutDao.queryUserAbout(user.getObjectId(), 3,
 						actyListCache.get(itemNow).getConversationId()).size();
-				numberAll.setText("" + number+"人报名");
+//				numberAll.setText("" + (actyListCache.get(itemNow).getOrderCountBoy()+actyListCache.get(itemNow).getOrderCountGirl())+"人报名");
+				numberAll.setText(""+number+"人报名");
+				numberFavor.setText(""+actyListCache.get(itemNow).getOrderAndFollow());
 			} else {
 				int number = userAboutDao.queryUserAbout(user.getObjectId(), 3,
 						actyListCache.get(itemNow).getConversationId()).size();
-				numberAll.setText("" + number+"人报名");
+				numberAll.setText(""+number+"人报名");
+//				numberAll.setText("" + actyListCache.get(itemNow).getOrderCountBoy()+actyListCache.get(itemNow).getOrderCountGirl()+"人报名");
+				numberFavor.setText(""+actyListCache.get(itemNow).getOrderAndFollow());
 			}
 
 		}
@@ -554,7 +558,7 @@ public class HomePagefragment extends Fragment implements
 	 * //查询参加活动列表 缓存活动成员
 	 * 
 	 * @param activity
-	 * @param conversitionId
+	 * @param conversitionId 
 	 * @author lucifer
 	 * @date 2015-11-23
 	 */
@@ -570,6 +574,7 @@ public class HomePagefragment extends Fragment implements
 							log.e("zcq", e);
 							return;
 						} else if (objects != null) {
+							int numberFavor=0;
 							userAboutBeanList = new ArrayList<UserAboutBean>();
 							for (ObjUser objUser : objects) {
 								UserAboutBean item = new UserAboutBean();
@@ -579,8 +584,31 @@ public class HomePagefragment extends Fragment implements
 								item.setAboutUserId(objUser.getObjectId());
 
 								userAboutBeanList.add(item);
+								
+								List<UserAboutBean> lists=new ArrayList<UserAboutBean>();
+								lists=userAboutDao.queryUserAbout(user.getObjectId(), 1, "");
+								if(lists!=null&&lists.size()>0){
+									for(int i=0;i<lists.size();i++){
+										if(objUser.getObjectId().equals(lists.get(i).getAboutUserId())){
+											numberFavor++;
+											break;	
+										}
+										
+									}
+									
+									
+								}else{
+									//不存在我关注的人
+									
+								}
+								
+								
+								
+								
 
 							}
+							log.e("zcq", "numberFavor=="+numberFavor);
+							activityDao.updateFavorUserNumber(user.getObjectId(), activity.getObjectId(), numberFavor);
 							userAboutDao.deleteByType(user.getObjectId(),
 									Constants.ACTIVITY_TYPE, conversitionId);
 
