@@ -87,13 +87,20 @@
         android:layout_alignParentTop="true"
         android:background="@color/white" >
 
-        <!-- <Button
-            android:id="@+id/address_baidumap_detial"
+        <TextView
+            android:id="@+id/address_baidumap_detial_tv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:text="活动地点" /> -->
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/kongjianruoqu_bg"
+            android:drawableLeft="@drawable/acty_navi_btn_landmark"
+            android:drawablePadding="4dp"
+            android:textSize="14sp"
+            android:textColor="#33c6e5"
+            android:text="目标地" />
 
         <RelativeLayout
             android:id="@+id/back_baidumap_rl"

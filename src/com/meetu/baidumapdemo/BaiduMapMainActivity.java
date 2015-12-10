@@ -34,6 +34,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.meetu.baidumapdemo.MyOrientationListener.OnOrientationListener;
 import com.meetu.bean.ActivityBean;
+import com.meetu.common.GCJ_02ChangeBD_09;
 
 import android.R.integer;
 import android.os.Bundle;
@@ -81,6 +82,7 @@ public class BaiduMapMainActivity extends Activity {
 	// 控件点击相关
 	private Button addressButton;
 	private ImageView back;
+	private TextView addressTextView;
 	// 网络数据相关
 	private ActivityBean activityBean = new ActivityBean();
 	private double LocationLongtitude, LocationLatitude;
@@ -107,6 +109,14 @@ public class BaiduMapMainActivity extends Activity {
 				.getLocationLongtitude()) / 100000000;
 		LocationLatitude = Double.valueOf(activityBean.getLocationLatitude()) / 100000000;
 		
+		
+		
+
+//		LocationLongtitude+=0.0065;
+//		LocationLatitude+=0.0060;
+		List<Double> list=GCJ_02ChangeBD_09.bd_encrypt(LocationLatitude, LocationLongtitude);
+		LocationLongtitude=list.get(0);
+		LocationLatitude=list.get(1);
 		log.e("zcq", "LocationLongtitude"+LocationLongtitude+"LocationLatitude"+LocationLatitude);
 		this.context = this;
 		loadInfo();
@@ -181,15 +191,16 @@ public class BaiduMapMainActivity extends Activity {
 			}
 		});
 		
-		addOverlays(infoList);;
+//		addOverlays(infoList);
 
 	}
 
 	private void loadInfo() {
 		infoList = new ArrayList<Info>();
 		Info item = new Info();
-		item.setLatitude(LocationLatitude);
-		item.setLongitude(LocationLongtitude);
+		
+		item.setLatitude(LocationLatitude);//用高德地图的坐标 转化成百度地图的坐标  加偏移量
+		item.setLongitude(LocationLongtitude);//用高德地图的坐标 转化成百度地图的坐标  加偏移量
 		item.setImgId(R.drawable.school1);
 		item.setName(activityBean.getLocationPlace());
 		item.setZan(100);
@@ -208,6 +219,16 @@ public class BaiduMapMainActivity extends Activity {
 //
 //			}
 //		});
+		addressTextView=(TextView) findViewById(R.id.address_baidumap_detial_tv);
+		addressTextView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				
+				addOverlays(infoList);
+			}
+		});
+		
 		back = (ImageView) super.findViewById(R.id.back_baidumap);
 		back.setOnClickListener(new OnClickListener() {
 
@@ -374,6 +395,7 @@ public class BaiduMapMainActivity extends Activity {
 		LatLng latLng = null;
 		Marker marker = null;
 		OverlayOptions options;
+		
 		for (Info info : infos) {
 			// 经纬度
 			// latLng = new LatLng(info.getLatitude(), info.getLongitude());
