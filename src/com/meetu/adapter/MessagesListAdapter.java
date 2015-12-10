@@ -8,6 +8,7 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.utils.DateUtils;
 import com.meetu.common.EmojisRelevantUtils;
 import com.meetu.common.Spanning;
 import com.meetu.common.dismissData;
@@ -17,7 +18,6 @@ import com.meetu.entity.Huodong;
 import com.meetu.entity.Messages;
 import com.meetu.entity.User;
 import com.meetu.sqlite.ChatmsgsDao;
-import com.meetu.tools.DateUtils;
 
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -144,7 +144,6 @@ public class MessagesListAdapter extends BaseAdapter {
 		}
 
 		if (item.getConversationType() == 1) {
-			
 			holder.tvName.setText(item.getActyName());
 			holder.photpHead
 					.setImageResource(R.drawable.massage_newslist_img_acty);
@@ -163,7 +162,6 @@ public class MessagesListAdapter extends BaseAdapter {
 					.setImageResource(R.drawable.massage_newslist_img_chat);
 			holder.tvTime.setText(""+dismissData.getDismissData(item.getTimeOver())+"后消失");
 		}
-
 		return convertView;
 	}
 

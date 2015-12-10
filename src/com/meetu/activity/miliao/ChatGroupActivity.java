@@ -1245,7 +1245,8 @@ OnItemClickListener {
 			// 测试显示 刷新adapter
 
 			handler.sendEmptyMessage(1);
-
+			messagesDao.updateTime(user.getObjectId(),
+					conversation.getConversationId());
 		} else {
 			// 未读消息加1
 			messagesDao.updateUnread(user.getObjectId(),
@@ -1297,6 +1298,8 @@ OnItemClickListener {
 		if (conversation.getConversationId().equals(conversationId)) {
 			// 测试显示
 			handler.sendEmptyMessage(1);
+			messagesDao.updateTime(user.getObjectId(),
+					conversation.getConversationId());
 		} else {
 			// 未读消息加1
 			messagesDao.updateUnread(user.getObjectId(),
@@ -1341,7 +1344,8 @@ OnItemClickListener {
 				} else if (result) {
 					log.e("zcq", "文本消息发送成功");
 					handler.sendEmptyMessage(1);
-
+					messagesDao.updateTime(user.getObjectId(),
+							conversation.getConversationId());
 				} else {
 					log.e("zcq", "文本消息发送失败");
 					handler.sendEmptyMessage(1);
@@ -1376,7 +1380,8 @@ OnItemClickListener {
 					if (result) {
 						log.e("zcq", "图片消息发送成功");
 						handler.sendEmptyMessage(1);
-
+						messagesDao.updateTime(user.getObjectId(),
+								conversation.getConversationId());
 					} else {
 						log.e("zcq", "图片消息发送失败");
 						handler.sendEmptyMessage(1);
@@ -1459,6 +1464,8 @@ OnItemClickListener {
 			log.e("zcq", "插入a 数据库成功");
 			if (conversation.getConversationId().equals(conversationId)) {
 				handler.sendEmptyMessage(1);
+				messagesDao.updateTime(user.getObjectId(),
+						conversation.getConversationId());
 			} else {
 				// 未读消息加1,保存未读
 				messagesDao.updateUnread(user.getObjectId(),
@@ -1481,11 +1488,14 @@ OnItemClickListener {
 			Chatmsgs chatmsgs=new Chatmsgs();				
 			chatmsgs.setContent("您已被群主踢出");
 			chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
-			chatmsgs.setChatMsgStatus(14);		
+			chatmsgs.setChatMsgStatus(Constants.SHOW_SELF_CHANGE);		
 			chatmsgs.setConversationId(conversation.getConversationId());
 			chatmsgs.setUid(user.getObjectId());
+			chatmsgs.setMessageCacheId(String.valueOf(System
+					.currentTimeMillis()));
 			chatmsgsDao.insert(chatmsgs);
-
+			messagesDao.updateTime(user.getObjectId(),
+					conversation.getConversationId());
 			handler.sendEmptyMessage(1);
 
 		} else {

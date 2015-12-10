@@ -151,6 +151,8 @@ public class Constants {
 	public static final int SHOW_RECV_TEXT = 12;
 	// 接收图片
 	public static final int SHOW_RECV_IMG = 13;
+	// 自己家人或被踢出提醒
+	public static final int SHOW_SELF_CHANGE = 14;
 	/**
 	 * 消息状态常量
 	 * */

@@ -383,6 +383,7 @@ public class ObjChatMessage {
 		member.add(userId);
 		query.whereContainsIn("m", member);
 		query.setLimit(100);
+		query.orderByAscending("lm");
 		query.whereGreaterThan("attr.overTime", System.currentTimeMillis());
 
 		query.findInBackground(new AVIMConversationQueryCallback() {

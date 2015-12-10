@@ -3,6 +3,7 @@ package com.meetu.myapplication;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
@@ -54,6 +55,8 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 		if (AVUser.getCurrentUser() == null) {
 			return;
 		}
+		Intent intent = new Intent(Constants.RECEIVE_MSG);
+		context.sendBroadcast(intent);
 		user = AVUser.cast(ObjUser.getCurrentUser(), ObjUser.class);
 		handleMemberAdd(client, conversation, array, str, user);
 	}
@@ -71,6 +74,8 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 			// 被踢出者中不包含自己，不处理
 			return;
 		}
+		Intent intent = new Intent(Constants.RECEIVE_MSG);
+		context.sendBroadcast(intent);
 		handleMemberRemove(client, conversation, array, str, user);
 	}
 
@@ -91,6 +96,9 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 			chatBean.setNowJoinUserId(userId);
 			chatBean.setMessageCacheId(String.valueOf(System
 					.currentTimeMillis()));
+			chatBean.setConversationId(conversation.getConversationId());
+			chatBean.setSendTimeStamp(String.valueOf(System
+					.currentTimeMillis()));
 			chatDao.insert(chatBean);
 			// 未读消息加1,保存未读
 			msgDao.updateUnread(user.getObjectId(),
@@ -106,11 +114,13 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 		msgDao.updateUnread(user.getObjectId(),
 				conversation.getConversationId());
 		Chatmsgs chatBean = new Chatmsgs();
-		chatBean.setChatMsgType(14);
+		chatBean.setChatMsgType(Constants.SHOW_SELF_CHANGE);
 		chatBean.setNowJoinUserId(client.getClientId());
 		chatBean.setUid(user.getObjectId());
 		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
 		chatBean.setContent("您被踢出群聊");
+		chatBean.setMessageCacheId(String.valueOf(System
+				.currentTimeMillis()));
 		chatBean.setConversationId(conversation.getConversationId());
 		chatDao.insert(chatBean);
 	}

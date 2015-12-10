@@ -24,6 +24,7 @@ import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjConversationListCallback;
 import com.meetu.cloud.callback.ObjListCallback;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.utils.DateUtils;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.common.Constants;
 import com.meetu.common.PerfectInformation;
@@ -54,7 +55,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class Messagefragment extends Fragment implements OnItemClickListener,
-		OnClickListener {
+OnClickListener {
 	private ListView mListView;
 	private List<Messages> mdataList = new ArrayList<Messages>();
 	private List<Messages> mdataListCache = new ArrayList<Messages>();
@@ -110,7 +111,6 @@ public class Messagefragment extends Fragment implements OnItemClickListener,
 		return view;
 
 	}
-
 	/**
 	 * 广播刷新界面
 	 * 
@@ -203,11 +203,11 @@ public class Messagefragment extends Fragment implements OnItemClickListener,
 				+ mdataListCache.get(position).getConversationType());
 		if (mdataListCache.get(position).getConversationType() == 1) {
 			intent.putExtra("title", mdataListCache.get(position).getActyName());
-			
-			
+
+
 		} else {
 			intent.putExtra("title", mdataListCache.get(position).getChatName());
-			
+
 			intent.putExtra("objectId", mdataListCache.get(position)
 					.getChatId());// 觅聊id
 		}
@@ -225,7 +225,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-
+		handler.sendEmptyMessage(0);
 	}
 
 	Handler handler = new Handler() {
@@ -276,7 +276,7 @@ public class Messagefragment extends Fragment implements OnItemClickListener,
 			}else{
 				PerfectInformation.showDiolagPerfertInformation(getActivity(), "亲爱的 完善个人信息后才能查看小纸条呢");
 			}
-			
+
 
 			break;
 		case R.id.system_msg_layout:
@@ -307,69 +307,68 @@ public class Messagefragment extends Fragment implements OnItemClickListener,
 		ObjChatMessage.getConversation(user.getObjectId(),
 				MyApplication.chatClient, new ObjConversationListCallback() {
 
-					@Override
-					public void callback(List<AVIMConversation> objects,
-							AVException e) {
-						// TODO Auto-generated method stub
-						if (e != null) {
-							log.e("zcq", e);
-							return;
+			@Override
+			public void callback(List<AVIMConversation> objects,
+					AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					log.e("zcq", e);
+					return;
+				}
+
+				ArrayList<AVIMConversation> convList = new ArrayList<AVIMConversation>();
+				for (AVIMConversation conversation : objects) {
+					convList.add(conversation);
+				}
+				if (convList.size() > 0) {
+
+					ArrayList<Messages> list = new ArrayList<Messages>();
+					log.e("zcq",
+							"user.getObjectId()==" + user.getObjectId());
+					for (int i = 0; i < convList.size(); i++) {
+
+						log.e("zcq iii===", "" + i);
+						AVIMConversation conversation = convList.get(i);
+
+						// 保存到本地
+						getMember(conversation);
+
+						Messages msg = new Messages();
+						msg.setUpdateTime(System.currentTimeMillis());
+						msg.setUserId(user.getObjectId());
+						msg.setConversationID(conversation
+								.getConversationId());
+						int type = (Integer) conversation
+								.getAttribute("cType");
+						msg.setConversationType(type);
+						String id = (String) conversation
+								.getAttribute("appendId");
+						String title = (String) conversation
+								.getAttribute("title");
+						long overTime = (Long) conversation
+								.getAttribute("overTime");
+						if (type == 1) {
+							msg.setActyId(id);
+							msg.setActyName(title);
+						} else {
+							log.e("zcq", "觅聊觅聊");
+							msg.setChatId(id);
+							msg.setChatName(title);
 						}
+						msg.setTimeOver(overTime);
+						msg.setCreatorID(convList.get(i).getCreator());
+						// 插入时所有标记为未踢出
+						msg.setTiStatus(0);
+						list.add(msg);
 
-						ArrayList<AVIMConversation> convList = new ArrayList<AVIMConversation>();
-						for (AVIMConversation conversation : objects) {
-							convList.add(conversation);
-						}
-						if (convList.size() > 0) {
-
-							ArrayList<Messages> list = new ArrayList<Messages>();
-							log.e("zcq",
-									"user.getObjectId()==" + user.getObjectId());
-							for (int i = 0; i < convList.size(); i++) {
-
-								log.e("zcq iii===", "" + i);
-								AVIMConversation conversation = convList.get(i);
-
-								// 保存到本地
-								getMember(conversation);
-
-								Messages msg = new Messages();
-
-								msg.setUserId(user.getObjectId());
-								msg.setConversationID(conversation
-										.getConversationId());
-								int type = (Integer) conversation
-										.getAttribute("cType");
-								msg.setConversationType(type);
-								String id = (String) conversation
-										.getAttribute("appendId");
-								String title = (String) conversation
-										.getAttribute("title");
-								long overTime = (Long) conversation
-										.getAttribute("overTime");
-								if (type == 1) {
-									msg.setActyId(id);
-									msg.setActyName(title);
-								} else {
-									log.e("zcq", "觅聊觅聊");
-									msg.setChatId(id);
-									msg.setChatName(title);
-								}
-								msg.setTimeOver(overTime);
-								msg.setCreatorID(convList.get(i).getCreator());
-								// 插入时所有标记为未踢出
-								msg.setTiStatus(0);
-								list.add(msg);
-
-							}
-							log.e("zcq", "list.size()==" + list.size());
-							messagesDao.insertList(list);
-						}
-						log.e("zcq", "list.size()==" + convList.size());
-
-						handler.sendEmptyMessage(1);
 					}
-				});
+					messagesDao.insertList(list);
+				}
+				log.e("zcq", "list.size()==" + convList.size());
+
+				handler.sendEmptyMessage(1);
+			}
+		});
 
 	}
 

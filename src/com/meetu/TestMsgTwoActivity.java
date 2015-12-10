@@ -173,6 +173,7 @@ public class TestMsgTwoActivity extends Activity {
 								}
 								msg.setTimeOver(overTime);
 								msg.setCreatorID(convList.get(i).getCreator());
+								msg.setUpdateTime(System.currentTimeMillis());
 								// 插入时所有标记为未踢出
 								msg.setTiStatus(0);
 								list.add(msg);

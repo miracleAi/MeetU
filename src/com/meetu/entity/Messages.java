@@ -63,6 +63,18 @@ public class Messages implements Serializable {
 	 * 用户昵称，用于单聊
 	 */
 	private String scripUserName;
+	/**
+	 * 最后更新时间
+	 * */
+	private long updateTime;
+	
+	public long getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(long updateTime) {
+		this.updateTime = updateTime;
+	}
 
 	public String getUserId() {
 		return userId;

@@ -66,6 +66,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 	private static final String TBL_MESSAGES_CHAT_NAME = "_chat_name";
 	private static final String TBL_MESSAGES_TI_STATUS = "_ti_status";
 	private static final String TBL_MESSAGES_UNREAD_COUNT = "_unread_count";
+	private static final String TBL_MESSAGES_UPDATE_TIME = "_update_time";
 
 	// 表情
 	private static final String TBL_EMOJIS = "emojis";// 表名
@@ -155,6 +156,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		sb4.append(TBL_MESSAGES_CHAT_ID + " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_CHAT_NAME + " varchar(100) ,");
 		sb4.append(TBL_MESSAGES_UNREAD_COUNT + " Integer ,");
+		sb4.append(TBL_MESSAGES_UPDATE_TIME + " Integer ,");
 		sb4.append("constraint " + TBL_MESSAGES_CACHEID + " primary key ("
 				+ Constants.USERID + "," + TBL_MESSAGES_CONVERSATION_ID + ") ");
 		sb4.append(")");

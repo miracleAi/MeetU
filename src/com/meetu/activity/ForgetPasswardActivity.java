@@ -26,7 +26,7 @@ public class ForgetPasswardActivity extends Activity implements OnClickListener 
 	// 控件相关
 	private ImageView back;
 	private Button registerButton;
-	private EditText uphone, upassward, uupassward;
+	private EditText uphone, upassward;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +48,8 @@ public class ForgetPasswardActivity extends Activity implements OnClickListener 
 				.findViewById(R.id.phone_login_ForgetPassward_et);
 		upassward = (EditText) super
 				.findViewById(R.id.passward_login_ForgetPassward_et);
-		uupassward = (EditText) super
-				.findViewById(R.id.uupassward_login_ForgetPassward_et);
 		uphone.addTextChangedListener(watcher);
 		upassward.addTextChangedListener(watcher);
-		uupassward.addTextChangedListener(watcher);
 		registerButton = (Button) super
 				.findViewById(R.id.next_bt_forgetpassward);
 		registerButton.setOnClickListener(this);
@@ -70,8 +67,7 @@ public class ForgetPasswardActivity extends Activity implements OnClickListener 
 				int count) {
 			// TODO Auto-generated method stub
 			if (uphone.getText().length() != 0
-					&& upassward.getText().length() != 0
-					&& uupassward.getText().length() != 0) {
+					&& upassward.getText().length() != 0) {
 				registerButton
 						.setBackgroundResource(R.drawable.register_login_720);
 			} else {
@@ -109,11 +105,7 @@ public class ForgetPasswardActivity extends Activity implements OnClickListener 
 			} else if (upassward.getText().length() < 6) {
 				Toast.makeText(ForgetPasswardActivity.this, "密码不能小于6位",
 						Toast.LENGTH_SHORT).show();
-			} else if (!upassward.getText().toString()
-					.equals(uupassward.getText().toString())) {
-				Toast.makeText(ForgetPasswardActivity.this, "两次密码输入的不一致",
-						Toast.LENGTH_SHORT).show();
-			} else {
+			}else {
 				// Toast.makeText(ForgetPasswardActivity.this, "可以发送数据了",
 				// Toast.LENGTH_SHORT).show();
 

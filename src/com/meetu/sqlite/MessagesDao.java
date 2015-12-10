@@ -30,14 +30,14 @@ public class MessagesDao {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		db.execSQL(
 				"insert or replace into messages values(" + "?,?,?,?,?,"
-						+ "?,?,?,?,?,?)",
-				new Object[] { messages.getUserId(),
+						+ "?,?,?,?,?,?,?)",
+						new Object[] { messages.getUserId(),
 						messages.getConversationID(),
 						messages.getConversationType(), messages.getTiStatus(),
 						messages.getCreatorID(), messages.getTimeOver(),
 						messages.getActyId(), messages.getActyName(),
 						messages.getChatId(), messages.getChatName(),
-						messages.getUnreadMsgCount() });
+						messages.getUnreadMsgCount(),messages.getUpdateTime()});
 		db.close();
 	}
 
@@ -50,43 +50,64 @@ public class MessagesDao {
 			Messages messages = list.get(i);
 			Cursor c = db.rawQuery(
 					"select * from messages where " + Constants.USERID
-							+ "=? and _conversation_id=?",
+					+ "=? and _conversation_id=?",
 					new String[] { messages.getUserId(),
 							messages.getConversationID() });
 			if (c.moveToNext()) {
 				Messages msg = new Messages();
 				messages.setUnreadMsgCount(c.getInt(c
 						.getColumnIndex("_unread_count")));
+				/*messages.setUpdateTime(c.getInt(c
+						.getColumnIndex("_update_time")));*/
 			}
 			c.close();
 			db.execSQL(
 					"insert or replace into messages values(" + "?,?,?,?,?,"
-							+ "?,?,?,?,?,?)",
-					new Object[] { messages.getUserId(),
+							+ "?,?,?,?,?,?,?)",
+							new Object[] { messages.getUserId(),
 							messages.getConversationID(),
 							messages.getConversationType(),
 							messages.getTiStatus(), messages.getCreatorID(),
 							messages.getTimeOver(), messages.getActyId(),
 							messages.getActyName(), messages.getChatId(),
 							messages.getChatName(),
-							messages.getUnreadMsgCount() });
+							messages.getUnreadMsgCount(),messages.getUpdateTime()});
 		}
 		db.close();
 	}
 
 	/**
-	 * 修改未读条数 +1
+	 * 修改未读条数 +1,更新时间
 	 * */
 	public void updateUnread(String userId, String convId) {
 		SQLiteDatabase sdb = helper.getWritableDatabase();
 		Cursor cursor = sdb.rawQuery("select * from messages where "
 				+ Constants.USERID + "=? and _conversation_id=?", new String[] {
-				userId, convId });
+						userId, convId });
 		if (cursor.moveToNext()) {
 			int count = cursor.getInt(cursor.getColumnIndex("_unread_count")) + 1;
 			ContentValues values = new ContentValues();
 			values.put("_unread_count", count);
+			values.put("_update_time", System.currentTimeMillis());
 			Log.d("mytest", "" + count);
+			int s = sdb.update("messages", values, Constants.USERID
+					+ "=? and _conversation_id=?", new String[] { userId,
+					convId });
+			Log.d("mytest", "s" + s);
+		}
+		sdb.close();
+	}
+	/**
+	 * 更新时间
+	 * */
+	public void updateTime(String userId, String convId) {
+		SQLiteDatabase sdb = helper.getWritableDatabase();
+		Cursor cursor = sdb.rawQuery("select * from messages where "
+				+ Constants.USERID + "=? and _conversation_id=?", new String[] {
+						userId, convId });
+		if (cursor.moveToNext()) {
+			ContentValues values = new ContentValues();
+			values.put("_update_time", System.currentTimeMillis());
 			int s = sdb.update("messages", values, Constants.USERID
 					+ "=? and _conversation_id=?", new String[] { userId,
 					convId });
@@ -107,7 +128,7 @@ public class MessagesDao {
 		SQLiteDatabase sdb = helper.getWritableDatabase();
 		Cursor cursor = sdb.rawQuery("select * from messages where "
 				+ Constants.USERID + "=? and _conversation_id=?", new String[] {
-				userId, convId });
+						userId, convId });
 		if (cursor.moveToNext()) {
 			int count = 0;
 			ContentValues values = new ContentValues();
@@ -179,7 +200,7 @@ public class MessagesDao {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		Cursor c = db.rawQuery("select * from messages where "
 				+ Constants.USERID
-				+ "=? and _conversation_type=1 or _conversation_type=2",
+				+ "=? and _conversation_type=1 or _conversation_type=2 order by _update_time desc",
 				new String[] { uid });
 		ArrayList<Messages> list = new ArrayList<Messages>();
 		while (c.moveToNext()) {
@@ -199,6 +220,7 @@ public class MessagesDao {
 			messages.setTiStatus(c.getInt(c.getColumnIndex("_ti_status")));
 			messages.setUnreadMsgCount(c.getInt(c
 					.getColumnIndex("_unread_count")));
+			messages.setUpdateTime(c.getLong(c.getColumnIndex("_update_time")));
 			list.add(messages);
 		}
 		c.close();
@@ -255,7 +277,7 @@ public class MessagesDao {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		Cursor c = db.rawQuery("select * from messages where "
 				+ Constants.USERID + "=? and _conversation_id=?", new String[] {
-				uid, convid });
+						uid, convid });
 		ArrayList<Messages> list = new ArrayList<Messages>();
 		while (c != null && c.moveToNext()) {
 			Messages messages = new Messages();
@@ -273,6 +295,7 @@ public class MessagesDao {
 			messages.setTiStatus(c.getInt(c.getColumnIndex("_ti_status")));
 			messages.setUnreadMsgCount(c.getInt(c
 					.getColumnIndex("_unread_count")));
+			messages.setUpdateTime(c.getLong(c.getColumnIndex("_update_time")));
 			list.add(messages);
 		}
 		c.close();

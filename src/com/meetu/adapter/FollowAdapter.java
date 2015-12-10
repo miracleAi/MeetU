@@ -77,10 +77,13 @@ public class FollowAdapter extends BaseAdapter {
 				.findViewById(R.id.school_item_joinUsers_tv);
 		holder.positionTv = (TextView) convertView
 				.findViewById(R.id.position_item_joinUser_tv);
+		holder.positionTagTv = (TextView) convertView
+				.findViewById(R.id.item_join_user_tag);
 		holder.arrowImv = (ImageView) convertView
 				.findViewById(R.id.item_right_arrow);
 
 		holder.positionTv.setVisibility(View.GONE);
+		holder.positionTagTv.setVisibility(View.GONE);
 		holder.arrowImv.setVisibility(View.VISIBLE);
 		ArrayList<UserBean> beanList = userDao.queryUser(userId);
 		if (beanList != null && beanList.size() > 0) {
@@ -127,6 +130,7 @@ public class FollowAdapter extends BaseAdapter {
 		private TextView nameTv;
 		private TextView schoolTv;
 		private TextView positionTv;
+		private TextView positionTagTv;
 		private ImageView avatorImv;
 		private ImageView sexImv;
 		private ImageView arrowImv;

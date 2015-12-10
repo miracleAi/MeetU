@@ -37,6 +37,8 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		if (AVUser.getCurrentUser() == null) {
 			return;
 		}
+		Intent intent = new Intent(Constants.RECEIVE_MSG);
+		context.sendBroadcast(intent);
 		if (message instanceof AVIMTextMessage) {
 			createChatMsg(conversation, message, msgDao, chatDao);
 			return;
@@ -45,8 +47,6 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			createChatPicMsg(conversation, message, msgDao, chatDao);
 			return;
 		}
-		Intent intent = new Intent(Constants.RECEIVE_MSG);
-		context.sendBroadcast(intent);
 	}
 
 	@Override

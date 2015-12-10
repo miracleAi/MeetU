@@ -29,7 +29,7 @@ import android.widget.Toast;
 public class RegisterActivity extends Activity implements OnClickListener {
 	private ImageView back;
 	private Button registerButton;
-	private EditText uphone, upassward, uupassward;
+	private EditText uphone, upassward;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +50,8 @@ public class RegisterActivity extends Activity implements OnClickListener {
 
 		uphone = (EditText) super.findViewById(R.id.phone_register_et);
 		upassward = (EditText) super.findViewById(R.id.password_register_et);
-		uupassward = (EditText) super.findViewById(R.id.uupassword_register_et);
 		uphone.addTextChangedListener(watcher);
 		upassward.addTextChangedListener(watcher);
-		uupassward.addTextChangedListener(watcher);
 		registerButton = (Button) super.findViewById(R.id.rigister_bt_rigister);
 		registerButton.setOnClickListener(this);
 	};
@@ -76,8 +74,7 @@ public class RegisterActivity extends Activity implements OnClickListener {
 				int count) {
 			// TODO Auto-generated method stub
 			if (uphone.getText().length() != 0
-					&& upassward.getText().length() != 0
-					&& uupassward.getText().length() != 0) {
+					&& upassward.getText().length() != 0) {
 				registerButton
 						.setBackgroundResource(R.drawable.register_login_720);
 			} else {
@@ -115,11 +112,7 @@ public class RegisterActivity extends Activity implements OnClickListener {
 			} else if (upassward.getText().length() < 6) {
 				Toast.makeText(RegisterActivity.this, "密码不能小于6位",
 						Toast.LENGTH_SHORT).show();
-			} else if (!upassward.getText().toString()
-					.equals(uupassward.getText().toString())) {
-				Toast.makeText(RegisterActivity.this, "两次密码输入的不一致",
-						Toast.LENGTH_SHORT).show();
-			} else {
+			}else {
 				String phoneString = uphone.getText().toString();
 				ObjUserWrap.phoneIsAlreadyRegister(phoneString,
 						new ObjFunEnumCallback() {

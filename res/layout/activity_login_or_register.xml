@@ -1,30 +1,54 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"   
-    tools:context=".LoginOrRegisterActivity"
-    android:background="@color/pwhite" >
+    android:layout_height="match_parent" >
 
-    <Button
-        android:id="@+id/bt_zhuce_dengluorzhuce"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:background="@color/tablebar_check"
-         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="61dp"
-        android:text="注册" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/start_page_img" />
 
-    <Button
-        android:id="@+id/bt_denglu_dengluorzhuce"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="61dp"
-        android:background="@color/tablebar_check"
-        android:text="登录" />
+        android:layout_above="@+id/bottom_view"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="36dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/bt_zhuce_dengluorzhuce"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="27dp"
+            android:background="@drawable/register_click"
+            android:textSize="15dip"
+            android:textColor="#7e6b5a"
+            android:text="注    册" />
+
+        <Button
+            android:id="@+id/bt_denglu_dengluorzhuce"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textSize="15dip"
+            android:textColor="#33c6e5"
+            android:layout_marginRight="27dp"
+            android:background="@drawable/login_click"
+            android:text="登    录" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/bottom_view"
+        android:layout_width="158dp"
+        android:layout_height="11dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="18dp"
+        android:src="@drawable/start_page_img_slogan" />
 
 </RelativeLayout>
