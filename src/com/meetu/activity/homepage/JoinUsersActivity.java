@@ -95,6 +95,7 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 	private TextView signTextView;
 	private boolean isCanSign=true;//是否可以签到
 	UserAboutDao userAboutDao;
+	private RelativeLayout alltitleLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -240,6 +241,7 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 		title=(TextView) super.findViewById(R.id.title_joinUsers_homepager_img);
 		myFavorLayout=(RelativeLayout) super.findViewById(R.id.center3_joinUsers_rl);
 		signTextView=(TextView) findViewById(R.id.sign_joinUsers_homepager_tv);
+		alltitleLayout=(RelativeLayout) findViewById(R.id.center4_joinUsers_rl);
 		
 	}
 
@@ -303,6 +305,8 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 							return;
 						} 
 						if (objects != null&&objects.size()>0) {
+							alltitleLayout.setVisibility(View.VISIBLE);
+							noneOrFailLayout.setEnabled(false);
 							userList.addAll(objects);
 							log.e("zcq 有人", "userList==" + userList.size());
 							queryFollowAndOrder(activity);
@@ -342,6 +346,7 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 							handler.sendEmptyMessage(1);
 							log.e("zcq", "objects==" + objects.size());
 						}else{
+							noneOrFailLayout.setEnabled(false);
 							log.e("zcq 没人", "没有成员啊");
 							noneOrFailLayout.setVisibility(View.VISIBLE);
 							noneTextView.setVisibility(View.VISIBLE);

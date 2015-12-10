@@ -128,7 +128,9 @@ OnClickListener {
 			failTextView=(TextView) view.findViewById(R.id.fail_miliao_fragment_tv);
 			miliaoImv = (ImageView) view.findViewById(R.id.join_miliao_img);
 			joinChatTv = (TextView) view.findViewById(R.id.join_chat_tv);
+			
 			loadData();
+			
 			viewPager = (ViewPager) view.findViewById(R.id.vpNewsList_miliao);
 			// 设置viewpage的切换动画
 			viewPager.setPageTransformer(true, new MyZoomOutPageTransformer());
@@ -387,8 +389,15 @@ OnClickListener {
 		});
 	}
 
-
+/**
+ * 加载网络数据
+ *   
+ * @author lucifer
+ * @date 2015-12-10
+ */
 	public void loadData() {
+		log.e("zcq", "正在加载");
+		Toast.makeText(getActivity(), "正在加载", Toast.LENGTH_SHORT).show();
 		ObjChatWrap.queryChatInfo(user, System.currentTimeMillis(), 999,
 				new ObjFunMapCallback() {
 
@@ -416,14 +425,17 @@ OnClickListener {
 					});
 					return;
 				}
-				if(object==null){
+				if(object.get("seekChatCount")==null||(Integer)object.get("seekChatCount")<=0){
+					log.e("zcq datanull", "没取到觅聊列表");
+					noneFailLayout.setEnabled(false);
 					//没获取到数据
 					noneFailLayout.setVisibility(View.VISIBLE);
 					nonoTextView.setVisibility(View.VISIBLE);
 					failTextView.setVisibility(View.GONE);
 
 				}else{
-					
+					noneFailLayout.setEnabled(false);
+					log.e("zcq datanullaaa", "没取到觅聊列表"+"object=="+object.size());
 					noneFailLayout.setVisibility(View.GONE);
 
 					chatBean = new SeekChatInfoBean();

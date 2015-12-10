@@ -6,6 +6,7 @@ import java.util.List;
 import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.LogUtil.log;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
@@ -28,6 +29,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
@@ -40,6 +42,10 @@ OnRefreshListener2<ListView>, OnItemClickListener, OnClickListener {
 	private ImageView back;
 	private TextView countTv;
 	private ObjUserPhoto userPhoto = new ObjUserPhoto();
+	
+	private RelativeLayout noneOrFailLayout;
+	private TextView noneTextView;
+	private TextView failTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,16 +70,25 @@ OnRefreshListener2<ListView>, OnItemClickListener, OnClickListener {
 			public void callback(List<ObjUser> objects, AVException e) {
 				// TODO Auto-generated method stub
 				if(e != null){
-					Toast.makeText(FavorListActivity.this, "查询失败", 1000).show();
+			//		Toast.makeText(FavorListActivity.this, "查询失败", 1000).show();
+					log.e("zcq", e);
+					noneOrFailLayout.setVisibility(View.VISIBLE);
+					noneTextView.setVisibility(View.GONE);
+					failTextView.setVisibility(View.VISIBLE);
 				}
 				if(objects != null && objects.size()>0){
+					noneOrFailLayout.setVisibility(View.GONE);
+				
 					List<ObjUser> list = objects;
 					userList.clear();
 					userList.addAll(list);
 					countTv.setText(""+userList.size());
 					adapter.notifyDataSetChanged();
 				}else{
-					Toast.makeText(FavorListActivity.this, "还没有人点赞", 1000).show();
+				//	Toast.makeText(FavorListActivity.this, "还没有人点赞", 1000).show();
+					noneOrFailLayout.setVisibility(View.VISIBLE);
+					noneTextView.setVisibility(View.VISIBLE);
+					failTextView.setVisibility(View.GONE);
 				}
 				lvNewsList.onRefreshComplete();
 			}
@@ -82,6 +97,9 @@ OnRefreshListener2<ListView>, OnItemClickListener, OnClickListener {
 
 	private void initView() {
 		// TODO Auto-generated method stub
+		noneOrFailLayout=(RelativeLayout) findViewById(R.id.none_or_favour_list_fragment_rl);
+		noneTextView=(TextView) findViewById(R.id.none_favour_list_tv);
+		failTextView=(TextView) findViewById(R.id.fail_favour_list_tv);
 		back = (ImageView) findViewById(R.id.back_favorlist_mine_img);
 		back.setOnClickListener(this);
 		countTv = (TextView) findViewById(R.id.favornumber_likelist_mine);
@@ -94,12 +112,7 @@ OnRefreshListener2<ListView>, OnItemClickListener, OnClickListener {
 		lvNewsList.setOnItemClickListener(this);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.favor_list, menu);
-		return true;
-	}
+
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {

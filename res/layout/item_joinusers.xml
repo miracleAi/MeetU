@@ -81,9 +81,9 @@
                 android:id="@+id/position_item_joinUser_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/textView4"
-                android:layout_toRightOf="@+id/textView4"
-                android:text="18"
+                android:layout_alignTop="@+id/item_join_user_tag"
+                android:layout_toRightOf="@+id/item_join_user_tag"
+                android:text="0"
                 android:textColor="#bfbfbf"
                 android:textSize="10sp" />
         </RelativeLayout>

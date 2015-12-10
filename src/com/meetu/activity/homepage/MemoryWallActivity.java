@@ -190,12 +190,13 @@ public class MemoryWallActivity extends Activity implements
 								}
 							});
 						} else if (objects != null && objects.size() > 0) {
-							
+							noneOrFailLayout.setEnabled(false);
 							
 							noneOrFailLayout.setVisibility(View.GONE);
 							photoList.addAll(objects);
 							handler.sendEmptyMessage(1);
 						} else {
+							noneOrFailLayout.setEnabled(false);
 							noneOrFailLayout.setVisibility(View.VISIBLE);
 							noneTextView.setVisibility(View.VISIBLE);
 							failtTextView.setVisibility(View.GONE);

@@ -251,7 +251,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/listview_favor_joinUser" >
+                    android:layout_below="@+id/listview_favor_joinUser" 
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/point2"

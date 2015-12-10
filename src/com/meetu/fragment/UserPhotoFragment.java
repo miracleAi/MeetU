@@ -191,6 +191,7 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements
 							return;
 						} 
 						if (objects != null&&objects.size()>0) {
+							noneOrFailLayout.setEnabled(false);
 							objUserPhotos.addAll(objects);
 							// mAdapter=new StaggeredHomeAdapter(getActivity(),
 							// objUserPhotos);
@@ -203,6 +204,7 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements
 							noneOrFailLayout.setVisibility(View.GONE);
 							handler.sendEmptyMessage(1);
 						}else{
+							noneOrFailLayout.setEnabled(false);
 							noneOrFailLayout.setVisibility(View.VISIBLE);
 							noneTextView.setVisibility(View.VISIBLE);
 							failTextView.setVisibility(View.GONE);
