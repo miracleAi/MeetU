@@ -100,8 +100,6 @@
         android:id="@+id/nameheader_mine_photoview_fullscreen_img"
         android:layout_width="58dp"
         android:layout_height="58dp"
-        
-        
         android:src="@drawable/mine_photoview_fullscreen_btn_profile_stroke" />
     
     </RelativeLayout>

@@ -113,10 +113,6 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements
 				isMyself = true;
 			}
 			getUserInfo(userId);
-			// if (currentUser != null) {
-			// //强制类型转换
-			// user = AVUser.cast(currentUser, ObjUser.class);
-			// }
 			view = inflater.inflate(R.layout.fragment_mine_photo_wall, null);
 			mPosition = getArguments().getInt(ARG_POSITION);
 			

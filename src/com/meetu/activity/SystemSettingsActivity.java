@@ -53,7 +53,7 @@ import android.widget.Toast;
  */
 public class SystemSettingsActivity extends Activity implements OnClickListener {
 	private RelativeLayout sharelayout, evaluationlayout, clearlayout,
-			checkForUpdatelayout, signOutlayout;
+	checkForUpdatelayout, signOutlayout;
 	private RelativeLayout backLayout;
 
 	private ObjGlobalAndroid globalObject;
@@ -111,9 +111,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 			getVersion();
 			break;
 		case R.id.sign_out_system_settings_rl:
-			signOut();
-			finish();
-
+			showSignOutDialog();
 			break;
 		case R.id.back_systemSettings_rl:
 			finish();
@@ -122,13 +120,34 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 		default:
 			break;
 		}
-
-
 	}
+	//退出登录弹窗
+	private void showSignOutDialog() {
+		// TODO Auto-generated method stub
+		Dialog dialog = new AlertDialog.Builder(this).setTitle("提示").setMessage("亲爱的，真的要离开小U么？")
+				.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int arg1) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+					}
+				}).setNeutralButton("退出登录", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int arg1) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+						signOut();
+					}
+				}).create();
+		dialog.show();
+	}
+	//版本更新弹窗
 	public void showDialog(){
 		Dialog dialog = new AlertDialog.Builder(this).setTitle("有新版本").setMessage("是否安装新版本？")
 				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-					
+
 					@Override
 					public void onClick(DialogInterface dialog, int arg1) {
 						// TODO Auto-generated method stub
@@ -136,7 +155,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 						downloadApk();
 					}
 				}).setNeutralButton("暂不更新", new DialogInterface.OnClickListener() {
-					
+
 					@Override
 					public void onClick(DialogInterface dialog, int arg1) {
 						// TODO Auto-generated method stub
@@ -148,7 +167,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 	//检查版本
 	public void getVersion(){
 		ObjGlobalAndroidWrap.checkVersion(new ObjGlobalCallback() {
-			
+
 			@Override
 			public void callback(ObjGlobalAndroid object, AVException e) {
 				// TODO Auto-generated method stub
@@ -180,10 +199,10 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 						fos.write(data);
 						//下载完成后自动弹出安装
 						Intent intent = new Intent(Intent.ACTION_VIEW);  
-				        intent.setDataAndType(Uri.fromFile(new File(Environment  
-				                .getExternalStorageDirectory()+"/meetu", "MeetU.apk")),  
-				                "application/vnd.android.package-archive");  
-				        startActivity(intent);  
+						intent.setDataAndType(Uri.fromFile(new File(Environment  
+								.getExternalStorageDirectory()+"/meetu", "MeetU.apk")),  
+								"application/vnd.android.package-archive");  
+						startActivity(intent);  
 					} catch (FileNotFoundException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -275,22 +294,22 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 	//调用系统分享
 	public void shareMsg(String activityTitle, String msgTitle, String msgText,
 			String imgPath) {
-			Intent intent = new Intent(Intent.ACTION_SEND);
-			if (imgPath == null || imgPath.equals("")) {
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		if (imgPath == null || imgPath.equals("")) {
 			intent.setType("text/plain"); // 纯文本
-			} else {
+		} else {
 			File f = new File(imgPath);
 			if (f != null && f.exists() && f.isFile()) {
-			intent.setType("image/png");
-			Uri u = Uri.fromFile(f);
-			intent.putExtra(Intent.EXTRA_STREAM, u);
+				intent.setType("image/png");
+				Uri u = Uri.fromFile(f);
+				intent.putExtra(Intent.EXTRA_STREAM, u);
 			}
-			}
-			intent.putExtra(Intent.EXTRA_SUBJECT, msgTitle);
-			intent.putExtra(Intent.EXTRA_TEXT, msgText);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(Intent.createChooser(intent, activityTitle));
-			}
+		}
+		intent.putExtra(Intent.EXTRA_SUBJECT, msgTitle);
+		intent.putExtra(Intent.EXTRA_TEXT, msgText);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(Intent.createChooser(intent, activityTitle));
+	}
 	/**
 	 * 注销登录需要做的操作，删除本地的用户对象 断开application的长连接
 	 * 
@@ -313,6 +332,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 					Intent intent=new Intent(SystemSettingsActivity.this,LoginActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(intent);
+					finish();
 				}else{
 					log.e("zcq", "长连接注销失败");
 				}

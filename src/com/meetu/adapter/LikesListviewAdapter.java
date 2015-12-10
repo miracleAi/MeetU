@@ -16,45 +16,22 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import cc.imeetu.R;
 
+import com.lidroid.xutils.BitmapUtils;
+import com.meetu.cloud.object.ObjUser;
 import com.meetu.entity.Huodong;
 
 @SuppressLint("NewApi")
-public class LikesListviewAdapter extends BaseAdapter implements
-		OnClickListener {
+public class LikesListviewAdapter extends BaseAdapter{
 
 	private Context mContext;
-	private List<Huodong> newsList;
+	private List<ObjUser> newsList;
+	// 网络数据相关
+	private BitmapUtils bitmapUtils;
 
-	private final int TYPE_COUNT = 4;
-
-	// private FinalBitmap fianlBitmap;
-	//
-
-	public LikesListviewAdapter(Context context, List<Huodong> newsList) {
+	public LikesListviewAdapter(Context context, List<ObjUser> newsList) {
 		this.mContext = context;
 		this.newsList = newsList;
-
-		//
-		// NewsApplication app=(NewsApplication)context.getApplicationContext();
-		// fianlBitmap=app.getFinalBitmap();
-	}
-
-	/**
-	 * ������������ʾ������� 0 1 2
-	 */
-	// @Override
-	// public int getItemViewType(int position) {
-	//
-	// // TODO Auto-generated method stub
-	// return newsList!=null?newsList.get(position).getStyle():-1;
-	// }
-	/**
-	 * �������͸���
-	 */
-	@Override
-	public int getViewTypeCount() {
-		// TODO Auto-generated method stub
-		return TYPE_COUNT;
+		bitmapUtils = new BitmapUtils(context);
 	}
 
 	@Override
@@ -62,7 +39,7 @@ public class LikesListviewAdapter extends BaseAdapter implements
 		// TODO Auto-generated method stub
 		Log.d("lucifer", "getCount()");
 		// return newsList.size();
-		return 10;
+		return newsList.size();
 	}
 
 	@Override
@@ -82,77 +59,30 @@ public class LikesListviewAdapter extends BaseAdapter implements
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
+		ObjUser bean = newsList.get(position);
 		ViewHolder holder = null;
-		// Huodong item=newsList.get(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
-			// //��layout.xmlת��ΪView
-			// switch(item.getStyle()){
-			// case 0:
 			convertView = LayoutInflater.from(mContext).inflate(
 					R.layout.item_likeslist, null);
 
-			// holder.tvDigest=(TextView)convertView.findViewById(R.id.tvDigest);
-			// holder.tvReply=(TextView)convertView.findViewById(R.id.tvReply);
-			// break;
-			// case 1:
-			// convertView=LayoutInflater.from(mContext).inflate(R.layout.news_item2,
-			// null);
-			// holder.ivExtImg1=(ImageView)convertView.findViewById(R.id.ivExtImg1);
-			// holder.ivExtImg2=(ImageView)convertView.findViewById(R.id.ivExtImg2);
-			// holder.tvReply=(TextView)convertView.findViewById(R.id.tvReply);
-			// break;
-			// case 2:
-			// convertView=LayoutInflater.from(mContext).inflate(R.layout.news_item3,
-			// null);
-			// holder.tvDigest=(TextView)convertView.findViewById(R.id.tvDigest);
-			// break;
-			// case 3:
-			// convertView = LayoutInflater.from(mContext).inflate(
-			// R.layout.wangyixinwen_item, null);
-			// break;
-			// }
-			// holder.tvTilte=(TextView)convertView.findViewById(R.id.tvTitle);
-			holder.ivImgUrl = (ImageView) convertView
+			holder.avatorImv = (ImageView) convertView
 					.findViewById(R.id.userhead_likelist_mine_img);
-
-			convertView.setTag(holder);// ��¼����ʶ
+			holder.nameTv = (TextView) convertView.findViewById(R.id.name_item_tv);
+			holder.schoolTv = (TextView) convertView.findViewById(R.id.school_item_tv);
+			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		// holder.tvTilte.setText(item.getTitle());
-		// fianlBitmap.display(holder.ivImgUrl, item.getImgsrc());
-		// if(item.getDigest()!=null&&holder.tvDigest!=null){
-		// holder.tvDigest.setText(item.getDigest());
-		// }
-		// List<Map<String,String>> list=item.getImgextra();
-		// if(list!=null&&list.size()!=0&&holder.ivExtImg1!=null){
-		// fianlBitmap.display(holder.ivExtImg1,
-		// list.get(0).get("imgsrc"));
-		// fianlBitmap.display(holder.ivExtImg2, list.get(1).get("imgsrc"));
-		// }
-		// if(holder.tvReply!=null){
-		// holder.tvReply.setText(item.getReplyCount()+"����");
-		// }
-		// Log.d("jereh","getView()");
-
+		bitmapUtils.display(holder.avatorImv, bean.getProfileClip().getUrl());
+		holder.nameTv.setText(bean.getNameNick());
+		holder.schoolTv.setText(bean.getSchool());
 		return convertView;
 	}
 
 	private class ViewHolder {
-		private TextView tvTilte;
-		private TextView tvDigest;
-		private TextView tvReply;
-		private ImageView ivImgUrl;
-		private ImageView ivExtImg1;
-		private ImageView ivExtImg2;
-
+		private ImageView avatorImv;
+		private TextView nameTv;
+		private TextView schoolTv;
 	}
-
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

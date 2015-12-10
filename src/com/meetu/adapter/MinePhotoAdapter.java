@@ -1,5 +1,6 @@
 package com.meetu.adapter;
 
+import java.io.Serializable;
 import java.util.List;
 
 import net.tsz.afinal.FinalBitmap;
@@ -29,6 +30,7 @@ import android.R.string;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -98,7 +100,7 @@ public class MinePhotoAdapter extends PagerAdapter {
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		// TODO Auto-generated method stub
-		ObjUserPhoto item = Newslist.get(position);
+		final ObjUserPhoto item = Newslist.get(position);
 		log.e("zcq", "" + photoUrl);
 		View view = LayoutInflater.from(mContext).inflate(
 				R.layout.item_minephoto_viewpager, null);
@@ -124,7 +126,7 @@ public class MinePhotoAdapter extends PagerAdapter {
 		}
 
 		if (isMyself == false) {
-			photoDownImv.setVisibility(View.GONE);
+			photoDownImv.setVisibility(View.INVISIBLE);
 			getUserInfo(item,userId, view);
 		} else {
 			photoDownImv.setVisibility(View.VISIBLE);
@@ -151,6 +153,7 @@ public class MinePhotoAdapter extends PagerAdapter {
 				public void onClick(View arg0) {
 					Intent intent = new Intent(mContext,
 							FavorListActivity.class);
+					intent.putExtra("photo", (Serializable) item);
 					mContext.startActivity(intent);
 
 				}
@@ -178,13 +181,14 @@ public class MinePhotoAdapter extends PagerAdapter {
 				} 
 				if (user != null) {
 					userObjUser = user;
-					boolean isFavor = false;
 					TextView name = (TextView) view
 							.findViewById(R.id.name_mine_photoview_fullscreen);
 					name.setText("" + userMy.getNameNick());
 
 					ImageView photoHead = (ImageView) view
 							.findViewById(R.id.nameheader_mine_photoview_fullscreen_img);
+					final TextView favorNumber = (TextView) view
+							.findViewById(R.id.favorNumber_item_minephoto);
 					final ImageView favorImv = (ImageView) view.findViewById(R.id.favor_minephoto_mine);
 					final RelativeLayout favorLayout = (RelativeLayout) view
 							.findViewById(R.id.favor_minephoto_mine_rl);
@@ -204,11 +208,13 @@ public class MinePhotoAdapter extends PagerAdapter {
 									@Override
 									public void onClick(View arg0) {
 										ObjUserPhotoWrap.cancelPraiseUserPhoto(photo, userMy, new ObjFunBooleanCallback() {
-											
+
 											@Override
 											public void callback(boolean result, AVException e) {
 												// TODO Auto-generated method stub
 												if(result){
+													favorNumber.setText("" + (photo.getPraiseCount()-1));
+													favorImv.setImageResource(R.drawable.mine_photoview_fullscreen_btn_like_nor);
 													Toast.makeText(mContext, "取消点赞", 1000).show();
 												}else{
 													Toast.makeText(mContext, "取消点赞失败", 1000).show();
@@ -229,6 +235,8 @@ public class MinePhotoAdapter extends PagerAdapter {
 											public void callback(boolean result, AVException e) {
 												// TODO Auto-generated method stub
 												if(result){
+													favorNumber.setText("" + (photo.getPraiseCount()+1));
+													favorImv.setImageResource(R.drawable.mine_photoview_fullscreen_btn_like_hl);
 													Toast.makeText(mContext, "点赞成功", 1000).show();
 												}else{
 													Toast.makeText(mContext, "点赞失败", 1000).show();
