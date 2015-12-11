@@ -67,7 +67,6 @@ OnRefreshListener2<ListView>, OnItemClickListener, OnClickListener {
 		sp = getSharedPreferences("favorHisPos",Context.MODE_PRIVATE);
 		scanTime = sp.getLong("scanTime", 0);
 		sp.edit().putLong("scanTime", System.currentTimeMillis()).commit();
-		log.d("mytest", "put"+sp.getLong("scanTime", 0));
 		initView();
 		initData();
 	}
@@ -93,14 +92,11 @@ OnRefreshListener2<ListView>, OnItemClickListener, OnClickListener {
 					List<FavorBean> list = objects;
 					List<FavorBean> newList = new ArrayList<FavorBean>();
 					List<FavorBean> hisList = new ArrayList<FavorBean>();
-					log.d("mytest", "last===="+scanTime);
 					for(int i=0;i<list.size();i++){
 						FavorBean bean = list.get(i);
 						if(bean.getPraiseTime()>scanTime){
-							log.d("mytest", "new===="+bean.getPraiseTime());
 							newList.add(bean);
 						}else{
-							log.d("mytest", "his===="+bean.getPraiseTime());
 							hisList.add(bean);
 						}
 					}

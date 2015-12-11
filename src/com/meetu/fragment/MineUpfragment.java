@@ -76,7 +76,7 @@ import android.widget.LinearLayout.LayoutParams;
  * @return
  */
 public class MineUpfragment extends Fragment implements ScrollTabHolder,
-		OnClickListener {
+OnClickListener {
 
 	private CustomViewPager userPager;
 	private SlidingTabLayout userTab;
@@ -127,11 +127,11 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 			if (currentUser != null) {
 				// 强制类型转换
 				user = AVUser.cast(currentUser, ObjUser.class);
-				
+
 				if(user.getProfileClip()!=null){
 					headURl = user.getProfileClip().getUrl();
 				}
-				
+
 				log.e("lucifer", "url" + headURl);
 			}
 			initView();
@@ -333,7 +333,6 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 			scrollHeader(scrollY);
 		}
 	}
-
 	class ViewPagerAdapter extends FragmentPagerAdapter {
 		private SparseArrayCompat<ScrollTabHolder> mScrollTabHolders;
 		private int nums;
@@ -380,9 +379,11 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 			log.e("zcq", "position==" + position);
 			mScrollTabHolders.put(position, (ScrollTabHolder) object);
 
+
 			if(object instanceof MinePhotoWallfragment){
 				photoWallFragment = (MinePhotoWallfragment) object;
 			}
+
 
 			return object;
 		}
@@ -540,7 +541,7 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 
 	private void showDialog() {
 		final AlertDialog portraidlg = new AlertDialog.Builder(getActivity())
-				.create();
+		.create();
 		portraidlg.show();
 		Window win = portraidlg.getWindow();
 		win.setContentView(R.layout.dialog_show_photo);
@@ -685,31 +686,31 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 							ObjUserWrap.completeUserInfo(user,
 									new ObjFunBooleanCallback() {
 
-										@Override
-										public void callback(boolean result,
-												AVException e) {
-											// TODO Auto-generated method stub
-											if (result) {
-												// clickBtn.setText(LOAD_SUC);
-												Toast.makeText(getActivity(),
-														"头像已上传", 1000)
-														.show();
-												// 更新头像
-												headURl = user.getProfileClip()
-														.getUrl();
-												log.e("lucifer", "url"
-														+ headURl);
-												bitmapUtils.display(ivTouxiang,
-														headURl);
+								@Override
+								public void callback(boolean result,
+										AVException e) {
+									// TODO Auto-generated method stub
+									if (result) {
+										// clickBtn.setText(LOAD_SUC);
+										Toast.makeText(getActivity(),
+												"头像已上传", 1000)
+												.show();
+										// 更新头像
+										headURl = user.getProfileClip()
+												.getUrl();
+										log.e("lucifer", "url"
+												+ headURl);
+										bitmapUtils.display(ivTouxiang,
+												headURl);
 
-											} else {
-												// clickBtn.setText(LOAD_FAIL);
-												Toast.makeText(getActivity(),
-														"上传头像失败", 1000)
-														.show();
-											}
-										}
-									});
+									} else {
+										// clickBtn.setText(LOAD_FAIL);
+										Toast.makeText(getActivity(),
+												"上传头像失败", 1000)
+												.show();
+									}
+								}
+							});
 						}
 					});
 				}
@@ -726,7 +727,7 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 	}
 
 	public Bitmap getThumbnail(Uri uri, int size) throws FileNotFoundException,
-			IOException {
+	IOException {
 		InputStream input = getActivity().getContentResolver().openInputStream(
 				uri);
 		BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
