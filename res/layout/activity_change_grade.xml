@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:background="@color/white">
+    android:background="@color/child_backgroud">
 
     <!-- title -->
 
@@ -12,15 +12,16 @@
         <RelativeLayout
             android:id="@+id/back_changeschool_mine_rl"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content" 
+            android:background="@color/white">
 
             <RelativeLayout
                 android:id="@+id/back_changeschool_mine_rl1"
-                android:layout_width="44dp"
+                android:layout_width="54dp"
                 android:layout_height="44dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
+               
                 android:background="@drawable/kongjianruoqu_bg"
                 android:gravity="center" >
 
@@ -42,6 +43,9 @@
 
    
         </RelativeLayout>
+        <View android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#cccccc"/>
 
 
     <LinearLayout

@@ -4,6 +4,7 @@ import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogUtil.log;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjUserWrap;
@@ -70,7 +71,7 @@ public class ChangexingzuoActivity extends Activity implements OnClickListener {
 		text10 = (TextView) super.findViewById(R.id.change_xingzuo10_tv);
 		text11 = (TextView) super.findViewById(R.id.change_xingzuo11_tv);
 		text12 = (TextView) super.findViewById(R.id.change_xingzuo12_tv);
-		text1.setOnClickListener(this);
+	
 		layout1 = (LinearLayout) super.findViewById(R.id.change_xingzuo1_ll);
 		layout2 = (LinearLayout) super.findViewById(R.id.change_xingzuo2_ll);
 		layout3 = (LinearLayout) super.findViewById(R.id.change_xingzuo3_ll);
@@ -107,10 +108,11 @@ public class ChangexingzuoActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.change_xingzuo1_ll:
+			log.e("zcq", "点击了第一个");
 			xingzuo = text1.getText().toString();
 			completeInfo(user);
 			Intent intent = new Intent();
-			intent.putExtra("xingzuo", text1.getText().toString());
+			intent.putExtra("xingzuo", ""+text1.getText().toString());
 			setResult(RESULT_OK, intent);
 			finish();
 
