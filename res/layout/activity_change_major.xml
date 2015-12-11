@@ -9,7 +9,8 @@
         android:id="@+id/top_changname_rl"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:gravity="center" >
+        android:gravity="center"
+        android:background="@color/white" >
 
         <RelativeLayout
             android:id="@+id/back_changemajor_mine_rl"
@@ -34,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="修改专业"
+            android:text="修改院系"
             android:textColor="#a0a0a0"
             android:textSize="19sp" />
 
@@ -115,7 +116,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/imageView3"
-        android:text="选择专业"
+        android:text="选择院系"
         android:textColor="#da33c6e5"
         android:textSize="12sp" />
 

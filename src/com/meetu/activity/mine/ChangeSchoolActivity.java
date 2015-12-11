@@ -140,14 +140,21 @@ public class ChangeSchoolActivity extends Activity implements OnClickListener {
 				if (arg0.length() != 0) {
 					mListViewFind.setVisibility(View.VISIBLE);
 
-					schoolsFindList = schoolDao.getSchoolsFind(arg0.toString());
+					try {
+						schoolsFindList= schoolDao.getSchoolsFind(arg0.toString());
+						addListview(schoolsFindList);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						mListViewFind.setVisibility(View.GONE);
+					}
 
 					// if(schoolsFindList.size()!=0){
 					// mListFindAdapter=new SchoolListAllAdapter(this,
 					// schoolsFindList);
 					// mListViewFind.setAdapter(mListFindAdapter);
 					// }
-					addListview(schoolsFindList);
+					
 				} else {
 					mListViewFind.setVisibility(View.GONE);
 				}
@@ -162,26 +169,26 @@ public class ChangeSchoolActivity extends Activity implements OnClickListener {
 			mListFindAdapter = new SchoolListAllAdapter(this, list);
 
 			mListViewFind.setAdapter(mListFindAdapter);
+			if(schoolsFindList!=null&&schoolsFindList.size()>0){
 			mListViewFind.setOnItemClickListener(new OnItemClickListener() {
 
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1,
-						int position, long arg3) {
-					// TODO
-					log.e("lucifer", ""
-							+ schoolsFindList.get(position - 1).getUnivsId()
-							+ " "
-							+ schoolsFindList.get(position - 1)
-									.getUnivsNameString());
-					Intent intent = new Intent(ChangeSchoolActivity.this,
-							ChangeMajorActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putSerializable("schools",
-							schoolsFindList.get(position - 1));
-					intent.putExtras(bundle);
-					startActivityForResult(intent, 20);
-				}
-			});
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				// TODO
+
+				Intent intent = new Intent(ChangeSchoolActivity.this,
+						ChangeMajorActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putSerializable("schools",
+						schoolsFindList.get(position - 1));
+				intent.putExtras(bundle);
+				startActivityForResult(intent, 20);
+			}
+		});
+	}
+			
+			
 
 		}
 		mListFindAdapter.notifyDataSetChanged();

@@ -92,7 +92,7 @@ public class ChangeMajorActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
+		
 		switch (v.getId()) {
 		case R.id.mine_changemajor_majorwancheng_rl:
 

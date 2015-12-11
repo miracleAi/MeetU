@@ -263,8 +263,14 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 				bundle.putSerializable("schools", schools);
 				intent3.putExtras(bundle);
 				startActivityForResult(intent3, 3);
-				break;
+				
+			}else{
+				Intent intent3 = new Intent(getActivity(),
+						ChangeSchoolActivity.class);
+				intent3.putExtra("school", userschool.getText());
+				startActivityForResult(intent3, 1);
 			}
+			break;
 			
 		// 家乡的修改
 		case R.id.minesetting_hometown_ll:
