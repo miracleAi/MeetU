@@ -201,6 +201,7 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 					return;
 				} 
 				if (objects != null&&objects.size()>0) {
+					objUserPhotos.clear();
 					objUserPhotos.addAll(objects);
 					// mAdapter=new StaggeredHomeAdapter(getActivity(),
 					// objUserPhotos);

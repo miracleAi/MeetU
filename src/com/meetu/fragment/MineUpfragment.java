@@ -19,6 +19,7 @@ import com.lidroid.xutils.BitmapUtils;
 import com.meetu.activity.SystemSettingsActivity;
 import com.meetu.activity.mine.UpdatepictureActivity;
 import com.meetu.activity.mine.UserPagerActivity;
+import com.meetu.adapter.PhotoPagerAdapter;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjUserWrap;
@@ -112,6 +113,8 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 	private String fHeadPath = "";
 	private String yHeadPath = "";
 	private ImageView sexImg;
+	
+	MinePhotoWallfragment photoWallFragment=null;
 	
 	private List<Fragment> fragmentList = new ArrayList<Fragment>();
 
@@ -377,6 +380,10 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 			log.e("zcq", "position==" + position);
 			mScrollTabHolders.put(position, (ScrollTabHolder) object);
 
+			if(object instanceof MinePhotoWallfragment){
+				photoWallFragment = (MinePhotoWallfragment) object;
+			}
+
 			return object;
 		}
 
@@ -519,8 +526,8 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 				log.e("lucifer", "上传照片成功刷新照片列表");
 
 			//	 ((MinePhotoWallfragment)MinePhotoWallfragment.newInstance(1));
-				 MinePhotoWallfragment.newInstance(1);
-				
+			//	 MinePhotoWallfragment.newInstance(1);
+				 photoWallFragment.reflesh();
 				
 			}
 			break;
