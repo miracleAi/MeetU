@@ -260,7 +260,7 @@ OnItemClickListener {
 		title.setText("" + jstitle);
 
 
-		int number = userAboutDao.queryUserAbout("" + user.getObjectId(), 2,
+		int number = userAboutDao.queryUserAbout("" + user.getObjectId(), Constants.CONVERSATION_TYPE,
 				conversationId).size();
 		log.e("lucifer", "number==" + number + " conversationStyle=="
 				+ conversationStyle);
@@ -365,7 +365,7 @@ OnItemClickListener {
 						InputMethodManager.HIDE_NOT_ALWAYS);
 
 				Chatmsgs item = chatmsgsCacheList.get(position);
-				if (item.getChatMsgType() == 0 || item.getChatMsgType() == 1) {
+				if (item.getChatMsgType() == Constants.SHOW_TEXT || item.getChatMsgType() == Constants.SHOW_IMG) {
 					// Toast.makeText(context, ""+item.getContent(),
 					// Toast.LENGTH_SHORT).show();
 					log.e("lucifer",
@@ -440,7 +440,7 @@ OnItemClickListener {
 				// TODO Auto-generated method stub
 				log.e("复制");
 				portraidlg.dismiss();
-				if (item.getChatMsgType() == 10 || item.getChatMsgType() == 12) {
+				if (item.getChatMsgType() == Constants.SHOW_SEND_TEXT || item.getChatMsgType() == Constants.SHOW_RECV_TEXT) {
 
 					CopyContent(item.getContent());
 				}
@@ -693,7 +693,7 @@ OnItemClickListener {
 		mchatmsgs.setSendTimeStamp("" + System.currentTimeMillis());
 		mchatmsgs.setImgMsgImageUrl(uir.toString());
 		mchatmsgs.setConversationId(conversationId);
-		mchatmsgs.setChatMsgType(11);
+		mchatmsgs.setChatMsgType(Constants.SHOW_SEND_IMG);
 		mchatmsgs.setChatMsgDirection(Constants.IOTYPE_OUT);
 		mchatmsgs.setChatMsgStatus(Constants.STATUES_SENDING);// 发送中
 
@@ -727,7 +727,7 @@ OnItemClickListener {
 			mchatmsgs.setSendTimeStamp("" + System.currentTimeMillis());
 			mchatmsgs.setContent(mcontentString);
 			mchatmsgs.setConversationId(conversationId);
-			mchatmsgs.setChatMsgType(10);
+			mchatmsgs.setChatMsgType(Constants.SHOW_SEND_TEXT);
 			mchatmsgs.setChatMsgDirection(Constants.IOTYPE_OUT);
 			mchatmsgs.setChatMsgStatus(Constants.STATUES_SENDING);// 发送中
 
@@ -1176,12 +1176,14 @@ OnItemClickListener {
 			super.onMessage(message, conversation, client);
 			// 请按自己需求改写
 			switch (message.getMessageType()) {
+			
 			case Constants.TEXT_TYPE:
 				log.e("zcq", "接收到一条文本消息");
 				createChatMsg(conversation, message);
 
 				break;
 			case Constants.IMAGE_TYPE:
+				log.e("zcq", "接收到一条图片消息");
 				createChatPicMsg(conversation, message);
 				break;
 			default:
@@ -1228,13 +1230,13 @@ OnItemClickListener {
 		chatBean.setContent(msg.getText());
 		int style = (Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
 		// 我接受别人的消息
-		if (style == 0
+		if (style == Constants.SHOW_TEXT
 				&& ChatMsgUtils.getDerection(msg.getMessageIOType()) == Constants.IOTYPE_IN) {
 
-			chatBean.setChatMsgType(12);
+			chatBean.setChatMsgType(Constants.SHOW_RECV_TEXT);
 		} else {
 			// 接收到自己发的消息
-			chatBean.setChatMsgType(10);
+			chatBean.setChatMsgType(Constants.SHOW_SEND_TEXT);
 		}
 		// 接收到本人id 发送的消息 不插入到本地消息数据库
 		if (!user.getObjectId().equals(msg.getFrom())) {
@@ -1287,12 +1289,12 @@ OnItemClickListener {
 		chatBean.setImgMsgImageWidth(msg.getWidth());
 
 		int style = (Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
-		if (style == 1
+		if (style == Constants.SHOW_IMG
 				&& ChatMsgUtils.getDerection(msg.getMessageIOType()) == Constants.IOTYPE_IN) {
 			// TODO 方便展示数据
-			chatBean.setChatMsgType(13);
+			chatBean.setChatMsgType(Constants.SHOW_RECV_IMG);
 		} else {
-			chatBean.setChatMsgType(11);
+			chatBean.setChatMsgType(Constants.SHOW_SEND_IMG);
 		}
 
 		chatmsgsDao.insert(chatBean);
@@ -1506,7 +1508,7 @@ OnItemClickListener {
 					conversation.getConversationId());
 
 			Chatmsgs chatBean = new Chatmsgs();
-			chatBean.setChatMsgType(14);//
+			chatBean.setChatMsgType(Constants.SHOW_SELF_CHANGE);//
 			chatBean.setNowJoinUserId(client.getClientId());
 			chatBean.setUid(user.getObjectId());
 			chatBean.setMessageCacheId(String.valueOf(System

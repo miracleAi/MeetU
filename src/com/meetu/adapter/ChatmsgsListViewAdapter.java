@@ -37,6 +37,7 @@ import com.meetu.bean.UserBean;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjUserWrap;
+import com.meetu.common.Constants;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.entity.Huodong;
 import com.meetu.myapplication.MyApplication;
@@ -84,8 +85,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 	}
 
 	/**
-	 * 消息状态 style 10 我发的文本消息 12接收的文本消息 11 我发的图片的消息 13接收的图片消息 2新人加入消息 3普通通知消息
-	 * 4活动咨询反馈通知消息 5 消息发送方向 14 自己加入和踢出提醒
+	 * 消息状态 style 10 我发的文本消息 12接收的文本消息 11 我发的图片的消息 13接收的图片消息 3新人加入消息 4普通通知消息
+	 * 活动咨询反馈通知消息  消息发送方向  14 自己加入和踢出提醒
 	 * 
 	 */
 	@Override
@@ -141,7 +142,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			switch (item.getChatMsgType()) {
 
 
-			case 10:
+			case Constants.SHOW_SEND_TEXT:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_item_text_right, null);
 				holder.content = (TextView) convertView
@@ -158,8 +159,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						.findViewById(R.id.fail_chat_item_text_img);
 				break;
 				//TODO 1 暂时没有此类型 未知原因出现此类型 待解决
-			case 1:
-			case 12:
+			
+			case Constants.SHOW_RECV_TEXT:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_item_text_left, null);
 				holder.content = (TextView) convertView
@@ -176,7 +177,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				holder.failPhoto = (ImageView) convertView
 						.findViewById(R.id.fail_chat_item_text_left);
 				break;
-			case 11:
+			case Constants.SHOW_SEND_IMG:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_item_photo_right, null);
 				holder.photo = (ImageView) convertView
@@ -192,7 +193,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				holder.resentLayout = (RelativeLayout) convertView
 						.findViewById(R.id.fail_chat_item_photo_right_rl);
 				break;
-			case 13:
+			case Constants.SHOW_RECV_IMG:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_item_photo_left, null);
 				holder.photo = (ImageView) convertView
@@ -210,7 +211,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						.findViewById(R.id.fail_chat_item_photo_left_rl);
 				break;
 
-			case 2:
+			case Constants.SHOW_MEMBERCHANGE:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_item_newjoin_remind, null);
 				holder.userHeadPhoto = (ImageView) convertView
@@ -225,7 +226,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						.findViewById(R.id.time_chat_item_newjoin_tv);
 				break;
 
-			case 14:
+			case Constants.SHOW_SELF_CHANGE:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_my_join_or_exit, null);
 				holder.time = (TextView) convertView
@@ -242,9 +243,9 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 		}
 
 		switch (item.getChatMsgType()) {
-		case 1:
-		case 10:
-		case 12:
+		
+		case Constants.SHOW_SEND_TEXT:
+		case Constants.SHOW_RECV_TEXT:
 			SpannableString spannableString = ChatGroupActivity
 			.getExpressionString(mContext, item.getContent());
 			holder.content.setMaxWidth(mMaxItemWidth);
@@ -336,7 +337,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			}
 			break;
 
-		case 11:
+		case Constants.SHOW_SEND_IMG:
 
 			if (item.getImgMsgImageUrl() != null
 			&& !item.getImgMsgImageUrl().equals("")) {
@@ -379,7 +380,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			}
 
 			break;
-		case 13:
+		case Constants.SHOW_RECV_IMG:
 			if (item.getImgMsgImageUrl() != null
 			&& !item.getImgMsgImageUrl().equals("")) {
 				finalBitmap.display(holder.photo, item.getImgMsgImageUrl());
@@ -454,7 +455,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 
 			break;
 
-		case 2:
+		case Constants.SHOW_MEMBERCHANGE:
 			// TODO 设置他人头像 需要封装个方法。多处使用
 			try {
 
@@ -515,7 +516,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			}
 
 			break;
-		case 14:
+		case Constants.SHOW_SELF_CHANGE:
 			// 自己 加入和退出的状态提醒
 
 			log.e("zcq 14", "自己加入消息显示");
