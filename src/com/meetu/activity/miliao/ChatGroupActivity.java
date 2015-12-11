@@ -231,6 +231,7 @@ OnItemClickListener {
 				+ conversationId);
 		jstitle = intent.getStringExtra("title");
 		number = intent.getStringExtra("number");
+		//觅聊ID
 		objectID = intent.getStringExtra("objectId");
 		timeOver=Long.valueOf(intent.getStringExtra("TimeOver"));
 

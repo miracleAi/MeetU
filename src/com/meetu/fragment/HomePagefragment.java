@@ -309,6 +309,8 @@ public class HomePagefragment extends Fragment implements
 						bean.setTitle(activity.getTitle());
 						bean.setTitleSub(activity.getTitleSub());
 						bean.setTimeStop(activity.getTimeStop());
+						log.d("mytest", "fragment time over ==== "+activity.getTimeChatStop());
+						bean.setTimeChatStop(activity.getTimeChatStop());
 						bean.setLocationGovernment(activity
 								.getLocationGovernment());
 						bean.setConversationId(activity.getConversationId());

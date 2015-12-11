@@ -2,6 +2,7 @@ package com.meetu.sqlite;
 
 import java.util.ArrayList;
 
+import com.avos.avoscloud.LogUtil.log;
 import com.meetu.bean.ActivityBean;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.common.Constants;
@@ -35,6 +36,7 @@ public class ActivityDao {
 			cv.put(Constants.ISACTIVITYPRAISE, bean.getIsFavor());
 			cv.put(Constants.TIMESTART, bean.getTimeStart());
 			cv.put(Constants.TIMESTOP, bean.getTimeStop());
+			cv.put(Constants.TIMECHATSTOP, bean.getTimeChatStop());
 			cv.put(Constants.TITLE, bean.getTitle());
 			cv.put(Constants.TITLESUB, bean.getTitleSub());
 			cv.put(Constants.STATUS, bean.getStatus());
@@ -150,6 +152,9 @@ public class ActivityDao {
 					.getColumnIndex(Constants.TITLESUB)));
 			bean.setTimeStop(cursor.getLong(cursor
 					.getColumnIndex(Constants.TIMESTOP)));
+			bean.setTimeChatStop(cursor.getLong(cursor
+					.getColumnIndex(Constants.TIMECHATSTOP)));
+			log.d("mytest", "dao query time over ==== "+bean.getTimeChatStop());
 			bean.setLocationGovernment(cursor.getString(cursor
 					.getColumnIndex(Constants.LOCATIONGOVERNMENT)));
 			bean.setLocationLatitude(cursor.getString(cursor
@@ -210,6 +215,9 @@ public class ActivityDao {
 					.getColumnIndex(Constants.TITLESUB)));
 			bean.setTimeStop(cursor.getLong(cursor
 					.getColumnIndex(Constants.TIMESTOP)));
+			bean.setTimeChatStop(cursor.getLong(cursor
+					.getColumnIndex(Constants.TIMECHATSTOP)));
+			log.d("mytest", "query1 time over ==== "+bean.getTimeChatStop());
 			bean.setLocationGovernment(cursor.getString(cursor
 					.getColumnIndex(Constants.LOCATIONGOVERNMENT)));
 			bean.setLocationLatitude(cursor.getString(cursor

@@ -199,6 +199,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		activitySb.append(Constants.LOCATIONPLACE + " varchar(100) ,");
 		activitySb.append(Constants.LOCATIONGOVERNMENT + " varchar(100) ,");
 		activitySb.append(Constants.TIMESTOP + " Integer ,");
+		activitySb.append(Constants.TIMECHATSTOP + " Integer ,");
 		activitySb.append(Constants.ACTIVITYINDEX + " Integer ,");
 		activitySb.append(Constants.LOCATIONLONGTITUDE + " varchar(100) ,");
 		activitySb.append(Constants.LOCATIONLATITUDE + " varchar(100) ,");

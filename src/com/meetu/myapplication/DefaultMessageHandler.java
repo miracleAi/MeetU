@@ -81,7 +81,6 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 					&& derection == Constants.IOTYPE_IN) {
 				chatBean.setChatMsgType(Constants.SHOW_RECV_TEXT);
 			} else {
-				
 				chatBean.setChatMsgType(msgType);
 			}
 			boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);

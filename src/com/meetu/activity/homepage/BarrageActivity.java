@@ -167,9 +167,10 @@ public class BarrageActivity extends Activity {
 		bottomTv = (TextView) findViewById(R.id.bottom_tv);
 		bottomImv = (ImageView) findViewById(R.id.bottom_arrow);
 		barrageBack = (ImageView) findViewById(R.id.back_barrage_img);
-		
+
+		topTitle.setText(actyBean.getTitle());
 		barrageBack.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -252,10 +253,10 @@ public class BarrageActivity extends Activity {
 						break;
 					case Constants.ActyStatusSignUPOver:
 						Toast.makeText(getApplicationContext(), "报名已结束", 1000)
-								.show();
+						.show();
 						break;
 					case Constants.ActyStatusSignUp:
-						
+
 						if(user.isCompleteUserInfo()){
 							Intent intent = new Intent(BarrageActivity.this,
 									JoinActivity.class);
@@ -266,16 +267,20 @@ public class BarrageActivity extends Activity {
 						}else{
 							PerfectInformation.showDiolagPerfertInformation(BarrageActivity.this, "亲爱的 只有完善个人信息后才能报名");
 						}
-						
+
 						break;
 					default:
 						break;
 					}
 				} else {
-					
 					Intent intent = new Intent(BarrageActivity.this,
 							ChatGroupActivity.class);
-					// startActivity(intent);
+					intent.putExtra("ConversationStyle", 1);
+					intent.putExtra("ConversationId", actyBean.getConversationId());
+					intent.putExtra("title", actyBean.getTitle());
+					log.d("mytest", "time over ==== "+actyBean.getTimeChatStop());
+					intent.putExtra("TimeOver",String.valueOf(actyBean.getTimeChatStop()));
+					startActivity(intent);
 				}
 			}
 		});
@@ -291,22 +296,22 @@ public class BarrageActivity extends Activity {
 			ObjActivityWrap.queryUserJoin(activity, user,
 					new ObjFunBooleanCallback() {
 
-						@Override
-						public void callback(boolean result, AVException e) {
-							// TODO Auto-generated method stub
-							if (e != null) {
-								return;
-							}
-							if (result) {
-								isJoined = true;
-								isChatLogin();
-							} else {
-								isJoined = false;
-								uLigin();
-							}
-							initBottom();
-						}
-					});
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if (e != null) {
+						return;
+					}
+					if (result) {
+						isJoined = true;
+						isChatLogin();
+					} else {
+						isJoined = false;
+						uLigin();
+					}
+					initBottom();
+				}
+			});
 		} catch (AVException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -319,21 +324,21 @@ public class BarrageActivity extends Activity {
 		ObjChatMessage.getClientStatus(MyApplication.chatClient,
 				new ObjFunBooleanCallback() {
 
-					@Override
-					public void callback(boolean result, AVException e) {
-						// TODO Auto-generated method stub
-						if (e != null) {
-							return;
-						}
-						if (result) {
-							// 本人聊天登录
-							getHisList(MyApplication.chatClient);
-						} else {
-							// 本人聊天未登录
-							chatLogin();
-						}
-					}
-				});
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					return;
+				}
+				if (result) {
+					// 本人聊天登录
+					getHisList(MyApplication.chatClient);
+				} else {
+					// 本人聊天未登录
+					chatLogin();
+				}
+			}
+		});
 	}
 
 	// 本人客户端登录
@@ -343,16 +348,16 @@ public class BarrageActivity extends Activity {
 		ObjChatMessage.connectToChatServer(MyApplication.chatClient,
 				new ObjAvimclientCallback() {
 
-					@Override
-					public void callback(AVIMClient client, AVException e) {
-						// TODO Auto-generated method stub
-						if (e != null) {
-							return;
-						}
-						MyApplication.chatClient = client;
-						// 本人聊天登录成功
-					}
-				});
+			@Override
+			public void callback(AVIMClient client, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					return;
+				}
+				MyApplication.chatClient = client;
+				// 本人聊天登录成功
+			}
+		});
 	}
 
 	/**
@@ -377,14 +382,14 @@ public class BarrageActivity extends Activity {
 				ObjUserWrap.getObjUser(barrage.getUserId(),
 						new ObjUserInfoCallback() {
 
-							@Override
-							public void callback(ObjUser objuser, AVException e) {
-								// TODO Auto-generated method stub
-								if (e == null) {
-									userDao.insertOrReplaceUser(objuser);
-								}
-							}
-						});
+					@Override
+					public void callback(ObjUser objuser, AVException e) {
+						// TODO Auto-generated method stub
+						if (e == null) {
+							userDao.insertOrReplaceUser(objuser);
+						}
+					}
+				});
 			}
 		}
 		setBottomBean(barrage);
@@ -408,7 +413,7 @@ public class BarrageActivity extends Activity {
 			bitmapUtils.display(imageView, barrage.getUserAvator());
 		} else {
 			imageView
-					.setImageResource(R.drawable.mine_likelist_profile_default);
+			.setImageResource(R.drawable.mine_likelist_profile_default);
 		}
 		// 唯一标记,与tv一致
 		imageView.setTag(barrage.getId());
@@ -526,13 +531,13 @@ public class BarrageActivity extends Activity {
 	public BarrageMsgBean getBottomBean() {
 		return bottomBean;
 	}
-	
+
 	public void initBottom(BarrageMsgBean bean, boolean isClick) {
 		if (null != bean.getUserAvator() && !("").equals(bean.getUserAvator())) {
 			bitmapUtils.display(headPhoto, bean.getUserAvator());
 		} else {
 			headPhoto
-					.setImageResource(R.drawable.mine_likelist_profile_default);
+			.setImageResource(R.drawable.mine_likelist_profile_default);
 		}
 		if (null != bean.getNickName() && !("").equals(bean.getNickName())) {
 			uName.setText(bean.getNickName());
@@ -616,17 +621,17 @@ public class BarrageActivity extends Activity {
 		ObjChatMessage.connectToChatServer(uClient,
 				new ObjAvimclientCallback() {
 
-					@Override
-					public void callback(AVIMClient client, AVException e) {
-						// TODO Auto-generated method stub
-						if (e != null) {
-							return;
-						}
-						uClient = client;
-						// 小U聊天登录成功
-						getHisList(uClient);
-					}
-				});
+			@Override
+			public void callback(AVIMClient client, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					return;
+				}
+				uClient = client;
+				// 小U聊天登录成功
+				getHisList(uClient);
+			}
+		});
 	}
 
 	// 获取历史记录
@@ -634,46 +639,46 @@ public class BarrageActivity extends Activity {
 		ObjChatMessage.getConversationById(client, conversationId,
 				new ObjCoversationCallback() {
 
+			@Override
+			public void callback(AVIMConversation conversation,
+					AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					return;
+				}
+				conversation.queryMessages(500,
+						new AVIMMessagesQueryCallback() {
+
 					@Override
-					public void callback(AVIMConversation conversation,
-							AVException e) {
+					public void done(List<AVIMMessage> msgs,
+							AVIMException e) {
 						// TODO Auto-generated method stub
+
 						if (e != null) {
 							return;
 						}
-						conversation.queryMessages(500,
-								new AVIMMessagesQueryCallback() {
-
-									@Override
-									public void done(List<AVIMMessage> msgs,
-											AVIMException e) {
-										// TODO Auto-generated method stub
-
-										if (e != null) {
-											return;
-										}
-										// 获取历史消息成功
-										for (AVIMMessage message : msgs) {
-											if (message instanceof AVIMTextMessage) {
-												AVIMTextMessage msg = ((AVIMTextMessage) message);
-												BarrageMsgBean bean = new BarrageMsgBean();
-												bean.setContent(msg.getText());
-												bean.setUserId(msg.getFrom());
-												bean.setTime(DateUtils
-														.getFormattedTimeInterval(msg
-																.getTimestamp()));
-												hisList.add(bean);
-											}
-										}
-									}
-								});
+						// 获取历史消息成功
+						for (AVIMMessage message : msgs) {
+							if (message instanceof AVIMTextMessage) {
+								AVIMTextMessage msg = ((AVIMTextMessage) message);
+								BarrageMsgBean bean = new BarrageMsgBean();
+								bean.setContent(msg.getText());
+								bean.setUserId(msg.getFrom());
+								bean.setTime(DateUtils
+										.getFormattedTimeInterval(msg
+												.getTimestamp()));
+								hisList.add(bean);
+							}
+						}
 					}
 				});
+			}
+		});
 	}
 
 	// 消息处理handler
 	public class MessageHandler extends
-			AVIMTypedMessageHandler<AVIMTypedMessage> {
+	AVIMTypedMessageHandler<AVIMTypedMessage> {
 		@Override
 		public void onMessage(AVIMTypedMessage message,
 				AVIMConversation conversation, AVIMClient client) {

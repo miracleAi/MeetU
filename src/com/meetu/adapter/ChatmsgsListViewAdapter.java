@@ -233,7 +233,6 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			default:
 				break;
 			}
-
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();

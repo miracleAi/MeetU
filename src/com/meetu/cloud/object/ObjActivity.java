@@ -104,6 +104,11 @@ public class ObjActivity extends AVObject implements Serializable {
 	 */
 	// String conversationId;
 	public static final String CONVERSATIONID = "conversationId";
+	public static final String TIMECHATSTOP = "timeChatStop";
+
+	public long getTimeChatStop() {
+		return this.getLong(TIMECHATSTOP);
+	}
 
 	public ObjActivity() {
 		// TODO Auto-generated constructor stub

@@ -64,6 +64,16 @@ public class ActivityBean implements Serializable {
 	String conversationId;
 	// index标记是插入的第几条活动
 	private int index;
+	//活动群聊结束时间
+	private long timeChatStop;
+
+	public long getTimeChatStop() {
+		return timeChatStop;
+	}
+
+	public void setTimeChatStop(long timeChatStop) {
+		this.timeChatStop = timeChatStop;
+	}
 
 	public String getLocationLongtitude() {
 		return locationLongtitude;

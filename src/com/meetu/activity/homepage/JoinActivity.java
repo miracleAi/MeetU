@@ -389,7 +389,7 @@ OnItemClickListener {
 	 * 报名参加活动
 	 * */
 	public void joinActivity(final int orderState){
-		if (hopeEditText.getText().length() == 0) {
+		if (nameEditText.getText().length() == 0) {
 			Toast.makeText(getApplicationContext(),
 					"请先完成报名信息", Toast.LENGTH_SHORT).show();
 			return;

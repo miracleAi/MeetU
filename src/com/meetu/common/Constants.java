@@ -96,6 +96,8 @@ public class Constants {
 	public static final String LOCATIONLATITUDE = "location_latitude";
 	// 活动结束时间
 	public static final String TIMESTOP = "time_stop";
+	//活动群聊结束时间
+	public static final String TIMECHATSTOP = "time_chat_stop";
 	// 活动群聊ID
 	public static final String CONVERSATIONID = "conversation_id";
 	// 活动index
