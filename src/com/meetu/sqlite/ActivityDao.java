@@ -154,7 +154,6 @@ public class ActivityDao {
 					.getColumnIndex(Constants.TIMESTOP)));
 			bean.setTimeChatStop(cursor.getLong(cursor
 					.getColumnIndex(Constants.TIMECHATSTOP)));
-			log.d("mytest", "dao query time over ==== "+bean.getTimeChatStop());
 			bean.setLocationGovernment(cursor.getString(cursor
 					.getColumnIndex(Constants.LOCATIONGOVERNMENT)));
 			bean.setLocationLatitude(cursor.getString(cursor
@@ -217,7 +216,6 @@ public class ActivityDao {
 					.getColumnIndex(Constants.TIMESTOP)));
 			bean.setTimeChatStop(cursor.getLong(cursor
 					.getColumnIndex(Constants.TIMECHATSTOP)));
-			log.d("mytest", "query1 time over ==== "+bean.getTimeChatStop());
 			bean.setLocationGovernment(cursor.getString(cursor
 					.getColumnIndex(Constants.LOCATIONGOVERNMENT)));
 			bean.setLocationLatitude(cursor.getString(cursor
