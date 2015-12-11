@@ -140,6 +140,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			log.e("zcq", "item.getContent()==" + item.getContent());
 			switch (item.getChatMsgType()) {
 
+
 			case 10:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_item_text_right, null);
@@ -156,6 +157,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				holder.failPhoto = (ImageView) convertView
 						.findViewById(R.id.fail_chat_item_text_img);
 				break;
+				//TODO 1 暂时没有此类型 未知原因出现此类型 待解决
+			case 1:
 			case 12:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_item_text_left, null);
@@ -239,10 +242,11 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 		}
 
 		switch (item.getChatMsgType()) {
+		case 1:
 		case 10:
 		case 12:
 			SpannableString spannableString = ChatGroupActivity
-					.getExpressionString(mContext, item.getContent());
+			.getExpressionString(mContext, item.getContent());
 			holder.content.setMaxWidth(mMaxItemWidth);
 			holder.content.setMinWidth(mMinItemWidth);
 			holder.content.setText(spannableString);
@@ -299,34 +303,34 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						ObjUserWrap.getObjUser(item.getClientId(),
 								new ObjUserInfoCallback() {
 
-									@Override
-									public void callback(ObjUser objuser,
-											AVException e) {
-										// TODO Auto-generated method stub
-										if (e == null) {
-											userDao.insertOrReplaceUser(objuser);
-											ArrayList<UserBean> list2 = userDao
-													.queryUser(item
-															.getClientId());
-											if (null != list2
-													&& list2.size() > 0) {
-												if (!list2.get(0)
-														.getProfileClip()
-														.equals("")) {
-													finalBitmap
-															.display(
-																	holder.userHeadPhoto,
-																	list2.get(0)
-																			.getProfileClip());
-												}
-												holder.userName.setText(""
-														+ list2.get(0)
-																.getNameNick());
-
-											}
+							@Override
+							public void callback(ObjUser objuser,
+									AVException e) {
+								// TODO Auto-generated method stub
+								if (e == null) {
+									userDao.insertOrReplaceUser(objuser);
+									ArrayList<UserBean> list2 = userDao
+											.queryUser(item
+													.getClientId());
+									if (null != list2
+											&& list2.size() > 0) {
+										if (!list2.get(0)
+												.getProfileClip()
+												.equals("")) {
+											finalBitmap
+											.display(
+													holder.userHeadPhoto,
+													list2.get(0)
+													.getProfileClip());
 										}
+										holder.userName.setText(""
+												+ list2.get(0)
+												.getNameNick());
+
 									}
-								});
+								}
+							}
+						});
 					}
 				}
 			}
@@ -335,7 +339,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 		case 11:
 
 			if (item.getImgMsgImageUrl() != null
-					&& !item.getImgMsgImageUrl().equals("")) {
+			&& !item.getImgMsgImageUrl().equals("")) {
 				finalBitmap.display(holder.photo, item.getImgMsgImageUrl());
 			}
 
@@ -377,7 +381,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			break;
 		case 13:
 			if (item.getImgMsgImageUrl() != null
-					&& !item.getImgMsgImageUrl().equals("")) {
+			&& !item.getImgMsgImageUrl().equals("")) {
 				finalBitmap.display(holder.photo, item.getImgMsgImageUrl());
 			}
 
@@ -420,31 +424,31 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 					ObjUserWrap.getObjUser(item.getNowJoinUserId(),
 							new ObjUserInfoCallback() {
 
-								@Override
-								public void callback(ObjUser objuser,
-										AVException e) {
-									// TODO Auto-generated method stub
-									if (e == null) {
-										userDao.insertOrReplaceUser(objuser);
-										ArrayList<UserBean> list2 = userDao
-												.queryUser(item.getClientId());
-										if (null != list2 && list2.size() > 0) {
-											if (!list2.get(0).getProfileClip()
-													.equals("")) {
-												finalBitmap
-														.display(
-																holder.userHeadPhoto,
-																list2.get(0)
-																		.getProfileClip());
-											}
-											holder.userName.setText(""
-													+ list2.get(0)
-															.getNameNick());
-
-										}
+						@Override
+						public void callback(ObjUser objuser,
+								AVException e) {
+							// TODO Auto-generated method stub
+							if (e == null) {
+								userDao.insertOrReplaceUser(objuser);
+								ArrayList<UserBean> list2 = userDao
+										.queryUser(item.getClientId());
+								if (null != list2 && list2.size() > 0) {
+									if (!list2.get(0).getProfileClip()
+											.equals("")) {
+										finalBitmap
+										.display(
+												holder.userHeadPhoto,
+												list2.get(0)
+												.getProfileClip());
 									}
+									holder.userName.setText(""
+											+ list2.get(0)
+											.getNameNick());
+
 								}
-							});
+							}
+						}
+					});
 				}
 			}
 
@@ -474,36 +478,36 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						ObjUserWrap.getObjUser(item.getNowJoinUserId(),
 								new ObjUserInfoCallback() {
 
-									@Override
-									public void callback(ObjUser objuser,
-											AVException e) {
-										// TODO Auto-generated method stub
-										if (e == null) {
-											userDao.insertOrReplaceUser(objuser);
-											ArrayList<UserBean> list2 = userDao.queryUser(item
-													.getNowJoinUserId());
-											if (null != list2
-													&& list2.size() > 0) {
-												if (!list2.get(0)
-														.getProfileClip()
-														.equals("")) {
-													finalBitmap
-															.display(
-																	holder.userHeadPhoto,
-																	list2.get(0)
-																			.getProfileClip());
-												}
-												holder.userName.setText(""
-														+ list2.get(0)
-																.getNameNick());
-												holder.userSchool.setText(""
-														+ list2.get(0)
-																.getSchool());
-
-											}
+							@Override
+							public void callback(ObjUser objuser,
+									AVException e) {
+								// TODO Auto-generated method stub
+								if (e == null) {
+									userDao.insertOrReplaceUser(objuser);
+									ArrayList<UserBean> list2 = userDao.queryUser(item
+											.getNowJoinUserId());
+									if (null != list2
+											&& list2.size() > 0) {
+										if (!list2.get(0)
+												.getProfileClip()
+												.equals("")) {
+											finalBitmap
+											.display(
+													holder.userHeadPhoto,
+													list2.get(0)
+													.getProfileClip());
 										}
+										holder.userName.setText(""
+												+ list2.get(0)
+												.getNameNick());
+										holder.userSchool.setText(""
+												+ list2.get(0)
+												.getSchool());
+
 									}
-								});
+								}
+							}
+						});
 					}
 				}
 			} catch (Exception e) {
@@ -519,8 +523,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 
 			holder.time.setText(""
 					+ com.meetu.cloud.utils.DateUtils
-							.getFormattedTimeInterval(Long.valueOf(item
-									.getSendTimeStamp())));
+					.getFormattedTimeInterval(Long.valueOf(item
+							.getSendTimeStamp())));
 			break;
 
 		}

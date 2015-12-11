@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:scrollbars="none" >
+    android:scrollbars="none" 
+    android:background="#80eeeeee">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -216,7 +217,7 @@
             android:id="@+id/minesetting_school_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/item_bg"
             android:orientation="vertical" >
 
