@@ -34,9 +34,10 @@
     <color name="textColor_setting">#a0a0a0</color>
     
     <color name="barrage_acty_end_bg">#AFAFAF</color>
-    <color name="barrage_acty_join_bg">#33c7e5</color>
+    <color name="barrage_acty_join_bg">#33c6e5</color>
     <color name="barrage_conv_join_bg">#0bc7b4</color>
     <color name="touming">#00000000</color>
+    <color name="child_backgroud">#64eeeeee</color>
     
    
     

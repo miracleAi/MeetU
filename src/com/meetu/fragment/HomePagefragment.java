@@ -111,6 +111,8 @@ public class HomePagefragment extends Fragment implements
 	//网络操作点击 管理
 	private boolean ischeckFavor=false;//当前操作网络是否正在请求中
 	
+	private int numberCache;//用来初始化cache中的关注数量
+	
 	//所有用户数量
 	private List<String> userAllNumberList=new ArrayList<String>();
 	@Override
@@ -269,6 +271,7 @@ public class HomePagefragment extends Fragment implements
 		// TODO Auto-generated method stub
 		log.e("lucifer", "正在加载网络数据");
 		actyList = new ArrayList<ActivityBean>();
+		numberCache=0;
 		ObjActivityWrap.queryAllActivitys(new ObjActivityCallback() {
 
 			@Override
@@ -435,8 +438,8 @@ public class HomePagefragment extends Fragment implements
 				adapter.notifyDataSetChanged();
 
 				initView();
-				refreshComplete();
-
+//				refreshComplete();
+				lvNewsList.onRefreshComplete();
 				break;
 			}
 		}
@@ -486,27 +489,36 @@ public class HomePagefragment extends Fragment implements
 
 		// TODO 实时更新活动标签里的内容 滑动距离有点问题
 
-		int ii = (int) ((maginY / actyListCache.size() - 1));// 标签滑动一个item 滑动的距离
-		log.e("lucifer" + "ii==" + ii + " i==" + i + " maginTop==" + maginTop);
-		int aa = (i - maginTop) / ii;
-		if (itemNow != aa) {
-			log.e("lucifer", "total==" + total + " itemHight==" + itemHight);
-			itemNow = aa;
-			if (itemNow >= actyListCache.size()) {
-				itemNow = actyListCache.size() - 1;
-				int number = userAboutDao.queryUserAbout(user.getObjectId(), 3,
-						actyListCache.get(itemNow).getConversationId()).size();
+		try {
+			int ii = (int) ((maginY / actyListCache.size() - 1));// 标签滑动一个item 滑动的距离
+			//log.e("lucifer" + "ii==" + ii + " i==" + i + " maginTop==" + maginTop);
+			int aa = (i - maginTop) / ii;
+			if (itemNow != aa) {
+			//	log.e("lucifer", "total==" + total + " itemHight==" + itemHight);
+				itemNow = aa;
+				if (itemNow >= actyListCache.size()) {
+					itemNow = actyListCache.size() - 1;
+					int number = userAboutDao.queryUserAbout(user.getObjectId(), 3,
+							actyListCache.get(itemNow).getConversationId()).size();
+				int allnumberUser=	actyListCache.get(itemNow).getOrderCountBoy()+actyListCache.get(itemNow).getOrderCountGirl();
 //				numberAll.setText("" + (actyListCache.get(itemNow).getOrderCountBoy()+actyListCache.get(itemNow).getOrderCountGirl())+"人报名");
-				numberAll.setText(""+number+"人报名");
-				numberFavor.setText(""+actyListCache.get(itemNow).getOrderAndFollow());
-			} else {
-				int number = userAboutDao.queryUserAbout(user.getObjectId(), 3,
-						actyListCache.get(itemNow).getConversationId()).size();
-				numberAll.setText(""+number+"人报名");
-//				numberAll.setText("" + actyListCache.get(itemNow).getOrderCountBoy()+actyListCache.get(itemNow).getOrderCountGirl()+"人报名");
-				numberFavor.setText(""+actyListCache.get(itemNow).getOrderAndFollow());
-			}
+					numberAll.setText(""+allnumberUser+"人报名");
+					numberFavor.setText(""+actyListCache.get(itemNow).getOrderAndFollow()+"个我关注的");
+				} else {
 
+					if(itemNow<0){
+						itemNow=0;
+					}
+					int allnumberUser=	actyListCache.get(itemNow).getOrderCountBoy()+actyListCache.get(itemNow).getOrderCountGirl();
+					numberAll.setText(""+allnumberUser+"人报名");
+
+					numberFavor.setText(""+actyListCache.get(itemNow).getOrderAndFollow()+"个我关注的");
+				}
+
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -519,7 +531,7 @@ public class HomePagefragment extends Fragment implements
 			// TODO 要传入实时滑动到的那个activity
 			Intent intent = new Intent(getActivity(), JoinUsersActivity.class);
 			Bundle bundle = new Bundle();
-			bundle.putSerializable("activityBean", actyListCache.get(2));
+			bundle.putSerializable("activityBean", actyListCache.get(itemNow));
 			intent.putExtras(bundle);
 			startActivity(intent);
 
@@ -564,6 +576,7 @@ public class HomePagefragment extends Fragment implements
 	 */
 	public void queryOrderUsers(final ObjActivity activity,
 			final String conversitionId) {
+		
 
 		ObjActivityOrderWrap.queryActivitySignUp(activity,
 				new ObjUserCallback() {
@@ -574,6 +587,8 @@ public class HomePagefragment extends Fragment implements
 							log.e("zcq", e);
 							return;
 						} else if (objects != null) {
+							numberCache++;
+
 							int numberFavor=0;
 							userAboutBeanList = new ArrayList<UserAboutBean>();
 							for (ObjUser objUser : objects) {
@@ -594,32 +609,38 @@ public class HomePagefragment extends Fragment implements
 											break;	
 										}
 										
-									}
-									
+									}			
 									
 								}else{
 									//不存在我关注的人
 									
 								}
-								
-								
-								
-								
 
 							}
 							log.e("zcq", "numberFavor=="+numberFavor);
 							activityDao.updateFavorUserNumber(user.getObjectId(), activity.getObjectId(), numberFavor);
+							
+							
 							userAboutDao.deleteByType(user.getObjectId(),
 									Constants.ACTIVITY_TYPE, conversitionId);
 
 							log.e("zcq", "userAboutBeanList=="
 									+ userAboutBeanList.size());
 							userAboutDao.saveUserAboutList(userAboutBeanList);
+							
+							log.e("numberCache", ""+numberCache);
+							if(numberCache==actyListCache.size()){
+								log.e("zcq cahce", "重新加载数据");
+								actyListCache.clear();
+								actyListCache.addAll(actyDao.queryActys(user.getObjectId()));
+								handler.sendEmptyMessage(1);
+								
+							}
 						}
 
 					}
 				});
-
+		
 	}
 
 }

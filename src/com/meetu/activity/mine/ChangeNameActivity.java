@@ -13,6 +13,8 @@ import com.meetu.cloud.wrap.ObjUserWrap;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -29,6 +31,7 @@ public class ChangeNameActivity extends Activity implements OnClickListener {
 	private String name;
 	private ImageView backImageView;
 	private RelativeLayout backLayout, quedingLayout;
+	private TextView nameNumser;//名字数量
 
 	// 网络数据 相关
 	// 拿本地的 user
@@ -58,7 +61,9 @@ public class ChangeNameActivity extends Activity implements OnClickListener {
 
 		nameEditText = (EditText) findViewById(R.id.name_changname_et);
 		nameEditText.setText(name);
+		
 		nameEditText.setOnClickListener(this);
+
 		backImageView = (ImageView) super
 				.findViewById(R.id.back_changename_mine);
 		backImageView.setOnClickListener(this);
@@ -68,7 +73,32 @@ public class ChangeNameActivity extends Activity implements OnClickListener {
 				.findViewById(R.id.mine_changename_wancheng_rl);
 		backLayout.setOnClickListener(this);
 		quedingLayout.setOnClickListener(this);
+		nameNumser=(TextView) findViewById(R.id.textSi_change_name_tv);
+		
+		nameEditText.addTextChangedListener(textWatcher);
+		nameNumser.setText(""+name.length());
 	}
+	public TextWatcher textWatcher=new TextWatcher() {
+		
+		@Override
+		public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+				int arg3) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void afterTextChanged(Editable arg0) {
+			// TODO Auto-generated method stub
+			nameNumser.setText(""+arg0.toString().length());
+		}
+	};
 
 	@Override
 	public void onClick(View v) {

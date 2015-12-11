@@ -139,6 +139,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			log.e("zcq", "item.getClientId()==" + item.getClientId());
 			log.e("zcq", "item.getContent()==" + item.getContent());
 			switch (item.getChatMsgType()) {
+		
 
 			case 10:
 				convertView = LayoutInflater.from(mContext).inflate(
@@ -156,6 +157,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				holder.failPhoto = (ImageView) convertView
 						.findViewById(R.id.fail_chat_item_text_img);
 				break;
+			//TODO 1 暂时没有此类型 未知原因出现此类型 待解决
+			case 1:
 			case 12:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_item_text_left, null);
@@ -234,12 +237,16 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				break;
 			}
 
-			convertView.setTag(holder);
+		
+				convertView.setTag(holder);
+		
+			
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
 		switch (item.getChatMsgType()) {
+		case 1:
 		case 10:
 		case 12:
 			SpannableString spannableString = ChatGroupActivity
