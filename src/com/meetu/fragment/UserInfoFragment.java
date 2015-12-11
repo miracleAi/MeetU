@@ -63,6 +63,7 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements
 	private static Boolean isMyself = false;
 
 	public static Fragment newInstance(int position, String userID) {
+		
 		UserInfoFragment fragment = new UserInfoFragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_POSITION, position);

@@ -94,6 +94,7 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 	private TextView failTextView;
 
 	public static Fragment newInstance(int position) {
+		log.e("zcq", "new MinePhotoWallfragment");
 		MinePhotoWallfragment fragment = new MinePhotoWallfragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_POSITION, position);
@@ -270,6 +271,7 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 	 * @date 2015-11-9
 	 */
 	public void reflesh() {
-		mAdapter.notifyDataSetChanged();
+		loaddata();
+		
 	}
 }

@@ -10,6 +10,7 @@ import cc.imeetu.R;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogUtil.log;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjUserPhotoWrap;
@@ -33,6 +34,7 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +49,7 @@ public class UpdatepictureActivity extends Activity implements OnClickListener {
 	private String userUpPhotoUri;
 	private Bitmap upPhoto;
 	private Boolean isEnd = false;// 用来标示 照片是否上传完成
+	private RelativeLayout okLayout,backLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,8 @@ public class UpdatepictureActivity extends Activity implements OnClickListener {
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
 		initView();
+		
+		update();
 	}
 
 	private void initView() {
@@ -69,11 +74,15 @@ public class UpdatepictureActivity extends Activity implements OnClickListener {
 		updateText.addTextChangedListener(watcher);
 		textsize = (TextView) super.findViewById(R.id.textsize_update_mine);
 		picture = (ImageView) super.findViewById(R.id.update_picture_mine);
-		quxiao = (TextView) super.findViewById(R.id.back_update_mine_tv);
+	
 		wancheng = (TextView) super.findViewById(R.id.wancheng_update_mine_tv);
-		quxiao.setOnClickListener(this);
-		wancheng.setOnClickListener(this);
-		update();
+		
+		
+		okLayout=(RelativeLayout) findViewById(R.id.wancheng_update_mine_rl);
+		okLayout.setOnClickListener(this);
+		backLayout=(RelativeLayout) findViewById(R.id.back_update_mine_rl);
+		backLayout.setOnClickListener(this);
+		
 
 	}
 
@@ -153,18 +162,16 @@ public class UpdatepictureActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.back_update_mine_tv:
+		case R.id.back_update_mine_rl:
 			finish();
 			break;
 		// 上传图片的相关信息
-		case R.id.wancheng_update_mine_tv:
+		case R.id.wancheng_update_mine_rl:
 			// Toast.makeText(this, "进行上传", Toast.LENGTH_SHORT).show();
 			if (isEnd == true) {
 				upLoadUserPhotoInfo(user);
 
-				Intent intent = getIntent();
-				setResult(RESULT_OK, intent);
-				finish();
+				
 			} else {
 				Toast.makeText(this, "请等照片上传结束后再点击", Toast.LENGTH_SHORT).show();
 			}
@@ -198,15 +205,17 @@ public class UpdatepictureActivity extends Activity implements OnClickListener {
 				// TODO Auto-generated method stub
 				if (e != null) {
 					// clickBtn.setText(LOAD_FAIL);
-					Toast.makeText(UpdatepictureActivity.this, "发表失败",
+					Toast.makeText(UpdatepictureActivity.this, "上传照片失败",
 							Toast.LENGTH_SHORT).show();
 				}
 				if (result) {
+					
 					isEnd = true;
+					log.e("zcq", "图片上传成功");
 
 				} else {
 					// clickBtn.setText(LOAD_FAIL);
-					Toast.makeText(UpdatepictureActivity.this, "发表失败",
+					Toast.makeText(UpdatepictureActivity.this, "上传照片失败",
 							Toast.LENGTH_SHORT).show();
 				}
 			}
@@ -234,16 +243,22 @@ public class UpdatepictureActivity extends Activity implements OnClickListener {
 						if (e != null) {
 							// clickBtn.setText(LOAD_FAIL);
 							Toast.makeText(UpdatepictureActivity.this,
-									"发表失败", Toast.LENGTH_SHORT).show();
+									"上传失败", Toast.LENGTH_SHORT).show();
+							log.e("zcq", "上传照片失败");
 						}
 						if (result) {
 							// clickBtn.setText(LOAD_SUC);
 							Toast.makeText(UpdatepictureActivity.this,
-									"已发表", Toast.LENGTH_SHORT).show();
+									"照片上传成功", Toast.LENGTH_SHORT).show();
+							log.e("zcq", "上传照片 信息 成功");
+							Intent intent = getIntent();
+							setResult(RESULT_OK, intent);
+							finish();
 						} else {
 							// clickBtn.setText(LOAD_FAIL);
 							Toast.makeText(UpdatepictureActivity.this,
 									"发表失败", Toast.LENGTH_SHORT).show();
+							log.e("zcq", "上传照片失败");
 						}
 					}
 				});

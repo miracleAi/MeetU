@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     >
 
     <RelativeLayout
@@ -10,38 +11,50 @@
         android:layout_height="40dp"
         android:gravity="center" >
 
-        <TextView
+        <RelativeLayout 
+            android:id="@+id/back_update_mine_rl"
+            android:layout_width="54dp"
+            android:layout_height="match_parent"
+            android:gravity="center">
+        <ImageView
             android:id="@+id/back_update_mine_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="10dp"
-            android:text="取消"
-            android:textColor="#33c6e5"
-            android:textSize="13dp" />
+            android:src="@drawable/mine_alter_btn_back"/>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+           
             android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:text="上传照片"
             android:textColor="#a0a0a0"
             android:textSize="18dp" />
 
+        <RelativeLayout 
+            android:id="@+id/wancheng_update_mine_rl"
+            android:layout_width="64dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center">
         <TextView
             android:id="@+id/wancheng_update_mine_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginRight="10dp"
+           
             android:text="完成"
             android:textColor="#33c6e5"
             android:textSize="13dp" />
+        </RelativeLayout>
     </RelativeLayout>
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/top_update_rl"
+        android:background="@color/view_backgroud" />
 
    
 
@@ -96,6 +109,7 @@
             android:drawablePadding="6dp"
             android:textColorHint="#bfbfbf"
             android:textColorLink="#33c6e5"
+            android:textColor="#808080"
             android:textSize="12dp" >
         </EditText>
 

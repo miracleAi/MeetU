@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import cc.imeetu.R;
 
@@ -25,6 +27,7 @@ import com.meetu.entity.Middle;
 import com.meetu.tools.BitmapCut;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
+import com.meetu.tools.UriToBitmap;
 import com.meetu.view.CustomViewPager;
 import com.meetu.view.MyScrollView;
 import com.meetu.view.ScrollTabHolder;
@@ -108,6 +111,9 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 	// 上传 信息 头像相关
 	private String fHeadPath = "";
 	private String yHeadPath = "";
+	private ImageView sexImg;
+	
+	private List<Fragment> fragmentList = new ArrayList<Fragment>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -190,6 +196,10 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 		updateImageView = (ImageView) view
 				.findViewById(R.id.update_mine_up_fragment_img);
 		updateImageView.setOnClickListener(this);
+		sexImg=(ImageView) view.findViewById(R.id.user_gender_imv);
+		if(user.getGender()==2){
+		//	sexImg.setImageResource(R.drawable);
+		}
 	}
 
 	private void initValues() {
@@ -445,6 +455,8 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 				try {
 					//
 					photoPortait = getThumbnail(url, 2000);
+					//
+					
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -455,6 +467,8 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 				// Bitmap output = Bitmap.createBitmap(headerPortait.getWidth(),
 				// headerPortait.getHeight(), Config.ARGB_8888);
 				// headerPortait=BitmapCut.toRectBitmap(headerPortait);
+				
+	//			photoPortait=UriToBitmap.getBitmapFromUri(getActivity(), url);
 				if (photoPortait != null) {
 					Middle.bimaBitmap = photoPortait;
 					// saveHeadImg(headerPortait);
@@ -504,7 +518,10 @@ public class MineUpfragment extends Fragment implements ScrollTabHolder,
 				// TODO 刷新 照片列表
 				log.e("lucifer", "上传照片成功刷新照片列表");
 
-				// ((MinePhotoWallfragment)list.get(1)).reflesh();
+			//	 ((MinePhotoWallfragment)MinePhotoWallfragment.newInstance(1));
+				 MinePhotoWallfragment.newInstance(1);
+				
+				
 			}
 			break;
 

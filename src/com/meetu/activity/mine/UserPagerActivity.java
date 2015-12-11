@@ -270,7 +270,7 @@ ScrollTabHolder, OnClickListener {
 		Morelayout = (RelativeLayout) findViewById(R.id.addmore_userpager_layout_rl);
 		Morelayout.setOnClickListener(this);
 		if (isMyself == true) {
-			backLayout.setVisibility(View.GONE);
+			backLayout.setVisibility(View.VISIBLE);
 			settingLayout.setVisibility(View.VISIBLE);
 			userLikeImv.setVisibility(View.GONE);
 			userScripImv.setVisibility(View.GONE);
@@ -1089,6 +1089,7 @@ ScrollTabHolder, OnClickListener {
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		finish();
+		
 	}
 
 	/**
@@ -1151,5 +1152,6 @@ ScrollTabHolder, OnClickListener {
 			}
 		});
 	}
+	
 
 }
