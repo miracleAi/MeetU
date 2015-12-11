@@ -13,6 +13,8 @@ import com.avos.avoscloud.DeleteCallback;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.SaveCallback;
+import com.meetu.bean.FavorBean;
+import com.meetu.cloud.callback.FavorBeanCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjUserCallback;
 import com.meetu.cloud.callback.ObjUserPhotoCallback;
@@ -224,7 +226,7 @@ public class ObjUserPhotoWrap {
 	/**
 	 * 查询用户照片点赞人列表
 	 * */
-	public static void queryPhotoPraiseUsers(ObjUserPhoto photo,final ObjUserCallback callback){
+	public static void queryPhotoPraiseUsers(ObjUserPhoto photo,final FavorBeanCallback callback){
 		AVQuery<ObjUserPhotoPraise> query = AVObject.getQuery(ObjUserPhotoPraise.class);
 		query.whereEqualTo("userPhoto", photo);
 		query.include("praiseUser");
@@ -238,10 +240,13 @@ public class ObjUserPhotoWrap {
 					return;
 				}
 				if(objects != null && objects.size()>0){
-					List<ObjUser> userList = new ArrayList<ObjUser>();
+					List<FavorBean> userList = new ArrayList<FavorBean>();
 					for(ObjUserPhotoPraise ph:objects){
 						ObjUser user = ph.getPraiseUser();
-						userList.add(user);
+						FavorBean bean = new FavorBean();
+						bean.setUser(user);
+						bean.setPraiseTime(ph.getUpdatedAt().getTime());
+						userList.add(bean);
 					}
 					callback.callback(userList, null);
 				}else{

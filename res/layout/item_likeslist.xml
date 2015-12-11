@@ -2,11 +2,50 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
+    》
+
+    <LinearLayout
+        android:id="@+id/his_layout"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#33c6e5" />
+        <LinearLayout 
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_gravity="center"
+            >
+            <ImageView android:layout_width="12dp"
+                android:layout_height="10dp"
+                android:src="@drawable/mine_likelist_his_img"/>
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dip"
+                android:textColor="#33c6e5"
+                android:text="已浏览"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#33c6e5" />
+        
+    </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/data_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@drawable/item_bg"
+        android:layout_below="@+id/his_layout"
         android:gravity="center_vertical" >
 
         <ImageView
@@ -63,8 +102,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:src="@drawable/mine_likelist_tablecell_btn_nextpage" />
     </RelativeLayout>

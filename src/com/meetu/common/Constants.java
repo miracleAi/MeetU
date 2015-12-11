@@ -130,17 +130,17 @@ public class Constants {
 	 * *传到云端，必须与iOS保持一直,标记消息展现类型
 	 */
 	// 文本
-	public static final int SHOW_TEXT = 0;
+	public static final int SHOW_TEXT = 1;
 	// 图片
-	public static final int SHOW_IMG = 1;
+	public static final int SHOW_IMG = 2;
 	// 群成员变动
-	public static final int SHOW_MEMBERCHANGE = 2;
+	public static final int SHOW_MEMBERCHANGE = 3;
 	// 普通通知
-	public static final int SHOW_NOMAL_NOTIFY = 3;
+	public static final int SHOW_NOMAL_NOTIFY = 4;
 	// 活动反馈通知
-	public static final int SHOW_ACTY_NOTY = 4;
+	public static final int SHOW_ACTY_NOTY = 5;
 	// 小纸条
-	public static final int SHOW_SCRIPT = 5;
+	public static final int SHOW_SCRIPT = 6;
 
 	/**
 	 * 文本 图片 区分发送接收方
@@ -153,7 +153,7 @@ public class Constants {
 	public static final int SHOW_RECV_TEXT = 12;
 	// 接收图片
 	public static final int SHOW_RECV_IMG = 13;
-	// 自己家人或被踢出提醒
+	// 自己加入或被踢出提醒
 	public static final int SHOW_SELF_CHANGE = 14;
 	/**
 	 * 消息状态常量

@@ -58,6 +58,10 @@ public class MinePhotoAdapter extends PagerAdapter {
 	private String userId;// 用户id
 	private boolean isMyself = true;// 用来标记是否从我自己的页面跳过来的
 	private ObjUser userObjUser = new ObjUser();// 他人的user对象
+	//标记是否点赞
+	private boolean isFavor = false;
+	//标记点赞数
+	private int praiseNum = 0;
 
 	public MinePhotoAdapter(Context context, List<ObjUserPhoto> list,
 			String userID) {
@@ -124,7 +128,6 @@ public class MinePhotoAdapter extends PagerAdapter {
 			photoUrl = item.getPhoto().getUrl();
 			finalBitmap.display(img, photoUrl);
 		}
-
 		if (isMyself == false) {
 			photoDownImv.setVisibility(View.INVISIBLE);
 			getUserInfo(item,userId, view);
@@ -176,6 +179,8 @@ public class MinePhotoAdapter extends PagerAdapter {
 
 			@Override
 			public void callback(ObjUser user, AVException e) {
+				isFavor = false;
+				praiseNum = photo.getPraiseCount();
 				if (e != null) {
 					return;
 				} 
@@ -202,18 +207,26 @@ public class MinePhotoAdapter extends PagerAdapter {
 						public void callback(boolean result, AVException e) {
 							// TODO Auto-generated method stub
 							if(result){
+								isFavor = true;
 								favorImv.setImageResource(R.drawable.mine_photoview_fullscreen_btn_like_hl);
-								favorLayout.setOnClickListener(new View.OnClickListener() {
+							}else{
+								isFavor = false;
+								favorImv.setImageResource(R.drawable.mine_photoview_fullscreen_btn_like_nor);
+							}
+							favorLayout.setOnClickListener(new View.OnClickListener() {
 
-									@Override
-									public void onClick(View arg0) {
+								@Override
+								public void onClick(View arg0) {
+									if(isFavor){
 										ObjUserPhotoWrap.cancelPraiseUserPhoto(photo, userMy, new ObjFunBooleanCallback() {
 
 											@Override
 											public void callback(boolean result, AVException e) {
 												// TODO Auto-generated method stub
 												if(result){
-													favorNumber.setText("" + (photo.getPraiseCount()-1));
+													isFavor = false;
+													praiseNum = praiseNum -1;
+													favorNumber.setText("" + praiseNum);
 													favorImv.setImageResource(R.drawable.mine_photoview_fullscreen_btn_like_nor);
 													Toast.makeText(mContext, "取消点赞", 1000).show();
 												}else{
@@ -221,21 +234,16 @@ public class MinePhotoAdapter extends PagerAdapter {
 												}
 											}
 										});
-									}
-								});
-							}else{
-								favorImv.setImageResource(R.drawable.mine_photoview_fullscreen_btn_like_nor);
-								favorLayout.setOnClickListener(new View.OnClickListener() {
-
-									@Override
-									public void onClick(View arg0) {
+									}else{
 										ObjUserPhotoWrap.praiseUserPhoto(photo, userMy, new ObjFunBooleanCallback() {
 
 											@Override
 											public void callback(boolean result, AVException e) {
 												// TODO Auto-generated method stub
 												if(result){
-													favorNumber.setText("" + (photo.getPraiseCount()+1));
+													isFavor = true;
+													praiseNum = praiseNum + 1;
+													favorNumber.setText("" + praiseNum);
 													favorImv.setImageResource(R.drawable.mine_photoview_fullscreen_btn_like_hl);
 													Toast.makeText(mContext, "点赞成功", 1000).show();
 												}else{
@@ -243,9 +251,10 @@ public class MinePhotoAdapter extends PagerAdapter {
 												}
 											}
 										});
+
 									}
-								});
-							}
+								}
+							});
 						}
 					});
 				} 
