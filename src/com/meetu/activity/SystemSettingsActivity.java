@@ -23,6 +23,10 @@ import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjGlobalAndroidWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.myapplication.MyApplication;
+import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UmengUpdateListener;
+import com.umeng.update.UpdateResponse;
+import com.umeng.update.UpdateStatus;
 
 import android.R.string;
 import android.net.Uri;
@@ -108,7 +112,8 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 			clearAllCache(getApplicationContext());
 			break;
 		case R.id.checkforupdates_system_settings_rl:
-			getVersion();
+			//getVersion();
+			checkUpdate();
 			break;
 		case R.id.sign_out_system_settings_rl:
 			showSignOutDialog();
@@ -121,6 +126,40 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 			break;
 		}
 	}
+	private void checkUpdate() {
+		// TODO Auto-generated method stub
+		log.d("mytest", "zhixinging");
+		UmengUpdateAgent.setUpdateAutoPopup(false);
+		UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
+			@Override
+			public void onUpdateReturned(int updateStatus,UpdateResponse updateInfo) {
+				log.d("mytest", "zhixing");
+				switch (updateStatus) {
+				case UpdateStatus.Yes: // has update
+					log.d("mytest", "update2");
+					UmengUpdateAgent.showUpdateDialog(getApplicationContext(), updateInfo);
+					break;
+				case UpdateStatus.No: // has no update
+					log.d("mytest", "no update");
+					 Toast.makeText(SystemSettingsActivity.this, "已经是最新版本啦！", Toast.LENGTH_SHORT).show();
+					break;
+				case UpdateStatus.NoneWifi: // none wifi
+					log.d("mytest", "no wifi");
+					Toast.makeText(getApplicationContext(), "no wifi ", Toast.LENGTH_SHORT).show();
+					break;
+				case UpdateStatus.Timeout: // time out
+					log.d("mytest", "time out");
+					Toast.makeText(getApplicationContext(), "time out", Toast.LENGTH_SHORT).show();
+					break;
+				}
+			}
+
+		});
+		UmengUpdateAgent.setUpdateOnlyWifi(false);
+		//UmengUpdateAgent.forceUpdate(SystemSettingsActivity.this);
+		UmengUpdateAgent.update(SystemSettingsActivity.this);
+	}
+
 	//退出登录弹窗
 	private void showSignOutDialog() {
 		// TODO Auto-generated method stub

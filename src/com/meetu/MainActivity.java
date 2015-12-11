@@ -32,6 +32,7 @@ import com.meetu.sqlite.UserDao;
 import com.meetu.sqlite.UserShieldDao;
 import com.meetu.tools.SystemBarTintManager;
 import com.meetu.view.ScrollTabHolder;
+import com.umeng.update.UmengUpdateAgent;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -97,14 +98,13 @@ public class MainActivity extends FragmentActivity implements
 				R.id.contentLayout);
 		tabHost.getTabWidget().setDividerDrawable(null);
 		tabHost.setOnTabChangedListener(this);
+		//友盟自动更新
+		UmengUpdateAgent.setDefault();
+		UmengUpdateAgent.setUpdateOnlyWifi(false);
+		UmengUpdateAgent.update(this);
+		
 		initTab();
 		pageString = super.getIntent().getStringExtra("page");
-
-		// fMineUpfragment=(MineUpfragment)
-		// MainActivity.this.getSupportFragmentManager().getFragments().get(3);
-
-		// fMineUpfragment=new MineUpfragment();
-
 		ChatConnection.isConnection();
 		userAboutDao=new UserAboutDao(this);
 		userDao=new UserDao(this);

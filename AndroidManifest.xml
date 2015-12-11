@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cc.imeetu"
-    android:versionCode="20151203"
+    android:versionCode="20151210"
     android:versionName="1.0" >
 
     <uses-sdk
@@ -30,10 +30,15 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="8tZESqMe7wIjpvWUzyGRjGLy" />
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="566a364a67e58e4d8600567e" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Channel ID" />
 
         <activity
             android:name="com.meetu.baidumapdemo.BaiduMapMainActivity"
@@ -77,12 +82,22 @@
             android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <!-- alipay sdk end -->
-        
+        <!-- umeng sdk begin -->
+        <service
+            android:name="com.umeng.update.net.DownloadingService"
+            android:process=":DownloadingService" >
+        </service>
+
+        <activity
+            android:name="com.umeng.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <!-- umeng sdk end -->
         <activity
             android:name="com.meetu.WelcomeActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop" >
-            <intent-filter> 
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
