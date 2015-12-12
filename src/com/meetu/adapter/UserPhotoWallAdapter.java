@@ -124,29 +124,32 @@ public class UserPhotoWallAdapter extends
 
 				} else {
 					// 处理bitmap
-					bitmapUtils.display(holder.ivImg, item.getPhoto().getUrl(),
-							new BitmapLoadCallBack<ImageView>() {
+					if(item.getPhoto()!=null){
+						bitmapUtils.display(holder.ivImg, item.getPhoto().getUrl(),
+								new BitmapLoadCallBack<ImageView>() {
 
-								@Override
-								public void onLoadCompleted(
-										ImageView container, String uri,
-										Bitmap bitmap,
-										BitmapDisplayConfig config,
-										BitmapLoadFrom from) {
+									@Override
+									public void onLoadCompleted(
+											ImageView container, String uri,
+											Bitmap bitmap,
+											BitmapDisplayConfig config,
+											BitmapLoadFrom from) {
 
-									bitmap = BitmapChange.zoomImg(bitmap,
-											width / 2);
-									holder.ivImg.setImageBitmap(bitmap);
-								}
+										bitmap = BitmapChange.zoomImg(bitmap,
+												width / 2);
+										holder.ivImg.setImageBitmap(bitmap);
+									}
 
-								@Override
-								public void onLoadFailed(ImageView arg0,
-										String arg1, Drawable arg2) {
-									// TODO Auto-generated method stub
+									@Override
+									public void onLoadFailed(ImageView arg0,
+											String arg1, Drawable arg2) {
+										// TODO Auto-generated method stub
 
-								}
-							});
+									}
+								});
 
+					}
+					
 				}
 
 				holder.ivFavorNumber.setText("" + item.getPraiseCount());

@@ -12,23 +12,34 @@
         android:background="@drawable/chat_img_card_bg"
          >
 
+        <RelativeLayout 
+            android:id="@+id/backgroud_miliao_channel_rl"
+            android:layout_width="match_parent"
+            android:layout_height="259dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginTop="14dp">
         <ImageView
             android:id="@+id/backgroud_miliao_channel_img"
             android:layout_width="match_parent"
             android:layout_height="258dp"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginTop="14dp"
+            android:layout_alignParentTop="true"            
             android:scaleType="centerCrop"
             android:src="@drawable/acty_barrage_img_bg" />
+        <ImageView 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"            
+            android:src="@drawable/chat_img_card_ellipse"
+            android:layout_alignParentBottom="true"
+            />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/content_center_miliao_channel_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/backgroud_miliao_channel_img"
+            android:layout_below="@+id/backgroud_miliao_channel_rl"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:text="来，我们聊聊摄影"
@@ -172,9 +183,9 @@
         <RelativeLayout 
               android:layout_width="44dp"
               android:layout_height="44dp"
-              android:layout_alignBottom="@+id/backgroud_miliao_channel_img"
+              android:layout_alignBottom="@+id/backgroud_miliao_channel_rl"
               android:layout_centerHorizontal="true"
-              android:layout_marginBottom="12dp"
+              android:layout_marginBottom="0dp"
               android:gravity="center"
             >
         <ImageView

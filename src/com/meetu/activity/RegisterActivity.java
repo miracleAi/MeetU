@@ -104,6 +104,7 @@ public class RegisterActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.activity_register_back_img:
 			finish();
+			break;
 		case R.id.rigister_bt_rigister:
 
 			if (uphone.getText().length() != 11) {
