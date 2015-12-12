@@ -1467,6 +1467,13 @@ OnItemClickListener {
 			log.e("zcq", "插入a 数据库成功");
 			messagesDao.updateTime(user.getObjectId(),
 					conversation.getConversationId());
+			//插入成员
+			UserAboutBean aboutBean = new UserAboutBean();
+			aboutBean.setUserId(user.getObjectId());
+			aboutBean.setAboutType(Constants.CONVERSATION_TYPE);
+			aboutBean.setAboutUserId(client.getClientId());
+			aboutBean.setAboutColetctionId(conversation.getConversationId());
+			userAboutDao.saveUserAboutBean(aboutBean);
 			if (conversation.getConversationId().equals(conversationId)) {
 				handler.sendEmptyMessage(1);
 			} else {
@@ -1481,7 +1488,8 @@ OnItemClickListener {
 	// 被踢出
 	public void handleMemberRemove(AVIMClient client,
 			AVIMConversation conversation, List<String> array, String str) {
-
+		//删除成员
+		userAboutDao.deleteUserTypeUserId(user.getObjectId(), Constants.CONVERSATION_TYPE, conversation.getConversationId(), client.getClientId());
 		if (conversation.getConversationId().equals(conversationId)) {
 			log.e("zcq", "进入被踢出回调 在当前回话");
 			// 删除消息缓存
