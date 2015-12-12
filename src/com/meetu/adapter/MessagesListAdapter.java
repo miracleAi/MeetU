@@ -117,22 +117,24 @@ public class MessagesListAdapter extends BaseAdapter {
 					chatmsgsDao.getChatmsgsList(item.getConversationID(),
 							user.getObjectId()).size() - 1);
 			nickName = "";
-			ArrayList<UserBean> list = userDao.queryUser(chatmsgs.getClientId());
-			if (null != list && list.size() > 0) {
-				nickName = list.get(0).getNameNick();
-			}else{
-				ObjUserWrap.getObjUser(chatmsgs.getClientId(),
-						new ObjUserInfoCallback() {
+			if(null != chatmsgs.getClientId()){
+				ArrayList<UserBean> list = userDao.queryUser(chatmsgs.getClientId());
+				if (null != list && list.size() > 0) {
+					nickName = list.get(0).getNameNick();
+				}else{
+					ObjUserWrap.getObjUser(chatmsgs.getClientId(),
+							new ObjUserInfoCallback() {
 
-					@Override
-					public void callback(ObjUser objuser, AVException e) {
-						// TODO Auto-generated method stub
-						if (e == null) {
-							nickName = objuser.getNameNick();
-							userDao.insertOrReplaceUser(objuser);
+						@Override
+						public void callback(ObjUser objuser, AVException e) {
+							// TODO Auto-generated method stub
+							if (e == null) {
+								nickName = objuser.getNameNick();
+								userDao.insertOrReplaceUser(objuser);
+							}
 						}
-					}
-				});
+					});
+				}
 			}
 			// 如果 是 文本消息 如果有表情的话显示表情
 			if (chatmsgs.getChatMsgType() == Constants.SHOW_SEND_TEXT
