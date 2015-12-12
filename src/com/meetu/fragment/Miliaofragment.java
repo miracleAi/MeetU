@@ -357,6 +357,10 @@ OnClickListener {
 					}else{
 						joinChatTv.setText("进入觅聊");
 					}
+					
+					
+					
+					
 					isAdd = true;
 					Intent intent2 = new Intent(getActivity(),
 							ChatGroupActivity.class);
@@ -380,6 +384,7 @@ OnClickListener {
 							seekChatBeansList.get(positonNow));
 					intent2.putExtras(bundle);
 					startActivity(intent2);
+					
 				} else {
 					log.e("zcq", "加入觅聊失败 ，请检查网络");
 				}
