@@ -127,7 +127,8 @@
         android:layout_marginTop="5dp"
         android:background="@drawable/progress"
         android:max="100"
-        android:progress="50" />
+        android:progress="0" 
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/Bottom_creationChat_ll"

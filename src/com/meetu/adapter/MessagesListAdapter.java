@@ -1,5 +1,6 @@
 package com.meetu.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cc.imeetu.R;
@@ -7,8 +8,10 @@ import cc.imeetu.R;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.activity.miliao.ChatGroupActivity;
+import com.meetu.bean.UserBean;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.utils.DateUtils;
+import com.meetu.common.Constants;
 import com.meetu.common.EmojisRelevantUtils;
 import com.meetu.common.Spanning;
 import com.meetu.common.dismissData;
@@ -18,6 +21,7 @@ import com.meetu.entity.Huodong;
 import com.meetu.entity.Messages;
 import com.meetu.entity.User;
 import com.meetu.sqlite.ChatmsgsDao;
+import com.meetu.sqlite.UserDao;
 
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -38,6 +42,7 @@ public class MessagesListAdapter extends BaseAdapter {
 	private static List<ChatEmoji> chatEmojis;
 	private ChatmsgsDao chatmsgsDao;
 	private Chatmsgs chatmsgs;
+	private UserDao userDao;
 	// 网络相关
 	ObjUser user = null;
 
@@ -46,6 +51,7 @@ public class MessagesListAdapter extends BaseAdapter {
 		this.mContext = context;
 		this.messagesList = messagesList;
 		chatmsgsDao = new ChatmsgsDao(context);
+		userDao = new UserDao(context);
 
 		this.chatEmojis = chatEmojis;
 		if (ObjUser.getCurrentUser() != null) {
@@ -106,26 +112,28 @@ public class MessagesListAdapter extends BaseAdapter {
 					user.getObjectId()).get(
 					chatmsgsDao.getChatmsgsList(item.getConversationID(),
 							user.getObjectId()).size() - 1);
-			// TODO
+			String nickName = "";
+			ArrayList<UserBean> list = userDao.queryUser(chatmsgs.getClientId());
+			if (null != list && list.size() > 0) {
+				nickName = list.get(0).getNameNick();
+			}
 			// 如果 是 文本消息 如果有表情的话显示表情
-			if (chatmsgs.getChatMsgType() == 10
-					|| chatmsgs.getChatMsgType() == 12) {
+			if (chatmsgs.getChatMsgType() == Constants.SHOW_SEND_TEXT
+					|| chatmsgs.getChatMsgType() == Constants.SHOW_RECV_TEXT) {
 				SpannableString spannableString = EmojisRelevantUtils
 						.getExpressionString(mContext, chatmsgs.getContent(),
 								chatEmojis);
 
-				holder.tvContent.setText(spannableString);
+				holder.tvContent.setText(nickName+":"+spannableString);
 
-				// holder.tvContent.setText(chatmsgs.getContent());
-
-				new Spanning().TextViewShowEmoji(mContext, chatEmojis,
-						holder.tvContent, chatmsgs.getContent());
-
-				// holder.tvNoReadMessages.setText(item.getUnreadMsgCount());
 			}
-			if (chatmsgs.getChatMsgType() == 11
-					|| chatmsgs.getChatMsgType() == 13) {
-				holder.tvContent.setText("[图片]");
+			if (chatmsgs.getChatMsgType() == Constants.SHOW_SEND_IMG
+					|| chatmsgs.getChatMsgType() == Constants.SHOW_RECV_IMG) {
+				holder.tvContent.setText(nickName+":"+"[图片]");
+			}
+			if (chatmsgs.getChatMsgType() == Constants.SHOW_MEMBERCHANGE
+					|| chatmsgs.getChatMsgType() == Constants.SHOW_RECV_IMG) {
+				holder.tvContent.setText(nickName+":"+"[图片]");
 			}
 
 		} else {
