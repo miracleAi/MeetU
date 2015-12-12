@@ -439,8 +439,8 @@ public class HomePagefragment extends Fragment implements
 				adapter.notifyDataSetChanged();
 
 				initView();
-//				refreshComplete();
-				lvNewsList.onRefreshComplete();
+				refreshComplete();
+				
 				break;
 			}
 		}
@@ -464,13 +464,16 @@ public class HomePagefragment extends Fragment implements
 	public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 		pageNo = 1;
 		// load(1, pageSize);
+		refreshComplete();
 		loadData();
 	}
 
 	@Override
 	public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-		pageNo++;
-		load(pageNo, pageSize);
+//		pageNo++;
+//		load(pageNo, pageSize);
+		refreshComplete();
+		Toast.makeText(getActivity(), "没有更多了呢", Toast.LENGTH_SHORT).show();
 
 	}
 

@@ -1,18 +1,34 @@
 package com.meetu.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import net.tsz.afinal.FinalBitmap;
 
 
 
 import cc.imeetu.R;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogUtil.log;
+import com.meetu.activity.mine.UserPagerActivity;
+import com.meetu.bean.UserAboutBean;
+import com.meetu.bean.UserBean;
+import com.meetu.cloud.callback.ObjUserInfoCallback;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.entity.Huodong;
 import com.meetu.entity.User;
+import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.UserDao;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.BaseAdapter;
@@ -21,11 +37,22 @@ import android.widget.TextView;
 
 public class MiLiaoUsersListAdapter extends BaseAdapter {
 	private Context mContext;
-	private List<User> usersList;
+	private List<UserAboutBean> usersList;
+	AVUser currentUser = ObjUser.getCurrentUser();
+	ObjUser userMy = new ObjUser();
+	
+	FinalBitmap finalBitmap;
+	UserDao userDao;
 
-	public MiLiaoUsersListAdapter(Context context, List<User> usersList) {
+	public MiLiaoUsersListAdapter(Context context, List<UserAboutBean> usersList) {
 		this.mContext = context;
 		this.usersList = usersList;
+		if(currentUser!=null){
+			userMy = AVUser.cast(currentUser, ObjUser.class);
+		}
+		MyApplication application=(MyApplication) context.getApplicationContext();
+		finalBitmap=application.getFinalBitmap();
+		userDao=new UserDao(context);
 	}
 
 	@Override
@@ -48,8 +75,8 @@ public class MiLiaoUsersListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder holder = null;
-		User item = usersList.get(position);
+		final ViewHolder holder ;
+		final UserAboutBean item = usersList.get(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(mContext).inflate(
@@ -67,12 +94,87 @@ public class MiLiaoUsersListAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.ivImgUrl.setImageResource(item.getHeadPhoto());
-		holder.tvName.setText(item.getName());
-		holder.tvSchool.setText(item.getSchool());
 
-		if (item.getSex().equals("女")) {
-			holder.ivSex.setImageResource(R.drawable.acty_joinlist_img_female);
+		holder.ivImgUrl.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent=new Intent(mContext,UserPagerActivity.class);
+				intent.putExtra("userId", item.getAboutUserId());
+				mContext.startActivity(intent);
+			}
+		});
+		if (item.getAboutUserId() != null && !("").equals(item.getAboutUserId())) {
+			log.e("zcq id", "userId==" + userMy.getObjectId()
+					+ " itemClientId==" + item.getAboutUserId());
+			if (userMy.getObjectId().equals(item.getAboutUserId())) {
+				holder.tvName.setText("" + userMy.getNameNick());
+				holder.tvSchool.setText(userMy.getSchool());
+				// log.e("zcq", "是我自己发的消息");
+				if (userMy.getProfileClip() != null) {
+					// log.e("zcq", "是我自己发的消息");
+					finalBitmap.display(holder.ivImgUrl, userMy
+							.getProfileClip().getUrl());
+				}
+				if(userMy.getGender()==2){
+					holder.ivSex.setImageResource(R.drawable.acty_joinlist_img_female);
+				}
+			} else {
+
+				log.e("zcq", "别人发的消息");
+
+				ArrayList<UserBean> list = userDao.queryUser(item
+						.getAboutUserId());
+				if (null != list && list.size() > 0) {
+
+					if (!list.get(0).getProfileClip().equals("")) {
+						finalBitmap.display(holder.ivImgUrl,
+								list.get(0).getProfileClip());
+					}
+					holder.tvName.setText("" + list.get(0).getNameNick());
+					holder.tvSchool.setText(list.get(0).getSchool());
+					if(list.get(0).getGender()==2){
+						holder.ivSex.setImageResource(R.drawable.acty_joinlist_img_female);
+					}
+				} else {
+					ObjUserWrap.getObjUser(item.getAboutUserId(),
+							new ObjUserInfoCallback() {
+
+						@Override
+						public void callback(ObjUser objuser,
+								AVException e) {
+							// TODO Auto-generated method stub
+							if (e == null) {
+								userDao.insertOrReplaceUser(objuser);
+								ArrayList<UserBean> list2 = userDao
+										.queryUser(item
+												.getAboutUserId());
+								if (null != list2
+										&& list2.size() > 0) {
+									if (!list2.get(0)
+											.getProfileClip()
+											.equals("")) {
+										finalBitmap
+										.display(
+												holder.ivImgUrl,
+												list2.get(0)
+												.getProfileClip());
+									}
+									holder.tvName.setText(""
+											+ list2.get(0)
+											.getNameNick());
+									holder.tvSchool.setText(list2.get(0).getSchool());
+									if(list2.get(0).getGender()==2){
+										holder.ivSex.setImageResource(R.drawable.acty_joinlist_img_female);
+									}
+
+								}
+							}
+						}
+					});
+				}
+			}
 		}
 		return convertView;
 	}

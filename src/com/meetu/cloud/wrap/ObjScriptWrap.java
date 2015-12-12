@@ -47,6 +47,7 @@ public class ObjScriptWrap {
 		// TimeUnit.DAYS.toMillis(1)
 		// query.setMaxCacheAge(10*60*1000);
 		query.whereEqualTo("scripBox", scripBox);
+		query.addDescendingOrder("createdAt");
 		query.findInBackground(new FindCallback<ObjScrip>() {
 
 			@Override

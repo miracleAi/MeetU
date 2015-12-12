@@ -89,10 +89,10 @@
 
                 <ImageView
                     android:id="@+id/emoji_notes_fragment_img"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/emotionsemojihl" />
+                    android:src="@drawable/message_groupchat_btn_emoticon_hl" />
             </RelativeLayout>
 
             <RelativeLayout

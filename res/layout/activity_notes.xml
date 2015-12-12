@@ -159,7 +159,7 @@
             android:layout_centerVertical="true"
             android:src="@drawable/massage_letters_show_btn_sendletters" />
     </RelativeLayout>
-  "
+  
     
     
       <android.support.v4.view.ViewPager

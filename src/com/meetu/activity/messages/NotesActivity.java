@@ -40,6 +40,8 @@ import com.meetu.fragment.NotesChannelFragment;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.ChatmsgsDao;
 import com.meetu.sqlite.UserShieldDao;
+import com.meetu.tools.DensityUtil;
+import com.meetu.tools.DisplayUtils;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -116,6 +118,9 @@ OnPageChangeListener, OnClickListener {
 	private ImageView favorImg;
 	List<UserAboutBean> userAboutBeansList=new ArrayList<UserAboutBean>();
 	private UserShieldDao shieldDao;
+	
+	private ImageView sendImageView;
+	private int randomX=0,randomY=0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -190,6 +195,8 @@ OnPageChangeListener, OnClickListener {
 
 	private void initView() {
 		// TODO Auto-generated method stub
+		sendImageView=(ImageView) findViewById(R.id.send_bottom_notes_img);
+		sendImageView.setOnClickListener(this);
 		sendLinearLayout = (LinearLayout) super
 				.findViewById(R.id.bottom_notes_send_ll);
 		backLayout = (RelativeLayout) super
@@ -322,6 +329,24 @@ OnPageChangeListener, OnClickListener {
 
 			}
 
+			break;
+			/**
+			 * 点击发送随机发送按钮
+			 */
+		case R.id.send_bottom_notes_img:
+			
+			randomXY();
+			log.e("zcq ", "randomX=="+randomX+" randomY=="+randomY);
+			
+			if(randomX<0){
+				randomX=0;
+			}
+			if(randomY<=0){
+				randomY=0;
+			}
+			
+			((NotesChannelFragment) fragmentList.get(beforeID)).randowShowSendScript(randomX, randomY);
+			
 			break;
 		default:
 			break;
@@ -679,6 +704,20 @@ OnPageChangeListener, OnClickListener {
 			// msg.getConversationId());
 		}
 
+	}
+	/**
+	 * 
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-12
+	 */
+	public void randomXY(){
+	int noteHight = DisplayUtils.getWindowHeight(this)
+				- DensityUtil.dip2px(this, 190);		
+	    randomX = 0+ (int)(Math.random()*(DisplayUtils.getWindowWidth(this)-DensityUtil.dip2px(this, 69)) );         
+	    
+		randomY=0+ (int)(Math.random()*(noteHight-DensityUtil.dip2px(this, 69)) );  
+		
 	}
 
 }

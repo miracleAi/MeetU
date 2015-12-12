@@ -36,6 +36,7 @@ import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjScriptWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
+import com.meetu.common.EmojisRelevantUtils;
 import com.meetu.entity.ChatEmoji;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.myapplication.MyApplication;
@@ -175,6 +176,8 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 	private int noteIdNow = 1;// 标记当前生成的view是第几个view 小纸条
 
 	private List<Integer> noteIDList = new ArrayList<Integer>();
+
+	private ImageView sendImageView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -380,6 +383,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 		}
 
 		contentTextView.setText("" + objScrip.getContentText());
+		sendImageView = (ImageView) view.findViewById(R.id.send_notes_img);
 
 	}
 
@@ -418,7 +422,8 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 					sendLinearLayout.setVisibility(View.VISIBLE);
 					if (isShowEmoji == true) {
 						NotesActivity.visible();
-						emojiAll.setBackgroundResource(R.drawable.emotionsemojihl);
+
+						emojiAll.setImageResource(R.drawable.message_groupchat_btn_emoticon_hl);
 						faceLayout.setVisibility(View.GONE);
 						isShowEmoji = false;
 
@@ -430,7 +435,6 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 					inputManager.showSoftInput(mEditText, -20);
 					isWindow = false;
 					mIsKeyboardShow = true;
-					// allLayout.setY(-100);
 
 					if ((noteHight - windowFocusY)
 							+ DensityUtil.dip2px(getActivity(), 77) >= ruanHight) {
@@ -447,7 +451,8 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 					NotesActivity.dismiss();
 					// notesMessageViewList.add(getsendMessageLayout());
 
-					allLayout.addView(getsendMessageLayout());
+					allLayout.addView(getsendMessageLayout(windowFocusX,
+							windowFocusY));
 
 				} else {
 					sendLinearLayout.setVisibility(View.GONE);
@@ -479,7 +484,8 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 			if (isShowEmoji == false) {
 				NotesActivity.dismiss();
 				faceLayout.setVisibility(View.VISIBLE);
-				emojiAll.setBackgroundResource(R.drawable.massage_letters_show_reply_img_keybroad);
+				emojiAll.setImageResource(R.drawable.massage_letters_show_reply_img_keybroad);
+
 				isShowEmoji = true;
 				// 落下软键盘
 				InputMethodManager inputManager = (InputMethodManager) mEditText
@@ -506,14 +512,34 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 				// 第二次点击表情
 
 				NotesActivity.visible();
-				emojiAll.setBackgroundResource(R.drawable.emotionsemojihl);
+				emojiAll.setImageResource(R.drawable.message_groupchat_btn_emoticon_hl);
 				faceLayout.setVisibility(View.GONE);
 				isShowEmoji = false;
-				sendLinearLayout.setVisibility(View.GONE);
-				allLayout.setY(0);
-				mScrollView.setY(0);
+				// sendLinearLayout.setVisibility(View.GONE);
+				// allLayout.setY(0);
+				// mScrollView.setY(0);
 
 				// allLayout.removeViewAt(100);
+				mEditText.requestFocus();
+				InputMethodManager inputManager = (InputMethodManager) mEditText
+						.getContext().getSystemService(
+								Context.INPUT_METHOD_SERVICE);
+				inputManager.showSoftInput(mEditText, -20);
+				isWindow = false;
+				mIsKeyboardShow = true;
+
+				if ((noteHight - windowFocusY)
+						+ DensityUtil.dip2px(getActivity(), 77) >= ruanHight) {
+
+				} else {
+					float moveHight = (noteHight - windowFocusY)
+							+ DensityUtil.dip2px(getActivity(), 77) - ruanHight;
+					log.e("zcq", "moveHight==" + moveHight);
+					// allLayout.setY(moveHight);
+					mScrollView.setY(moveHight);
+				}
+
+				NotesActivity.dismiss();
 
 			}
 
@@ -778,7 +804,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 	/**
 	 * 获取添加的视图 输入框
 	 */
-	private View getsendMessageLayout() {
+	private View getsendMessageLayout(int windowFocusX, int windowFocusY) {
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
@@ -853,40 +879,21 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 
 		@Override
 		public void afterTextChanged(Editable arg0) {
-			// TODO Auto-generated method stub
-			// Toast.makeText(getActivity(), ""+mEditText.getText(),
-			// Toast.LENGTH_SHORT).show();
 
-			/*
-			 * //一个字体的高度和宽度
-			 * 
-			 * int textHight=DensityUtil.dip2px(getActivity(), 15); int
-			 * textWidth=DensityUtil.dip2px(getActivity(), 13);
-			 * 
-			 * 
-			 * if(arg0.length()<=8){
-			 * layoutW=arg0.length()*textWidth+DensityUtil.dip2px(getActivity(),
-			 * 20); layoutH=textHight+DensityUtil.dip2px(getActivity(), 24);
-			 * }else{ layoutW=8*textWidth+DensityUtil.dip2px(getActivity(), 20);
-			 * if(arg0.length()%8==0){
-			 * layoutH=textHight*(arg0.length()/8)+DensityUtil
-			 * .dip2px(getActivity(), 24); }else{
-			 * layoutH=textHight*((arg0.length
-			 * ()/8)+1)+DensityUtil.dip2px(getActivity(), 24); }
-			 * 
-			 * }
-			 * 
-			 * RelativeLayout.LayoutParams params=(LayoutParams)
-			 * contentLayout.getLayoutParams();
-			 * if(layoutW<=DensityUtil.dip2px(getActivity(), 69)){
-			 * layoutW=DensityUtil.dip2px(getActivity(), 69); }
-			 * params.width=layoutW; params.height=layoutH;
-			 * contentLayout.setLayoutParams(params);
-			 */
+			if (arg0.length() > 0) {
+				sendImageView
+						.setImageResource(R.drawable.message_groupchat_btn_send_hl);
+			} else {
+				sendImageView
+						.setImageResource(R.drawable.message_groupchat_btn_send_nor);
+			}
 
 			if (sendLinearLayout.getVisibility() == View.VISIBLE) {
+				SpannableString spannableString = EmojisRelevantUtils
+						.getExpressionString(getActivity(), arg0.toString(),
+								chatEmojis);
 
-				content.setText("" + arg0.toString());
+				content.setText("" + spannableString);
 
 				// getTextWH(""+arg0);
 			}
@@ -1014,20 +1021,20 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 				// TODO Auto-generated method stub
 				if (e != null) {
 					log.e("zcq", e);
-					Toast.makeText(getActivity(), "发送失败", Toast.LENGTH_SHORT)
-							.show();
+				//	Toast.makeText(getActivity(), "发送失败", Toast.LENGTH_SHORT)
+				//			.show();
 					return;
 				}
 				if (result) {
-					// clickBtn.setText(LOADSUC);
+					
 					log.e("zcq", "发送成功");
-					Toast.makeText(getActivity(), "已发送", Toast.LENGTH_SHORT)
-							.show();
+//					Toast.makeText(getActivity(), "已发送", Toast.LENGTH_SHORT)
+//							.show();
 				} else {
-					// clickBtn.setText(LOADFAIL);
+					
 					log.e("zcq", "发送失败");
-					Toast.makeText(getActivity(), "发送失败", Toast.LENGTH_SHORT)
-							.show();
+//					Toast.makeText(getActivity(), "发送失败", Toast.LENGTH_SHORT)
+//							.show();
 				}
 			}
 		});
@@ -1049,7 +1056,11 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 		TextView contentTextView = (TextView) view
 				.findViewById(R.id.content_note_channels_tv);
 
-		contentTextView.setText("" + chatmsgs.getContent());
+		SpannableString spannableString = EmojisRelevantUtils
+				.getExpressionString(getActivity(), chatmsgs.getContent(),
+						chatEmojis);
+
+		contentTextView.setText(spannableString);
 
 		final ImageView photoHead = (ImageView) view
 				.findViewById(R.id.photoHead_notes_channel_fragment_img);
@@ -1282,6 +1293,74 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 	 */
 	public void showAllView() {
 		handler.sendEmptyMessage(1);
+	}
+
+	/**
+	 * 点击小飞机随机在屏幕上随机生成一个小纸条
+	 * 
+	 * @author lucifer
+	 * @date 2015-12-12
+	 */
+	public void randowShowSendScript(int randowX, int randowY) {
+		Boolean isShowView = NotesActivity.isShow;
+		log.e("zcq", "isShowView" + isShowView);
+
+		if (isShowView == true) {
+			// 第一次点击屏幕
+			if (isWindow == true) {
+				sendLinearLayout.setVisibility(View.VISIBLE);
+				if (isShowEmoji == true) {
+					NotesActivity.visible();
+					emojiAll.setImageResource(R.drawable.emotionsemojihl);
+					faceLayout.setVisibility(View.GONE);
+					isShowEmoji = false;
+
+				}
+				mEditText.requestFocus();
+				InputMethodManager inputManager = (InputMethodManager) mEditText
+						.getContext().getSystemService(
+								Context.INPUT_METHOD_SERVICE);
+				inputManager.showSoftInput(mEditText, -20);
+				isWindow = false;
+				mIsKeyboardShow = true;
+				// allLayout.setY(-100);
+
+				if ((noteHight - randowY)
+						+ DensityUtil.dip2px(getActivity(), 77) >= ruanHight) {
+
+				} else {
+					float moveHight = (noteHight - randowY)
+							+ DensityUtil.dip2px(getActivity(), 77) - ruanHight;
+					log.e("zcq", "moveHight==" + moveHight);
+					// allLayout.setY(moveHight);
+					mScrollView.setY(moveHight);
+				}
+
+				NotesActivity.dismiss();
+				// notesMessageViewList.add(getsendMessageLayout());
+
+				allLayout.addView(getsendMessageLayout(randowX, randowY));
+
+			} else {
+				sendLinearLayout.setVisibility(View.GONE);
+				faceLayout.setVisibility(View.GONE);
+				isShowEmoji = false;
+				InputMethodManager inputManager = (InputMethodManager) mEditText
+						.getContext().getSystemService(
+								Context.INPUT_METHOD_SERVICE);
+				inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+				isWindow = true;
+				mIsKeyboardShow = false;
+
+				allLayout.setY(0);
+				mScrollView.setY(0);
+				NotesActivity.visible();
+				// allLayout.removeViewAt(1);
+				// dismissAll();
+				removeView(numberId);
+
+			}
+		}
 	}
 
 }

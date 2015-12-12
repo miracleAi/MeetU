@@ -5,8 +5,13 @@ import java.util.List;
 
 import cc.imeetu.R;
 
+import com.avos.avoscloud.AVUser;
 import com.meetu.adapter.MiLiaoUsersListAdapter;
+import com.meetu.bean.UserAboutBean;
+import com.meetu.cloud.object.ObjUser;
+import com.meetu.common.Constants;
 import com.meetu.entity.User;
+import com.meetu.sqlite.UserAboutDao;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -16,6 +21,7 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class MiLiaoUsersListActivity extends Activity implements
 		OnClickListener {
@@ -23,8 +29,14 @@ public class MiLiaoUsersListActivity extends Activity implements
 	private MiLiaoUsersListAdapter adapter;
 	private ListView mlistView;
 
+	private List<UserAboutBean> userAboutBeansList=new ArrayList<UserAboutBean>();
+	UserAboutDao userAboutDao;
+	String conversationId="";
 	// 控件相关
 	private RelativeLayout backLayout;
+	AVUser currentUser = ObjUser.getCurrentUser();
+	ObjUser userMy = new ObjUser();
+	private TextView numberAllTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,65 +46,46 @@ public class MiLiaoUsersListActivity extends Activity implements
 		// 全屏
 		super.getWindow();
 		setContentView(R.layout.activity_mi_liao_users_list);
-		loadData();
-		mlistView = (ListView) super
-				.findViewById(R.id.listview_all_miliao_userlist);
-		adapter = new MiLiaoUsersListAdapter(this, usersList);
-		mlistView.setAdapter(adapter);
+		
+		conversationId=getIntent().getStringExtra("conversationId");
+		if(currentUser!=null){
+			userMy = AVUser.cast(currentUser, ObjUser.class);
+		}
+		
+		userAboutDao=new UserAboutDao(this);
+	
+		
 		initView();
+		initAdapter();
+		loadData();
+	}
 
+	private void initAdapter() {
+		
+		adapter = new MiLiaoUsersListAdapter(this, userAboutBeansList);
+		mlistView.setAdapter(adapter);
+		
 	}
 
 	private void initView() {
+		mlistView = (ListView) super
+				.findViewById(R.id.listview_all_miliao_userlist);
+		
 		backLayout = (RelativeLayout) super
 				.findViewById(R.id.back_miliao_UsersList_rl);
 		backLayout.setOnClickListener(this);
+		numberAllTextView=(TextView) findViewById(R.id.number_miliao_UsersList_tv);
 
 	}
 
 	private void loadData() {
-		usersList = new ArrayList<User>();
-		User item = new User();
-		item.setName("刘亦菲");
-		item.setSchool("北京大学");
-		item.setSex("女");
-		item.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		usersList.add(item);
+		List<UserAboutBean> list=userAboutDao.queryUserAbout(userMy.getObjectId(), Constants.CONVERSATION_TYPE, conversationId);
+		if(list!=null){
+			userAboutBeansList.addAll(list);
+		}
+	
 
-		User item1 = new User();
-		item1.setName("李连杰");
-		item1.setSchool("清华大学");
-		item1.setSex("男");
-		item1.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		usersList.add(item1);
-
-		User item2 = new User();
-		item2.setName("赵子龙");
-		item2.setSchool("北京大学");
-		item2.setSex("男");
-		item2.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		usersList.add(item2);
-
-		User item3 = new User();
-		item3.setName("赵子龙");
-		item3.setSchool("北京大学");
-		item3.setSex("男");
-		item3.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		usersList.add(item3);
-
-		User item4 = new User();
-		item4.setName("赵小凤");
-		item4.setSchool("北京大学");
-		item4.setSex("女");
-		item4.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		usersList.add(item4);
-
-		User item5 = new User();
-		item5.setName("赵子龙");
-		item5.setSchool("北京大学");
-		item5.setSex("男");
-		item5.setHeadPhoto(R.drawable.mine_likelist_profile_default);
-		usersList.add(item5);
+		numberAllTextView.setText(""+userAboutBeansList.size());
 
 	}
 

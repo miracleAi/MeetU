@@ -12,9 +12,8 @@
 
         <RelativeLayout
             android:id="@+id/back_miliao_UsersList_rl"
-            android:layout_width="44dp"
+            android:layout_width="54dp"
             android:layout_height="44dp"
-            android:layout_marginLeft="5dp"
             android:background="@drawable/kongjianruoqu_bg"
             android:gravity="center" >
 
@@ -24,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/navi_close_blue" />
+                android:src="@drawable/mine_alter_btn_back" />
         </RelativeLayout>
 
         <TextView
@@ -42,6 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
             android:layout_centerVertical="true"
               android:textSize="12sp"
             android:textColor="#a0a0a0"
@@ -55,7 +55,7 @@
             android:textSize="12sp"
             android:textColor="#a0a0a0"
             android:layout_toLeftOf="@+id/textView1"
-            android:text="20" />
+            android:text="0" />
 
         <TextView
             android:id="@+id/textView3"

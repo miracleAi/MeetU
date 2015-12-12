@@ -8,11 +8,8 @@
         android:id="@+id/input_note_channels_rl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-      
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-       
+        android:layout_alignParentTop="true"      
+             
         android:background="@drawable/massage_letter_img_dialog" >
 
         <TextView
@@ -20,15 +17,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
-            android:padding="8dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="8dp"          
+            android:padding="8dp"         
             android:textSize="11sp"
+            android:maxLength="100"
             android:textColor="#d6606366"
            	android:minWidth="69dp"
-           	android:maxWidth="112dp"
-           	android:gravity="center"
+           	android:maxWidth="112dp"          	
             android:text="" />
     </RelativeLayout>
 

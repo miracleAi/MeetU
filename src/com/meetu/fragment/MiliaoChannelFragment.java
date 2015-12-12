@@ -10,6 +10,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.meetu.activity.miliao.MiLiaoUsersListActivity;
 import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.bean.SeekChatBean;
 import com.meetu.bean.UserAboutBean;
@@ -34,6 +35,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MiliaoChannelFragment extends Fragment implements OnClickListener {
@@ -57,6 +59,8 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 	private ArrayList<UserAboutBean> userAboutBeanList = new ArrayList<UserAboutBean>();
 
 	private SeekChatBean seekChatBean = new SeekChatBean();
+	
+	private RelativeLayout numberLayout;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -131,6 +135,18 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 			log.e("zcq", "设置背景");
 			finalBitmap.display(backgroud, seekChatBean.getPictureUrl());
 		}
+		numberLayout=(RelativeLayout) view.findViewById(R.id.number_user_fragment_miliao_channel_rl);
+		numberLayout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent=new Intent(getActivity(),MiLiaoUsersListActivity.class);
+				intent.putExtra("conversationId", seekChatBean.getConversationId());
+				startActivity(intent);
+			}
+		});
+		
 		titile.setText("" + seekChatBean.getTitle());
 		numberAll.setText("" + seekChatBean.getMembers().size());
 		numberFavor.setText("" + seekChatBean.getFolloweeCount());
