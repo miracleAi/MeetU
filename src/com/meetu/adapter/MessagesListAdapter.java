@@ -5,12 +5,15 @@ import java.util.List;
 
 import cc.imeetu.R;
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.bean.UserBean;
+import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.utils.DateUtils;
+import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
 import com.meetu.common.EmojisRelevantUtils;
 import com.meetu.common.Spanning;
@@ -45,6 +48,7 @@ public class MessagesListAdapter extends BaseAdapter {
 	private UserDao userDao;
 	// 网络相关
 	ObjUser user = null;
+	String nickName = "";
 
 	public MessagesListAdapter(Context context, List<Messages> messagesList,
 			List<ChatEmoji> chatEmojis) {
@@ -112,10 +116,23 @@ public class MessagesListAdapter extends BaseAdapter {
 					user.getObjectId()).get(
 					chatmsgsDao.getChatmsgsList(item.getConversationID(),
 							user.getObjectId()).size() - 1);
-			String nickName = "";
+			nickName = "";
 			ArrayList<UserBean> list = userDao.queryUser(chatmsgs.getClientId());
 			if (null != list && list.size() > 0) {
 				nickName = list.get(0).getNameNick();
+			}else{
+				ObjUserWrap.getObjUser(chatmsgs.getClientId(),
+						new ObjUserInfoCallback() {
+
+					@Override
+					public void callback(ObjUser objuser, AVException e) {
+						// TODO Auto-generated method stub
+						if (e == null) {
+							nickName = objuser.getNameNick();
+							userDao.insertOrReplaceUser(objuser);
+						}
+					}
+				});
 			}
 			// 如果 是 文本消息 如果有表情的话显示表情
 			if (chatmsgs.getChatMsgType() == Constants.SHOW_SEND_TEXT
@@ -123,13 +140,20 @@ public class MessagesListAdapter extends BaseAdapter {
 				SpannableString spannableString = EmojisRelevantUtils
 						.getExpressionString(mContext, chatmsgs.getContent(),
 								chatEmojis);
-
-				holder.tvContent.setText(nickName+":"+spannableString);
+				if(!nickName.equals("")){
+					holder.tvContent.setText(nickName+":"+spannableString);
+				}else{
+					holder.tvContent.setText(spannableString);
+				}
 
 			}
 			if (chatmsgs.getChatMsgType() == Constants.SHOW_SEND_IMG
 					|| chatmsgs.getChatMsgType() == Constants.SHOW_RECV_IMG) {
-				holder.tvContent.setText(nickName+":"+"[图片]");
+				if(!nickName.equals("")){
+					holder.tvContent.setText(nickName+":"+"[图片]");
+				}else{
+					holder.tvContent.setText("[图片]");
+				}
 			}
 			if (chatmsgs.getChatMsgType() == Constants.SHOW_MEMBERCHANGE) {
 				holder.tvContent.setText("系统消息：新人加入了，打个招呼吧！");

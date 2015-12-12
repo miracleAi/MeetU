@@ -203,8 +203,6 @@ OnClickListener {
 				+ mdataListCache.get(position).getConversationType());
 		if (mdataListCache.get(position).getConversationType() == 1) {
 			intent.putExtra("title", mdataListCache.get(position).getActyName());
-
-
 		} else {
 			intent.putExtra("title", mdataListCache.get(position).getChatName());
 
@@ -218,6 +216,10 @@ OnClickListener {
 		// 清空该项未读消息
 		messagesDao.updateUnreadClear(user.getObjectId(),
 				mdataListCache.get(position).getConversationID());
+		//点击之后将失效会话删掉
+		if (mdataListCache.get(position).getTiStatus() == 1) {
+			messagesDao.deleteConv(user.getObjectId(),mdataListCache.get(position).getConversationID());
+		}
 		handler.sendEmptyMessage(1);
 	}
 
@@ -249,9 +251,6 @@ OnClickListener {
 								"" + messages.getTiStatus());
 						if (messages.getTiStatus() == 0) {
 							mdataListCache.add(messages);
-						} else {
-							messagesDao.deleteConv(user.getObjectId(),
-									messages.getConversationID());
 						}
 					}
 				} else {

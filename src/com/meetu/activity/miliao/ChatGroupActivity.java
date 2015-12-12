@@ -1464,10 +1464,10 @@ OnItemClickListener {
 					.currentTimeMillis()));
 			chatmsgsDao.insert(chatBean);
 			log.e("zcq", "插入a 数据库成功");
+			messagesDao.updateTime(user.getObjectId(),
+					conversation.getConversationId());
 			if (conversation.getConversationId().equals(conversationId)) {
 				handler.sendEmptyMessage(1);
-				messagesDao.updateTime(user.getObjectId(),
-						conversation.getConversationId());
 			} else {
 				// 未读消息加1,保存未读
 				messagesDao.updateUnread(user.getObjectId(),
