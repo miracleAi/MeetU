@@ -355,7 +355,7 @@ OnClickListener {
 					
 				//	((MiliaoChannelFragment)fragmentList.get(positonNow))).setu
 					
-					
+					isAdd=true;
 					((MiliaoChannelFragment) fragmentList.get(positonNow)).setUserInfo();
 		
 					if(memList.size()<5){
@@ -364,11 +364,6 @@ OnClickListener {
 					}else{
 						joinChatTv.setText("进入觅聊");
 					}
-					
-					
-					
-					
-					isAdd = true;
 					Intent intent2 = new Intent(getActivity(),
 							ChatGroupActivity.class);
 					intent2.putExtra("ConversationId", ""
