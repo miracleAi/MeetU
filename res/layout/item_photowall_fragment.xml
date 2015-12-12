@@ -9,6 +9,11 @@
     android:background="@drawable/tupian_bg"
     android:orientation="vertical" >
 
+  <RelativeLayout 
+      android:id="@+id/rl_all_rl"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      >  
     <RelativeLayout
         android:id="@+id/rl_all"
         android:layout_width="wrap_content"       
@@ -90,5 +95,6 @@
             android:layout_width="wrap_content"
             android:layout_height="10dp"           
             android:layout_below="@+id/mine_favourNumber"/>
+        </RelativeLayout>
 
 </RelativeLayout>

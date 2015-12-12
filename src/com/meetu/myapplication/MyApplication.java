@@ -60,7 +60,7 @@ public class MyApplication extends Application {
 		super.onCreate();
 		// 配置bitmapUtils
 		finalBitmap = FinalBitmap.create(this);
-		finalBitmap.configBitmapLoadThreadSize(3);// 线程尺寸
+		finalBitmap.configBitmapLoadThreadSize(10);// 线程尺寸
 		finalBitmap.configDiskCachePath(getFilesDir().toString());//
 		finalBitmap.configDiskCacheSize(1024 * 1024 * 100);
 		int memory = (int) Runtime.getRuntime().maxMemory() / 8;

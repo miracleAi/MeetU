@@ -333,8 +333,13 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 		log.e("zcq", "设置头像");
 
 		List<String> list = new ArrayList<String>();
-		for (int i = 0; i < seekChatBean.getMembers().size(); i++) {
-			list.add("" + seekChatBean.getMembers().get(i).get("userId"));
+		
+//		for (int i = 0; i < seekChatBean.getMembers().size(); i++) {
+//			list.add("" + seekChatBean.getMembers().get(i).get("userId"));
+//		}
+		List<UserAboutBean> list2=userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, seekChatBean.getConversationId());
+		for(int i=0;i<list2.size();i++){
+			list.add(list2.get(i).getAboutUserId());
 		}
 		getUsersListInfo(list);
 

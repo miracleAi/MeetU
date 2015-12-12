@@ -212,7 +212,7 @@ public class UserPhotoWallAdapter extends
 		public RecyclerItemViewHolder(View view) {
 			super(view);
 			ivImg = (ImageView) view.findViewById(R.id.mine_img_loading);
-			rlAll = (RelativeLayout) view.findViewById(R.id.rl_all);
+			rlAll = (RelativeLayout) view.findViewById(R.id.rl_all_rl);
 			ivFavorNumber = (TextView) view
 					.findViewById(R.id.mine_favourNumber);
 			ivViewNumber = (TextView) view.findViewById(R.id.mine_viewNumber);
