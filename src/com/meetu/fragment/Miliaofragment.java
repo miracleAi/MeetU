@@ -338,7 +338,7 @@ OnClickListener {
 					chatmsgs.setContent("欢迎加入觅聊");
 					chatmsgs.setClientId(user.getObjectId());
 					chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
-					chatmsgs.setChatMsgType(14);
+					chatmsgs.setChatMsgType(Constants.SHOW_SELF_CHANGE);
 					chatmsgs.setConversationId(conversation.getConversationId());
 					chatmsgs.setUid(user.getObjectId());
 					chatmsgsDao.insert(chatmsgs);

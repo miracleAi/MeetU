@@ -115,7 +115,7 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 		msgDao.updateUnread(user.getObjectId(),
 				conversation.getConversationId());
 		Chatmsgs chatBean = new Chatmsgs();
-		chatBean.setChatMsgType(Constants.SHOW_SELF_CHANGE);
+		chatBean.setChatMsgType(Constants.SHOW_SELF_DEL);
 		chatBean.setClientId(client.getClientId());
 		chatBean.setNowJoinUserId(client.getClientId());
 		chatBean.setUid(user.getObjectId());

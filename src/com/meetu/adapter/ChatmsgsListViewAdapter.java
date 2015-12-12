@@ -561,10 +561,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			break;
 		case Constants.SHOW_SELF_CHANGE:
 			// 自己 加入和退出的状态提醒
-
 			log.e("zcq 14", "自己加入消息显示");
 			holder.content.setText("" + item.getContent());
-
 			holder.time.setText(""
 					+ com.meetu.cloud.utils.DateUtils
 					.getFormattedTimeInterval(Long.valueOf(item

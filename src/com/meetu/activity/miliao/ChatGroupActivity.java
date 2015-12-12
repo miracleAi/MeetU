@@ -1493,7 +1493,7 @@ OnItemClickListener {
 			chatmsgs.setNowJoinUserId(client.getClientId());
 			chatmsgs.setClientId(client.getClientId());
 			chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
-			chatmsgs.setChatMsgType(Constants.SHOW_SELF_CHANGE);		
+			chatmsgs.setChatMsgType(Constants.SHOW_SELF_DEL);		
 			chatmsgs.setConversationId(conversation.getConversationId());
 			chatmsgs.setUid(user.getObjectId());
 			chatmsgs.setMessageCacheId(String.valueOf(System
@@ -1510,7 +1510,7 @@ OnItemClickListener {
 					conversation.getConversationId());
 
 			Chatmsgs chatBean = new Chatmsgs();
-			chatBean.setChatMsgType(Constants.SHOW_SELF_CHANGE);//
+			chatBean.setChatMsgType(Constants.SHOW_SELF_DEL);//
 			chatBean.setNowJoinUserId(client.getClientId());
 			chatBean.setClientId(client.getClientId());
 			chatBean.setUid(user.getObjectId());

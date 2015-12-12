@@ -161,6 +161,9 @@ public class MessagesListAdapter extends BaseAdapter {
 				holder.tvContent.setText("系统消息：新人加入了，打个招呼吧！");
 			}
 			if (chatmsgs.getChatMsgType() == Constants.SHOW_SELF_CHANGE) {
+				holder.tvContent.setText("系统消息：欢迎加入觅聊");
+			}
+			if (chatmsgs.getChatMsgType() == Constants.SHOW_SELF_DEL) {
 				holder.tvContent.setText("系统消息：您已被踢出群聊");
 			}
 
