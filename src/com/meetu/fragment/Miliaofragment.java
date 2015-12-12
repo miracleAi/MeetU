@@ -128,9 +128,9 @@ OnClickListener {
 			failTextView=(TextView) view.findViewById(R.id.fail_miliao_fragment_tv);
 			miliaoImv = (ImageView) view.findViewById(R.id.join_miliao_img);
 			joinChatTv = (TextView) view.findViewById(R.id.join_chat_tv);
-			
+
 			loadData();
-			
+
 			viewPager = (ViewPager) view.findViewById(R.id.vpNewsList_miliao);
 			// 设置viewpage的切换动画
 			viewPager.setPageTransformer(true, new MyZoomOutPageTransformer());
@@ -164,7 +164,7 @@ OnClickListener {
 		joinLayout.setOnClickListener(this);
 		// TODO 此处应设置为卡片的总数量。
 
-//		numberPosition.setText("" + 1);
+		//		numberPosition.setText("" + 1);
 	}
 
 	/**
@@ -239,10 +239,7 @@ OnClickListener {
 		case R.id.join_miliao_rl:
 
 			if(user.isCompleteUserInfo()){
-
-
 				if (seekChatBeansList != null && seekChatBeansList.size() != 0) {
-
 					if (isAdd) {
 						miliaoImv.setImageResource(R.drawable.miliao_in);
 						List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
@@ -360,6 +357,7 @@ OnClickListener {
 					}else{
 						joinChatTv.setText("进入觅聊");
 					}
+					isAdd = true;
 					Intent intent2 = new Intent(getActivity(),
 							ChatGroupActivity.class);
 					intent2.putExtra("ConversationId", ""
@@ -389,12 +387,12 @@ OnClickListener {
 		});
 	}
 
-/**
- * 加载网络数据
- *   
- * @author lucifer
- * @date 2015-12-10
- */
+	/**
+	 * 加载网络数据
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-10
+	 */
 	public void loadData() {
 		log.e("zcq", "正在加载");
 		Toast.makeText(getActivity(), "正在加载", Toast.LENGTH_SHORT).show();
@@ -557,7 +555,7 @@ OnClickListener {
 					numberAll.setText("" + seekChatBeansList.size());
 					numberPosition.setText("" + 1);
 					handler.sendEmptyMessage(1);
-					
+
 
 				}
 
@@ -601,7 +599,7 @@ OnClickListener {
 			}
 
 		} else {
-			
+
 			Intent intent = new Intent(getActivity(),
 					CreationChatActivity.class);
 			startActivityForResult(intent, 100);
@@ -693,7 +691,7 @@ OnClickListener {
 		userAboutDao.deleteByType(user.getObjectId(), 2,
 				conversationId);
 		userAboutDao.saveUserAboutList(userAboutBeansList);
-		
+
 	}
 
 

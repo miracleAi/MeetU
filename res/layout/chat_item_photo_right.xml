@@ -6,8 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content" >
 
         <RelativeLayout
             android:id="@+id/time_photochat_item_right_rl"
@@ -49,20 +48,53 @@
             android:textColor="#aaaaaa"
             android:textSize="11sp" />
 
-        <ImageView
-            android:id="@+id/photo_chat_item_right_img"
+        <FrameLayout
+            android:id="@+id/photo_chat_item_right_fram"
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:layout_alignRight="@+id/userName_chat_item_photo_right_tv"
             android:layout_below="@+id/userName_chat_item_photo_right_tv"
-            android:layout_marginTop="4dp"
-            android:scaleType="centerCrop" />
+            android:layout_marginTop="4dp" >
+
+            <ImageView
+                android:id="@+id/photo_chat_item_right_img"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:scaleType="centerCrop" />
+
+            <RelativeLayout
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:background="#60000000"
+                android:visibility="gone" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical" >
+
+                    <ProgressBar
+                        style="@android:style/Widget.ProgressBar.Small.Inverse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/progress_text_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:textColor="@color/white"
+                        android:textSize="15dip" />
+                </LinearLayout>
+            </RelativeLayout>
+        </FrameLayout>
 
         <View
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:layout_below="@+id/photo_chat_item_right_img"
+            android:layout_below="@+id/photo_chat_item_right_fram"
             android:layout_centerHorizontal="true"
             android:gravity="center" />
 
@@ -72,21 +104,21 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/userName_chat_item_photo_right_tv"
             android:layout_marginTop="4dp"
-            android:layout_toLeftOf="@+id/photo_chat_item_right_img"
+            android:layout_toLeftOf="@+id/photo_chat_item_right_fram"
             android:gravity="center" >
 
             <RelativeLayout
                 android:id="@+id/fail_chat_item_photo_right_rl"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
-                android:gravity="center" >
+                android:gravity="center"
+                android:visibility="invisible" >
 
                 <ImageView
                     android:id="@+id/fail_chat_item_text_photo__right_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/message_groupchat_btn_resend"
-                    android:visibility="invisible" />
+                    android:src="@drawable/message_groupchat_btn_resend" />
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>

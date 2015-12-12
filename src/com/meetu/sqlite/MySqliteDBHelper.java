@@ -111,7 +111,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		sb3.append("create table if not exists ");
 		sb3.append(TBL_CHATMSGS + "(");
 		sb3.append(TBL_CHATMSGS_MESSAGE_CACHE_ID
-				+ " integer primary key autoincrement ,");
+				+ " varchar(100) primary key ,");
 		sb3.append(Constants.USERID + " varchar(100) ,");
 		sb3.append(TBL_CHATMSGS_MESSAGE_ID + " varchar(100) , ");
 		sb3.append(TBL_CHATMSGS_CLIENT_ID + " varchar(100) , ");

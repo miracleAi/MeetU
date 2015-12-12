@@ -13,6 +13,8 @@ import cc.imeetu.R;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.ProgressCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
@@ -49,6 +51,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -75,6 +78,8 @@ public class CreateLitterNoteActivity extends Activity implements
 	private boolean isSend = false;// 用来记录是否在网络处理中 false 可以点击 true 不可点击
 
 	private FinalBitmap finalBitmap;
+	private ProgressBar noteProgre;
+	boolean isUpEnd = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +105,7 @@ public class CreateLitterNoteActivity extends Activity implements
 	}
 
 	private void initView() {
+		noteProgre = (ProgressBar) findViewById(R.id.noteup_progress_bar);
 		photoUpdate = (ImageView) super
 				.findViewById(R.id.photoUpdate_create_note_img);
 		photoUpdate.setOnClickListener(this);
@@ -163,9 +169,12 @@ public class CreateLitterNoteActivity extends Activity implements
 				} else if (photoPath.equals("")) {
 					Toast.makeText(this, "请上传背景图片", Toast.LENGTH_SHORT).show();
 				} else {
-
-					createGroup();
-					isSend = true;
+					if(isUpEnd){
+						createGroup();
+						isSend = true;
+					}else{
+						Toast.makeText(this, "图片还没有上传完成哦", Toast.LENGTH_SHORT).show();
+					}
 				}
 			}
 			break;
@@ -404,32 +413,32 @@ public class CreateLitterNoteActivity extends Activity implements
 			e.printStackTrace();
 		}
 		// 上传图片
-		ObjUserPhotoWrap.savePhoto(groupf, new ObjFunBooleanCallback() {
-
+		noteProgre.setVisibility(View.VISIBLE);
+		groupf.saveInBackground(new SaveCallback() {
+			
 			@Override
-			public void callback(boolean result, AVException e) {
+			public void done(AVException e) {
 				// TODO Auto-generated method stub
-				if (e != null) {
-					log.e("zcq", e);
-
-					Toast.makeText(getApplicationContext(), "发送失败",
-							Toast.LENGTH_SHORT).show();
-					return;
-				}
-				if (!result) {
-
-					log.e("zcq", "图片上传失败");
-					return;
-
-				} else {
-					log.e("zcq", "图片上传成功");
-					//
+				isUpEnd = true;
+				if(e == null){
+					noteProgre.setProgress(0);
+					noteProgre.setVisibility(View.GONE);
 					createScript();
-
+				}else{
+					noteProgre.setProgress(0);
+					noteProgre.setVisibility(View.GONE);
+					Toast.makeText(getApplicationContext(), "上传失败",
+							Toast.LENGTH_SHORT).show();
 				}
 			}
+		}, new ProgressCallback() {
+			
+			@Override
+			public void done(Integer progress) {
+				// TODO Auto-generated method stub
+				noteProgre.setProgress(progress);
+			}
 		});
-
 	}
 
 	/**

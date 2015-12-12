@@ -105,92 +105,94 @@
             android:text="李琳"
             android:textColor="#606366"
             android:textSize="15sp" />
-
-        
-
-        
     </RelativeLayout>
 
-    <RelativeLayout 
+    <RelativeLayout
         android:id="@+id/center_create_note_rl"
         android:layout_width="match_parent"
         android:layout_height="280dp"
-        android:layout_below="@+id/center_notes_create_rl">
-    <RelativeLayout
-        android:id="@+id/photoUpdate_creation_note_rl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-       
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp" >
+        android:layout_below="@+id/center_notes_create_rl" >
 
-        <ImageView
-            android:id="@+id/photoUpdate_create_note_img"
+        <RelativeLayout
+            android:id="@+id/photoUpdate_creation_note_rl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="0dp"
-            android:src="@drawable/chat_show_btn_uploadphoto" />
+            android:layout_marginTop="60dp" >
 
-        <TextView
-            android:id="@+id/text_create_note"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/photoUpdate_create_note_img"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="14dp"
-            android:text="上传主题照片"
-            android:textColor="#aaaaaa"
-            android:textSize="13sp" />
-    </RelativeLayout>
-    
-     <RelativeLayout
-        android:id="@+id/photo_creationNote_rl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-       	android:layout_centerHorizontal="true"
-       	android:layout_centerVertical="true"
-      	android:layout_marginTop="34dp"
-      	
-      	android:visibility="gone"
-      	
-         >
+            <ImageView
+                android:id="@+id/photoUpdate_create_note_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="0dp"
+                android:src="@drawable/chat_show_btn_uploadphoto" />
 
-        <ImageView
-            android:id="@+id/photo_creation_note_img"
+            <TextView
+                android:id="@+id/text_create_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/photoUpdate_create_note_img"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="14dp"
+                android:text="上传主题照片"
+                android:textColor="#aaaaaa"
+                android:textSize="13sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/photo_creationNote_rl"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
-            android:background="@color/gainsboro"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="0dp"
-            android:src="@drawable/chat_show_btn_uploadphoto" />
-
-        <ImageView
-            android:id="@+id/uploadAgain_create_note_img"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/chat_show_photoupload_btn_reupload" />
-      
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="34dp"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/photo_creation_note_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="0dp"
+                android:adjustViewBounds="true"
+                android:background="@color/gainsboro"
+                android:scaleType="centerCrop"
+                android:src="@drawable/chat_show_btn_uploadphoto" />
+
+            <ImageView
+                android:id="@+id/uploadAgain_create_note_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/chat_show_photoupload_btn_reupload" />
+        </RelativeLayout>
     </RelativeLayout>
 
-    
-</RelativeLayout>
+    <ProgressBar
+        android:id="@+id/noteup_progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_below="@+id/center_create_note_rl"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/progress"
+        android:max="100"
+        android:progress="0"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/center_CreationChat_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/center_create_note_rl"
+        android:layout_below="@+id/noteup_progress_bar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
         android:orientation="vertical" >
 
         <EditText
@@ -202,9 +204,9 @@
             android:drawablePadding="6dp"
             android:hint="你可以：打招呼、聊兴趣、发明信片..."
             android:maxLength="100"
+            android:textColor="#898989"
             android:textColorHint="#bfbfbf"
             android:textColorLink="#33c6e5"
-            android:textColor="#898989"
             android:textSize="13sp" >
         </EditText>
 
@@ -242,7 +244,8 @@
                 android:textSize="11dp" />
         </RelativeLayout>
     </LinearLayout>
-    <!-- <RelativeLayout
+    <!--
+    <RelativeLayout
         android:id="@+id/send_bottom_create_note_rl"
         android:layout_width="match_parent"
         android:layout_height="77dp"
@@ -257,6 +260,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:src="@drawable/massage_letters_show_btn_sendletters" />
-    </RelativeLayout> -->
+    </RelativeLayout>
+    -->
 
 </RelativeLayout>

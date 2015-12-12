@@ -16,6 +16,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.ProgressCallback;
 import com.avos.avoscloud.AVQuery.CachePolicy;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;

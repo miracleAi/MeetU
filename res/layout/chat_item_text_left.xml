@@ -1,94 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="wrap_content" >
 
-     >
-    <RelativeLayout android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-       
-        >
-        
-         <RelativeLayout  android:id="@+id/time_chat_item_left_rl"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <RelativeLayout
+            android:id="@+id/time_chat_item_left_rl"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
-            android:layout_centerHorizontal="true">
-        <TextView
-            android:id="@+id/time_chat_item_left_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" 
-           android:layout_alignParentBottom="true"     
-            android:layout_centerHorizontal="true"
-            android:textSize="11dp"
-            android:textColor="#a0a0a0"
-            android:text="" />
+            android:layout_centerHorizontal="true" >
+
+            <TextView
+                android:id="@+id/time_chat_item_left_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:text=""
+                android:textColor="#a0a0a0"
+                android:textSize="11dp" />
         </RelativeLayout>
 
         <ImageView
             android:id="@+id/userHead_chat_item_left_img"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:layout_alignParentLeft="true"           
-            android:layout_marginLeft="10dp"
+            android:layout_alignParentLeft="true"
             android:layout_below="@id/time_chat_item_left_rl"
+            android:layout_marginLeft="10dp"
             android:src="@drawable/message_groupchat_img_profiles_default" />
 
         <TextView
             android:id="@+id/userName_chat_item_left_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/time_chat_item_left_rl"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="15dp"
-            android:layout_below="@id/time_chat_item_left_rl"
             android:layout_toRightOf="@+id/userHead_chat_item_left_img"
-            android:textSize="11sp"
+            android:text=""
             android:textColor="#aaaaaa"
-            android:text="" />
+            android:textSize="11sp" />
 
         <TextView
             android:id="@+id/content_chat_item_left_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            
-            android:padding="10dp"
-            android:layout_marginTop="4dp"
             android:layout_alignLeft="@+id/userName_chat_item_left_tv"
             android:layout_below="@+id/userName_chat_item_left_tv"
+            android:layout_marginTop="4dp"
             android:background="@drawable/dialog_gray"
-            android:textColor="@color/black"
-           	android:text="这是别人发的消息" />
+            android:padding="10dp"
+            android:text="这是别人发的消息"
+            android:textColor="@color/black" />
 
-        
         <View
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:gravity="center"
             android:layout_below="@+id/content_chat_item_left_tv"
-           />
-        <RelativeLayout            
-		    android:id="@+id/imageView3"
+            android:gravity="center" />
+
+        <RelativeLayout
+            android:id="@+id/imageView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"           
             android:layout_below="@+id/userName_chat_item_left_tv"
+            android:layout_marginTop="4dp"
             android:layout_toRightOf="@+id/content_chat_item_left_tv"
-            android:gravity="center">
-        <RelativeLayout 
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:gravity="center">
-	        <ImageView
-	            android:id="@+id/fail_chat_item_text_left"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:visibility="invisible"
-	            android:src="@drawable/message_groupchat_btn_resend" />
-	        </RelativeLayout>
-        </RelativeLayout>
-        
+            android:gravity="center" >
 
+            <RelativeLayout
+                android:id="@+id/fail_chat_item_text_right_rl"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:gravity="center"
+                android:visibility="invisible" >
+
+                <ImageView
+                    android:id="@+id/fail_chat_item_text_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/message_groupchat_btn_resend" />
+            </RelativeLayout>
         </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

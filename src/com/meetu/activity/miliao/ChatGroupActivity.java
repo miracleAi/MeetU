@@ -202,7 +202,7 @@ OnItemClickListener {
 	private UserAboutDao userAboutDao;
 	private List<UserAboutBean> userAboutBeans = new ArrayList<UserAboutBean>();
 	private SeekChatBean seekChatBean = null;
-	
+
 	private RelativeLayout emojiLayout,pictureLayout,cameraLayout;
 
 	@Override
@@ -343,7 +343,7 @@ OnItemClickListener {
 
 		// mChatmsgsAdapter=new ChatmsgsListViewAdapter(this, chatmsgsList);
 
-		mChatmsgsAdapter = new ChatmsgsListViewAdapter(this, chatmsgsCacheList);
+		mChatmsgsAdapter = new ChatmsgsListViewAdapter(this, chatmsgsCacheList,handler);
 
 		mChatmsgsListView.setAdapter(mChatmsgsAdapter);
 		mChatmsgsListView.setOnItemClickListener(new OnItemClickListener() {
@@ -420,8 +420,8 @@ OnItemClickListener {
 		}else{
 			timeOverTextView.setText(""+dismissData.getDismissData(timeOver));
 		}
-		
-		
+
+
 
 
 	}
@@ -689,6 +689,7 @@ OnItemClickListener {
 		// TODO Auto-generated method stub
 		Chatmsgs mchatmsgs = new Chatmsgs();
 		mchatmsgs.setUid(user.getObjectId());
+		mchatmsgs.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
 		mchatmsgs.setClientId(user.getObjectId());
 		mchatmsgs.setSendTimeStamp("" + System.currentTimeMillis());
 		mchatmsgs.setImgMsgImageUrl(uir.toString());
@@ -702,15 +703,6 @@ OnItemClickListener {
 		chatmsgsDao.insert(mchatmsgs);
 		handler.sendEmptyMessage(1);
 		sendPictureMessage(mchatmsgs);
-		// //TODO 测试类型 加了左边布局的数据
-		// Chatmsgs item=new Chatmsgs();
-		// item.setImgMsgImageUrl(uir.toString());
-		// item.setConversationId("1");
-		// item.setChatMsgType(3);
-		//
-		// isShowTime(item);
-		// chatmsgsDao.insert(item);
-
 	}
 
 	/**
@@ -723,6 +715,7 @@ OnItemClickListener {
 		if (mEditText.getText().length() != 0) {
 			String mcontentString = mEditText.getText().toString();
 			mchatmsgs.setUid(user.getObjectId());
+			mchatmsgs.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
 			mchatmsgs.setClientId(user.getObjectId());
 			mchatmsgs.setSendTimeStamp("" + System.currentTimeMillis());
 			mchatmsgs.setContent(mcontentString);
@@ -736,7 +729,7 @@ OnItemClickListener {
 
 			chatmsgsDao.insert(mchatmsgs);
 			handler.sendEmptyMessage(1);
-
+			log.d("mytest", "1------"+mchatmsgs.getMessageCacheId());
 			sendTextMessage(mchatmsgs);
 			mEditText.setText("");
 
@@ -962,11 +955,6 @@ OnItemClickListener {
 				chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList(
 						conversationId, user.getObjectId()));
 				log.e("zcq", "chatmsgsCacheList=="+chatmsgsCacheList.size());
-				//				System.err.println(chatmsgsCacheList.get(
-				//						chatmsgsCacheList.size() - 1).getContent()
-				//						+ "  id=="
-				//						+ chatmsgsCacheList.get(chatmsgsCacheList.size() - 1)
-				//								.getMessageCacheId());
 
 				mChatmsgsAdapter.notifyDataSetChanged();
 
@@ -983,16 +971,18 @@ OnItemClickListener {
 				chatmsgsCacheList.addAll(chatmsgsDao.getChatmsgsList(
 						conversationId, user.getObjectId()));
 
-				//				System.err.println(chatmsgsCacheList.get(
-				//						chatmsgsCacheList.size() - 1).getContent()
-				//						+ "  id=="
-				//						+ chatmsgsCacheList.get(chatmsgsCacheList.size() - 1)
-				//								.getMessageCacheId());
-
 				mChatmsgsAdapter.notifyDataSetChanged();
 
 				refreshComplete();
 
+				break;
+			case 3:
+				Chatmsgs chatMsgText = (Chatmsgs) msg.obj;
+				sendTextMessage(chatMsgText);
+				break;
+			case 4:
+				Chatmsgs chatMsgPhoto = (Chatmsgs) msg.obj;
+				sendPictureMessage(chatMsgPhoto);
 				break;
 			}
 		}
@@ -1130,34 +1120,34 @@ OnItemClickListener {
 
 		void onCorpusDeleted();
 	}
-	
+
 	/**
 	 * 监听输入框内文字的变化
 	 */
 	public  TextWatcher textWatcher=new TextWatcher() {
-		
+
 		@Override
 		public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 		@Override
 		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
 				int arg3) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 		@Override
 		public void afterTextChanged(Editable arg0) {
-			
+
 			if(arg0.length()>0){
 				send.setImageResource(R.drawable.message_groupchat_btn_send_hl);
 			}else{
 				send.setImageResource(R.drawable.message_groupchat_btn_send_nor);
 			}
-			
+
 		}
 	};
 
@@ -1176,7 +1166,7 @@ OnItemClickListener {
 			super.onMessage(message, conversation, client);
 			// 请按自己需求改写
 			switch (message.getMessageType()) {
-			
+
 			case Constants.TEXT_TYPE:
 				log.e("zcq", "接收到一条文本消息");
 				createChatMsg(conversation, message);
@@ -1319,10 +1309,9 @@ OnItemClickListener {
 	 * @date 2015-11-19
 	 */
 
-	public void sendTextMessage(Chatmsgs mchatmsgs) {
+	public void sendTextMessage(final Chatmsgs mchatmsgs) {
 		AVIMTextMessage msg = new AVIMTextMessage();
-		log.e("zcq", "mchatmsgs.getContent()==" + mchatmsgs.getContent());
-
+		log.d("mytest", "2------"+mchatmsgs.getMessageCacheId());
 		msg.setText("" + mchatmsgs.getContent());
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1343,14 +1332,19 @@ OnItemClickListener {
 			@Override
 			public void callback(boolean result, AVException e) {
 				if (e != null) {
-					log.e("zcq", e);
+					log.e("zcq-------", "文本消息发送失败====="+e);
+					log.d("mytest", "3------"+mchatmsgs.getMessageCacheId());
+					chatmsgsDao.updateStatus(user.getObjectId(),mchatmsgs.getMessageCacheId(), Constants.STATUES_FAILED);
+					handler.sendEmptyMessage(1);
 				} else if (result) {
 					log.e("zcq", "文本消息发送成功");
+					chatmsgsDao.updateStatus(user.getObjectId(),mchatmsgs.getMessageCacheId(),Constants.STATUES_SENT);
 					handler.sendEmptyMessage(1);
 					messagesDao.updateTime(user.getObjectId(),
 							conversation.getConversationId());
 				} else {
 					log.e("zcq", "文本消息发送失败");
+					chatmsgsDao.updateStatus(user.getObjectId(),mchatmsgs.getMessageCacheId(),Constants.STATUES_FAILED);
 					handler.sendEmptyMessage(1);
 				}
 
@@ -1359,7 +1353,7 @@ OnItemClickListener {
 	}
 
 	// 发送图片消息
-	public void sendPictureMessage(Chatmsgs mchatmsgs) {
+	public void sendPictureMessage(final Chatmsgs mchatmsgs) {
 		AVIMImageMessage msg;
 		try {
 			msg = new AVIMImageMessage(mchatmsgs.getImgMsgImageUrl());
@@ -1377,16 +1371,20 @@ OnItemClickListener {
 				public void callback(boolean result, AVException e) {
 					// TODO Auto-generated method stub
 					if (e != null) {
-						log.e("zcq", e);
+						log.e("zcq--------", "tupian消息发送失败====="+e);
+						chatmsgsDao.updateStatus(user.getObjectId(),mchatmsgs.getMessageCacheId(), Constants.STATUES_FAILED);
+						handler.sendEmptyMessage(1);
 						return;
 					}
 					if (result) {
 						log.e("zcq", "图片消息发送成功");
+						chatmsgsDao.updateStatus(user.getObjectId(),mchatmsgs.getMessageCacheId(), Constants.STATUES_SENT);
 						handler.sendEmptyMessage(1);
 						messagesDao.updateTime(user.getObjectId(),
 								conversation.getConversationId());
 					} else {
 						log.e("zcq", "图片消息发送失败");
+						chatmsgsDao.updateStatus(user.getObjectId(),mchatmsgs.getMessageCacheId(), Constants.STATUES_FAILED);
 						handler.sendEmptyMessage(1);
 					}
 				}
@@ -1404,7 +1402,7 @@ OnItemClickListener {
 	 *
 	 */
 	public class MemberChangeHandler extends AVIMConversationEventHandler {
-		
+
 		public MemberChangeHandler(Context context) {
 			// TODO Auto-generated constructor stub
 		}
@@ -1491,7 +1489,7 @@ OnItemClickListener {
 			Chatmsgs chatmsgs=new Chatmsgs();				
 			chatmsgs.setContent("您已被群主踢出");
 			chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
-			chatmsgs.setChatMsgStatus(Constants.SHOW_SELF_CHANGE);		
+			chatmsgs.setChatMsgType(Constants.SHOW_SELF_CHANGE);		
 			chatmsgs.setConversationId(conversation.getConversationId());
 			chatmsgs.setUid(user.getObjectId());
 			chatmsgs.setMessageCacheId(String.valueOf(System

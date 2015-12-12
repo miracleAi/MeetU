@@ -92,6 +92,8 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 	private RelativeLayout noneOrFailLayout;
 	private TextView noneTextView;
 	private TextView failTextView;
+	//启动查看照片页
+	private static int SCAN_PHOTO = 1001;
 
 	public static Fragment newInstance(int position) {
 		log.e("zcq", "new MinePhotoWallfragment");
@@ -228,7 +230,7 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 		intent.putExtra("photolist", (Serializable) objUserPhotos);
 		intent.putExtra("id", "" + id);
 		log.e("lucifer", "id==" + id);
-		startActivity(intent);
+		startActivityForResult(intent, SCAN_PHOTO);
 		getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
 	}
 
@@ -274,5 +276,13 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 	public void reflesh() {
 		loaddata();
 		
+	}
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode == SCAN_PHOTO && resultCode == MinephotoActivity.RESULT_OK){
+			reflesh();
+		}
 	}
 }

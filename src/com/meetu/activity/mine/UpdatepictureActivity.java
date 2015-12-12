@@ -10,6 +10,8 @@ import cc.imeetu.R;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.ProgressCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjUser;
@@ -34,6 +36,7 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +53,7 @@ public class UpdatepictureActivity extends Activity implements OnClickListener {
 	private Bitmap upPhoto;
 	private Boolean isEnd = false;// 用来标示 照片是否上传完成
 	private RelativeLayout okLayout,backLayout;
+	private ProgressBar mineProgre;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +73,7 @@ public class UpdatepictureActivity extends Activity implements OnClickListener {
 	}
 
 	private void initView() {
-
+		mineProgre = (ProgressBar) findViewById(R.id.mineup_progress_bar);
 		updateText = (EditText) super.findViewById(R.id.update_text_mine);
 		updateText.addTextChangedListener(watcher);
 		textsize = (TextView) super.findViewById(R.id.textsize_update_mine);
@@ -198,26 +202,29 @@ public class UpdatepictureActivity extends Activity implements OnClickListener {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		ObjUserPhotoWrap.savePhoto(userf, new ObjFunBooleanCallback() {
-
+		mineProgre.setVisibility(View.VISIBLE);
+		userf.saveInBackground(new SaveCallback() {
+			
 			@Override
-			public void callback(boolean result, AVException e) {
+			public void done(AVException e) {
 				// TODO Auto-generated method stub
-				if (e != null) {
-					// clickBtn.setText(LOAD_FAIL);
-					Toast.makeText(UpdatepictureActivity.this, "上传照片失败",
-							Toast.LENGTH_SHORT).show();
-				}
-				if (result) {
-					
+				if(e == null){
+					mineProgre.setProgress(0);
+					mineProgre.setVisibility(View.GONE);
 					isEnd = true;
-					log.e("zcq", "图片上传成功");
-
-				} else {
-					// clickBtn.setText(LOAD_FAIL);
+				}else{
+					mineProgre.setProgress(0);
+					mineProgre.setVisibility(View.GONE);
 					Toast.makeText(UpdatepictureActivity.this, "上传照片失败",
 							Toast.LENGTH_SHORT).show();
 				}
+			}
+		}, new ProgressCallback() {
+			
+			@Override
+			public void done(Integer progress) {
+				// TODO Auto-generated method stub
+				mineProgre.setProgress(progress);
 			}
 		});
 	}

@@ -12,6 +12,8 @@ import cc.imeetu.R;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.ProgressCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
@@ -50,6 +52,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -64,10 +67,12 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 	private RelativeLayout photoUpdateLayout, photoLayout;
 	private int PhotoWidth, PhotoHight;
 	private RelativeLayout upLayout, backLayout;
+	private ProgressBar chatUpProgre;
 	// 网络数据相关
 	private String photoPath = "";
 	ObjUser user = new ObjUser();
 	AVUser currentUser = ObjUser.getCurrentUser();
+	boolean isUpEnd = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +87,7 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 	}
 
 	private void initView() {
+		chatUpProgre = (ProgressBar) findViewById(R.id.chatup_progress_bar);
 		photoUpdateLayout = (RelativeLayout) super
 				.findViewById(R.id.photoUpdate_creationChat_rl);
 		// 设置上传主题图片在屏幕的1/3高度处
@@ -186,7 +192,12 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 					Toast.makeText(getApplicationContext(), "请选择照片",
 							Toast.LENGTH_SHORT).show();
 				} else {
-					createGroup();
+					if(isUpEnd){
+						createGroup();
+					}else{
+						Toast.makeText(getApplicationContext(), "图片还没有上传成功哦",
+								Toast.LENGTH_SHORT).show();
+					}
 				}
 
 			}
@@ -374,48 +385,53 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 			e.printStackTrace();
 		}
 		// 上传图片
-		ObjUserPhotoWrap.savePhoto(groupf, new ObjFunBooleanCallback() {
+		chatUpProgre.setVisibility(View.VISIBLE);
+		groupf.saveInBackground(new SaveCallback() {
 
 			@Override
-			public void callback(boolean result, AVException e) {
+			public void done(AVException e) {
 				// TODO Auto-generated method stub
-				if (e != null) {
-					// clickBtn.setText(LOADFAIL);
-					log.e("zcq", e);
-					return;
-				} else if (!result) {
-					// clickBtn.setText(LOADFAIL);
-					log.e("zcq", "照片上传失败");
-					return;
+				isUpEnd = true;
+				if (e == null) {
+					chatUpProgre.setProgress(0);
+					chatUpProgre.setVisibility(View.GONE);
+					if(MyApplication.isChatLogin){
+						saveGroupInfo();
+					}else{
+						ObjChatMessage.connectToChatServer(
+								MyApplication.chatClient,
+								new ObjAvimclientCallback() {
 
-				} else if (MyApplication.isChatLogin) {
-
-					// 建立长连接
-					log.e("zcq", "已经建立过长连接");
-					saveGroupInfo();
+									@Override
+									public void callback(AVIMClient client,
+											AVException e) {
+										if (e != null) {
+											log.e("zcq", e);
+											return;
+										}
+										if (client != null) {
+											MyApplication.chatClient = client;
+											log.e("zcq", "连接聊天长连接成功");
+											saveGroupInfo();
+										} else {
+											log.e("zcq", "连接聊天长连接失败");
+										}
+									}
+								});
+					}
 				} else {
-
-					ObjChatMessage.connectToChatServer(
-							MyApplication.chatClient,
-							new ObjAvimclientCallback() {
-
-								@Override
-								public void callback(AVIMClient client,
-										AVException e) {
-									if (e != null) {
-										log.e("zcq", e);
-										return;
-									}
-									if (client != null) {
-										MyApplication.chatClient = client;
-										log.e("zcq", "连接聊天长连接成功");
-										saveGroupInfo();
-									} else {
-										log.e("zcq", "连接聊天长连接失败");
-									}
-								}
-							});
+					chatUpProgre.setProgress(0);
+					chatUpProgre.setVisibility(View.GONE);
+					log.e("zcq", "照片上传失败");
 				}
+			}
+		},new ProgressCallback() {
+			
+			@Override
+			public void done(Integer pro) {
+				// TODO Auto-generated method stub
+				log.d("mytest", "jindu"+pro);
+				chatUpProgre.setProgress(pro);
 			}
 		});
 	}

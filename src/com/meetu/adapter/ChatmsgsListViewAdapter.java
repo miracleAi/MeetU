@@ -14,6 +14,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,14 +64,15 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 	private UserDao userDao;
 	// 拿本地的 user
 	private AVUser currentUser = AVUser.getCurrentUser();
+	Handler handler;
 	// 网络相关
-
 	private ObjUser user = null;
 	FinalBitmap finalBitmap;
 
-	public ChatmsgsListViewAdapter(Context context, List<Chatmsgs> chatmsgsList) {
+	public ChatmsgsListViewAdapter(Context context, List<Chatmsgs> chatmsgsList,Handler handler) {
 		this.mContext = context;
 		this.chatmsgsList = chatmsgsList;
+		this.handler = handler;
 
 		mMaxItemWidth = DisplayUtils.getWindowWidth(mContext)
 				- DensityUtil.dip2px(mContext, 110);
@@ -157,9 +160,11 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						.findViewById(R.id.userName_chat_item_tv);
 				holder.failPhoto = (ImageView) convertView
 						.findViewById(R.id.fail_chat_item_text_img);
+				holder.resentLayout = (RelativeLayout) convertView
+						.findViewById(R.id.fail_chat_item_text_right_rl);
 				break;
 				//TODO 1 暂时没有此类型 未知原因出现此类型 待解决
-			
+
 			case Constants.SHOW_RECV_TEXT:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_item_text_left, null);
@@ -176,6 +181,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						.findViewById(R.id.userName_chat_item_left_tv);
 				holder.failPhoto = (ImageView) convertView
 						.findViewById(R.id.fail_chat_item_text_left);
+				holder.resentLayout = (RelativeLayout) convertView
+						.findViewById(R.id.fail_chat_item_text_right_rl);
 				break;
 			case Constants.SHOW_SEND_IMG:
 				convertView = LayoutInflater.from(mContext).inflate(
@@ -243,11 +250,27 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 		}
 
 		switch (item.getChatMsgType()) {
-		
+
 		case Constants.SHOW_SEND_TEXT:
 		case Constants.SHOW_RECV_TEXT:
+			if(item.getChatMsgStatus() == Constants.STATUES_FAILED){
+				holder.resentLayout.setVisibility(View.VISIBLE);
+			}else{
+				holder.resentLayout.setVisibility(View.GONE);
+			}
+			holder.resentLayout.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Message msg = new Message();
+					msg.what = 3;
+					msg.obj = item;
+					handler.sendMessage(msg);
+				}
+			});
 			SpannableString spannableString = ChatGroupActivity
-			.getExpressionString(mContext, item.getContent());
+					.getExpressionString(mContext, item.getContent());
 			holder.content.setMaxWidth(mMaxItemWidth);
 			holder.content.setMinWidth(mMinItemWidth);
 			holder.content.setText(spannableString);
@@ -338,9 +361,24 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			break;
 
 		case Constants.SHOW_SEND_IMG:
+			if(item.getChatMsgStatus() == Constants.STATUES_FAILED){
+				holder.resentLayout.setVisibility(View.VISIBLE);
+			}else{
+				holder.resentLayout.setVisibility(View.GONE);
+			}
+			holder.resentLayout.setOnClickListener(new OnClickListener() {
 
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Message msg = new Message();
+					msg.what = 4;
+					msg.obj = item;
+					handler.sendMessage(msg);
+				}
+			});
 			if (item.getImgMsgImageUrl() != null
-			&& !item.getImgMsgImageUrl().equals("")) {
+					&& !item.getImgMsgImageUrl().equals("")) {
 				finalBitmap.display(holder.photo, item.getImgMsgImageUrl());
 			}
 
@@ -381,8 +419,13 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 
 			break;
 		case Constants.SHOW_RECV_IMG:
+			if(item.getChatMsgStatus() == Constants.STATUES_FAILED){
+				holder.resentLayout.setVisibility(View.VISIBLE);
+			}else{
+				holder.resentLayout.setVisibility(View.GONE);
+			}
 			if (item.getImgMsgImageUrl() != null
-			&& !item.getImgMsgImageUrl().equals("")) {
+					&& !item.getImgMsgImageUrl().equals("")) {
 				finalBitmap.display(holder.photo, item.getImgMsgImageUrl());
 			}
 

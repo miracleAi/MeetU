@@ -124,6 +124,7 @@ public class MinephotoActivity extends Activity implements OnClickListener,
 					// TODO Auto-generated method stub
 					if(result){
 						Toast.makeText(MinephotoActivity.this, "已删除", 1000).show();
+						setResult(RESULT_OK);
 						objUserPhotos.remove(positionNow);
 						adapter = new MinePhotoAdapter(MinephotoActivity.this, objUserPhotos, userId);
 						viewPager.setAdapter(adapter);
