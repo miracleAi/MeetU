@@ -519,8 +519,9 @@ OnItemClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.back_miliao_chat_rl:
+			Intent dataIntent=getIntent();
+			setResult(RESULT_CANCELED, dataIntent);
 			finish();
-
 			break;
 		case R.id.chat_face_container_rl:
 			if (faceBoolean == false) {
@@ -1519,6 +1520,15 @@ OnItemClickListener {
 			chatBean.setContent("您被踢出群聊");
 			chatmsgsDao.insert(chatBean);
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		Intent intent=getIntent();
+		setResult(RESULT_CANCELED, intent);
+		finish();
 	}
 
 

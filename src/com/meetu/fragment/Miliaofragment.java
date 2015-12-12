@@ -274,7 +274,7 @@ OnClickListener {
 						bundle.putSerializable("SeekChatBean",
 								seekChatBeansList.get(positonNow));
 						intent2.putExtras(bundle);
-						startActivity(intent2);
+						startActivityForResult(intent2, 200);
 					} else {
 						log.e("zcq", "没加入过当前觅聊");
 						miliaoImv.setImageResource(R.drawable.chat_navi_btn_joinchat);
@@ -351,6 +351,12 @@ OnClickListener {
 					List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
 							Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
 					miliaoImv.setImageResource(R.drawable.miliao_in);
+					
+				//	((MiliaoChannelFragment)fragmentList.get(positonNow))).setu
+					
+					
+					((MiliaoChannelFragment) fragmentList.get(positonNow)).setUserInfo();
+		
 					if(memList.size()<5){
 						joinChatTv.setText("等待开启");
 						return;
@@ -383,7 +389,7 @@ OnClickListener {
 					bundle.putSerializable("SeekChatBean",
 							seekChatBeansList.get(positonNow));
 					intent2.putExtras(bundle);
-					startActivity(intent2);
+					startActivityForResult(intent2, 200);
 					
 				} else {
 					log.e("zcq", "加入觅聊失败 ，请检查网络");
@@ -664,6 +670,14 @@ OnClickListener {
 				// 创建觅聊 成功 执行的操作
 				log.e("lucifer", "需要重新加载数据");
 				loadData();
+			}
+			break;
+		case 200:
+			if (resultCode == getActivity().RESULT_OK) {
+				// 创建觅聊 成功 执行的操作
+				log.e("lucifer", "需要重新加载头像");
+				((MiliaoChannelFragment) fragmentList.get(positonNow)).setUserInfo();
+				isAddconvesition();
 			}
 			break;
 

@@ -259,6 +259,8 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 											memberUserList.get(4)
 													.getProfileClip().getUrl());
 									fiveUser.setOnClickListener(MiliaoChannelFragment.this);
+								}else{
+									fiveUser.setImageResource(R.drawable.acty_show_img_profiles);
 								}
 
 							}
@@ -269,6 +271,8 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 											memberUserList.get(3)
 													.getProfileClip().getUrl());
 									fourUser.setOnClickListener(MiliaoChannelFragment.this);
+								}else{
+									fourUser.setImageResource(R.drawable.acty_show_img_profiles);
 								}
 
 							}
@@ -280,6 +284,8 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 													.getProfileClip().getUrl());
 									threeUser
 											.setOnClickListener(MiliaoChannelFragment.this);
+								}else{
+									threeUser.setImageResource(R.drawable.acty_show_img_profiles);
 								}
 
 							}
@@ -289,6 +295,8 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 									finalBitmap.display(twoUser, memberUserList
 											.get(1).getProfileClip().getUrl());
 									twoUser.setOnClickListener(MiliaoChannelFragment.this);
+								}else{
+									twoUser.setImageResource(R.drawable.acty_show_img_profiles);
 								}
 
 							}
@@ -298,6 +306,8 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 									finalBitmap.display(oneUser, memberUserList
 											.get(0).getProfileClip().getUrl());
 									oneUser.setOnClickListener(MiliaoChannelFragment.this);
+								}else{
+									oneUser.setImageResource(R.drawable.acty_show_img_profiles);
 								}
 
 							}
@@ -342,7 +352,27 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 			list.add(list2.get(i).getAboutUserId());
 		}
 		getUsersListInfo(list);
+		
+		numberUserAll.setText("" + list.size());
 
+	}
+	
+	public void setUserInfoNone(){
+		log.e("zcq", "设置头像");
+
+		List<String> list = new ArrayList<String>();
+		
+//		for (int i = 0; i < seekChatBean.getMembers().size(); i++) {
+//			list.add("" + seekChatBean.getMembers().get(i).get("userId"));
+//		}
+		List<UserAboutBean> list2=userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, seekChatBean.getConversationId());
+		for(int i=0;i<list2.size();i++){
+			if(!user.getObjectId().equals(list2.get(i).getAboutUserId())){
+				list.add(list2.get(i).getAboutUserId());
+			}
+			
+		}
+		getUsersListInfo(list);
 	}
 
 	@Override
