@@ -72,7 +72,7 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 	private String photoPath = "";
 	ObjUser user = new ObjUser();
 	AVUser currentUser = ObjUser.getCurrentUser();
-	boolean isUpEnd = false;
+	boolean isUpEnd = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +193,7 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 							Toast.LENGTH_SHORT).show();
 				} else {
 					if(isUpEnd){
+						isUpEnd = false;
 						createGroup();
 					}else{
 						Toast.makeText(getApplicationContext(), "图片还没有上传成功哦",
@@ -391,7 +392,6 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 			@Override
 			public void done(AVException e) {
 				// TODO Auto-generated method stub
-				isUpEnd = true;
 				if (e == null) {
 					chatUpProgre.setProgress(0);
 					chatUpProgre.setVisibility(View.GONE);

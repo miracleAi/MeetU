@@ -116,6 +116,7 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 				conversation.getConversationId());
 		Chatmsgs chatBean = new Chatmsgs();
 		chatBean.setChatMsgType(Constants.SHOW_SELF_CHANGE);
+		chatBean.setClientId(client.getClientId());
 		chatBean.setNowJoinUserId(client.getClientId());
 		chatBean.setUid(user.getObjectId());
 		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));

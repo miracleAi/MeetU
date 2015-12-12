@@ -131,9 +131,11 @@ public class MessagesListAdapter extends BaseAdapter {
 					|| chatmsgs.getChatMsgType() == Constants.SHOW_RECV_IMG) {
 				holder.tvContent.setText(nickName+":"+"[图片]");
 			}
-			if (chatmsgs.getChatMsgType() == Constants.SHOW_MEMBERCHANGE
-					|| chatmsgs.getChatMsgType() == Constants.SHOW_RECV_IMG) {
-				holder.tvContent.setText(nickName+":"+"[图片]");
+			if (chatmsgs.getChatMsgType() == Constants.SHOW_MEMBERCHANGE) {
+				holder.tvContent.setText("系统消息：新人加入了，打个招呼吧！");
+			}
+			if (chatmsgs.getChatMsgType() == Constants.SHOW_SELF_CHANGE) {
+				holder.tvContent.setText("系统消息：您已被踢出群聊");
 			}
 
 		} else {

@@ -1453,6 +1453,7 @@ OnItemClickListener {
 		for (String userId : array) {
 			Chatmsgs chatBean = new Chatmsgs();
 			chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
+			chatBean.setClientId(client.getClientId());
 			chatBean.setNowJoinUserId(client.getClientId());
 			chatBean.setUid(user.getObjectId());
 			chatBean.setNowJoinUserId(userId);
@@ -1488,6 +1489,8 @@ OnItemClickListener {
 
 			Chatmsgs chatmsgs=new Chatmsgs();				
 			chatmsgs.setContent("您已被群主踢出");
+			chatmsgs.setNowJoinUserId(client.getClientId());
+			chatmsgs.setClientId(client.getClientId());
 			chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
 			chatmsgs.setChatMsgType(Constants.SHOW_SELF_CHANGE);		
 			chatmsgs.setConversationId(conversation.getConversationId());
@@ -1508,6 +1511,7 @@ OnItemClickListener {
 			Chatmsgs chatBean = new Chatmsgs();
 			chatBean.setChatMsgType(Constants.SHOW_SELF_CHANGE);//
 			chatBean.setNowJoinUserId(client.getClientId());
+			chatBean.setClientId(client.getClientId());
 			chatBean.setUid(user.getObjectId());
 			chatBean.setMessageCacheId(String.valueOf(System
 					.currentTimeMillis()));

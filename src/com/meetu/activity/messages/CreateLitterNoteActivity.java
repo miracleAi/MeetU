@@ -79,7 +79,7 @@ public class CreateLitterNoteActivity extends Activity implements
 
 	private FinalBitmap finalBitmap;
 	private ProgressBar noteProgre;
-	boolean isUpEnd = false;
+	boolean isUpEnd = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +170,7 @@ public class CreateLitterNoteActivity extends Activity implements
 					Toast.makeText(this, "请上传背景图片", Toast.LENGTH_SHORT).show();
 				} else {
 					if(isUpEnd){
+						isUpEnd = false;
 						createGroup();
 						isSend = true;
 					}else{
@@ -419,7 +420,6 @@ public class CreateLitterNoteActivity extends Activity implements
 			@Override
 			public void done(AVException e) {
 				// TODO Auto-generated method stub
-				isUpEnd = true;
 				if(e == null){
 					noteProgre.setProgress(0);
 					noteProgre.setVisibility(View.GONE);
