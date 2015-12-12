@@ -1436,13 +1436,13 @@ OnItemClickListener {
 		public void onMemberLeft(AVIMClient client, AVIMConversation conversation,
 				List<String> array, String str) {
 			log.e("zcq", "接收到踢出消息");
-			if (!array.contains(user.getObjectId())) {
-				// 被踢出者中不包含自己，不处理
-				log.e("zcq", "被踢出者不包括自己");
-				return;
+			for(int i=0;i<array.size();i++){
+				if(array.get(0).equals(user.getObjectId())){
+					Intent intent = new Intent(Constants.RECEIVE_MSG);
+					context.sendBroadcast(intent);
+					handleMemberRemove(client, conversation, array, str);
+				}
 			}
-			// 被踢出人，踢出人
-			handleMemberRemove(client, conversation, array, str);
 
 		}
 
