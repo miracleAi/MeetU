@@ -74,13 +74,13 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 			return;
 		}
 		user = AVUser.cast(ObjUser.getCurrentUser(), ObjUser.class);
-		if (!array.contains(user.getObjectId())) {
-			// 被踢出者中不包含自己，不处理
-			return;
+		for(int i=0;i<array.size();i++){
+			if(array.get(0).equals(user.getObjectId())){
+				Intent intent = new Intent(Constants.RECEIVE_MSG);
+				context.sendBroadcast(intent);
+				handleMemberRemove(client, conversation, array, str, user);
+			}
 		}
-		Intent intent = new Intent(Constants.RECEIVE_MSG);
-		context.sendBroadcast(intent);
-		handleMemberRemove(client, conversation, array, str, user);
 	}
 
 	// 成员加入消息处理
