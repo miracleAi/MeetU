@@ -336,6 +336,7 @@ OnClickListener {
 					log.e("zcq", "加入觅聊成功");
 					Chatmsgs chatmsgs=new Chatmsgs();
 					chatmsgs.setContent("欢迎加入觅聊");
+					chatmsgs.setClientId(user.getObjectId());
 					chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
 					chatmsgs.setChatMsgType(14);
 					chatmsgs.setConversationId(conversation.getConversationId());
