@@ -1,5 +1,7 @@
 package com.meetu.cloud.object;
 
+import java.io.Serializable;
+
 import android.os.Parcelable.Creator;
 
 import com.avos.avoscloud.AVClassName;
@@ -7,7 +9,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVObject.AVObjectCreator;
 
 @AVClassName("ObjSysMsg")
-public class ObjSysMsg extends AVObject {
+public class ObjSysMsg extends AVObject implements Serializable{
 	public static final Creator CREATOR = AVObjectCreator.instance;
 	// 对方用户
 	public static final String TOWARDSUSER = "towardsUser";
@@ -28,7 +30,6 @@ public class ObjSysMsg extends AVObject {
 
 	public void setTowardsUser(ObjUser towardsUser) {
 		this.put(TOWARDSUSER, towardsUser);
-		;
 	}
 
 	public String getContent() {

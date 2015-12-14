@@ -74,8 +74,11 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 			return;
 		}
 		user = AVUser.cast(ObjUser.getCurrentUser(), ObjUser.class);
+		log.d("mytest", "tichu===="+array);
 		for(int i=0;i<array.size();i++){
-			if(array.get(0).equals(user.getObjectId())){
+			log.d("mytest", "tichu1===="+array.get(i));
+			log.d("mytest", "tichu2===="+user.getObjectId());
+			if(array.get(i).equals(user.getObjectId())){
 				Intent intent = new Intent(Constants.RECEIVE_MSG);
 				context.sendBroadcast(intent);
 				handleMemberRemove(client, conversation, array, str, user);

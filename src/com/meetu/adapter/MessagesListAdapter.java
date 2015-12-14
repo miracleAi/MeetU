@@ -114,8 +114,8 @@ public class MessagesListAdapter extends BaseAdapter {
 				user.getObjectId()).size() != 0) {
 			chatmsgs = chatmsgsDao.getChatmsgsList(item.getConversationID(),
 					user.getObjectId()).get(
-					chatmsgsDao.getChatmsgsList(item.getConversationID(),
-							user.getObjectId()).size() - 1);
+							chatmsgsDao.getChatmsgsList(item.getConversationID(),
+									user.getObjectId()).size() - 1);
 			nickName = "";
 			if(null != chatmsgs.getClientId()){
 				ArrayList<UserBean> list = userDao.queryUser(chatmsgs.getClientId());
@@ -185,21 +185,28 @@ public class MessagesListAdapter extends BaseAdapter {
 		if (item.getConversationType() == 1) {
 			holder.tvName.setText(item.getActyName());
 			holder.photpHead
-					.setImageResource(R.drawable.massage_newslist_img_acty);
-			if(dismissData.getDismissData(item.getTimeOver())!=null){
-				holder.tvTime.setText(""+dismissData.getDismissData(item.getTimeOver())+"后消失");
+			.setImageResource(R.drawable.massage_newslist_img_acty);
+			if(item.getTiStatus() == 1){
+				holder.tvTime.setText("已失效");
 			}else{
-				if(chatmsgs!=null){
-					holder.tvTime.setText(""+com.meetu.cloud.utils.DateUtils.getFormattedTimeInterval(Long.valueOf(chatmsgs.getSendTimeStamp())));
-				}
-				
-			}
+				if(dismissData.getDismissData(item.getTimeOver())!=null){
+					holder.tvTime.setText(""+dismissData.getDismissData(item.getTimeOver())+"后消失");
+				}else{
+					if(chatmsgs!=null){
+						holder.tvTime.setText(""+com.meetu.cloud.utils.DateUtils.getFormattedTimeInterval(Long.valueOf(chatmsgs.getSendTimeStamp())));
+					}
 
+				}
+			}
 		} else if (item.getConversationType() == 2) {
 			holder.tvName.setText(item.getChatName());
 			holder.photpHead
-					.setImageResource(R.drawable.massage_newslist_img_chat);
-			holder.tvTime.setText(""+dismissData.getDismissData(item.getTimeOver())+"后消失");
+			.setImageResource(R.drawable.massage_newslist_img_chat);
+			if(item.getTiStatus() == 1){
+				holder.tvTime.setText("已失效");
+			}else{
+				holder.tvTime.setText(""+dismissData.getDismissData(item.getTimeOver())+"后消失");
+			}
 		}
 		return convertView;
 	}

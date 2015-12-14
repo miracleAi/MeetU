@@ -2,6 +2,7 @@ package com.meetu.fragment;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,11 +24,15 @@ import com.meetu.adapter.MessagesListAdapter;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjConversationListCallback;
 import com.meetu.cloud.callback.ObjListCallback;
+import com.meetu.cloud.callback.ObjSysMsgListCallback;
+import com.meetu.cloud.object.ObjSysMsg;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.utils.DateUtils;
 import com.meetu.cloud.wrap.ObjChatMessage;
+import com.meetu.cloud.wrap.ObjSysMsgWrap;
 import com.meetu.common.Constants;
 import com.meetu.common.PerfectInformation;
+import com.meetu.common.SharepreferencesUtils;
 import com.meetu.entity.ChatEmoji;
 import com.meetu.entity.Messages;
 import com.meetu.myapplication.MyApplication;
@@ -40,6 +45,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -66,6 +72,8 @@ OnClickListener {
 	private MessagesDao messagesDao;
 	private RelativeLayout littleNoteLayout;
 	private RelativeLayout sysMsgLayout;
+	private TextView sysMsgCountTv;
+	private ArrayList<ObjSysMsg> msgList = new ArrayList<ObjSysMsg>();
 
 	// 表情相关 xml解析
 	private static EmojiParser parser;
@@ -79,7 +87,7 @@ OnClickListener {
 	//
 	private UserAboutDao userAboutDao;
 	private ArrayList<UserAboutBean> userAboutBeansList = new ArrayList<UserAboutBean>();
-
+	long scanTime = 0;
 	public boolean isEnd = true;
 
 	@Override
@@ -97,10 +105,9 @@ OnClickListener {
 			AVUser currentUser = ObjUser.getCurrentUser();
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
+		scanTime = SharepreferencesUtils.getInstance().getSystemScanTime(getActivity(), SharepreferencesUtils.SYS_MSG_SCAN, 0);
 		messagesDao = new MessagesDao(getActivity());
 		userAboutDao = new UserAboutDao(getActivity());
-		// //TODO 测试
-		// testMessages();
 
 		loadEmoji(getActivity());
 
@@ -109,6 +116,33 @@ OnClickListener {
 
 		getConversation();
 		return view;
+
+	}
+	private void loadSysMsg() {
+		ObjSysMsgWrap.querySysMsgs(user, new ObjSysMsgListCallback() {
+
+			@Override
+			public void callback(List<ObjSysMsg> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if (e == null) {
+					msgList.clear();
+					msgList.addAll(objects);
+					int count = 0;
+					if(objects == null || objects.size()==0){
+						return;
+					}
+					for (int i = 0; i < objects.size(); i++) {
+						if(objects.get(i).getCreatedAt().getTime()>scanTime){
+							count += 1;
+						}
+					}
+					sysMsgCountTv.setTextColor(Color.parseColor("#ff6b6b"));
+					sysMsgCountTv.setText(""+count);
+				} else {
+					// 查询出错
+				}
+			}
+		});
 
 	}
 	/**
@@ -136,12 +170,8 @@ OnClickListener {
 
 	private void loadData() {
 
-		// ArrayList<Messages> list =
-		// messagesDao.getMessages(user.getObjectId());
 		ArrayList<Messages> list = messagesDao.getMessages(user.getObjectId());
 
-		log.e("zcq", "user.getObjectId()======" + user.getObjectId() + "list=="
-				+ list.size());
 		if (list != null && list.size() > 0) {
 			mdataListCache.clear();
 			mdataListCache.addAll(list);
@@ -168,6 +198,7 @@ OnClickListener {
 		sysMsgLayout = (RelativeLayout) view
 				.findViewById(R.id.system_msg_layout);
 		sysMsgLayout.setOnClickListener(this);
+		sysMsgCountTv = (TextView) view.findViewById(R.id.system_msg_count);
 
 		mr = new MyReceiver();
 		IntentFilter filter = new IntentFilter();
@@ -220,14 +251,13 @@ OnClickListener {
 		if (mdataListCache.get(position).getTiStatus() == 1) {
 			messagesDao.deleteConv(user.getObjectId(),mdataListCache.get(position).getConversationID());
 		}
-		handler.sendEmptyMessage(1);
 	}
 
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		handler.sendEmptyMessage(0);
+		handler.sendEmptyMessage(1);
 	}
 
 	Handler handler = new Handler() {
@@ -239,19 +269,15 @@ OnClickListener {
 			switch (msg.what) {
 			case 1:
 				log.e("zcq", "刷新了");
-
 				ArrayList<Messages> list = messagesDao.getMessages(user
 						.getObjectId());
 
 				if (list != null && list.size() > 0) {
 					mdataListCache.clear();
-
 					for (Messages messages : list) {
 						log.e("messages.getTiStatus()",
 								"" + messages.getTiStatus());
-						if (messages.getTiStatus() == 0) {
-							mdataListCache.add(messages);
-						}
+						mdataListCache.add(messages);
 					}
 				} else {
 					// 重新加载
@@ -280,6 +306,7 @@ OnClickListener {
 			break;
 		case R.id.system_msg_layout:
 			Intent intent2 = new Intent(getActivity(), SystemMsgActivity.class);
+			intent2.putExtra("sysmsg_list", (Serializable)msgList);
 			startActivity(intent2);
 			break;
 		default:
@@ -295,14 +322,6 @@ OnClickListener {
 	 * @date 2015-11-20
 	 */
 	public void getConversation() {
-
-		// 修改状态
-		messagesDao.updeteStatus(user.getObjectId());
-
-		log.e("zcq", "正在加载数据");
-		// ObjChatMessage.getConversation(MyApplication.chatClient, new
-		// ObjConversationListCallback() {
-
 		ObjChatMessage.getConversation(user.getObjectId(),
 				MyApplication.chatClient, new ObjConversationListCallback() {
 
@@ -320,7 +339,9 @@ OnClickListener {
 					convList.add(conversation);
 				}
 				if (convList.size() > 0) {
-
+					// 修改状态
+					messagesDao.updeteStatus(user.getObjectId());
+					
 					ArrayList<Messages> list = new ArrayList<Messages>();
 					log.e("zcq",
 							"user.getObjectId()==" + user.getObjectId());
@@ -363,24 +384,11 @@ OnClickListener {
 					}
 					messagesDao.insertList(list);
 				}
-				log.e("zcq", "list.size()==" + convList.size());
-
 				handler.sendEmptyMessage(1);
 			}
 		});
 
 	}
-
-	// 查询数据库会话
-	public void queryLocalCinv() {
-		ArrayList<Messages> list = messagesDao.getMessages(user.getObjectId());
-		if (list != null && list.size() > 0) {
-			mdataListCache.clear();
-			mdataListCache.addAll(list);
-		}
-
-	}
-
 	/**
 	 * 查询对话成员 插到本地
 	 * 

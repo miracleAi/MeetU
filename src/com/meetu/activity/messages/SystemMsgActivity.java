@@ -14,6 +14,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.handmark.pulltorefresh.library.R.layout;
 import com.lidroid.xutils.BitmapUtils;
 import com.meetu.activity.homepage.HomePageDetialActivity;
+import com.meetu.activity.mine.FavorListActivity;
 import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.bean.ActivityBean;
 import com.meetu.cloud.callback.ObjSysMsgListCallback;
@@ -24,6 +25,7 @@ import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.cloud.utils.DateUtils;
 import com.meetu.cloud.wrap.ObjSysMsgWrap;
 import com.meetu.common.Constants;
+import com.meetu.common.SharepreferencesUtils;
 import com.meetu.sqlite.ActivityDao;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
@@ -31,6 +33,7 @@ import com.meetu.tools.DisplayUtils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,8 +68,15 @@ public class SystemMsgActivity extends Activity implements
 		user = AVUser.cast(AVUser.getCurrentUser(), ObjUser.class);
 		bitmapUtils = new BitmapUtils(getApplicationContext());
 		activityDao = new ActivityDao(getApplicationContext());
+		ArrayList<ObjSysMsg> list =  (ArrayList<ObjSysMsg>) getIntent().getSerializableExtra("sysmsg_list");
+		if(list!= null){
+			msgList.clear();
+			msgList.addAll(list);
+			sysAdapter.notifyDataSetChanged();
+		}
 		initView();
-		loadSysMsg();
+		PreferenceManager.getDefaultSharedPreferences(SystemMsgActivity.this).edit()
+		.putLong(SharepreferencesUtils.SYS_MSG_SCAN, System.currentTimeMillis()).commit();
 	}
 
 	private void initView() {

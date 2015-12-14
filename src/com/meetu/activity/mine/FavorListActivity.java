@@ -19,9 +19,11 @@ import com.meetu.cloud.callback.ObjUserCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.cloud.wrap.ObjUserPhotoWrap;
+import com.meetu.common.SharepreferencesUtils;
 import com.meetu.entity.Huodong;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -50,7 +52,6 @@ OnRefreshListener2<ListView>, OnItemClickListener, OnClickListener {
 	private RelativeLayout noneOrFailLayout;
 	private TextView noneTextView;
 	private TextView failTextView;
-	SharedPreferences sp;
 	long scanTime = 0;
 
 	@Override
@@ -64,9 +65,9 @@ OnRefreshListener2<ListView>, OnItemClickListener, OnClickListener {
 		if(getIntent().getSerializableExtra("photo")!= null){
 			userPhoto = (ObjUserPhoto) getIntent().getSerializableExtra("photo");
 		}
-		sp = getSharedPreferences("favorHisPos",Context.MODE_PRIVATE);
-		scanTime = sp.getLong("scanTime", 0);
-		sp.edit().putLong("scanTime", System.currentTimeMillis()).commit();
+		scanTime = SharepreferencesUtils.getInstance().getPhotoFavorScanTime(FavorListActivity.this, SharepreferencesUtils.PHOTO_FAVOR_SCAN, 0);
+		PreferenceManager.getDefaultSharedPreferences(FavorListActivity.this).edit()
+		.putLong(SharepreferencesUtils.PHOTO_FAVOR_SCAN, System.currentTimeMillis()).commit();
 		initView();
 		initData();
 	}
