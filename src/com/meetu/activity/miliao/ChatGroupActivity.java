@@ -35,6 +35,7 @@ import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.baidu.location.h.m;
 import com.meetu.TestReceiveMsg.MemberChangeHandler;
+import com.meetu.activity.messages.ShowSysMsgPhotoActivity;
 import com.meetu.adapter.ChatmsgsListViewAdapter;
 import com.meetu.bean.SeekChatBean;
 import com.meetu.bean.UserAboutBean;
@@ -365,13 +366,16 @@ OnItemClickListener {
 						InputMethodManager.HIDE_NOT_ALWAYS);
 
 				Chatmsgs item = chatmsgsCacheList.get(position);
-				if (item.getChatMsgType() == Constants.SHOW_TEXT || item.getChatMsgType() == Constants.SHOW_IMG) {
+				if (item.getChatMsgType() == Constants.SHOW_SEND_TEXT || item.getChatMsgType() == Constants.SHOW_RECV_TEXT|| item.getChatMsgType() == Constants.SHOW_SEND_IMG|| item.getChatMsgType() == Constants.SHOW_RECV_IMG) {
 					// Toast.makeText(context, ""+item.getContent(),
 					// Toast.LENGTH_SHORT).show();
-					log.e("lucifer",
-							"" + item.getContent() + " id=="
-									+ item.getMessageCacheId() + ",fangxiang=="
-									+ item.getChatMsgDirection());
+					log.e("lucifer","" + item.getContent() + " id=="+ item.getMessageCacheId() + ",fangxiang=="+ item.getChatMsgDirection());
+				}
+				if(item.getChatMsgType() == Constants.SHOW_SEND_IMG|| item.getChatMsgType() == Constants.SHOW_RECV_IMG){
+					Intent intent=new Intent(ChatGroupActivity.this,ShowSysMsgPhotoActivity.class);
+					intent.putExtra("photoUrl", ""+item.getImgMsgImageUrl());
+					startActivity(intent);
+					
 				}
 
 			}
