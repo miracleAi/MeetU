@@ -87,7 +87,7 @@ public class BaiduMapMainActivity extends Activity {
 	private ActivityBean activityBean = new ActivityBean();
 	private double LocationLongtitude, LocationLatitude;
 	private List<Info> infoList = new ArrayList<Info>();
-
+	private RelativeLayout backLayout,addressLayout;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -209,35 +209,27 @@ public class BaiduMapMainActivity extends Activity {
 	}
 
 	private void initkongjian() {
-//		addressButton = (Button) super
-//				.findViewById(R.id.address_baidumap_detial);
-//		addressButton.setOnClickListener(new OnClickListener() {
-//
+		
+//		addressTextView=(TextView) findViewById(R.id.address_baidumap_detial_tv);
+//		addressTextView.setOnClickListener(new OnClickListener() {
+//			
 //			@Override
-//			public void onClick(View v) {
+//			public void onClick(View arg0) {
+//				
 //				addOverlays(infoList);
-//
 //			}
 //		});
-		addressTextView=(TextView) findViewById(R.id.address_baidumap_detial_tv);
-		addressTextView.setOnClickListener(new OnClickListener() {
+		
+		addressLayout=(RelativeLayout) findViewById(R.id.address_baidumap_detial_rl);
+		addressLayout.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
-				
+				// TODO Auto-generated method stub
 				addOverlays(infoList);
 			}
 		});
-		
-		back = (ImageView) super.findViewById(R.id.back_baidumap);
-		back.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				finish();
-
-			}
-		});
+	
 
 	}
 
@@ -286,6 +278,16 @@ public class BaiduMapMainActivity extends Activity {
 		// 设置是否显示缩放控件
 		BaiduMapOptions bmp = new BaiduMapOptions();
 		bmp.zoomControlsEnabled(false);
+		
+		backLayout=(RelativeLayout) findViewById(R.id.back_baidumap_rl);
+		backLayout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
 
 	}
 

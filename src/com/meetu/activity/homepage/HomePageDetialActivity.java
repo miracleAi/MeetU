@@ -118,6 +118,7 @@ public class HomePageDetialActivity extends Activity implements
 	
 	private TextView timeTextView;
 	private RelativeLayout userLayout;
+	private ImageView backImage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -201,6 +202,8 @@ public class HomePageDetialActivity extends Activity implements
 		backLayout = (RelativeLayout) super
 				.findViewById(R.id.back_homepage_detial_rl);
 		backLayout.setOnClickListener(this);
+		
+		backImage=(ImageView) findViewById(R.id.back_homepage_detial);
 		baiduMap = (ImageView) super
 				.findViewById(R.id.baidumap_homepage_detial);
 		baiduMap.setOnClickListener(this);
@@ -593,6 +596,7 @@ public class HomePageDetialActivity extends Activity implements
 //				favorImg.setImageResource(R.drawable.acty_show_navi_btn_like_line_nor);
 //				
 //			}
+			backImage.setImageResource(R.drawable.navi_btn_back_blue);
 		} else {
 			topLayout.setBackgroundColor(this.getResources().getColor(
 					R.color.relativelayout_yuan));
@@ -602,6 +606,7 @@ public class HomePageDetialActivity extends Activity implements
 //				favorImg.setImageResource(R.drawable.acty_show_navi_btn_like_hl);
 //				
 //			}
+			backImage.setImageResource(R.drawable.navi_btn_back_white);
 		}
 
 	}

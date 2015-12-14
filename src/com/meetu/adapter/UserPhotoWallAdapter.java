@@ -102,12 +102,12 @@ public class UserPhotoWallAdapter extends
 				final RecyclerItemViewHolder holder = (RecyclerItemViewHolder) viewHolder;
 				ObjUserPhoto item = mPhotos.get(position);
 				// 设置第一行的上magin
-				if (position == 0 || position == 1) {
-					RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) holder.rlAll
-							.getLayoutParams();
-					params.topMargin = DensityUtil.dip2px(mContext, 10);
-					holder.rlAll.setLayoutParams(params);
-				}
+//				if (position == 0 || position == 1) {
+//					RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) holder.rlAll
+//							.getLayoutParams();
+//					params.topMargin = DensityUtil.dip2px(mContext, 10);
+//					holder.rlAll.setLayoutParams(params);
+//				}
 
 				if (item.getPhoto() != null) {
 					photoUrl = item.getPhoto().getUrl();

@@ -3,8 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-   
-
     <RelativeLayout
         android:id="@+id/id_maker_ly"
         android:layout_width="match_parent"
@@ -87,24 +85,30 @@
         android:layout_alignParentTop="true"
         android:background="@color/white" >
 
-        <TextView
-            android:id="@+id/address_baidumap_detial_tv"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+             android:id="@+id/address_baidumap_detial_rl"
+            android:layout_width="84dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:layout_marginRight="10dp"
             android:background="@drawable/kongjianruoqu_bg"
-            android:drawableLeft="@drawable/acty_navi_btn_landmark"
-            android:drawablePadding="4dp"
-            android:textSize="14sp"
-            android:textColor="#33c6e5"
-            android:text="目标地" />
+            android:gravity="center" >
+
+            <TextView
+                android:id="@+id/address_baidumap_detial_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:drawableLeft="@drawable/acty_navi_btn_landmark"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:text="目标地"
+                android:textColor="#33c6e5"
+                android:textSize="14sp" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/back_baidumap_rl"
-            android:layout_width="44dp"
+            android:layout_width="54dp"
             android:layout_height="44dp"
             android:background="@drawable/kongjianruoqu_bg"
             android:gravity="center" >
@@ -113,25 +117,24 @@
                 android:id="@+id/back_baidumap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
                 android:src="@drawable/mine_alter_btn_back" />
         </RelativeLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textColor="#a0a0a0"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="活动地点"/>
+            android:text="活动地点"
+            android:textColor="#a0a0a0"
+            android:textSize="18sp" />
     </RelativeLayout>
-    
-     <com.baidu.mapapi.map.MapView
+
+    <com.baidu.mapapi.map.MapView
         android:id="@+id/id_bmapView"
-        android:layout_below="@id/top_baidumap_rl"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_below="@id/top_baidumap_rl"
         android:clickable="true" />
 
 </RelativeLayout>
