@@ -422,8 +422,11 @@ ScrollTabHolder, OnClickListener {
 	@SuppressLint("NewApi")
 	private void scrollHeader(int scrollY) {
 		float translationY = Math.max(-scrollY, minHeaderTranslation);
-
-		headView.setTranslationY(translationY);
+		if(translationY>0){
+			headView.setTranslationY(translationY);
+		}else{
+			headView.setTranslationY(translationY);
+		}
 		// imgView.setTranslationY(-translationY / 3);
 	}
 

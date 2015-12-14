@@ -143,10 +143,10 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
 				mScrollY += dy;
-				if (mScrollY < 0) {
+				if(mScrollY<=0){
 					mScrollY = 0;
+					mLayoutMgr.scrollToPositionWithOffset(0, -mScrollY);
 				}
-
 				if (mScrollTabHolder != null) {
 					log.d("mytest", "zhixing");
 					mScrollTabHolder.onRecyclerViewScroll(recyclerView,
