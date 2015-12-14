@@ -639,7 +639,6 @@ OnItemClickListener {
 			break;
 		case 100:
 			if(resultCode==this.RESULT_OK){
-
 				setResult(RESULT_OK, getIntent());
 				finish();
 			}
@@ -1419,7 +1418,8 @@ OnItemClickListener {
 		public void onKicked(AVIMClient client, AVIMConversation conversation,
 				String str) {
 			// TODO Auto-generated method stub
-
+			log.e("zcq", "进入被踢出回调");
+			handleMemberRemove(client, conversation,str);
 		}
 
 		@Override
@@ -1435,15 +1435,7 @@ OnItemClickListener {
 		@Override
 		public void onMemberLeft(AVIMClient client, AVIMConversation conversation,
 				List<String> array, String str) {
-			log.e("zcq", "接收到踢出消息");
-			for(int i=0;i<array.size();i++){
-				if(array.get(0).equals(user.getObjectId())){
-					Intent intent = new Intent(Constants.RECEIVE_MSG);
-					context.sendBroadcast(intent);
-					handleMemberRemove(client, conversation, array, str);
-				}
-			}
-
+			log.e("zcq", "接收到其他成员被踢出消息");
 		}
 
 	}
@@ -1487,7 +1479,7 @@ OnItemClickListener {
 
 	// 被踢出
 	public void handleMemberRemove(AVIMClient client,
-			AVIMConversation conversation, List<String> array, String str) {
+			AVIMConversation conversation, String str) {
 		//删除成员
 		userAboutDao.deleteUserTypeUserId(user.getObjectId(), Constants.CONVERSATION_TYPE, conversation.getConversationId(), client.getClientId());
 		if (conversation.getConversationId().equals(conversationId)) {
@@ -1497,7 +1489,7 @@ OnItemClickListener {
 					conversation.getConversationId());
 
 			Chatmsgs chatmsgs=new Chatmsgs();				
-			chatmsgs.setContent("您已被群主踢出");
+			chatmsgs.setContent("您已被踢出觅聊");
 			chatmsgs.setNowJoinUserId(client.getClientId());
 			chatmsgs.setClientId(client.getClientId());
 			chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
@@ -1512,7 +1504,6 @@ OnItemClickListener {
 			handler.sendEmptyMessage(1);
 
 		} else {
-			log.e("zcq", "进入被踢出回调");
 			// 未读消息加1,保存未读
 			messagesDao.updateUnread(user.getObjectId(),
 					conversation.getConversationId());

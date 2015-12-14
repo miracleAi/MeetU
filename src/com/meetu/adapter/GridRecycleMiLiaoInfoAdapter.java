@@ -112,6 +112,7 @@ public class GridRecycleMiLiaoInfoAdapter extends
 			if(userAboutBeansList==null||userAboutBeansList.size()==0){
 				holder.ivFavor.setVisibility(View.GONE);
 			}else{
+				holder.ivFavor.setVisibility(View.GONE);
 				for(int i=0;i<userAboutBeansList.size();i++){
 					if(userAboutBeansList.get(i).getAboutUserId().equals(item.getUserId())){
 						holder.ivFavor.setVisibility(View.VISIBLE);

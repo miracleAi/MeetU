@@ -232,7 +232,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				holder.time = (TextView) convertView
 						.findViewById(R.id.time_chat_item_newjoin_tv);
 				break;
-
+			case Constants.SHOW_SELF_DEL:
 			case Constants.SHOW_SELF_CHANGE:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_my_join_or_exit, null);

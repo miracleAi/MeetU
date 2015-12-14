@@ -33,6 +33,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -52,7 +55,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MiLiaoInfoActivity extends Activity implements OnClickListener,
-		OnMiLiaoInfoItemClickCallBack {
+OnMiLiaoInfoItemClickCallBack {
 	// 控件相关
 	private TextView numberAll;
 	private Switch switch1;
@@ -88,8 +91,8 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 	private RelativeLayout exitLayout;
 	private TextView titleTextView;
 	private TextView favorNumber;
-	
-	
+
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +133,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 						return;
 					} else if (s != null || s != "") {
 
-						
+
 						if (s.equals(userMY.getObjectId())) {
 							// 如果用户的id和创建者的id 相等 就是觅聊创建者
 							isCreator = true;
@@ -152,13 +155,13 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 		} else if (conversationStyle.equals("1")) {
 			if (userMY.getProfileClip() != null) {
 				finalBitmap
-						.display(userCreator, userMY.getProfileClip().getUrl());
+				.display(userCreator, userMY.getProfileClip().getUrl());
 			}
 
 			qunliaoLayout.setVisibility(View.VISIBLE);
 			miliaoLayout.setVisibility(View.GONE);
 			reportLayout.setVisibility(View.GONE);
-//			xiaoUname.setText(""+userMY.getNameNick());
+			//			xiaoUname.setText(""+userMY.getNameNick());
 			userCreatorName.setText(userMY.getNameNick());
 			titleTextView.setText("活动群聊");
 		}
@@ -174,7 +177,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 		// }
 		if (conversationStyle.equals("2") && isCreator == true) {
 
-			
+
 			if (mlist != null) {
 				mList2.addAll(mlist);
 			}
@@ -186,11 +189,11 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 		} else {
 			int favorNM=0;
 			numberAll.setText("" + mlist.size());
-			
+
 			if (mlist != null) {
 				mList2.addAll(mlist);
 				List<UserAboutBean> userAboutBeansList=userAboutDao.queryUserAbout(userMY.getObjectId(), 1, "");
-				
+
 				for(int i=0;i<mlist.size();i++){
 					for(int j=0;j<userAboutBeansList.size();j++){
 						if(mlist.get(i).getUserId().equals(userAboutBeansList.get(j).getAboutUserId())){
@@ -200,7 +203,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 					}
 				}
 			}
-			
+
 			favorNumber.setText(""+favorNM);
 		}
 
@@ -298,7 +301,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 				.findViewById(R.id.name_miliao_info_tv_huodong);
 		titleTextView=(TextView) findViewById(R.id.title_info_chatList_tv);
 		favorNumber=(TextView) findViewById(R.id.numberFavor_user_miliao_info);
-		
+
 	}
 
 	@Override
@@ -310,7 +313,7 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 			setResult(RESULT_CANCELED, data);
 			finish();
 			break;
-		// 举报觅聊
+			// 举报觅聊
 		case R.id.center4_miliao_info_rl:
 			Intent intent = new Intent(MiLiaoInfoActivity.this,
 					ReportActivity.class);
@@ -320,36 +323,59 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 			break;
 			//退出群聊
 		case R.id.bottom_miliao_info_rl:
-			
-			ObjChatMessage.userQuitConv(conv, new ObjFunBooleanCallback() {
-				
-				@Override
-				public void callback(boolean result, AVException e) {
-					// TODO Auto-generated method stub
-					if(e!=null){
-						log.e("zcq", e);
-						return;
-					}
-					if(result){
-						log.e("zcq", "退出成功");
-						Toast.makeText(getApplicationContext(), "退出成功", Toast.LENGTH_SHORT).show();
-						userAboutDao.deleteUserTypeUserId(userMY.getObjectId(), 2, conversationId, userMY.getObjectId());
-						
-						Intent intent=getIntent();
-						setResult(RESULT_OK, intent);
-						finish();
-					}else {
-						log.e("zcq", "退出失败");
-						
-					}
-					
-				}
-			});
+			ShowQuitDialog();
 			break;
 		}
 
 	}
 
+	private void ShowQuitDialog() {
+		// TODO Auto-generated method stub
+		Dialog dialog = new AlertDialog.Builder(this).setTitle("提示").setMessage("亲爱的，真的要退出觅聊么？")
+				.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int arg1) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+					}
+				}).setNeutralButton("退出觅聊", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int arg1) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+						quit();
+					}
+				}).create();
+		dialog.show();
+	}
+	public void quit(){
+		ObjChatMessage.userQuitConv(conv, new ObjFunBooleanCallback() {
+
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e!=null){
+					log.e("zcq", e);
+					return;
+				}
+				if(result){
+					log.e("zcq", "退出成功");
+					Toast.makeText(getApplicationContext(), "退出成功", Toast.LENGTH_SHORT).show();
+					userAboutDao.deleteUserTypeUserId(userMY.getObjectId(), 2, conversationId, userMY.getObjectId());
+
+					Intent intent=getIntent();
+					setResult(RESULT_OK, intent);
+					finish();
+				}else {
+					log.e("zcq", "退出失败");
+
+				}
+
+			}
+		});
+	}
 	@Override
 	public void onItemClick(int position) {
 		if (conversationStyle.equals("2") && isCreator == true) {
@@ -374,11 +400,11 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 
 				} else {
 
-		//			Toast.makeText(this, "点击了位置" + position, Toast.LENGTH_SHORT)
-		//					.show();
-//					Intent intent=new Intent(MiLiaoInfoActivity.this,UserPagerActivity.class);
-//					intent.putExtra("userId", ""+mList2.get(position).getUserId());
-//					startActivity(intent);
+					//			Toast.makeText(this, "点击了位置" + position, Toast.LENGTH_SHORT)
+					//					.show();
+					//					Intent intent=new Intent(MiLiaoInfoActivity.this,UserPagerActivity.class);
+					//					intent.putExtra("userId", ""+mList2.get(position).getUserId());
+					//					startActivity(intent);
 				}
 			} else {
 				if (position == mList2.size() - 1) {
@@ -402,14 +428,14 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 					}else{
 						Toast.makeText(getApplicationContext(), "不能删除自己", Toast.LENGTH_SHORT).show();
 					}
-					
+
 				}
 
 			}
 
 			handler.sendEmptyMessage(1);
 		} else {
-	//		Toast.makeText(this, "点击了位置" + position, Toast.LENGTH_SHORT).show();
+			//		Toast.makeText(this, "点击了位置" + position, Toast.LENGTH_SHORT).show();
 			Intent intent=new Intent(MiLiaoInfoActivity.this,UserPagerActivity.class);
 			intent.putExtra("userId", ""+mList2.get(position).getUserId());
 			startActivity(intent);
@@ -475,35 +501,35 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 			ObjUserWrap.getObjUser(list.get(i).getAboutUserId(),
 					new ObjUserInfoCallback() {
 
-						@Override
-						public void callback(ObjUser user, AVException e) {
-							if (e != null) {
-								log.e("zcq", e);
-								return;
-							} else if (user != null) {
-								log.e("zcq", "群员信息获取成功");
+				@Override
+				public void callback(ObjUser user, AVException e) {
+					if (e != null) {
+						log.e("zcq", e);
+						return;
+					} else if (user != null) {
+						log.e("zcq", "群员信息获取成功");
 
-								UserAbout item = new UserAbout();
-								item.setUserId(user.getObjectId());
-								item.setUserName(user.getNameNick());
-								item.setIsDetele(false);
-								if (user.getProfileClip() != null) {
-									item.setUserHeadPhotoUrl(user
-											.getProfileClip().getUrl());
-								}
-
-								mlist.add(item);
-
-								userList.add(user);
-								if (list.size() == mlist.size()) {
-									// 所有的都加载过后刷新数据
-									loadData2();
-									handler.sendEmptyMessage(1);
-								}
-							}
-
+						UserAbout item = new UserAbout();
+						item.setUserId(user.getObjectId());
+						item.setUserName(user.getNameNick());
+						item.setIsDetele(false);
+						if (user.getProfileClip() != null) {
+							item.setUserHeadPhotoUrl(user
+									.getProfileClip().getUrl());
 						}
-					});
+
+						mlist.add(item);
+
+						userList.add(user);
+						if (list.size() == mlist.size()) {
+							// 所有的都加载过后刷新数据
+							loadData2();
+							handler.sendEmptyMessage(1);
+						}
+					}
+
+				}
+			});
 		}
 
 	}
@@ -535,45 +561,45 @@ public class MiLiaoInfoActivity extends Activity implements OnClickListener,
 		});
 	}
 
-/**
- * 踢出成员
- * @param memberId  
- * @author lucifer
- * @date 2015-12-4
- */
-		public void deleteUser(final String memberId){
-			ObjChatMessage.deleteMember(memberId, conv, new ObjFunBooleanCallback() {
-				
-				@Override
-				public void callback(boolean result, AVException e) {
-					// TODO Auto-generated method stub
-					if(e!=null){
-						log.e("zcq", e);
-						return;
-					}
-					if(result){
-						log.e("zcq", "踢出成功");
-						Toast.makeText(getApplicationContext(), "踢出成功", Toast.LENGTH_SHORT).show();
-						userAboutDao.deleteUserTypeUserId(userMY.getObjectId(), 2, conversationId, memberId);
-					}else{
-						log.e("zcq", "踢出失败");
-						Toast.makeText(getApplicationContext(), "踢出失败", Toast.LENGTH_SHORT).show();
-					}
-					
-				}
-			});
-		}
+	/**
+	 * 踢出成员
+	 * @param memberId  
+	 * @author lucifer
+	 * @date 2015-12-4
+	 */
+	public void deleteUser(final String memberId){
+		ObjChatMessage.deleteMember(memberId, conv, new ObjFunBooleanCallback() {
 
-@Override
-public void onBackPressed() {
-	// TODO Auto-generated method stub
-	super.onBackPressed();
-	Intent intent=getIntent();
-	setResult(RESULT_CANCELED, intent);
-	finish();
-}
-		
-		
-	
-	
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e!=null){
+					log.e("zcq", e);
+					return;
+				}
+				if(result){
+					log.e("zcq", "踢出成功");
+					Toast.makeText(getApplicationContext(), "踢出成功", Toast.LENGTH_SHORT).show();
+					userAboutDao.deleteUserTypeUserId(userMY.getObjectId(), 2, conversationId, memberId);
+				}else{
+					log.e("zcq", "踢出失败");
+					Toast.makeText(getApplicationContext(), "踢出失败", Toast.LENGTH_SHORT).show();
+				}
+
+			}
+		});
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		Intent intent=getIntent();
+		setResult(RESULT_CANCELED, intent);
+		finish();
+	}
+
+
+
+
 }

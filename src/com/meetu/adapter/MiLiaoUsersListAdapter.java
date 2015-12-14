@@ -122,12 +122,9 @@ public class MiLiaoUsersListAdapter extends BaseAdapter {
 				}
 			} else {
 
-				log.e("zcq", "别人发的消息");
-
 				ArrayList<UserBean> list = userDao.queryUser(item
 						.getAboutUserId());
 				if (null != list && list.size() > 0) {
-
 					if (!list.get(0).getProfileClip().equals("")) {
 						finalBitmap.display(holder.ivImgUrl,
 								list.get(0).getProfileClip());

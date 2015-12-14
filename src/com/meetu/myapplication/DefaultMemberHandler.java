@@ -47,9 +47,15 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 	}
 
 	@Override
-	public void onKicked(AVIMClient arg0, AVIMConversation arg1, String arg2) {
-		// TODO Auto-generated method stub
-
+	public void onKicked(AVIMClient client, AVIMConversation conversation, String str) {
+		log.e("zcq", "进入全局监听被踢出");
+		if (AVUser.getCurrentUser() == null) {
+			return;
+		}
+		user = AVUser.cast(ObjUser.getCurrentUser(), ObjUser.class);
+		Intent intent = new Intent(Constants.RECEIVE_MSG);
+		context.sendBroadcast(intent);
+		handleMemberRemove(client, conversation, str, user);
 	}
 
 	@Override
@@ -69,21 +75,7 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 	public void onMemberLeft(AVIMClient client, AVIMConversation conversation,
 			List<String> array, String str) {
 		// TODO Auto-generated method stub
-		log.e("zcq", "进入全局监听踢出");
-		if (AVUser.getCurrentUser() == null) {
-			return;
-		}
-		user = AVUser.cast(ObjUser.getCurrentUser(), ObjUser.class);
-		log.d("mytest", "tichu===="+array);
-		for(int i=0;i<array.size();i++){
-			log.d("mytest", "tichu1===="+array.get(i));
-			log.d("mytest", "tichu2===="+user.getObjectId());
-			if(array.get(i).equals(user.getObjectId())){
-				Intent intent = new Intent(Constants.RECEIVE_MSG);
-				context.sendBroadcast(intent);
-				handleMemberRemove(client, conversation, array, str, user);
-			}
-		}
+		log.e("zcq", "进入全局监听其他成员被踢出");
 	}
 
 	// 成员加入消息处理
@@ -123,7 +115,7 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 
 	// 被踢出
 	public void handleMemberRemove(AVIMClient client,
-			AVIMConversation conversation, List<String> array, String str,
+			AVIMConversation conversation, String str,
 			ObjUser user) {
 		// 未读消息加1,保存未读
 		msgDao.updateUnread(user.getObjectId(),
@@ -134,7 +126,7 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 		chatBean.setNowJoinUserId(client.getClientId());
 		chatBean.setUid(user.getObjectId());
 		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
-		chatBean.setContent("您被踢出群聊");
+		chatBean.setContent("您已被踢出觅聊");
 		chatBean.setMessageCacheId(String.valueOf(System
 				.currentTimeMillis()));
 		chatBean.setConversationId(conversation.getConversationId());

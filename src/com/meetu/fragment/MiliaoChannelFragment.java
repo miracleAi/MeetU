@@ -176,10 +176,11 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 
 			@Override
 			public void callback(ObjUser user, AVException e) {
-
-				if (user.getProfileClip() != null) {
-					finalBitmap.display(photoManager, user.getProfileClip()
-							.getUrl());
+				if(e == null){
+					if (user.getProfileClip() != null) {
+						finalBitmap.display(photoManager, user.getProfileClip()
+								.getUrl());
+					}
 				}
 
 			}

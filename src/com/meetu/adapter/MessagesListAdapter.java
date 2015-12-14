@@ -164,7 +164,7 @@ public class MessagesListAdapter extends BaseAdapter {
 				holder.tvContent.setText("系统消息：欢迎加入觅聊");
 			}
 			if (chatmsgs.getChatMsgType() == Constants.SHOW_SELF_DEL) {
-				holder.tvContent.setText("系统消息：您已被踢出群聊");
+				holder.tvContent.setText("系统消息：您已被踢出觅聊");
 			}
 
 		} else {
@@ -192,7 +192,7 @@ public class MessagesListAdapter extends BaseAdapter {
 				if(dismissData.getDismissData(item.getTimeOver())!=null){
 					holder.tvTime.setText(""+dismissData.getDismissData(item.getTimeOver())+"后消失");
 				}else{
-					if(chatmsgs!=null){
+					if(chatmsgs!=null && chatmsgs.getSendTimeStamp()!=null){
 						holder.tvTime.setText(""+com.meetu.cloud.utils.DateUtils.getFormattedTimeInterval(Long.valueOf(chatmsgs.getSendTimeStamp())));
 					}
 

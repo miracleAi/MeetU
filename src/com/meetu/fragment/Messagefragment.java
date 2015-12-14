@@ -243,7 +243,7 @@ OnClickListener {
 		intent.putExtra("TimeOver", ""+mdataListCache.get(position).getTimeOver());
 		Bundle bundle = new Bundle();
 		bundle.putSerializable("Messages", mdataListCache.get(position));
-		startActivity(intent);
+		startActivityForResult(intent, 1001);
 		// 清空该项未读消息
 		messagesDao.updateUnreadClear(user.getObjectId(),
 				mdataListCache.get(position).getConversationID());
@@ -417,5 +417,12 @@ OnClickListener {
 		userAboutDao.saveUserAboutList(userAboutBeansList);
 
 	}
-
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode == 1001 && resultCode == ChatGroupActivity.RESULT_OK){
+			getConversation();
+		}
+	}
 }
