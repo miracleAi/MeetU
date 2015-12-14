@@ -33,8 +33,17 @@ public class ShowSysMsgPhotoActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				finish();
+				overridePendingTransition(R.anim.zoom_exit, R.anim.zoom_exit);
 			}
 		});
 	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		overridePendingTransition(R.anim.zoom_exit, R.anim.zoom_exit);
+	}
+	
 
 }

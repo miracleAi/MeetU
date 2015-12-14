@@ -301,6 +301,7 @@ ScrollTabHolder, OnClickListener {
 							photoIntent.putExtra("photoUrl",userBeans.get(0).getProfileOrign());
 						}
 						startActivity(photoIntent);
+						overridePendingTransition(R.anim.zoom_inda, R.anim.zoom_inda);
 
 					}else{
 						ObjUserWrap.getObjUser(userId, new ObjUserInfoCallback() {
@@ -317,6 +318,7 @@ ScrollTabHolder, OnClickListener {
 									photoIntent.putExtra("photoUrl",user.getProfileOrign().getUrl());
 								}
 								startActivity(photoIntent);
+								overridePendingTransition(R.anim.zoom_inda, R.anim.zoom_inda);
 
 							}
 						});

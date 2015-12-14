@@ -520,6 +520,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 							
 						}
 					});
+					
+					
 					ArrayList<UserBean> list = userDao.queryUser(item
 							.getNowJoinUserId());
 					if (null != list && list.size() > 0) {
@@ -530,6 +532,9 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						}
 						holder.userName.setText("" + list.get(0).getNameNick());
 						holder.userSchool.setText("" + list.get(0).getSchool());
+						if(list.get(0).getGender()==2){
+							holder.sexImg.setImageResource(R.drawable.acty_joinlist_img_female);
+						}
 					} else {
 						ObjUserWrap.getObjUser(item.getNowJoinUserId(),
 								new ObjUserInfoCallback() {
@@ -559,6 +564,9 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 										holder.userSchool.setText(""
 												+ list2.get(0)
 												.getSchool());
+										if(list2.get(0).getGender()==2){
+											holder.sexImg.setImageResource(R.drawable.acty_joinlist_img_female);
+										}
 
 									}
 								}

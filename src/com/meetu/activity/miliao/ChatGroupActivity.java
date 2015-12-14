@@ -375,6 +375,7 @@ OnItemClickListener {
 					Intent intent=new Intent(ChatGroupActivity.this,ShowSysMsgPhotoActivity.class);
 					intent.putExtra("photoUrl", ""+item.getImgMsgImageUrl());
 					startActivity(intent);
+					overridePendingTransition(R.anim.zoom_inda, R.anim.zoom_inda);
 					
 				}
 
