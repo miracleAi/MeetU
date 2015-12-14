@@ -293,6 +293,12 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 	 * */
 
 	public void commentApp() {
+		final PackageManager packageManager = SystemSettingsActivity.this.getPackageManager();// 获取packagemanager
+		List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);// 获取所有已安装程序的包信息
+		if(pinfo == null || pinfo.size() ==0){
+			Toast.makeText(SystemSettingsActivity.this, "您还未安装任何应用市场", 1000).show();
+			return;
+		}
 		Uri uri = Uri.parse("market://details?id="+getPackageName());  
 		Intent intent = new Intent(Intent.ACTION_VIEW,uri);  
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
