@@ -162,6 +162,10 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 				mScrollY += dy;
 				if (mScrollTabHolder != null) {
 					log.d("mytest", "zhixing");
+					if(mScrollY<=0){
+						mScrollY = 0;
+						mLayoutMgr.scrollToPositionWithOffset(0, -mScrollY);
+					}
 					mScrollTabHolder.onRecyclerViewScroll(recyclerView,
 							mScrollY, mPosition);
 				}
