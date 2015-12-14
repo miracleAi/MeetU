@@ -508,6 +508,18 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 
 				if (item.getNowJoinUserId() != null
 						&& !("").equals(item.getNowJoinUserId())) {
+					
+					holder.userHeadPhoto.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View arg0) {
+							// TODO Auto-generated method stub
+							Intent intent=new Intent(mContext,UserPagerActivity.class);
+							intent.putExtra("userId", item.getNowJoinUserId());
+							mContext.startActivity(intent);
+							
+						}
+					});
 					ArrayList<UserBean> list = userDao.queryUser(item
 							.getNowJoinUserId());
 					if (null != list && list.size() > 0) {
