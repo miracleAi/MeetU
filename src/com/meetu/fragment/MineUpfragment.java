@@ -201,7 +201,7 @@ OnClickListener {
 		updateImageView.setOnClickListener(this);
 		sexImg=(ImageView) view.findViewById(R.id.user_gender_imv);
 		if(user.getGender()==2){
-		//	sexImg.setImageResource(R.drawable);
+			sexImg.setImageResource(R.drawable.female_icon);
 		}
 	}
 

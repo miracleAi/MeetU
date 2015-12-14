@@ -348,6 +348,8 @@ public class HomePagefragment extends Fragment implements
 					actyListCache.clear();
 					actyListCache.addAll(actyDao.queryActys(user.getObjectId()));
 					log.e("zcq", "actyListCache==" + actyListCache.size());
+					
+					
 
 					handler.sendEmptyMessage(1);
 
@@ -398,6 +400,9 @@ public class HomePagefragment extends Fragment implements
 		HightY = itemHight * number - pingHight + topHight + bottomHight;// item滑动的总高度
 		maginY = pingHight - topHight - bottomHight - itemHight;// 标签移动的绝对总高度
 
+		int allnumberUser=	actyListCache.get(itemNow).getOrderCountBoy()+actyListCache.get(itemNow).getOrderCountGirl();
+		numberAll.setText(""+allnumberUser+"人报名");
+		numberFavor.setText(""+actyListCache.get(itemNow).getOrderAndFollow()+"个我关注的");
 	}
 
 	@Override
@@ -494,7 +499,7 @@ public class HomePagefragment extends Fragment implements
 		// TODO 实时更新活动标签里的内容 滑动距离有点问题
 
 		try {
-			int ii = (int) ((maginY / actyListCache.size() - 1));// 标签滑动一个item 滑动的距离
+			int ii = (int) ((maginY / (actyListCache.size() - 1)));// 标签滑动一个item 滑动的距离
 			//log.e("lucifer" + "ii==" + ii + " i==" + i + " maginTop==" + maginTop);
 			int aa = (i - maginTop) / ii;
 			if (itemNow != aa) {
@@ -502,8 +507,8 @@ public class HomePagefragment extends Fragment implements
 				itemNow = aa;
 				if (itemNow >= actyListCache.size()) {
 					itemNow = actyListCache.size() - 1;
-					int number = userAboutDao.queryUserAbout(user.getObjectId(), 3,
-							actyListCache.get(itemNow).getConversationId()).size();
+//					int number = userAboutDao.queryUserAbout(user.getObjectId(), 3,
+//							actyListCache.get(itemNow).getConversationId()).size();
 				int allnumberUser=	actyListCache.get(itemNow).getOrderCountBoy()+actyListCache.get(itemNow).getOrderCountGirl();
 //				numberAll.setText("" + (actyListCache.get(itemNow).getOrderCountBoy()+actyListCache.get(itemNow).getOrderCountGirl())+"人报名");
 					numberAll.setText(""+allnumberUser+"人报名");

@@ -70,6 +70,7 @@ import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
 import com.meetu.common.PerfectInformation;
 import com.meetu.entity.Middle;
+import com.meetu.fragment.MinePhotoWallfragment;
 import com.meetu.fragment.UserInfoFragment;
 import com.meetu.fragment.UserPhotoFragment;
 import com.meetu.myapplication.MyApplication;
@@ -151,7 +152,7 @@ ScrollTabHolder, OnClickListener {
 	UserAboutDao userAboutDao;
 	UserDao userDao;
 	UserShieldDao shieldDao;
-
+	MinePhotoWallfragment photoWallFragment=null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -492,6 +493,10 @@ ScrollTabHolder, OnClickListener {
 			Object object = super.instantiateItem(container, position);
 
 			mScrollTabHolders.put(position, (ScrollTabHolder) object);
+			
+			if(object instanceof MinePhotoWallfragment){
+				photoWallFragment = (MinePhotoWallfragment) object;
+			}
 
 			return object;
 		}
@@ -543,13 +548,20 @@ ScrollTabHolder, OnClickListener {
 
 			@Override
 			public void callback(ObjUser user, AVException e) {
+				if(e!=null){
+					log.e("zcq", e);
+					return;
+				}
 
 				if (user.getProfileClip() != null) {
 					finalBitmap.display(userProfileImv, user.getProfileClip()
 							.getUrl());
 				}
 				userNameTv.setText(user.getNameNick());
-
+				if(user.getGender()==2){
+					userGenderImv.setImageResource(R.drawable.female_icon);
+				}
+				
 			}
 		});
 	}
@@ -855,6 +867,7 @@ ScrollTabHolder, OnClickListener {
 				log.e("lucifer", "上传照片成功刷新照片列表");
 
 				// ((MinePhotoWallfragment)list.get(1)).reflesh();
+				photoWallFragment.reflesh();
 			}
 			break;
 

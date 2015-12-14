@@ -81,6 +81,8 @@ public class UserAboutDao {
 			aboutList.add(bean);
 			cursor.moveToNext();
 		}
+		sdb.close();
+		
 		return aboutList;
 	}
 

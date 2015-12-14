@@ -74,6 +74,8 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements
 		}
 		if (userMy.getObjectId().equals(userId)) {
 			isMyself = true;
+		}else{
+			isMyself = false;
 		}
 		return fragment;
 	}

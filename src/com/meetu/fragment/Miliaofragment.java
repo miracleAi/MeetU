@@ -95,6 +95,8 @@ OnClickListener {
 	private Boolean isAdd = false;
 
 	ChatmsgsDao chatmsgsDao;
+	
+	List<Boolean> isAddList=new ArrayList<Boolean>();
 
 	//空状态相关
 	private RelativeLayout noneFailLayout;//空状态背景
@@ -173,6 +175,7 @@ OnClickListener {
 
 	private void initViewPager() {
 		// TODO 加载网络数据后设置 viewpager数据
+		fragmentList.clear();
 		fragmentList = new ArrayList<Fragment>();
 		for (int i = 0; i < seekChatBeansList.size(); i++) {
 			MiliaoChannelFragment frag = new MiliaoChannelFragment();
@@ -185,7 +188,7 @@ OnClickListener {
 		adapter = new BoardPageFragmentAdapter(super.getActivity()
 				.getSupportFragmentManager(), fragmentList);
 		viewPager.setAdapter(adapter);
-		viewPager.setOffscreenPageLimit(1);
+		viewPager.setOffscreenPageLimit(0);
 		viewPager.setCurrentItem(positonNow);
 		isAddconvesition();
 		conv = MyApplication.chatClient.getConversation(""
@@ -309,6 +312,7 @@ OnClickListener {
 			switch (msg.what) {
 			case 1:
 				initViewPager();
+				
 				break;
 
 			default:
@@ -508,7 +512,8 @@ OnClickListener {
 					chatBean.setChatList((List<Map<String, Object>>) object
 							.get("seekChats"));
 					log.d("mytest", "seekChats=" + chatBean.getChatList());
-
+					
+					seekChatBeansList.clear();
 					seekChatBeansList = new ArrayList<SeekChatBean>();
 
 					for (int i = 0; i < chatBean.getSeekChatCount(); i++) {
@@ -584,9 +589,9 @@ OnClickListener {
 							ApplyForMiLiaoActivity.class);
 					intent.putExtra("isApply", "" + 1);// 已经申请
 					intent.putExtra("applyId", chatBean.getApplyId());
-					intent.putExtra("CategoryId",
-							chatBean.getAuthoriseCategoryId());
-					intent.putExtra("ApplyReply", chatBean.getApplyReply());
+					intent.putExtra("CategoryId",chatBean.getAuthoriseCategoryId());
+					intent.putExtra("ApplyReply", ""+chatBean.getApplyResult());
+					intent.putExtra("argument", chatBean.getArgument());
 					startActivity(intent);
 				}
 			} else {
@@ -624,6 +629,7 @@ OnClickListener {
 		List<String> list = new ArrayList<String>();
 		SeekChatBean chatBean = seekChatBeansList.get(positonNow);
 		List<UserAboutBean> aboutlist = userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, chatBean.getConversationId());
+
 		for (int i = 0; i < aboutlist.size(); i++) {
 			list.add(aboutlist.get(i).getAboutUserId());
 		}
@@ -665,6 +671,9 @@ OnClickListener {
 			if (resultCode == getActivity().RESULT_OK) {
 				// 创建觅聊 成功 执行的操作
 				log.e("lucifer", "需要重新加载数据");
+				seekChatBeansList.clear();
+				positonNow=0;
+		//		handler.sendEmptyMessage(1);
 				loadData();
 			}
 			break;

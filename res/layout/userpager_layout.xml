@@ -22,7 +22,7 @@
             android:id="@+id/img_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/imageview_height"
-            android:background="@drawable/mine_img_bg"
+            android:background="@drawable/mine_photoview_bg"
             android:orientation="vertical" >
 
             <RelativeLayout
@@ -96,11 +96,18 @@
                     android:layout_width="85dp"
                     android:layout_height="85dp"
                     android:layout_marginLeft="25dp" >
-
+	
                     <ImageView
-                        android:id="@+id/user_profile_iv"
+                        android:id="@+id/imageView1"
                         android:layout_width="85dp"
                         android:layout_height="85dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/massage_letters_show_reply_img_profiles_stroke" />
+                    <ImageView
+                        android:id="@+id/user_profile_iv"
+                        android:layout_width="83dp"
+                        android:layout_height="83dp"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/mine_btn_profile" />
 

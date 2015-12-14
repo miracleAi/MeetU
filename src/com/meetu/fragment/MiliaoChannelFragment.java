@@ -49,7 +49,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 
 	// 网络数据相关
 	private ObjChat objChat = new ObjChat();
-	private FinalBitmap finalBitmap;
+	private FinalBitmap finalBitmap=null;
 	private AVIMConversation conv;
 	// 会话成员列表
 	ArrayList<ObjUser> memberUserList = new ArrayList<ObjUser>();
@@ -61,6 +61,8 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 	private SeekChatBean seekChatBean = new SeekChatBean();
 	
 	private RelativeLayout numberLayout;
+	
+	List<String> list=new ArrayList<String>();//存放用户的id
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -343,7 +345,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 
 		log.e("zcq", "设置头像");
 
-		List<String> list = new ArrayList<String>();
+		 list = new ArrayList<String>();
 		
 //		for (int i = 0; i < seekChatBean.getMembers().size(); i++) {
 //			list.add("" + seekChatBean.getMembers().get(i).get("userId"));
@@ -358,65 +360,68 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 
 	}
 	
-	public void setUserInfoNone(){
-		log.e("zcq", "设置头像");
-
-		List<String> list = new ArrayList<String>();
-		
-//		for (int i = 0; i < seekChatBean.getMembers().size(); i++) {
-//			list.add("" + seekChatBean.getMembers().get(i).get("userId"));
+//	public void setUserInfoNone(){
+//		log.e("zcq", "设置头像");
+//
+//		 list = new ArrayList<String>();
+//		
+////		for (int i = 0; i < seekChatBean.getMembers().size(); i++) {
+////			list.add("" + seekChatBean.getMembers().get(i).get("userId"));
+////		}
+//		List<UserAboutBean> list2=userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, seekChatBean.getConversationId());
+//		for(int i=0;i<list2.size();i++){
+//			if(!user.getObjectId().equals(list2.get(i).getAboutUserId())){
+//				list.add(list2.get(i).getAboutUserId());
+//			}
+//			
 //		}
-		List<UserAboutBean> list2=userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, seekChatBean.getConversationId());
-		for(int i=0;i<list2.size();i++){
-			if(!user.getObjectId().equals(list2.get(i).getAboutUserId())){
-				list.add(list2.get(i).getAboutUserId());
-			}
-			
-		}
-		getUsersListInfo(list);
-	}
+//		getUsersListInfo(list);
+//	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.one_photoHead_channel_img:
 			Intent one = new Intent(getActivity(), UserPagerActivity.class);
-			log.e("lucifer", "userId0=="
-					+ seekChatBean.getMembers().get(0).get("userId"));
-			one.putExtra("userId",
-					"" + seekChatBean.getMembers().get(0).get("userId"));
+//			log.e("lucifer", "userId0=="+ seekChatBean.getMembers().get(0).get("userId"));
+//			one.putExtra("userId","" + seekChatBean.getMembers().get(0).get("userId"));
+			one.putExtra("userId", list.get(0));
 			startActivity(one);
 			break;
 		case R.id.two_photoHead_channel_img:
 			Intent two = new Intent(getActivity(), UserPagerActivity.class);
-			log.e("lucifer", "userId0=="
-					+ seekChatBean.getMembers().get(1).get("userId"));
-			two.putExtra("userId",
-					"" + seekChatBean.getMembers().get(1).get("userId"));
+//			log.e("lucifer", "userId0=="
+//					+ seekChatBean.getMembers().get(1).get("userId"));
+//			two.putExtra("userId",
+//					"" + seekChatBean.getMembers().get(1).get("userId"));
+			two.putExtra("userId", list.get(1));
 			startActivity(two);
 			break;
 		case R.id.three_photoHead_channel_img:
 			Intent three = new Intent(getActivity(), UserPagerActivity.class);
-			log.e("lucifer", "userId0=="
-					+ seekChatBean.getMembers().get(2).get("userId"));
-			three.putExtra("userId",
-					"" + seekChatBean.getMembers().get(2).get("userId"));
+//			log.e("lucifer", "userId0=="
+//					+ seekChatBean.getMembers().get(2).get("userId"));
+//			three.putExtra("userId",
+//					"" + seekChatBean.getMembers().get(2).get("userId"));
+			three.putExtra("userId", list.get(2));
 			startActivity(three);
 			break;
 		case R.id.four_photoHead_channel_img:
 			Intent four = new Intent(getActivity(), UserPagerActivity.class);
-			log.e("lucifer", "userId0=="
-					+ seekChatBean.getMembers().get(3).get("userId"));
-			four.putExtra("userId",
-					"" + seekChatBean.getMembers().get(3).get("userId"));
+//			log.e("lucifer", "userId0=="
+//					+ seekChatBean.getMembers().get(3).get("userId"));
+//			four.putExtra("userId",
+//					"" + seekChatBean.getMembers().get(3).get("userId"));
+			four.putExtra("userId", list.get(3));
 			startActivity(four);
 			break;
 		case R.id.five_photoHead_channel_img:
 			Intent five = new Intent(getActivity(), UserPagerActivity.class);
-			log.e("lucifer", "userId0=="
-					+ seekChatBean.getMembers().get(4).get("userId"));
-			five.putExtra("userId",
-					"" + seekChatBean.getMembers().get(4).get("userId"));
+//			log.e("lucifer", "userId0=="
+//					+ seekChatBean.getMembers().get(4).get("userId"));
+//			five.putExtra("userId",
+//					"" + seekChatBean.getMembers().get(4).get("userId"));
+			five.putExtra("userId", list.get(4));
 			startActivity(five);
 			break;
 		case R.id.photoHead_manage_miliao_channel_img:

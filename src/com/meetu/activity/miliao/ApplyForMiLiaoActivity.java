@@ -51,11 +51,12 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 
 	// SeekChatInfoBean chatBean = new SeekChatInfoBean();
 
-	private boolean isApply;
+	private boolean isApply;//是否申请过觅聊
 	private String applyId;
 	private String categoryId;
 	private String applyResult;
-
+	private String argument;//申请内容
+	String isApplynumber;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -71,8 +72,8 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 		// "chatBean");
 		Intent intent = getIntent();
 
-		String number = intent.getStringExtra("isApply");
-		if (number.equals("0")) {
+		isApplynumber = intent.getStringExtra("isApply");
+		if (isApplynumber.equals("0")) {
 			isApply = false;
 		} else {
 			isApply = true;
@@ -80,9 +81,11 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 		applyId = intent.getStringExtra("applyId");
 		categoryId = intent.getStringExtra("CategoryId");
 		applyResult = intent.getStringExtra("ApplyReply");
+		argument=intent.getStringExtra("argument");
 
 		log.e("categoryId", categoryId);
 		log.e("applyId", applyId);
+		log.e("applyResult", applyResult);
 		initView();
 	}
 
@@ -101,10 +104,19 @@ public class ApplyForMiLiaoActivity extends Activity implements OnClickListener 
 		if (isApply) {
 			nonetipLayout.setVisibility(View.GONE);
 			applyResultTextView.setVisibility(View.VISIBLE);
-			applyResultTextView.setText(applyResult);
+			content.setText(argument);
+			if(applyResult.equals("0")){
+				applyResultTextView.setText("小u正在认真审核你的申请呢。 请耐心等待呦");
+			}else{
+				applyResultTextView.setText("你的申请没有通过哎，请认真描述自己~");
+			}
+			applyImageView.setImageResource(R.drawable.chat_application_btn_reapply);
+			
 		} else {
 			nonetipLayout.setVisibility(View.VISIBLE);
 			applyResultTextView.setVisibility(View.GONE);
+			
+			
 		}
 	}
 
