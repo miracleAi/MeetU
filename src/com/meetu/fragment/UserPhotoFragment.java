@@ -222,7 +222,7 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements
 		intent.putExtra("id", "" + id);
 		intent.putExtra("userId", userId);
 		log.e("lucifer", "id==" + id);
-		startActivity(intent);
+		startActivityForResult(intent, 1001);
 		getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
 	}
 
@@ -293,5 +293,13 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements
 
 			}
 		});
+	}
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode == 1001 && resultCode == MinephotoActivity.RESULT_OK){
+			reflesh();
+		}
 	}
 }

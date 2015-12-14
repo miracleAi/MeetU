@@ -175,8 +175,14 @@ OnClickListener {
 
 	private void initViewPager() {
 		// TODO 加载网络数据后设置 viewpager数据
-		fragmentList.clear();
-		fragmentList = new ArrayList<Fragment>();
+		/*for(int i=0;i<fragmentList.size();i++){
+			getActivity().getSupportFragmentManager().beginTransaction().remove(fragmentList.get(i)).commit();
+		}*/
+		if(adapter!= null){
+			adapter.setFragments(fragmentList);
+			fragmentList.clear();
+			log.d("mytest", "remove zhixing");
+		}
 		for (int i = 0; i < seekChatBeansList.size(); i++) {
 			MiliaoChannelFragment frag = new MiliaoChannelFragment();
 			Bundle bundle = new Bundle();
