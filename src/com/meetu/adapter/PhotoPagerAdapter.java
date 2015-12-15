@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import net.tsz.afinal.FinalBitmap;
 import cc.imeetu.R;
 
+import com.avos.avoscloud.LogUtil.log;
 import com.lidroid.xutils.BitmapUtils;
 import com.meetu.activity.homepage.HomePageDetialActivity;
 import com.meetu.cloud.object.ObjActivityCover;
@@ -15,6 +16,8 @@ import com.meetu.cloud.object.ObjActivityPhoto;
 import com.meetu.entity.PhotoWall;
 import com.meetu.entity.Photolunbo;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.tools.DensityUtil;
+import com.meetu.tools.DisplayUtils;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -71,18 +74,12 @@ public class PhotoPagerAdapter extends PagerAdapter {
 				R.layout.item_photolunbo_detial, null);
 		ImageView img = (ImageView) view
 				.findViewById(R.id.photo_lunbo_item_homepage_img);
-		// finalBitmap.display(img,news.getImgurl());
-		// img.setImageResource(item.getImg());
-
-		// bitmapUtils.display(img, item.getCover().getUrl());
+		
+		log.e("zcq url", item.getCover().getUrl());
+		
 		finalBitmap.display(img, item.getCover().getUrl());
-		// View
-		// view2=LayoutInflater.from(mContext).inflate(R.layout.photo_desc_item_layout,
-		// null);
-
-		// TextView
-		// title=(TextView)view.findViewById(R.id.title_lunbo_item_homepage_tv);
-		// title.setText(item.getTitle());
+		
+		
 		container.addView(view);
 		return view;
 	}

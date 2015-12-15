@@ -232,23 +232,7 @@ public class NewsListViewAdapter extends BaseAdapter {
 					}
 				});
 
-		// holder.favourImg.setOnClickListener(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View arg0) {
-		// if(item.getIsFavor()==0){
-		// holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_hl);
-		// onItemImageFavorClickCallBack.onItemImageFavorClick(position);
-		// }else{
-		// holder.favourImg.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
-		// onItemImageFavorClickCallBack.onItemCancleImageFavorClick(position);
-		// }
-		//
-		//
-		//
-		//
-		// }
-		// });
+
 
 		return convertView;
 	}

@@ -348,9 +348,9 @@ public class BitmapCut {
 		canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
 		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
 		canvas.drawBitmap(bitmap, rect, rect, paint);
-		if (bitmap != null && !bitmap.isRecycled()) {
-			bitmap.recycle();
-		}
+//		if (bitmap != null && !bitmap.isRecycled()) {
+//			bitmap.recycle();
+//		}
 		return output;
 	}
 
@@ -487,5 +487,28 @@ public class BitmapCut {
 		return bmp;// Bitmap.createBitmap(bitmap, retX, retY, nw, nh, null,
 					// false);
 	}
+	
+	public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
+		
+	    Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+	    bitmap.getHeight(), Config.ARGB_8888);
+	    Canvas canvas = new Canvas(output);
+	 
+	    final int color = 0xff424242;
+	    final Paint paint = new Paint();
+	    final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+	    final RectF rectF = new RectF(rect);
+	    final float roundPx = 50;
+	 
+	    paint.setAntiAlias(true);
+	    canvas.drawARGB(0, 0, 0, 0);
+	    paint.setColor(color);
+	    canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+	 
+	    paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+	    canvas.drawBitmap(bitmap, rect, rect, paint);
+	 
+	    return output;
+	  }
 
 }

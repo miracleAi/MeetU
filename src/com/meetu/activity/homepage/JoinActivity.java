@@ -17,6 +17,10 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
+import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
+import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 import com.meetu.adapter.BookingListViewAdapter;
 import com.meetu.bean.ActivityBean;
 import com.meetu.cloud.callback.ObjActivityOrderCallback;
@@ -32,6 +36,7 @@ import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
 import com.meetu.entity.Booking;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.tools.BitmapCut;
 import com.meetu.tools.DateUtils;
 import com.meetu.tools.DensityUtil;
 
@@ -42,6 +47,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.content.Loader;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.Menu;
 import android.view.View;
@@ -74,6 +80,7 @@ OnItemClickListener {
 	private ArrayList<ObjActivityTicket> tickets = new ArrayList<ObjActivityTicket>();
 	private ObjActivity objActivity = null;
 	private FinalBitmap fianlBitmap;
+	private BitmapUtils bitmapUtils;
 	private int selectedPosition = -1;
 	// 拿本地的 user
 	private AVUser currentUser = AVUser.getCurrentUser();
@@ -83,6 +90,7 @@ OnItemClickListener {
 	private TextView title, titleDesc, timeStart;
 	private EditText nameEditText;
 	private EditText hopeEditText;
+	private RelativeLayout loadAgainLayout;//重新加载票
 
 	// 获取活动报名信息
 	private boolean isJoin = false;// 是否报名
@@ -152,14 +160,16 @@ OnItemClickListener {
 			user = AVUser.cast(currentUser, ObjUser.class);
 
 		}
+		bitmapUtils=new BitmapUtils(getApplicationContext());
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();
 		activityBean = (ActivityBean) bundle.getSerializable("activityBean");
 		initLoadActivity(activityBean.getActyId());
-		//检查是否报名
-		checkISjoinActivity();
 		// 事件绑定处理
 		initView();
+		//检查是否报名
+		checkISjoinActivity();
+	
 
 	}
 
@@ -175,6 +185,15 @@ OnItemClickListener {
 	}
 
 	private void initView() {
+		loadAgainLayout=(RelativeLayout) findViewById(R.id.load_ticket_again_rl);
+		loadAgainLayout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				loaddate();
+			}
+		});
 		backLayout = (RelativeLayout) super
 				.findViewById(R.id.back_join_homepager_rl);
 		backLayout.setOnClickListener(this);
@@ -209,8 +228,30 @@ OnItemClickListener {
 		photoHuodong = (ImageView) super
 				.findViewById(R.id.photo_join_homepager);
 
-		fianlBitmap.display(photoHuodong, activityBean.getActivityCover());
+	//	fianlBitmap.display(photoHuodong, activityBean.getActivityCover());
+		bitmapUtils.display(photoHuodong, activityBean.getActivityCover(), new BitmapLoadCallBack<ImageView>() {
 
+			@Override
+			public void onLoadCompleted(ImageView container, String uri, Bitmap bitmap,
+					BitmapDisplayConfig arg3, BitmapLoadFrom arg4) {
+				// TODO Auto-generated method stub
+				
+				try {
+					bitmap=BitmapCut.toRoundCorner(bitmap,24);
+					container.setImageBitmap(bitmap);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
+			}
+
+			@Override
+			public void onLoadFailed(ImageView view, String arg1, Drawable arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+		} );
+		
 		nameEditText = (EditText) super.findViewById(R.id.name_join_et);
 		hopeEditText = (EditText) findViewById(R.id.wish_join_et);
 		if(user.getNameReal() != null){
@@ -267,11 +308,13 @@ OnItemClickListener {
 				// TODO Auto-generated method stub
 
 				if (e != null) {
-					Toast.makeText(getApplicationContext(), e.getMessage(),
-							1000).show();
+					Toast.makeText(getApplicationContext(), "加载失败，请重新加载",
+							Toast.LENGTH_SHORT).show();
+					loadAgainLayout.setVisibility(View.VISIBLE);
 					return;
 				}
 				if (objects != null && objects.size() > 0) {
+					loadAgainLayout.setVisibility(View.GONE);
 					tickets.addAll(objects);
 					String ss = tickets.get(0).getTicketTitle();
 					log.e("zcq", "name==" + ss);

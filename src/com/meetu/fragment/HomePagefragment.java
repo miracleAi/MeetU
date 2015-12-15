@@ -299,6 +299,7 @@ public class HomePagefragment extends Fragment implements
 									+ activity.getActivityContent().getUrl());
 						}
 						if (activity.getActivityCover() != null) {
+							;
 							bean.setActivityCover(""
 									+ activity.getActivityCover().getUrl());
 						}
@@ -400,9 +401,12 @@ public class HomePagefragment extends Fragment implements
 		HightY = itemHight * number - pingHight + topHight + bottomHight;// item滑动的总高度
 		maginY = pingHight - topHight - bottomHight - itemHight;// 标签移动的绝对总高度
 
-		int allnumberUser=	actyListCache.get(itemNow).getOrderCountBoy()+actyListCache.get(itemNow).getOrderCountGirl();
-		numberAll.setText(""+allnumberUser+"人报名");
-		numberFavor.setText(""+actyListCache.get(itemNow).getOrderAndFollow()+"个我关注的");
+		if(actyListCache!=null&&actyListCache.size()>0){
+			int allnumberUser=	actyListCache.get(itemNow).getOrderCountBoy()+actyListCache.get(itemNow).getOrderCountGirl();
+			numberAll.setText(""+allnumberUser+"人报名");
+			numberFavor.setText(""+actyListCache.get(itemNow).getOrderAndFollow()+"个我关注的");
+		}
+		
 	}
 
 	@Override
