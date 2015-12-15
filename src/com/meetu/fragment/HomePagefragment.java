@@ -396,7 +396,7 @@ public class HomePagefragment extends Fragment implements
 		pingHight = DisplayUtils.getWindowHeight(getActivity());
 		topHight = DensityUtil.dip2px(getActivity(), 44);
 		bottomHight = DensityUtil.dip2px(getActivity(), 54);
-		itemHight = DensityUtil.dip2px(getActivity(), 301) + 1;// item的高度（+1是加下划线）
+		itemHight = DensityUtil.dip2px(getActivity(), 299) + 1;// item的高度（+1是加下划线）
 
 		HightY = itemHight * number - pingHight + topHight + bottomHight;// item滑动的总高度
 		maginY = pingHight - topHight - bottomHight - itemHight;// 标签移动的绝对总高度

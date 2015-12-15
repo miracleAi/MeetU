@@ -173,7 +173,12 @@ public class UpdatepictureActivity extends Activity implements OnClickListener {
 		case R.id.wancheng_update_mine_rl:
 			// Toast.makeText(this, "进行上传", Toast.LENGTH_SHORT).show();
 			if (isEnd == true) {
-				upLoadUserPhotoInfo(user);
+				if(updateText.getText().length()>0){
+					upLoadUserPhotoInfo(user);
+				}else{
+					Toast.makeText(getApplicationContext(), "请填写描述文字", Toast.LENGTH_SHORT).show();
+				}
+				
 
 				
 			} else {

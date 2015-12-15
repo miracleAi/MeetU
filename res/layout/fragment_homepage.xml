@@ -62,7 +62,7 @@
     <RelativeLayout
         android:id="@+id/usernumber_homepage_rl"
         android:layout_width="wrap_content"
-        android:layout_height="44dp"
+        android:layout_height="wrap_content"
         
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
@@ -77,17 +77,17 @@
             
             android:text="0人报名"
             android:textColor="#ffffff"
-            android:textSize="12sp" />
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/woguanzhunumber_homepage_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/zongnumber_homepage_tv"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="2dp"
             android:text="0个我关注的"
             android:textColor="#ffffff"
-            android:textSize="10sp" />
+            android:textSize="11sp" />
     </RelativeLayout>
 
 </RelativeLayout>

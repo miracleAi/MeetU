@@ -78,6 +78,7 @@ import com.meetu.sqlite.UserAboutDao;
 import com.meetu.sqlite.UserDao;
 import com.meetu.sqlite.UserShieldDao;
 import com.meetu.tools.BitmapCut;
+import com.meetu.tools.DensityUtil;
 import com.meetu.view.CustomViewPager;
 import com.meetu.view.ScrollTabHolder;
 import com.meetu.view.SlidingTabLayout;
@@ -153,6 +154,8 @@ ScrollTabHolder, OnClickListener {
 	UserDao userDao;
 	UserShieldDao shieldDao;
 	MinePhotoWallfragment photoWallFragment=null;
+	
+	Bitmap loadingBitmap=null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -167,6 +170,7 @@ ScrollTabHolder, OnClickListener {
 		shieldDao = new UserShieldDao(getApplicationContext());
 		userDao=new UserDao(getApplicationContext());
 		userAboutDao=new UserAboutDao(getApplicationContext());
+		loadingBitmap=BitmapFactory.decodeResource(getResources(), R.drawable.mine_btn_profile);
 		Intent intent = getIntent();
 		// 取到用户的id
 		userId = intent.getStringExtra("userId");
@@ -560,7 +564,7 @@ ScrollTabHolder, OnClickListener {
 
 				if (user.getProfileClip() != null) {
 					finalBitmap.display(userProfileImv, user.getProfileClip()
-							.getUrl());
+							.getThumbnailUrl(true, DensityUtil.dip2px(UserPagerActivity.this, 40), DensityUtil.dip2px(UserPagerActivity.this, 40)),loadingBitmap);
 				}
 				userNameTv.setText(user.getNameNick());
 				if(user.getGender()==2){

@@ -108,6 +108,7 @@
                         android:id="@+id/user_profile_iv"
                         android:layout_width="83dp"
                         android:layout_height="83dp"
+                        android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/mine_btn_profile" />
 

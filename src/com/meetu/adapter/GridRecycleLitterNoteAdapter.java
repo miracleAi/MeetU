@@ -10,6 +10,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.baidu.a.a.a.c;
+import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjScripBox;
@@ -23,6 +24,7 @@ import com.meetu.tools.DensityUtil;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -95,7 +97,7 @@ public class GridRecycleLitterNoteAdapter extends
 	public void onBindViewHolder(MyViewHolder holder, final int position) {
 		if (list != null && list.size() > 0) {
 
-			ObjScripBox item = list.get(position);
+			final ObjScripBox item = list.get(position);
 			// holder.tvName.setText(item.getName());
 
 			if (mOnItemClickLitener != null) {
@@ -133,10 +135,31 @@ public class GridRecycleLitterNoteAdapter extends
 			if (item.getSender().getObjectId().equals(user.getObjectId())) {
 				// 我是创建者
 				holder.ivNoReadNumber.setText("" + item.getSenderUnreadCount());
+				holder.ivImg.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View arg0) {
+						// TODO Auto-generated method stub
+						Intent intent=new Intent(mContext,UserPagerActivity.class);
+						intent.putExtra("userId", user.getObjectId());
+						mContext.startActivity(intent);
+					}
+				});
 			} else {
 				holder.ivNoReadNumber.setText(""
 						+ item.getReceiverUnreadCount());
+				holder.ivImg.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View arg0) {
+						// TODO Auto-generated method stub
+						Intent intent=new Intent(mContext,UserPagerActivity.class);
+						intent.putExtra("userId", item.getSender().getObjectId());
+						mContext.startActivity(intent);
+					}
+				});
 			}
+			
 			
 			
 			if(userAboutBeansList==null||userAboutBeansList.size()==0){

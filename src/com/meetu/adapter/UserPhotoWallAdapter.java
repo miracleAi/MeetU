@@ -102,7 +102,7 @@ public class UserPhotoWallAdapter extends
 				final RecyclerItemViewHolder holder = (RecyclerItemViewHolder) viewHolder;
 				ObjUserPhoto item = mPhotos.get(position);
 
-				log.e("zcq url==", item.getPhoto().getThumbnailUrl(true, item.getImageWidth(), item.getImageHeight(),100,"jpg"));
+//				log.e("zcq url==", item.getPhoto().getThumbnailUrl(true, item.getImageWidth(), item.getImageHeight(),100,"jpg"));
 
 				if (item.getPhoto() != null) {
 					photoUrl = item.getPhoto().getThumbnailUrl(true, item.getImageWidth(), item.getImageHeight(),100,"jpg");
@@ -142,11 +142,12 @@ public class UserPhotoWallAdapter extends
 
 									}
 								});
-
 					}
 					
 				}
-
+				
+				
+				
 				holder.ivFavorNumber.setText("" + item.getPraiseCount());
 				holder.ivViewNumber.setText("" + item.getBrowseCount());
 				holder.ivDesc.setText("" + item.getPhotoDescription());
