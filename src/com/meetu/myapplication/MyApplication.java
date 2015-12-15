@@ -53,6 +53,7 @@ public class MyApplication extends Application {
 
 	public BitmapUtils bitmapUtils = null;
 	private FinalBitmap finalBitmap = null;
+	private FinalBitmap finalBitmapHead=null;
 
 	@Override
 	public void onCreate() {
@@ -60,13 +61,17 @@ public class MyApplication extends Application {
 		super.onCreate();
 		// 配置bitmapUtils
 		finalBitmap = FinalBitmap.create(this);
-		finalBitmap.configBitmapLoadThreadSize(10);// 线程尺寸
+		finalBitmap.configBitmapLoadThreadSize(3);// 线程尺寸
 		finalBitmap.configDiskCachePath(getFilesDir().toString());//
 		finalBitmap.configDiskCacheSize(1024 * 1024 * 100);
 		int memory = (int) Runtime.getRuntime().maxMemory() / 8;
 		finalBitmap.configMemoryCacheSize(memory);
 		finalBitmap.configLoadingImage(R.drawable.mine_img_loading);
 		finalBitmap.configLoadfailImage(R.drawable.mine_img_loading);
+		
+		
+
+		
 		// finalBitmap.configBitmapMaxHeight(bitmapHeight);
 		/**
 		 * 第三方支付相关
@@ -133,9 +138,16 @@ public class MyApplication extends Application {
 			});
 		}
 	}
+/**
+ * 取普通图片bitmap
+ * @return  
+ * @author lucifer
+ * @date 2015-12-15
+ */
 
 	public FinalBitmap getFinalBitmap() {
 		// TODO Auto-generated method stub
 		return finalBitmap;
 	}
+
 }

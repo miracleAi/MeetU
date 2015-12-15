@@ -22,10 +22,13 @@ import com.meetu.entity.Huodong;
 import com.meetu.entity.User;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.UserDao;
+import com.meetu.tools.DensityUtil;
 
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -43,6 +46,7 @@ public class MiLiaoUsersListAdapter extends BaseAdapter {
 	
 	FinalBitmap finalBitmap;
 	UserDao userDao;
+	Bitmap loadBitmap=null;
 
 	public MiLiaoUsersListAdapter(Context context, List<UserAboutBean> usersList) {
 		this.mContext = context;
@@ -53,6 +57,7 @@ public class MiLiaoUsersListAdapter extends BaseAdapter {
 		MyApplication application=(MyApplication) context.getApplicationContext();
 		finalBitmap=application.getFinalBitmap();
 		userDao=new UserDao(context);
+		loadBitmap=BitmapFactory.decodeResource(mContext.getResources(), R.drawable.mine_likelist_profile_default);
 	}
 
 	@Override
@@ -115,7 +120,7 @@ public class MiLiaoUsersListAdapter extends BaseAdapter {
 				if (userMy.getProfileClip() != null) {
 					// log.e("zcq", "是我自己发的消息");
 					finalBitmap.display(holder.ivImgUrl, userMy
-							.getProfileClip().getUrl());
+							.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(mContext, 40), DensityUtil.dip2px(mContext, 40)),loadBitmap);
 				}
 				if(userMy.getGender()==2){
 					holder.ivSex.setImageResource(R.drawable.acty_joinlist_img_female);
@@ -127,7 +132,7 @@ public class MiLiaoUsersListAdapter extends BaseAdapter {
 				if (null != list && list.size() > 0) {
 					if (!list.get(0).getProfileClip().equals("")) {
 						finalBitmap.display(holder.ivImgUrl,
-								list.get(0).getProfileClip());
+								list.get(0).getProfileClip(),loadBitmap);
 					}
 					holder.tvName.setText("" + list.get(0).getNameNick());
 					holder.tvSchool.setText(list.get(0).getSchool());
@@ -144,23 +149,12 @@ public class MiLiaoUsersListAdapter extends BaseAdapter {
 							// TODO Auto-generated method stub
 							if (e == null) {
 								userDao.insertOrReplaceUser(objuser);
-								ArrayList<UserBean> list2 = userDao
-										.queryUser(item
-												.getAboutUserId());
-								if (null != list2
-										&& list2.size() > 0) {
-									if (!list2.get(0)
-											.getProfileClip()
-											.equals("")) {
-										finalBitmap
-										.display(
-												holder.ivImgUrl,
-												list2.get(0)
-												.getProfileClip());
+								ArrayList<UserBean> list2 = userDao.queryUser(item.getAboutUserId());
+								if (null != list2&& list2.size() > 0) {
+									if (!list2.get(0).getProfileClip().equals("")) {
+										finalBitmap.display(holder.ivImgUrl,list2.get(0).getProfileClip(),loadBitmap);
 									}
-									holder.tvName.setText(""
-											+ list2.get(0)
-											.getNameNick());
+									holder.tvName.setText(""+ list2.get(0).getNameNick());
 									holder.tvSchool.setText(list2.get(0).getSchool());
 									if(list2.get(0).getGender()==2){
 										holder.ivSex.setImageResource(R.drawable.acty_joinlist_img_female);

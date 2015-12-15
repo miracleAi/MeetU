@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.tsz.afinal.FinalBitmap;
+
 import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
@@ -25,6 +27,7 @@ import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
 import com.meetu.entity.Middle;
+import com.meetu.myapplication.MyApplication;
 import com.meetu.tools.BitmapCut;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
@@ -114,26 +117,31 @@ OnClickListener {
 	private String yHeadPath = "";
 	private ImageView sexImg;
 	
+	private FinalBitmap finalBitmapHead;
+	
 	MinePhotoWallfragment photoWallFragment=null;
 	
 	private List<Fragment> fragmentList = new ArrayList<Fragment>();
-
+	Bitmap loadingBitmap=null;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		if (view == null) {
 			view = inflater.inflate(R.layout.fragment_mine_up, null);
 			bitmapUtils = new BitmapUtils(getActivity());
+			MyApplication application=(MyApplication) getActivity().getApplicationContext();
+			finalBitmapHead=application.getFinalBitmap();
 			if (currentUser != null) {
 				// 强制类型转换
 				user = AVUser.cast(currentUser, ObjUser.class);
 
 				if(user.getProfileClip()!=null){
-					headURl = user.getProfileClip().getUrl();
+					headURl = user.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(getActivity(), 85), DensityUtil.dip2px(getActivity(), 85));
 				}
 
 				log.e("lucifer", "url" + headURl);
 			}
+			loadingBitmap=BitmapFactory.decodeResource(getResources(), R.drawable.mine_btn_profile);
 			initView();
 			initValues();
 
@@ -182,7 +190,9 @@ OnClickListener {
 		if (headURl != null) {
 			// ivTouxiang.setImageBitmap(head);
 			// 加载网络图片
-			bitmapUtils.display(ivTouxiang, headURl);
+			
+		
+			finalBitmapHead.display(ivTouxiang, headURl, loadingBitmap);
 		}
 
 		ivTouxiang.setOnClickListener(new OnClickListener() {
@@ -700,12 +710,16 @@ OnClickListener {
 												"头像已上传", 1000)
 												.show();
 										// 更新头像
-										headURl = user.getProfileClip()
-												.getUrl();
-										log.e("lucifer", "url"
-												+ headURl);
-										bitmapUtils.display(ivTouxiang,
-												headURl);
+										if(user.getProfileClip()!=null){
+											headURl = user.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(getActivity(), 85), DensityUtil.dip2px(getActivity(), 85));
+											finalBitmapHead.display(ivTouxiang, headURl,loadingBitmap);
+										}
+//										headURl = user.getProfileClip()
+//												.getUrl();
+//										log.e("lucifer", "url"
+//												+ headURl);
+//										bitmapUtils.display(ivTouxiang,
+//												headURl);
 
 									} else {
 										// clickBtn.setText(LOAD_FAIL);

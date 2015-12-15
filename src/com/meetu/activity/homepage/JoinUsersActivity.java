@@ -38,6 +38,8 @@ import android.os.Message;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Loader;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -97,6 +99,7 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 	UserAboutDao userAboutDao;
 	private RelativeLayout alltitleLayout;
 
+	Bitmap loadBitmapIng=null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -109,6 +112,8 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 			// 强制类型转换
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
+		loadBitmapIng = BitmapFactory.decodeResource(getResources(),
+				R.drawable.mine_likelist_profile_default);
 		userAboutDao=new UserAboutDao(this);
 		bitmapUtils = new BitmapUtils(this);
 		MyApplication app = (MyApplication) this.getApplication();
@@ -185,7 +190,7 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 		}
 		
 		if(user.getProfileClip()!=null){
-			finalBitmap.display(myPHotoHead, user.getProfileClip().getUrl());
+			finalBitmap.display(myPHotoHead, user.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(this, 40),  DensityUtil.dip2px(this, 40)),loadBitmapIng);
 		}
 		
 		title.setText(""+activityBean.getTitle());

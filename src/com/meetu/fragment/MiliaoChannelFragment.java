@@ -23,8 +23,11 @@ import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.UserAboutDao;
+import com.meetu.tools.DensityUtil;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -63,6 +66,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 	private RelativeLayout numberLayout;
 
 	List<String> list=new ArrayList<String>();//存放用户的id
+	Bitmap loadBitmapIng=null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,7 +77,8 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 			if (currentUser != null) {
 				user = AVUser.cast(currentUser, ObjUser.class);
 			}
-
+			
+			loadBitmapIng=BitmapFactory.decodeResource(getResources(), R.drawable.mine_likelist_profile_default);
 			userAboutDao = new UserAboutDao(getActivity());
 			// objChat=(ObjChat) getArguments().get("ObjChat");
 			// log.e("zcq","objChat=="+objChat.getObjectId()+"  objChat.getConversationId=="+objChat.getConversationId());
@@ -128,8 +133,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 
 		if (seekChatBean.getCreator().getProfileClip() != null) {
 			log.e("zcq", "设置头像");
-			finalBitmap.display(photoManager, seekChatBean.getCreator()
-					.getProfileClip().getUrl());
+			finalBitmap.display(photoManager, seekChatBean.getCreator().getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(getActivity(), 40), DensityUtil.dip2px(getActivity(), 40)),loadBitmapIng);
 			photoManager.setOnClickListener(this);
 		}
 		if (seekChatBean.getPictureUrl() != null) {
@@ -179,8 +183,9 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 			public void callback(ObjUser user, AVException e) {
 				if(e == null){
 					if (user.getProfileClip() != null) {
-						finalBitmap.display(photoManager, user.getProfileClip()
-								.getUrl());
+						finalBitmap.display(photoManager, user.getProfileClip().getThumbnailUrl(true
+								, DensityUtil.dip2px(getActivity(), DensityUtil.dip2px(getActivity(), 40)), 
+								DensityUtil.dip2px(getActivity(), DensityUtil.dip2px(getActivity(), 40))),loadBitmapIng);
 					}
 				}
 
@@ -188,55 +193,6 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 		});
 	}
 
-	// /**
-	// * 获取会话成员
-	// */
-	// public void getMembers(AVIMConversation conv){
-	// ObjChatMessage.getChatMembers(conv,new ObjListCallback() {
-	//
-	// @Override
-	// public void callback(ArrayList<String> list, AVException e) {
-	// // TODO Auto-generated method stub
-	//
-	// if(e!=null){
-	//
-	// log.e("zcq", e);
-	// return;
-	// }else if(list.size()!=0){
-	// log.e("zcq","群员列表获取成功");
-	// log.e("zcq","list.size()=="+list.size());
-	// numberUserAll.setText(""+list.size());
-	//
-	// userAboutBeanList=new ArrayList<UserAboutBean>();
-	// for(String userId:list){
-	//
-	// getUsersListInfo(list);
-	//
-	// UserAboutBean userAboutBean=new UserAboutBean();
-	// userAboutBean.setUserId(""+user.getObjectId());
-	// userAboutBean.setAboutType(Constants.CONVERSATION_TYPE);
-	// userAboutBean.setAboutUserId(""+userId);
-	// userAboutBean.setAboutColetctionId(objChat.getConversationId());
-	// userAboutBeanList.add(userAboutBean);
-	// }
-	//
-	// userAboutDao.deleteByType(user.getObjectId(),
-	// Constants.CONVERSATION_TYPE, objChat.getConversationId());
-	//
-	// userAboutDao.saveUserAboutList(userAboutBeanList);
-	//
-	// log.e("zcq", "插入数据成功");
-	//
-	// }
-	// }
-	// });
-	// }
-	// /**
-	// * 获得群员列表
-	// * @param objId
-	// * @author lucifer
-	// * @date 2015-11-17
-	// */
 	private void getUsersListInfo(final List<String> list) {
 		memberUserList.clear();
 
@@ -258,7 +214,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 								if (memberUserList.get(4).getProfileClip()!= null) {
 									finalBitmap.display(fiveUser,
 											memberUserList.get(4)
-											.getProfileClip().getUrl());
+											.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(getActivity(), 40), DensityUtil.dip2px(getActivity(), 40)),loadBitmapIng);
 									fiveUser.setOnClickListener(MiliaoChannelFragment.this);
 								}else{
 									fiveUser.setImageResource(R.drawable.acty_show_img_profiles);
@@ -272,7 +228,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 										.getUrl() != null) {
 									finalBitmap.display(fourUser,
 											memberUserList.get(3)
-											.getProfileClip().getUrl());
+											.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(getActivity(), 40), DensityUtil.dip2px(getActivity(), 40)),loadBitmapIng);
 									fourUser.setOnClickListener(MiliaoChannelFragment.this);
 								}else{
 									fourUser.setImageResource(R.drawable.acty_show_img_profiles);
@@ -286,7 +242,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 										.getUrl() != null) {
 									finalBitmap.display(threeUser,
 											memberUserList.get(2)
-											.getProfileClip().getUrl());
+											.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(getActivity(), 40), DensityUtil.dip2px(getActivity(), 40)),loadBitmapIng);
 									threeUser
 									.setOnClickListener(MiliaoChannelFragment.this);
 								}else{
@@ -300,7 +256,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 								if (memberUserList.get(1).getProfileClip()
 										.getUrl() != null) {
 									finalBitmap.display(twoUser, memberUserList
-											.get(1).getProfileClip().getUrl());
+											.get(1).getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(getActivity(), 40), DensityUtil.dip2px(getActivity(), 40)),loadBitmapIng);
 									twoUser.setOnClickListener(MiliaoChannelFragment.this);
 								}else{
 									twoUser.setImageResource(R.drawable.acty_show_img_profiles);
@@ -312,7 +268,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 							if (list.size() >= 1) {
 								if (memberUserList.get(0).getProfileClip()!= null) {
 									finalBitmap.display(oneUser, memberUserList
-											.get(0).getProfileClip().getUrl());
+											.get(0).getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(getActivity(), 40), DensityUtil.dip2px(getActivity(), 40)),loadBitmapIng);
 									oneUser.setOnClickListener(MiliaoChannelFragment.this);
 								}else{
 									oneUser.setImageResource(R.drawable.acty_show_img_profiles);

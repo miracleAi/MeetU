@@ -13,12 +13,15 @@ import com.avos.avoscloud.LogUtil.log;
 import com.meetu.bean.UserBean;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.common.Constants;
+import com.meetu.tools.DensityUtil;
 
 public class UserDao {
 	private MySqliteDBHelper helper;
+	private int photoWidth=0;
 
 	public UserDao(Context context) {
 		helper = new MySqliteDBHelper(context);
+		photoWidth=DensityUtil.dip2px(context, 40);
 	}
 
 	// 插入或替换用户
@@ -44,10 +47,9 @@ public class UserDao {
 						user.getDepartment(),
 						user.getDepartmentId(),
 						user.getHometown(),
-						user.getProfileClip() != null ? user.getProfileClip()
-								.getUrl() : "",
+						user.getProfileClip() != null ? user.getProfileClip().getThumbnailUrl(true, photoWidth, photoWidth) : "",
 						user.getProfileOrign() != null ? user.getProfileOrign()
-								.getUrl() : "",
+								.getThumbnailUrl(true, photoWidth, photoWidth) : "",
 						String.valueOf(System.currentTimeMillis()) });
 		db.close();
 	}

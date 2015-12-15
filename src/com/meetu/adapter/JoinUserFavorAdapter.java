@@ -12,10 +12,13 @@ import com.meetu.cloud.object.ObjUser;
 import com.meetu.entity.Huodong;
 import com.meetu.entity.User;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.tools.DensityUtil;
 
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +33,15 @@ public class JoinUserFavorAdapter extends BaseAdapter {
 	private List<ObjUser> joinUsersList;
 	// 网络数据相关
 	private FinalBitmap finalBitmap;
+	Bitmap loadBitmapIng=null;
 
 	public JoinUserFavorAdapter(Context context, List<ObjUser> joinUsersList) {
 		this.mContext = context;
 		this.joinUsersList = joinUsersList;
 		MyApplication app = (MyApplication) context.getApplicationContext();
 		finalBitmap = app.getFinalBitmap();
+		loadBitmapIng = BitmapFactory.decodeResource(context.getResources(),
+				R.drawable.mine_likelist_profile_default);
 	}
 
 	@Override
@@ -81,7 +87,7 @@ public class JoinUserFavorAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		if(item.getProfileClip()!=null){
-			finalBitmap.display(holder.ivImgUrl, item.getProfileClip().getUrl());
+			finalBitmap.display(holder.ivImgUrl, item.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(mContext, 40),  DensityUtil.dip2px(mContext, 40)),loadBitmapIng);
 		}
 		holder.ivImgUrl.setOnClickListener(new OnClickListener() {
 			
