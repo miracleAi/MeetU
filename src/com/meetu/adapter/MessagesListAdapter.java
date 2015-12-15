@@ -182,30 +182,30 @@ public class MessagesListAdapter extends BaseAdapter {
 			holder.tvNoReadMessages.setText("" + item.getUnreadMsgCount());
 		}
 
-		if (item.getConversationType() == 1) {
+		if (item.getConversationType() == Constants.ACTYSG) {
 			holder.tvName.setText(item.getActyName());
 			holder.photpHead
 			.setImageResource(R.drawable.massage_newslist_img_acty);
-			if(item.getTiStatus() == 1){
-				holder.tvTime.setText("已失效");
-			}else{
-				if(dismissData.getDismissData(item.getTimeOver())!=null){
-					holder.tvTime.setText(""+dismissData.getDismissData(item.getTimeOver())+"后消失");
+			if(dismissData.getDismissData(item.getTimeOver())!=null){
+				if(dismissData.getDismissData(item.getTimeOver()).equals("dismiss")){
+					holder.tvTime.setText("觅聊已消失");
 				}else{
-					if(chatmsgs!=null && chatmsgs.getSendTimeStamp()!=null){
-						holder.tvTime.setText(""+com.meetu.cloud.utils.DateUtils.getFormattedTimeInterval(Long.valueOf(chatmsgs.getSendTimeStamp())));
-					}
-
+					holder.tvTime.setText(""+dismissData.getDismissData(item.getTimeOver())+"后消失");
 				}
+			}else{
+				if(chatmsgs!=null && chatmsgs.getSendTimeStamp()!=null){
+					holder.tvTime.setText(""+com.meetu.cloud.utils.DateUtils.getFormattedTimeInterval(Long.valueOf(chatmsgs.getSendTimeStamp())));
+				}
+
 			}
-		} else if (item.getConversationType() == 2) {
+		} else if (item.getConversationType() == Constants.SEEKMSG) {
 			holder.tvName.setText(item.getChatName());
 			holder.photpHead
 			.setImageResource(R.drawable.massage_newslist_img_chat);
-			if(item.getTiStatus() == 1){
-				holder.tvTime.setText("已失效");
-			}else{
+			if(dismissData.getDismissData(item.getTimeOver())!=null && !dismissData.getDismissData(item.getTimeOver()).equals("dismiss")){
 				holder.tvTime.setText(""+dismissData.getDismissData(item.getTimeOver())+"后消失");
+			}else{
+				holder.tvTime.setText("觅聊已消失");
 			}
 		}
 		return convertView;

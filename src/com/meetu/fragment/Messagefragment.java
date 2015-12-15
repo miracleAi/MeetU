@@ -304,7 +304,6 @@ OnClickListener {
 			break;
 		case R.id.system_msg_layout:
 			Intent intent2 = new Intent(getActivity(), SystemMsgActivity.class);
-			intent2.putExtra("sysmsg_list", (Serializable)msgList);
 			startActivity(intent2);
 			break;
 		default:

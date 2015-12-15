@@ -34,12 +34,9 @@ public class dismissData {
 			}else if((timeOver-nowData)>=1000){
 				String string=""+((timeOver-nowData)/1000)+"s";
 				return string;
+			}else{
+				return "dismiss";
 			}
-				
-		
-		
-		return null;
-		
 	}
 
 }
