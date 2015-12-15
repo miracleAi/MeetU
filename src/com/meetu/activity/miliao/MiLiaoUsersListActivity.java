@@ -6,6 +6,7 @@ import java.util.List;
 import cc.imeetu.R;
 
 import com.avos.avoscloud.AVUser;
+import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.adapter.MiLiaoUsersListAdapter;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.object.ObjUser;
@@ -15,10 +16,13 @@ import com.meetu.sqlite.UserAboutDao;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -64,6 +68,18 @@ public class MiLiaoUsersListActivity extends Activity implements
 		
 		adapter = new MiLiaoUsersListAdapter(this, userAboutBeansList);
 		mlistView.setAdapter(adapter);
+		
+		mlistView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				Intent intent=new Intent(MiLiaoUsersListActivity.this,UserPagerActivity.class);
+				intent.putExtra("userId", userAboutBeansList.get(position).getAboutUserId());
+				startActivity(intent);
+			}
+		});
 		
 	}
 

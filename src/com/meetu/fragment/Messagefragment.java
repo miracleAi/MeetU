@@ -301,8 +301,6 @@ OnClickListener {
 			}else{
 				PerfectInformation.showDiolagPerfertInformation(getActivity(), "亲爱的 完善个人信息后才能查看小纸条呢");
 			}
-
-
 			break;
 		case R.id.system_msg_layout:
 			Intent intent2 = new Intent(getActivity(), SystemMsgActivity.class);

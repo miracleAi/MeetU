@@ -21,6 +21,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.lidroid.xutils.BitmapUtils;
 import com.meetu.activity.miliao.ChatGroupActivity;
+import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.bean.ActivityBean;
 import com.meetu.bean.BarrageMsgBean;
 import com.meetu.bean.UserBean;
@@ -86,9 +87,11 @@ public class BarrageActivity extends Activity {
 	ArrayList<BarrageMsgBean> realTimeList = new ArrayList<BarrageMsgBean>();
 	// 默认列表内容
 	String[] defContents = { "弹幕，是一场盛大的文字直播", "活动未开始，弹幕便是活动群聊广场",
-			"活动进行时，弹幕化身现场直播解说员", "你在看弹幕，发弹幕的人也在看你", "让我们的欢乐，感染你的生活" };
+			"活动进行时，弹幕化身现场直播解说员", "你在看弹幕，发弹幕的人也在看你", "弹幕直播将在3s后开启","活动群聊的互动内容会呈现在弹幕里呢",
+			"点击弹幕，就可以查看弹幕详情","点击头像，就可以逮到弹幕的人","弹幕直播开启啦  开启啦","让我们的欢乐，感染你的生活" };
 	// 默认列表额外内容
-	String[] defExtras = { "", "", "", "", "" };
+	String[] defExtras = { "2015.11.05", "2015.05.21", "2016.01.01","2015.12.15", "2016.02.14",
+			"2015.12.15","2016.01.01","2015.05.21","2015.11.05", "2016.02.14" };
 	int defIndex = 0;
 	int hisIndex = 0;
 	// 5623af6560b2ce30d24a2c67 测试用
@@ -275,7 +278,7 @@ public class BarrageActivity extends Activity {
 				} else {
 					Intent intent = new Intent(BarrageActivity.this,
 							ChatGroupActivity.class);
-					intent.putExtra("ConversationStyle", 1);
+					intent.putExtra("ConversationStyle", "1");
 					intent.putExtra("ConversationId", actyBean.getConversationId());
 					intent.putExtra("title", actyBean.getTitle());
 					log.d("mytest", "time over ==== "+actyBean.getTimeChatStop());
@@ -408,7 +411,9 @@ public class BarrageActivity extends Activity {
 				DensityUtil.dip2px(getApplicationContext(), 44),
 				DensityUtil.dip2px(getApplicationContext(), 44));
 		imageView.setId(1);
-		if (null != barrage.getUserAvator()
+		if(barrage.getNickName().equals("小U")){
+			imageView.setImageResource(R.drawable.img_profiles_u);
+		}else if (null != barrage.getUserAvator()
 				&& !("").equals(barrage.getUserAvator())) {
 			bitmapUtils.display(imageView, barrage.getUserAvator());
 		} else {
@@ -420,8 +425,11 @@ public class BarrageActivity extends Activity {
 		imageView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				handler.removeCallbacks(bottomRunnable);
-				initBottom(barrage, true);
+				if(barrage.getUserId() != null && !("").equals(barrage.getUserId())){
+					Intent intent = new Intent(BarrageActivity.this, UserPagerActivity.class);
+					intent.putExtra("userId",barrage.getUserId());
+					startActivity(intent);
+				}
 			}
 		});
 		ll.addView(imageView, imageLp);
@@ -533,7 +541,10 @@ public class BarrageActivity extends Activity {
 	}
 
 	public void initBottom(BarrageMsgBean bean, boolean isClick) {
-		if (null != bean.getUserAvator() && !("").equals(bean.getUserAvator())) {
+		if(bean.getNickName().equals("小U")){
+			headPhoto
+			.setImageResource(R.drawable.img_profiles_u);
+		}if (null != bean.getUserAvator() && !("").equals(bean.getUserAvator())) {
 			bitmapUtils.display(headPhoto, bean.getUserAvator());
 		} else {
 			headPhoto
@@ -546,6 +557,11 @@ public class BarrageActivity extends Activity {
 		}
 		timeTv.setText(bean.getTime());
 		uContent.setText(bean.getContent());
+		if(bean.getUserId() != null && !("").equals(bean.getUserId())){
+			Intent intent = new Intent(BarrageActivity.this, UserPagerActivity.class);
+			intent.putExtra("userId",bean.getUserId());
+			startActivity(intent);
+		}
 		if (isClick) {
 			handler.postDelayed(bottomRunnable, 8000);
 		} else {

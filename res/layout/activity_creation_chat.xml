@@ -157,7 +157,8 @@
             android:layout_marginTop="4dp"
             android:text="你发起的觅聊都会在某个凌晨五点消失，其中："
             android:textColor="#bfbfbf"
-            android:textSize="13dp" />
+            android:textSize="13dp"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -165,7 +166,7 @@
             android:layout_marginTop="6dp"
             android:drawableLeft="@drawable/mine_alter_img_point_blue"
             android:drawablePadding="4dp"
-            android:text="每天活跃度前十的，在第二天依旧可以谈笑风生"
+            android:text="觅聊卡片只有24h的保鲜期，限时自动消失"
             android:textColor="#bfbfbf"
             android:textSize="13dp" />
 
@@ -175,11 +176,10 @@
             android:layout_marginBottom="2dp"
             android:drawableLeft="@drawable/mine_alter_img_point_blue"
             android:drawablePadding="4dp"
-            android:text="每天活跃度不及前十的，会在第二天凌晨5：00消失"
+            android:text="觅聊卡片达到5个小伙伴时开启，最多20个小伙伴"
             android:textColor="#bfbfbf"
             android:textSize="13dp" />
     </LinearLayout>
-
     <LinearLayout
         android:id="@+id/center_CreationChat_ll"
         android:layout_width="match_parent"

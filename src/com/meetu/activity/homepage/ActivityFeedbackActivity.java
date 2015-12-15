@@ -107,7 +107,7 @@ public class ActivityFeedbackActivity extends Activity implements
 		content = (EditText) super.findViewById(R.id.content_feedback_et);
 		time = (TextView) super.findViewById(R.id.time_feedback_tv);
 		//time.setText(DateUtils.getDateToString(System.currentTimeMillis()));
-		time.setText(DateUtils.getDateToString(activityBean.getTimeStop()));
+		time.setText(DateUtils.getDateToString(activityBean.getTimeStart()));
 		title = (TextView) super.findViewById(R.id.title_feedback_tv);
 		title.setText("" + activityBean.getTitle());
 		photoHead = (ImageView) super
