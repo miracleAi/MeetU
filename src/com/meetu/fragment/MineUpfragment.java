@@ -476,7 +476,7 @@ OnClickListener {
 				Uri url = data.getData();
 				try {
 					//
-					photoPortait = getThumbnail(url, 2000);
+					photoPortait = getThumbnail(url, 500);
 					//
 					
 				} catch (FileNotFoundException e) {

@@ -22,6 +22,8 @@ import com.meetu.tools.DisplayUtils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -42,6 +44,7 @@ public class GridRecycleMiLiaoInfoAdapter extends
 	private Context mContext;
 	// 网络数据处理
 	private FinalBitmap finalBitmap;
+	Bitmap loadBitmap;
 	
 	// 当前用户
 		private ObjUser user = new ObjUser();
@@ -81,6 +84,7 @@ public class GridRecycleMiLiaoInfoAdapter extends
 			return;
 		}
 		userAboutDao=new UserAboutDao(context);
+		loadBitmap=BitmapFactory.decodeResource(mContext.getResources(), R.drawable.mine_likelist_profile_default);
 	}
 
 	@Override
@@ -97,7 +101,7 @@ public class GridRecycleMiLiaoInfoAdapter extends
 				if (item.getUserHeadPhotoUrl() != null
 						|| item.getUserHeadPhotoUrl() != "") {
 					finalBitmap.display(holder.ivImg,
-							item.getUserHeadPhotoUrl());
+							item.getUserHeadPhotoUrl(),loadBitmap);
 				}
 			}
 

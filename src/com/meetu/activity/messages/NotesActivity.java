@@ -51,6 +51,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
@@ -121,6 +123,7 @@ OnPageChangeListener, OnClickListener {
 	
 	private ImageView sendImageView;
 	private int randomX=0,randomY=0;
+	private Bitmap loadBitmap=null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +141,7 @@ OnPageChangeListener, OnClickListener {
 		} else {
 			return;
 		}
+		loadBitmap=BitmapFactory.decodeResource(getResources(), R.drawable.mine_likelist_profile_default);
 		initView();
 
 		MyApplication app = (MyApplication) this.getApplicationContext();
@@ -531,7 +535,7 @@ OnPageChangeListener, OnClickListener {
 
 				if (user.getProfileClip() != null) {
 					finalBitmap.display(userHeadPhoto, user.getProfileClip()
-							.getUrl());
+							.getThumbnailUrl(true, DensityUtil.dip2px(NotesActivity.this, 40), DensityUtil.dip2px(NotesActivity.this, 40)),loadBitmap);
 				}
 				userName.setText(user.getNameNick());
 				if (user.getGender() == 1) {

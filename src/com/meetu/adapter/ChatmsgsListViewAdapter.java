@@ -68,6 +68,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 	// 网络相关
 	private ObjUser user = null;
 	FinalBitmap finalBitmap;
+	Bitmap loadBitmap;
 
 	public ChatmsgsListViewAdapter(Context context, List<Chatmsgs> chatmsgsList,Handler handler) {
 		this.mContext = context;
@@ -85,6 +86,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 		MyApplication app = (MyApplication) context.getApplicationContext();
 		finalBitmap = app.getFinalBitmap();
 		userDao = new UserDao(context);
+		loadBitmap=BitmapFactory.decodeResource(mContext.getResources(), R.drawable.mine_likelist_profile_default);
 	}
 
 	/**
@@ -307,7 +309,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 					if (user.getProfileClip() != null) {
 						// log.e("zcq", "是我自己发的消息");
 						finalBitmap.display(holder.userHeadPhoto, user
-								.getProfileClip().getUrl());
+								.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(mContext, 40), DensityUtil.dip2px(mContext, 40)),loadBitmap);
 					}
 				} else {
 
@@ -319,7 +321,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 
 						if (!list.get(0).getProfileClip().equals("")) {
 							finalBitmap.display(holder.userHeadPhoto,
-									list.get(0).getProfileClip());
+									list.get(0).getProfileClip(),loadBitmap);
 						}
 						holder.userName.setText("" + list.get(0).getNameNick());
 
@@ -345,7 +347,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 											.display(
 													holder.userHeadPhoto,
 													list2.get(0)
-													.getProfileClip());
+													.getProfileClip(),loadBitmap);
 										}
 										holder.userName.setText(""
 												+ list2.get(0)
@@ -411,7 +413,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				holder.userName.setText("" + user.getNameNick());
 				if (user.getProfileClip() != null) {
 					finalBitmap.display(holder.userHeadPhoto, user
-							.getProfileClip().getUrl());
+							.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(mContext, 40), DensityUtil.dip2px(mContext, 40)),loadBitmap);
 				}
 
 
@@ -460,7 +462,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 
 					if (!list.get(0).getProfileClip().equals("")) {
 						finalBitmap.display(holder.userHeadPhoto, list.get(0)
-								.getProfileClip());
+								.getProfileClip(),loadBitmap);
 					}
 					holder.userName.setText("" + list.get(0).getNameNick());
 
@@ -483,7 +485,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 										.display(
 												holder.userHeadPhoto,
 												list2.get(0)
-												.getProfileClip());
+												.getProfileClip(),loadBitmap);
 									}
 									holder.userName.setText(""
 											+ list2.get(0)
@@ -528,7 +530,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 
 						if (!list.get(0).getProfileClip().equals("")) {
 							finalBitmap.display(holder.userHeadPhoto,
-									list.get(0).getProfileClip());
+									list.get(0).getProfileClip(),loadBitmap);
 						}
 						holder.userName.setText("" + list.get(0).getNameNick());
 						holder.userSchool.setText("" + list.get(0).getSchool());
@@ -556,7 +558,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 											.display(
 													holder.userHeadPhoto,
 													list2.get(0)
-													.getProfileClip());
+													.getProfileClip(),loadBitmap);
 										}
 										holder.userName.setText(""
 												+ list2.get(0)

@@ -37,6 +37,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.GridLayoutManager;
@@ -91,6 +93,8 @@ OnMiLiaoInfoItemClickCallBack {
 	private RelativeLayout exitLayout;
 	private TextView titleTextView;
 	private TextView favorNumber;
+	
+	private Bitmap loadBitmap=null;
 
 
 
@@ -110,6 +114,7 @@ OnMiLiaoInfoItemClickCallBack {
 		if (getIntent().getStringExtra("chatId") != null) {
 			chatId = getIntent().getStringExtra("chatId");
 		}
+		loadBitmap=BitmapFactory.decodeResource(getResources(), R.drawable.mine_likelist_profile_default);
 		userAboutDao = new UserAboutDao(this);
 		if (currentUser != null) {
 			// 强制类型转换
@@ -138,7 +143,7 @@ OnMiLiaoInfoItemClickCallBack {
 							// 如果用户的id和创建者的id 相等 就是觅聊创建者
 							isCreator = true;
 							if(userMY.getProfileClip()!=null){
-								finalBitmap.display(userCreator, userMY.getProfileClip().getUrl());								
+								finalBitmap.display(userCreator, userMY.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(MiLiaoInfoActivity.this, 40), DensityUtil.dip2px(MiLiaoInfoActivity.this, 40)),loadBitmap);								
 							}
 							xiaoUname.setText(userMY.getNameNick());
 						}else{
@@ -155,7 +160,7 @@ OnMiLiaoInfoItemClickCallBack {
 		} else if (conversationStyle.equals("1")) {
 			if (userMY.getProfileClip() != null) {
 				finalBitmap
-				.display(userCreator, userMY.getProfileClip().getUrl());
+				.display(userCreator, userMY.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(MiLiaoInfoActivity.this, 40), DensityUtil.dip2px(MiLiaoInfoActivity.this, 40)),loadBitmap);	
 			}
 
 			qunliaoLayout.setVisibility(View.VISIBLE);
@@ -515,7 +520,7 @@ OnMiLiaoInfoItemClickCallBack {
 						item.setIsDetele(false);
 						if (user.getProfileClip() != null) {
 							item.setUserHeadPhotoUrl(user
-									.getProfileClip().getUrl());
+									.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(MiLiaoInfoActivity.this, 40), DensityUtil.dip2px(MiLiaoInfoActivity.this, 40)));
 						}
 
 						mlist.add(item);
@@ -553,7 +558,7 @@ OnMiLiaoInfoItemClickCallBack {
 
 				if (user.getProfileClip() != null) {
 					finalBitmap.display(userCreator, user.getProfileClip()
-							.getUrl());
+							.getThumbnailUrl(true, DensityUtil.dip2px(MiLiaoInfoActivity.this, 40), DensityUtil.dip2px(MiLiaoInfoActivity.this, 40)),loadBitmap);	
 				}
 				xiaoUname.setText(user.getNameNick());
 

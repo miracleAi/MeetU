@@ -18,9 +18,12 @@ import com.meetu.common.Constants;
 import com.meetu.entity.LitterNotes;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.UserAboutDao;
+import com.meetu.tools.DensityUtil;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -50,6 +53,7 @@ public class GridRecycleLitterNoteAdapter extends
 	String userId = "";// 对方的id
 	UserAboutDao userAboutDao;
 	List<UserAboutBean> userAboutBeansList=new ArrayList<UserAboutBean>();
+	Bitmap loadBitmap;
 	/**
 	 * 单击 和长按接口
 	 * 
@@ -83,7 +87,7 @@ public class GridRecycleLitterNoteAdapter extends
 		}
 		userAboutDao=new UserAboutDao(context);
 		userAboutBeansList=userAboutDao.queryUserAbout(user.getObjectId(), Constants.FOLLOW_TYPE, "");
-
+		loadBitmap=BitmapFactory.decodeResource(mContext.getResources(), R.drawable.mine_likelist_profile_default);
 	}
 
 	@Override
@@ -212,7 +216,7 @@ public class GridRecycleLitterNoteAdapter extends
 
 				if (user.getProfileClip() != null) {
 					finalBitmap.display(holder.ivImg, user.getProfileClip()
-							.getUrl());
+							.getThumbnailUrl(true, DensityUtil.dip2px(mContext, 40), DensityUtil.dip2px(mContext, 40)),loadBitmap);
 				}
 				holder.tvName.setText(user.getNameNick());
 				if (user.getGender() == 2) {

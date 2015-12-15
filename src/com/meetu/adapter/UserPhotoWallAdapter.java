@@ -102,9 +102,10 @@ public class UserPhotoWallAdapter extends
 				final RecyclerItemViewHolder holder = (RecyclerItemViewHolder) viewHolder;
 				ObjUserPhoto item = mPhotos.get(position);
 
+				log.e("zcq url==", item.getPhoto().getThumbnailUrl(true, item.getImageWidth(), item.getImageHeight(),100,"jpg"));
 
 				if (item.getPhoto() != null) {
-					photoUrl = item.getPhoto().getUrl();
+					photoUrl = item.getPhoto().getThumbnailUrl(true, item.getImageWidth(), item.getImageHeight(),100,"jpg");
 				}
 
 				int photoWidth = item.getImageWidth();
@@ -113,13 +114,13 @@ public class UserPhotoWallAdapter extends
 				if (photoWidth >= (width / 2)) {
 					if (item.getPhoto() != null) {
 						finalBitmap.display(holder.ivImg, item.getPhoto()
-								.getUrl(), width / 2, Hight);
+								.getThumbnailUrl(true, item.getImageWidth(), item.getImageHeight(),100,"jpg"), width / 2, Hight);
 					}
 
 				} else {
 					// 处理bitmap
 					if(item.getPhoto()!=null){
-						bitmapUtils.display(holder.ivImg, item.getPhoto().getUrl(),
+						bitmapUtils.display(holder.ivImg, item.getPhoto().getThumbnailUrl(true, item.getImageWidth(), item.getImageHeight(),100,"jpg"),
 								new BitmapLoadCallBack<ImageView>() {
 
 									@Override

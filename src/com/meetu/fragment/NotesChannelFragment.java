@@ -178,6 +178,8 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 	private List<Integer> noteIDList = new ArrayList<Integer>();
 
 	private ImageView sendImageView;
+	
+	private Bitmap loadBitmap=null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -196,7 +198,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 					- DensityUtil.dip2px(getActivity(), 190);
 			noteWight = DisplayUtils.getWindowWidth(getActivity());
 			userDao = new UserDao(getActivity());
-
+			loadBitmap=BitmapFactory.decodeResource(getResources(), R.drawable.mine_likelist_profile_default);
 			emojiHight = DensityUtil.dip2px(getActivity(), 275);
 			ruanHight = DensityUtil.dip2px(getActivity(), 350);
 			if (currentUser != null) {
@@ -822,7 +824,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 
 		// 是我发的
 		if (user.getProfileClip() != null) {
-			finalBitmap.display(photoHead, user.getProfileClip().getUrl());
+			finalBitmap.display(photoHead, user.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(getActivity(), 40), DensityUtil.dip2px(getActivity(), 40)),loadBitmap);
 		}
 
 		viewX = windowFocusX - (DensityUtil.dip2px(getActivity(), 34) + 1);
@@ -1068,7 +1070,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 		if (user.getObjectId().equals(chatmsgs.getClientId())) {
 			// 是我发的
 			if (user.getProfileClip() != null) {
-				finalBitmap.display(photoHead, user.getProfileClip().getUrl());
+				finalBitmap.display(photoHead, user.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(getActivity(), 40), DensityUtil.dip2px(getActivity(), 40)),loadBitmap);
 			}
 
 		} else {
@@ -1082,7 +1084,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 					// barrage.setUserAvator(list.get(0).getProfileClip());
 					if (!list.get(0).getProfileClip().equals("")) {
 						finalBitmap.display(photoHead, list.get(0)
-								.getProfileClip());
+								.getProfileClip(),loadBitmap);
 					}
 
 				} else {
@@ -1114,7 +1116,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 														.display(
 																photoHead,
 																list2.get(0)
-																		.getProfileClip());
+																		.getProfileClip(),loadBitmap);
 											}
 
 										}
