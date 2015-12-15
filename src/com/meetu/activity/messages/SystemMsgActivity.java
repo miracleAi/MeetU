@@ -69,12 +69,12 @@ public class SystemMsgActivity extends Activity implements
 		bitmapUtils = new BitmapUtils(getApplicationContext());
 		activityDao = new ActivityDao(getApplicationContext());
 		ArrayList<ObjSysMsg> list =  (ArrayList<ObjSysMsg>) getIntent().getSerializableExtra("sysmsg_list");
+		initView();
 		if(list!= null){
 			msgList.clear();
 			msgList.addAll(list);
 			sysAdapter.notifyDataSetChanged();
 		}
-		initView();
 		PreferenceManager.getDefaultSharedPreferences(SystemMsgActivity.this).edit()
 		.putLong(SharepreferencesUtils.SYS_MSG_SCAN, System.currentTimeMillis()).commit();
 	}
