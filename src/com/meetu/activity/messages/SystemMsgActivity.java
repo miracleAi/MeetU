@@ -35,6 +35,7 @@ import com.meetu.tools.DisplayUtils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.nfc.cardemulation.CardEmulation;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -71,13 +72,8 @@ public class SystemMsgActivity extends Activity implements
 		user = AVUser.cast(AVUser.getCurrentUser(), ObjUser.class);
 		bitmapUtils = new BitmapUtils(getApplicationContext());
 		activityDao = new ActivityDao(getApplicationContext());
-		ArrayList<ObjSysMsg> list =  (ArrayList<ObjSysMsg>) getIntent().getSerializableExtra("sysmsg_list");
 		initView();
-		if(list!= null){
-			msgList.clear();
-			msgList.addAll(list);
-			sysAdapter.notifyDataSetChanged();
-		}
+		loadSysMsg();
 		PreferenceManager.getDefaultSharedPreferences(SystemMsgActivity.this).edit()
 		.putLong(SharepreferencesUtils.SYS_MSG_SCAN, System.currentTimeMillis()).commit();
 	}
@@ -99,51 +95,6 @@ public class SystemMsgActivity extends Activity implements
 				finish();
 			}
 		});
-		systemLv.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1,
-					int position, long arg3) {
-				// position -1
-				ObjSysMsg msg = msgList.get(position - 1);
-				switch (msg.getMsgType()) {
-				case Constants.SysMsgTypeText:
-
-					break;
-				case Constants.SysMsgTypeActy:
-					Intent actyIntent = new Intent(SystemMsgActivity.this,
-							HomePageDetialActivity.class);
-					ArrayList<ActivityBean> list = activityDao.queryActyBean(
-							user.getObjectId(), msgList.get(position - 1)
-									.getActy().getObjectId());
-					if (list != null && list.size() > 0) {
-						Bundle bundle = new Bundle();
-						bundle.putSerializable("activityBean", list.get(0));
-						actyIntent.putExtras(bundle);
-						startActivity(actyIntent);
-					}
-					break;
-				case Constants.SysMsgTypeFollow:
-					Intent followIntent = new Intent(SystemMsgActivity.this,
-							UserPagerActivity.class);
-					followIntent.putExtra("userId", msg.getTowardsUser()
-							.getObjectId());
-					startActivity(followIntent);
-					break;
-				case Constants.SysMsgTypeUserPhoto:
-					Intent photoIntent = new Intent(SystemMsgActivity.this,
-							FavorPhotoScanActivity.class);
-					if (msg.getUserPhoto().getPhoto() != null) {
-						photoIntent.putExtra("photo",(Serializable) msg.getUserPhoto());
-						startActivity(photoIntent);
-					}
-					break;
-				default:
-					break;
-				}
-			}
-		});
-
 	}
 
 	private void loadSysMsg() {
@@ -211,7 +162,7 @@ public class SystemMsgActivity extends Activity implements
 		@Override
 		public View getView(int position, View convertView, ViewGroup arg2) {
 			// TODO Auto-generated method stub
-			ObjSysMsg bean = msgList.get(position);
+			final ObjSysMsg bean = msgList.get(position);
 			ViewHolder holder = null;
 			if (convertView == null) {
 				holder = new ViewHolder();
@@ -243,6 +194,7 @@ public class SystemMsgActivity extends Activity implements
 						.findViewById(R.id.text_layout);
 				holder.cardLayout = (LinearLayout) convertView
 						.findViewById(R.id.card_layout);
+				holder.cardClickLayout = (LinearLayout) convertView.findViewById(R.id.card_click_layout);
 				if (bean.getMsgType() == Constants.SysMsgTypeText) {
 					// 文本消息
 					holder.textLayout.setVisibility(View.VISIBLE);
@@ -347,6 +299,44 @@ public class SystemMsgActivity extends Activity implements
 			default:
 				break;
 			}
+			holder.cardClickLayout.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					switch (bean.getMsgType()) {
+					case Constants.SysMsgTypeFollow:
+						Intent followIntent = new Intent(SystemMsgActivity.this,
+								UserPagerActivity.class);
+						followIntent.putExtra("userId", bean.getTowardsUser()
+								.getObjectId());
+						startActivity(followIntent);
+						break;
+					case Constants.SysMsgTypeActy:
+						Intent actyIntent = new Intent(SystemMsgActivity.this,
+								HomePageDetialActivity.class);
+						ArrayList<ActivityBean> list = activityDao.queryActyBean(
+								user.getObjectId(), bean.getActy().getObjectId());
+						if (list != null && list.size() > 0) {
+							Bundle bundle = new Bundle();
+							bundle.putSerializable("activityBean", list.get(0));
+							actyIntent.putExtras(bundle);
+							startActivity(actyIntent);
+						}
+						break;
+					case Constants.SysMsgTypeUserPhoto:
+						Intent photoIntent = new Intent(SystemMsgActivity.this,
+								FavorPhotoScanActivity.class);
+						if (bean.getUserPhoto().getPhoto() != null) {
+							photoIntent.putExtra("photo",(Serializable) bean.getUserPhoto());
+							startActivity(photoIntent);
+						}
+						break;
+					default:
+						break;
+					}
+				}
+			});
 			return convertView;
 		}
 
@@ -364,6 +354,7 @@ public class SystemMsgActivity extends Activity implements
 			ImageView sexImv;
 			RelativeLayout textLayout;
 			LinearLayout cardLayout;
+			LinearLayout cardClickLayout;
 		}
 	}
 }

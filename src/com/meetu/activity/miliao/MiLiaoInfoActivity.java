@@ -26,6 +26,7 @@ import com.meetu.common.Constants;
 import com.meetu.entity.User;
 import com.meetu.entity.UserAbout;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.MessagesDao;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DensityUtil;
 
@@ -79,6 +80,7 @@ OnMiLiaoInfoItemClickCallBack {
 	private String conversationId;// 对话id
 	private List<ObjUser> objUsersList = new ArrayList<ObjUser>();
 	private UserAboutDao userAboutDao;
+	private MessagesDao messageDao;
 	// 会话成员列表
 	List<ObjUser> userList = new ArrayList<ObjUser>();
 	private List<UserAboutBean> beanList = new ArrayList<UserAboutBean>();
@@ -116,6 +118,7 @@ OnMiLiaoInfoItemClickCallBack {
 		}
 		loadBitmap=BitmapFactory.decodeResource(getResources(), R.drawable.mine_likelist_profile_default);
 		userAboutDao = new UserAboutDao(this);
+		messageDao = new MessagesDao(this);
 		if (currentUser != null) {
 			// 强制类型转换
 			userMY = AVUser.cast(currentUser, ObjUser.class);
@@ -369,7 +372,7 @@ OnMiLiaoInfoItemClickCallBack {
 					log.e("zcq", "退出成功");
 					Toast.makeText(getApplicationContext(), "退出成功", Toast.LENGTH_SHORT).show();
 					userAboutDao.deleteUserTypeUserId(userMY.getObjectId(), 2, conversationId, userMY.getObjectId());
-
+					messageDao.deleteConv(userMY.getObjectId(), conversationId);
 					Intent intent=getIntent();
 					setResult(RESULT_OK, intent);
 					finish();

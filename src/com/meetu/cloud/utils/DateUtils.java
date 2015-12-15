@@ -54,10 +54,10 @@ public class DateUtils {
 		if (todayZero - time < 0) {
 			return format(time, DateFormat_Time);
 		}
-		if (todayZero - time < 24) {
+		if (todayZero - time < (24* Time_Of_Hour)) {
 			return "昨天 " + format(time, DateFormat_Time);
 		}
-		if (todayZero - time < 48) {
+		if (todayZero - time < (48* Time_Of_Hour)) {
 			return "前天 " + format(time, DateFormat_Time);
 		}
 		if (year == yearMsg) {

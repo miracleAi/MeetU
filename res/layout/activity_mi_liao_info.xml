@@ -131,10 +131,9 @@
                     
                     android:layout_marginTop="14dp" >
                 <RelativeLayout
-                    android:id="@+id/name_miliao_info_rl"
+                    android:id="@+id/name_miliao_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                
                     android:layout_centerHorizontal="true"
                      >
 
@@ -161,7 +160,7 @@
                 <View
                     android:layout_width="160dp"
                     android:layout_height="1px"
-                    android:layout_below="@id/name_miliao_info_rl"
+                    android:layout_below="@id/name_miliao_info"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="2dp"
                     android:background="#b2ffffff" />
@@ -169,7 +168,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/name_miliao_info_rl"
+                    android:layout_below="@+id/name_miliao_info"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="4dp"
                     android:orientation="horizontal" >
@@ -227,6 +226,7 @@
                     android:id="@+id/recycleview_miliao_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
                     android:layout_marginLeft="34dp"
                     android:layout_marginRight="34dp"
                     android:background="@color/white" />
@@ -241,7 +241,6 @@
                 android:background="@color/white" >
 
                 <TextView
-                    android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -268,7 +267,6 @@
                 android:background="@color/white" >
 
                 <TextView
-                    android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"

@@ -48,6 +48,7 @@
             android:layout_below="@id/photo_item_miliao_info_rl"
             android:layout_centerHorizontal="true"
             android:text="张三"
+            android:layout_marginTop="6dp"
             android:textColor="#606366"
             android:textSize="12sp" />
     </RelativeLayout>
