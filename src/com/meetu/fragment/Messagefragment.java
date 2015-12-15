@@ -113,7 +113,7 @@ OnClickListener {
 
 		loadData();
 		initView();
-
+		loadSysMsg();
 		getConversation();
 		return view;
 

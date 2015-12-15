@@ -188,7 +188,7 @@ public class MinePhotoAdapter extends PagerAdapter {
 					userObjUser = user;
 					TextView name = (TextView) view
 							.findViewById(R.id.name_mine_photoview_fullscreen);
-					name.setText("" + userMy.getNameNick());
+					name.setText("" + userObjUser.getNameNick());
 
 					ImageView photoHead = (ImageView) view
 							.findViewById(R.id.nameheader_mine_photoview_fullscreen_img);

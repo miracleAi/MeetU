@@ -229,6 +229,10 @@
             android:name="com.meetu.activity.mine.ChangeBirthdayActivity"
             android:label="@string/title_activity_change_birthday" >
         </activity>
+         <activity
+            android:name="com.meetu.activity.mine.FavorPhotoScanActivity"
+            android:label="@string/title_activity_change_birthday" >
+        </activity>
         <activity
             android:name="com.meetu.activity.homepage.JoinActivity"
             android:label="@string/title_activity_join" >

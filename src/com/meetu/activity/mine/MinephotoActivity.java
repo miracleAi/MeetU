@@ -10,6 +10,7 @@ import com.avos.avoscloud.LogUtil.log;
 import com.meetu.adapter.MinePhotoAdapter;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjUserPhoto;
+import com.meetu.cloud.utils.DateUtils;
 import com.meetu.cloud.wrap.ObjUserPhotoWrap;
 import com.meetu.entity.PhotoWall;
 
@@ -25,6 +26,7 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MinephotoActivity extends Activity implements OnClickListener,
@@ -32,12 +34,13 @@ public class MinephotoActivity extends Activity implements OnClickListener,
 	private String itemid;
 	private String pid;
 	private PhotoWall dataPhotoWall;
-	private ImageView photo, back, delect, favor;
+	private ImageView photo, back, delect;
 	private ViewPager viewPager;
 	private MinePhotoAdapter adapter;
 	int id;
 	// private List<PhotoWall> photolist=new ArrayList<PhotoWall>();
 	private RelativeLayout backLayout, delectLayout;
+	private TextView dateTv;
 	// 网络数据相关
 	private String photoUrl;
 	private List<ObjUserPhoto> objUserPhotos = new ArrayList<ObjUserPhoto>();
@@ -92,14 +95,13 @@ public class MinephotoActivity extends Activity implements OnClickListener,
 		delectLayout = (RelativeLayout) super
 				.findViewById(R.id.deldect_mine_photoview_fullscreen_rl);
 		delectLayout.setOnClickListener(this);
-		// favor = (ImageView) super.findViewById(R.id.favor_minephoto_mine);
-		// favor.setOnClickListener(this);
+		dateTv = (TextView) findViewById(R.id.date_tv);
 		viewPager = (ViewPager) super.findViewById(R.id.viewpager_photo);
 		adapter = new MinePhotoAdapter(this, objUserPhotos, userId);
 		viewPager.setAdapter(adapter);
 		viewPager.setOnPageChangeListener(this);
 		viewPager.setCurrentItem(id);
-
+		dateTv.setText(DateUtils.format(objUserPhotos.get(positionNow).getCreatedAt().getTime(), DateUtils.DateFormat_Date));
 		if (isMyself == false) {
 			delectLayout.setVisibility(View.GONE);
 		} else {
@@ -165,6 +167,7 @@ public class MinephotoActivity extends Activity implements OnClickListener,
 	public void onPageSelected(int arg0) {
 		// TODO Auto-generated method stub
 		positionNow = arg0;
+		dateTv.setText(DateUtils.format(objUserPhotos.get(positionNow).getCreatedAt().getTime(), DateUtils.DateFormat_Date));
 	}
 
 }

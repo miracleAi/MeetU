@@ -59,9 +59,9 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 	private ArrayList<UserAboutBean> userAboutBeanList = new ArrayList<UserAboutBean>();
 
 	private SeekChatBean seekChatBean = new SeekChatBean();
-	
+
 	private RelativeLayout numberLayout;
-	
+
 	List<String> list=new ArrayList<String>();//存放用户的id
 
 	@Override
@@ -88,7 +88,6 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 			initView();
 			getUserInfo("" + seekChatBean.getCreator().getObjectId());
 			// getMembers(conv);
-
 			setUserInfo();
 		}
 		ViewGroup parent = (ViewGroup) view.getParent();
@@ -124,7 +123,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 		// 觅聊总人数头像
 		numberUserAll = (TextView) view
 				.findViewById(R.id.number_user_fragment_miliao_channel_tv);
-		
+
 		photoManager.setOnClickListener(this);
 
 		if (seekChatBean.getCreator().getProfileClip() != null) {
@@ -139,7 +138,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 		}
 		numberLayout=(RelativeLayout) view.findViewById(R.id.number_user_fragment_miliao_channel_rl);
 		numberLayout.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -148,7 +147,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 				startActivity(intent);
 			}
 		});
-		
+
 		titile.setText("" + seekChatBean.getTitle());
 		numberAll.setText("" + seekChatBean.getMembers().size());
 		numberFavor.setText("" + seekChatBean.getFolloweeCount());
@@ -239,7 +238,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 	// * @date 2015-11-17
 	// */
 	private void getUsersListInfo(final List<String> list) {
-		memberUserList = new ArrayList<ObjUser>();
+		memberUserList.clear();
 
 		for (int i = 0; i < list.size(); i++) {
 			ObjUserWrap.getObjUser(list.get(i), new ObjUserInfoCallback() {
@@ -256,41 +255,46 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 						if (memberUserList.size() == list.size()) {
 							log.e("zcq", "设置头像");
 							if (list.size() >= 5) {
-								if (memberUserList.get(4).getProfileClip()
-										.getUrl() != null) {
+								if (memberUserList.get(4).getProfileClip()!= null) {
 									finalBitmap.display(fiveUser,
 											memberUserList.get(4)
-													.getProfileClip().getUrl());
+											.getProfileClip().getUrl());
 									fiveUser.setOnClickListener(MiliaoChannelFragment.this);
 								}else{
 									fiveUser.setImageResource(R.drawable.acty_show_img_profiles);
 								}
 
+							}else{
+								fiveUser.setImageResource(R.drawable.acty_show_img_profiles);
 							}
 							if (list.size() >= 4) {
 								if (memberUserList.get(3).getProfileClip()
 										.getUrl() != null) {
 									finalBitmap.display(fourUser,
 											memberUserList.get(3)
-													.getProfileClip().getUrl());
+											.getProfileClip().getUrl());
 									fourUser.setOnClickListener(MiliaoChannelFragment.this);
 								}else{
 									fourUser.setImageResource(R.drawable.acty_show_img_profiles);
 								}
 
+							}else{
+								fourUser.setImageResource(R.drawable.acty_show_img_profiles);
 							}
 							if (list.size() >= 3) {
 								if (memberUserList.get(2).getProfileClip()
 										.getUrl() != null) {
 									finalBitmap.display(threeUser,
 											memberUserList.get(2)
-													.getProfileClip().getUrl());
+											.getProfileClip().getUrl());
 									threeUser
-											.setOnClickListener(MiliaoChannelFragment.this);
+									.setOnClickListener(MiliaoChannelFragment.this);
 								}else{
 									threeUser.setImageResource(R.drawable.acty_show_img_profiles);
 								}
 
+							}else{
+								threeUser.setImageResource(R.drawable.acty_show_img_profiles);
 							}
 							if (list.size() >= 2) {
 								if (memberUserList.get(1).getProfileClip()
@@ -302,17 +306,19 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 									twoUser.setImageResource(R.drawable.acty_show_img_profiles);
 								}
 
+							}else{
+								twoUser.setImageResource(R.drawable.acty_show_img_profiles);
 							}
 							if (list.size() >= 1) {
-								if (memberUserList.get(0).getProfileClip()
-										.getUrl() != null) {
+								if (memberUserList.get(0).getProfileClip()!= null) {
 									finalBitmap.display(oneUser, memberUserList
 											.get(0).getProfileClip().getUrl());
 									oneUser.setOnClickListener(MiliaoChannelFragment.this);
 								}else{
 									oneUser.setImageResource(R.drawable.acty_show_img_profiles);
 								}
-
+							}else{
+								oneUser.setImageResource(R.drawable.acty_show_img_profiles);
 							}
 						}
 
@@ -345,83 +351,45 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 
 		log.e("zcq", "设置头像");
 
-		 list = new ArrayList<String>();
-		
-//		for (int i = 0; i < seekChatBean.getMembers().size(); i++) {
-//			list.add("" + seekChatBean.getMembers().get(i).get("userId"));
-//		}
+		list = new ArrayList<String>();
+
 		List<UserAboutBean> list2=userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, seekChatBean.getConversationId());
 		for(int i=0;i<list2.size();i++){
 			list.add(list2.get(i).getAboutUserId());
 		}
 		getUsersListInfo(list);
-		
+
 		numberUserAll.setText("" + list.size());
 
 	}
-	
-//	public void setUserInfoNone(){
-//		log.e("zcq", "设置头像");
-//
-//		 list = new ArrayList<String>();
-//		
-////		for (int i = 0; i < seekChatBean.getMembers().size(); i++) {
-////			list.add("" + seekChatBean.getMembers().get(i).get("userId"));
-////		}
-//		List<UserAboutBean> list2=userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, seekChatBean.getConversationId());
-//		for(int i=0;i<list2.size();i++){
-//			if(!user.getObjectId().equals(list2.get(i).getAboutUserId())){
-//				list.add(list2.get(i).getAboutUserId());
-//			}
-//			
-//		}
-//		getUsersListInfo(list);
-//	}
+
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.one_photoHead_channel_img:
 			Intent one = new Intent(getActivity(), UserPagerActivity.class);
-//			log.e("lucifer", "userId0=="+ seekChatBean.getMembers().get(0).get("userId"));
-//			one.putExtra("userId","" + seekChatBean.getMembers().get(0).get("userId"));
-			one.putExtra("userId", list.get(0));
+			one.putExtra("userId", memberUserList.get(0).getObjectId());
 			startActivity(one);
 			break;
 		case R.id.two_photoHead_channel_img:
 			Intent two = new Intent(getActivity(), UserPagerActivity.class);
-//			log.e("lucifer", "userId0=="
-//					+ seekChatBean.getMembers().get(1).get("userId"));
-//			two.putExtra("userId",
-//					"" + seekChatBean.getMembers().get(1).get("userId"));
-			two.putExtra("userId", list.get(1));
+			two.putExtra("userId", memberUserList.get(1).getObjectId());
 			startActivity(two);
 			break;
 		case R.id.three_photoHead_channel_img:
 			Intent three = new Intent(getActivity(), UserPagerActivity.class);
-//			log.e("lucifer", "userId0=="
-//					+ seekChatBean.getMembers().get(2).get("userId"));
-//			three.putExtra("userId",
-//					"" + seekChatBean.getMembers().get(2).get("userId"));
-			three.putExtra("userId", list.get(2));
+			three.putExtra("userId", memberUserList.get(2).getObjectId());
 			startActivity(three);
 			break;
 		case R.id.four_photoHead_channel_img:
 			Intent four = new Intent(getActivity(), UserPagerActivity.class);
-//			log.e("lucifer", "userId0=="
-//					+ seekChatBean.getMembers().get(3).get("userId"));
-//			four.putExtra("userId",
-//					"" + seekChatBean.getMembers().get(3).get("userId"));
-			four.putExtra("userId", list.get(3));
+			four.putExtra("userId", memberUserList.get(3).getObjectId());
 			startActivity(four);
 			break;
 		case R.id.five_photoHead_channel_img:
 			Intent five = new Intent(getActivity(), UserPagerActivity.class);
-//			log.e("lucifer", "userId0=="
-//					+ seekChatBean.getMembers().get(4).get("userId"));
-//			five.putExtra("userId",
-//					"" + seekChatBean.getMembers().get(4).get("userId"));
-			five.putExtra("userId", list.get(4));
+			five.putExtra("userId", memberUserList.get(4).getObjectId());
 			startActivity(five);
 			break;
 		case R.id.photoHead_manage_miliao_channel_img:
