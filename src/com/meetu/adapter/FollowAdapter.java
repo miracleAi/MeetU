@@ -12,6 +12,7 @@ import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.sqlite.UserDao;
+import com.meetu.tools.DensityUtil;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -108,7 +109,7 @@ public class FollowAdapter extends BaseAdapter {
 						userDao.insertOrReplaceUser(user);
 						if (user.getProfileClip() != null) {
 							bitmapUtils.display(holder.avatorImv, user
-									.getProfileClip().getUrl());
+									.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(context, 40), DensityUtil.dip2px(context, 40)));							
 						}
 						holder.nameTv.setText(user.getNameNick());
 						holder.schoolTv.setText(user.getSchool());

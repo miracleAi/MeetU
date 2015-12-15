@@ -15,6 +15,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.handmark.pulltorefresh.library.R.layout;
 import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
+import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
+import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 import com.meetu.activity.homepage.HomePageDetialActivity;
 import com.meetu.activity.mine.FavorListActivity;
 import com.meetu.activity.mine.FavorPhotoScanActivity;
@@ -30,11 +33,14 @@ import com.meetu.cloud.wrap.ObjSysMsgWrap;
 import com.meetu.common.Constants;
 import com.meetu.common.SharepreferencesUtils;
 import com.meetu.sqlite.ActivityDao;
+import com.meetu.tools.BitmapCut;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -280,7 +286,7 @@ public class SystemMsgActivity extends Activity implements
 						+ followUser.getNameNick() + "已相互关注");
 				if (user.getProfileClip() != null) {
 					bitmapUtils.display(holder.msgImv, followUser
-							.getProfileClip().getUrl());
+							.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(SystemMsgActivity.this, 40), DensityUtil.dip2px(SystemMsgActivity.this, 40)));
 				} else {
 					holder.msgImv
 							.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
@@ -310,7 +316,26 @@ public class SystemMsgActivity extends Activity implements
 							.getTime(), DateUtils.DateFormat_YearTime));
 					if (acty.getActivityCover() != null) {
 						bitmapUtils.display(holder.msgImv, acty
-								.getActivityCover().getUrl());
+								.getActivityCover().getThumbnailUrl(true, DensityUtil.dip2px(SystemMsgActivity.this, 40), DensityUtil.dip2px(SystemMsgActivity.this, 40)),new BitmapLoadCallBack<ImageView>() {
+
+									@Override
+									public void onLoadCompleted(ImageView imageView,
+											String arg1, Bitmap bitmap,
+											BitmapDisplayConfig arg3,
+											BitmapLoadFrom arg4) {
+										// TODO Auto-generated method stub
+										bitmap=BitmapCut.toRoundCorner(bitmap, 12);
+										imageView.setImageBitmap(bitmap);
+									}
+
+									@Override
+									public void onLoadFailed(ImageView arg0,
+											String arg1, Drawable arg2) {
+										// TODO Auto-generated method stub
+										
+									}
+								});
+						
 					} else {
 						holder.msgImv
 								.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
@@ -334,7 +359,7 @@ public class SystemMsgActivity extends Activity implements
 							.getTime(), DateUtils.DateFormat_YearTime));
 					if (photo.getPhoto() != null) {
 						bitmapUtils.display(holder.msgImv, photo.getPhoto()
-								.getUrl());
+								.getThumbnailUrl(true, DensityUtil.dip2px(SystemMsgActivity.this, 40), DensityUtil.dip2px(SystemMsgActivity.this, 40)));
 					} else {
 						holder.msgImv
 								.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);

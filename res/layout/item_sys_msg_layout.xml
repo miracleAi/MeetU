@@ -106,7 +106,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:drawableLeft="@drawable/mine_alter_img_point_blue"
-                    android:drawablePadding="5dp"
+                    android:drawablePadding="10dp"
                     android:text="新人加入了，打个招呼吧"
                     android:textColor="#a0a0a0"
                     android:textSize="12dp" />
@@ -129,6 +129,7 @@
                         android:id="@+id/msg_photo_img"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        
                         android:src="@drawable/acty_barrage_img_comment_profiles_default" />
                 </RelativeLayout>
 

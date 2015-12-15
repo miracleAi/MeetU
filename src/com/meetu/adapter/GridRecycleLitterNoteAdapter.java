@@ -8,6 +8,7 @@ import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogUtil.log;
 import com.baidu.a.a.a.c;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
@@ -213,6 +214,11 @@ public class GridRecycleLitterNoteAdapter extends
 
 			@Override
 			public void callback(ObjUser user, AVException e) {
+				
+				if(e!=null){
+					log.e("zcq", e);
+					return;
+				}
 
 				if (user.getProfileClip() != null) {
 					finalBitmap.display(holder.ivImg, user.getProfileClip()
