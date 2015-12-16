@@ -272,8 +272,10 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 					return false;
 				}
 			}
+			return dir.delete();
+		}else{
+			return false;
 		}
-		return dir.delete();
 	} 
 	/**
 	 * 进入市场评分
