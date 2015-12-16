@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"      
              
-        android:background="@drawable/massage_letter_img_dialog" >
+        android:background="@drawable/massage_letter_img_dialog_new" >
 
         <TextView
             android:id="@+id/content_note_channels_tv"

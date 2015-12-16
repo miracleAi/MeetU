@@ -163,6 +163,14 @@ public class BarrageActivity extends Activity {
 
 		topTitle = (TextView) super.findViewById(R.id.title_top_barrary_tv);
 		back = (RelativeLayout) super.findViewById(R.id.back_barrage_rl);
+		back.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
 		userJoinList = (RelativeLayout) super
 				.findViewById(R.id.userjoin_barrary_rl);
 

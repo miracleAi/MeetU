@@ -14,7 +14,7 @@
 
      <RelativeLayout
          android:id="@+id/back_mine_photoview_fullscreen_rl"
-         android:layout_width="44dp"
+         android:layout_width="54dp"
          android:layout_height="44dp"
          android:background="@drawable/kongjianruoqu_bg"
          android:gravity="center" >
@@ -29,10 +29,10 @@
      
      <RelativeLayout 
          android:id="@+id/deldect_mine_photoview_fullscreen_rl"
-         android:layout_width="44dp"
+         android:layout_width="54dp"
          android:layout_height="44dp"
          android:layout_alignParentRight="true"
-         android:layout_marginRight="10dp"
+         
          android:background="@drawable/kongjianruoqu_bg"
          android:gravity="center"
          >

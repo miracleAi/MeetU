@@ -452,7 +452,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="5dp"
             android:layout_toLeftOf="@id/favornumber_homepage_detail"
-            android:background="@drawable/kongjianruoqu_bg"
+           
             android:gravity="center" >
 
             <ImageView

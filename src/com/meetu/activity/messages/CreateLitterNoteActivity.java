@@ -158,7 +158,11 @@ OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.photoUpdate_create_note_img:
-			showDialog();
+		//	showDialog();
+			Intent intent1 = new Intent(Intent.ACTION_PICK, null);
+			intent1.setDataAndType(
+					MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+			startActivityForResult(intent1, 11);
 			break;
 		case R.id.send_notes_top_rl:
 			// fasong
@@ -181,7 +185,11 @@ OnClickListener {
 			break;
 		case R.id.uploadAgain_create_note_img:
 			// 重新上传
-			showDialog();
+		//	showDialog();
+			Intent intent2 = new Intent(Intent.ACTION_PICK, null);
+			intent2.setDataAndType(
+					MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+			startActivityForResult(intent2, 11);
 			break;
 		case R.id.back_notes_top_rl:
 			finish();

@@ -175,12 +175,20 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.photoUpdate_creationChat_rl:
 
-			showDialog();
+		//	showDialog();
+			Intent intent1 = new Intent(Intent.ACTION_PICK, null);
+			intent1.setDataAndType(
+					MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+			startActivityForResult(intent1, 11);
 
 			break;
 		case R.id.uploadAgain_creationChat_img:
 			// Toast.makeText(this, "重新上传", Toast.LENGTH_SHORT).show();
-			showDialog();
+		//	showDialog();
+			Intent intent2 = new Intent(Intent.ACTION_PICK, null);
+			intent2.setDataAndType(
+					MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+			startActivityForResult(intent2, 11);
 			break;
 		case R.id.wancheng_creationChat_rl:
 			if (updateText.getText().length() == 0) {
@@ -463,7 +471,7 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		Intent intent = getIntent();
-		setResult(RESULT_OK, intent);
+		setResult(RESULT_CANCELED, intent);
 		finish();
 		super.onBackPressed();
 	}
