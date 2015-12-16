@@ -17,6 +17,7 @@ import com.meetu.common.Constants;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.sqlite.ChatmsgsDao;
 import com.meetu.sqlite.MessagesDao;
+import com.meetu.tools.DensityUtil;
 
 public class DefaultMessageHandler extends AVIMMessageHandler {
 	MessagesDao msgDao = null;
@@ -133,7 +134,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
 		chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
 		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
-		chatBean.setImgMsgImageUrl(msg.getFileUrl());
+		chatBean.setImgMsgImageUrl(msg.getAVFile().getThumbnailUrl(true, DensityUtil.dip2px(context, 160), DensityUtil.dip2px(context, 160),100,"jpg"));
 		chatBean.setImgMsgImageHeight(msg.getHeight());
 		chatBean.setImgMsgImageWidth(msg.getWidth());
 		// 消息插入数据库

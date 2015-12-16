@@ -33,6 +33,7 @@ public class CityDao {
 
 			list.add(item);
 		}
+		database.close();
 		return list;
 
 	}
@@ -66,6 +67,7 @@ public class CityDao {
 
 			list.add(item);
 		}
+		database.close();
 		return list;
 
 	}
@@ -101,6 +103,7 @@ public class CityDao {
 
 			list.add(item);
 		}
+		database.close();
 		return list;
 
 	}
@@ -138,6 +141,7 @@ public class CityDao {
 
 			list.add(item);
 		}
+		database.close();
 		return list;
 	}
 
@@ -175,6 +179,7 @@ public class CityDao {
 
 			list.add(item);
 		}
+		database.close();
 		return list;
 
 	}
@@ -210,6 +215,7 @@ public class CityDao {
 
 			list.add(item);
 		}
+		database.close();
 		return list;
 
 	}

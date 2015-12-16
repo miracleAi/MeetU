@@ -69,6 +69,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 	private ObjUser user = null;
 	FinalBitmap finalBitmap;
 	Bitmap loadBitmap;
+	int photoW,photoH;
 
 	public ChatmsgsListViewAdapter(Context context, List<Chatmsgs> chatmsgsList,Handler handler) {
 		this.mContext = context;
@@ -218,6 +219,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						.findViewById(R.id.userNamechat_item_photo_left_tv);
 				holder.resentLayout = (RelativeLayout) convertView
 						.findViewById(R.id.fail_chat_item_photo_left_rl);
+			//	holder.leftPhotoUp=(ImageView) convertView.findViewById(R.id.photo_up_chat_item_left_img);
+				
 				break;
 
 			case Constants.SHOW_MEMBERCHANGE:
@@ -429,7 +432,35 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			if (item.getImgMsgImageUrl() != null
 					&& !item.getImgMsgImageUrl().equals("")) {
 				finalBitmap.display(holder.photo, item.getImgMsgImageUrl());
+	
+	//计算图片 比例 大小
+	/*			if(item.getImgMsgImageWidth()>item.getImgMsgImageHeight()){
+					if(item.getImgMsgImageWidth()<DensityUtil.dip2px(mContext, 160)){
+						photoW=item.getImgMsgImageWidth();
+						photoH=item.getImgMsgImageHeight();
+					}else{
+						photoW=DensityUtil.dip2px(mContext, 160);
+						photoH=(int)((double)item.getImgMsgImageHeight()/((double)((double)item.getImgMsgImageWidth()/(double)photoW)));
+					}
+					
+				}else{
+					if(item.getImgMsgImageHeight()<DensityUtil.dip2px(mContext, 160)){
+						photoW=item.getImgMsgImageWidth();
+						photoH=item.getImgMsgImageHeight();
+					}else{
+						photoH=DensityUtil.dip2px(mContext, 160);
+						photoW=(int)((double)item.getImgMsgImageWidth()/((double)((double)item.getImgMsgImageHeight()/(double)photoH)));
+					}
+					
+				}*/
 			}
+			
+//			RelativeLayout.LayoutParams params= (LayoutParams) holder.leftPhotoUp.getLayoutParams();
+//			params.width=photoW;
+//			params.height=photoH;
+//			holder.leftPhotoUp.setLayoutParams(params);
+//			log.e("image wh==", "photoW=="+photoW+"photoH=="+photoH+"w=="+item.getImgMsgImageWidth()+" h=="+item.getImgMsgImageHeight());
+//			finalBitmap.display(holder.photo, item.getImgMsgImageUrl(), photoW, photoH);
 
 			if (item.getIsShowTime() == 1) {
 				long time = Long.parseLong(item.getSendTimeStamp());
@@ -609,6 +640,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 		private TextView userName;
 		private ImageView failPhoto;
 		private RelativeLayout resentLayout;
+		private ImageView leftPhotoUp;
 	}
 
 }

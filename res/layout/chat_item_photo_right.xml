@@ -50,21 +50,23 @@
 
         <FrameLayout
             android:id="@+id/photo_chat_item_right_fram"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignRight="@+id/userName_chat_item_photo_right_tv"
             android:layout_below="@+id/userName_chat_item_photo_right_tv"
             android:layout_marginTop="4dp" >
 
             <ImageView
                 android:id="@+id/photo_chat_item_right_img"
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"                
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" 
+                android:maxWidth="160dp"
+                android:maxHeight="160dp"               
                 android:adjustViewBounds="true" />
 
             <RelativeLayout
-                android:layout_width="160dp"
-                android:layout_height="160dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="#60000000"
                 android:visibility="gone" >
 

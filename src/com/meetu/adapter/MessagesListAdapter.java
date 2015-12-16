@@ -179,7 +179,7 @@ public class MessagesListAdapter extends BaseAdapter {
 
 		} else {
 			holder.noReadLayout.setVisibility(View.VISIBLE);
-			holder.tvNoReadMessages.setText("" + item.getUnreadMsgCount());
+			holder.tvNoReadMessages.setText("" + item.getUnreadMsgCount()+"999+");
 		}
 
 		if (item.getConversationType() == Constants.ACTYSG) {

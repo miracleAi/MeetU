@@ -1279,7 +1279,7 @@ OnItemClickListener {
 		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
 		chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
 		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
-		chatBean.setImgMsgImageUrl(msg.getFileUrl());
+		chatBean.setImgMsgImageUrl(msg.getAVFile().getThumbnailUrl(true, DensityUtil.dip2px(this, 160), DensityUtil.dip2px(this, 160),100,"jpg"));
 		chatBean.setImgMsgImageHeight(msg.getHeight());
 		chatBean.setImgMsgImageWidth(msg.getWidth());
 
