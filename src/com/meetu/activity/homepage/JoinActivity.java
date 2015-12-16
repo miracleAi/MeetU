@@ -362,7 +362,9 @@ OnItemClickListener {
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long id) {
 		if(!isJoin){
-			if(tickets.get(position).getTicketCount()<=0){
+			int number = Integer.valueOf(tickets.get(position).getTicketCount())
+					- Integer.valueOf(tickets.get(position).getTicketSaleCount());
+			if(number<=0){
 				Toast.makeText(JoinActivity.this, "亲爱的，这个票种竟然没啦", 1000).show();
 				return;
 			}

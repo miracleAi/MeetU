@@ -423,7 +423,6 @@ OnClickListener {
 
 				if (e != null) {
 					//获取失败，点击屏幕重新加载
-
 					log.e("zcq 加载失败异常", e);
 					noneFailLayout.setVisibility(View.VISIBLE);
 					nonoTextView.setVisibility(View.GONE);

@@ -15,7 +15,6 @@
             android:layout_height="44dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            
             android:scaleType="center"
             android:src="@drawable/navi_btn_back_blue" />
 
@@ -28,6 +27,11 @@
             android:textColor="#a0a0a0"
             android:textSize="18sp" />
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#cccccc" />
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/system_msg_lv"
