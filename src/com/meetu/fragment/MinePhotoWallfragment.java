@@ -15,6 +15,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+import com.lidroid.xutils.BitmapUtils;
 import com.meetu.activity.mine.MinephotoActivity;
 import com.meetu.activity.mine.UpdatepictureActivity;
 import com.meetu.adapter.PhotoWallAdapter;
@@ -66,7 +67,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
-		implements com.meetu.adapter.UserPhotoWallAdapter.OnItemClickCallBack {
+implements com.meetu.adapter.UserPhotoWallAdapter.OnItemClickCallBack {
 
 	private View view;
 	private LinearLayout newsList;
@@ -87,7 +88,7 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 	private int mScrollY;
 	private int mPosition;
 	private static final String ARG_POSITION = "position";
-	
+
 	//空状态、
 	private RelativeLayout noneOrFailLayout;
 	private TextView noneTextView;
@@ -131,7 +132,7 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 			}
 			view = inflater.inflate(R.layout.fragment_mine_photo_wall, null);
 			mPosition = getArguments().getInt(ARG_POSITION);
-			
+
 			noneOrFailLayout=(RelativeLayout) view.findViewById(R.id.none_or_mine_photo_fragment_rl);
 			noneTextView=(TextView) view.findViewById(R.id.none_mine_photo_fragment_tv);
 			failTextView=(TextView) view.findViewById(R.id.fail_mine_photo_fragment_tv);
@@ -160,18 +161,16 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
 				mScrollY += dy;
+				float y = recyclerView.getTranslationY();
+				log.d("mytest", "tans---"+y);
+				log.d("mytest", "dy---"+dy);
 				if (mScrollTabHolder != null) {
-					log.d("mytest", "zhixing");
-					if(mScrollY<=0){
-						mScrollY = 0;
-						mLayoutMgr.scrollToPositionWithOffset(0, -mScrollY);
-					}
 					mScrollTabHolder.onRecyclerViewScroll(recyclerView,
 							mScrollY, mPosition);
 				}
 			}
 		});
-		
+
 	}
 
 	public void setGridViewHeightaListener(
@@ -197,7 +196,7 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 					noneTextView.setVisibility(View.GONE);
 					failTextView.setVisibility(View.VISIBLE);
 					noneOrFailLayout.setOnClickListener(new OnClickListener() {
-						
+
 						@Override
 						public void onClick(View arg0) {
 							// TODO Auto-generated method stub
@@ -279,7 +278,7 @@ public class MinePhotoWallfragment extends ScrollTabHolderMineupFragment
 	 */
 	public void reflesh() {
 		loaddata();
-		
+
 	}
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {

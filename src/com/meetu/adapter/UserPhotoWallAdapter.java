@@ -71,7 +71,7 @@ public class UserPhotoWallAdapter extends
 		width = DisplayUtils.getWindowWidth((Activity) context)
 				- DensityUtil.dip2px(context, 28);
 		mContext = context;
-		bitmapUtils = new BitmapUtils(mContext.getApplicationContext());
+		this.bitmapUtils = new BitmapUtils(mContext);
 		MyApplication app = (MyApplication) context.getApplicationContext();
 		finalBitmap = app.getFinalBitmap();
 	}

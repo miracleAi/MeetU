@@ -26,6 +26,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
+import com.lidroid.xutils.BitmapUtils;
 import com.meetu.activity.mine.MinephotoActivity;
 import com.meetu.adapter.PhotoWallAdapter.GridViewHeightaListener;
 import com.meetu.adapter.UserPhotoWallAdapter;
@@ -70,7 +71,6 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements
 		private RelativeLayout noneOrFailLayout;
 		private TextView noneTextView;
 		private TextView failTextView;
-
 	public UserPhotoFragment() {
 		// TODO Auto-generated constructor stub
 	}
@@ -143,12 +143,10 @@ public class UserPhotoFragment extends ScrollTabHolderFragment implements
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
 				mScrollY += dy;
-				if(mScrollY<=0){
-					mScrollY = 0;
-					mLayoutMgr.scrollToPositionWithOffset(0, -mScrollY);
-				}
+				float y = recyclerView.getTranslationY();
+				log.d("mytest", "tans---"+y);
+				log.d("mytest", "dy---"+dy);
 				if (mScrollTabHolder != null) {
-					log.d("mytest", "zhixing");
 					mScrollTabHolder.onRecyclerViewScroll(recyclerView,
 							mScrollY, mPosition);
 				}
