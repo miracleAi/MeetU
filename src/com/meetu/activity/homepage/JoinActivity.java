@@ -506,10 +506,10 @@ OnItemClickListener {
 		// TODO Auto-generated method stub
 		Map<String, String> mapOptional = new HashMap<String, String>();
 		mapOptional.put("phone", "android");
-
+		int payPrice = (int) (price*100);
 		BCPay.getInstance(JoinActivity.this).reqAliPaymentAsync(
 				activityBean.getTitle()+"报名",
-				1,
+				payPrice,
 				orderId,
 				mapOptional,
 				bcCallback);
@@ -522,13 +522,13 @@ OnItemClickListener {
 		Map<String, String> mapOptional = new HashMap<String, String>();
 
 		mapOptional.put("phone", "android");
-
+		int payPrice = (int) (price*100);
 		if (BCPay.isWXAppInstalledAndSupported() &&
 				BCPay.isWXPaySupported()) {
 
 			BCPay.getInstance(JoinActivity.this).reqWXPaymentAsync(
 					activityBean.getTitle()+"报名",               //订单标题
-					1,                           //订单金额(分)
+					payPrice,                           //订单金额(分)
 					orderId,  //订单流水号
 					mapOptional,            //扩展参数(可以null)
 					bcCallback);            //支付完成后回调入口
