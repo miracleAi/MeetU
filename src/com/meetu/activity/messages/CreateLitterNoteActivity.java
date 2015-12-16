@@ -80,7 +80,11 @@ OnClickListener {
 	private FinalBitmap finalBitmap;
 	private ProgressBar noteProgre;
 	boolean isUpEnd = true;
-	Uri imageUri;
+	public static final File FILE_SDCARD = Environment
+			.getExternalStorageDirectory();
+	public static final File FILE_LOCAL = new File(FILE_SDCARD, "meetu");
+	Uri imageUri;//The Uri to store the big bitmap
+	Bitmap headerPortait;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -100,7 +104,10 @@ OnClickListener {
 		userId = getIntent().getStringExtra("userId");
 		log.e("zcq", "userId==" + userId);
 		initView();
-
+		// 生成裁剪保存目录
+		if (!FILE_LOCAL.exists()) {
+			FILE_LOCAL.mkdirs();
+		}
 		getUserInfo(userId);
 	}
 
@@ -158,7 +165,7 @@ OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.photoUpdate_create_note_img:
-		//	showDialog();
+			//	showDialog();
 			Intent intent1 = new Intent(Intent.ACTION_PICK, null);
 			intent1.setDataAndType(
 					MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
@@ -185,7 +192,6 @@ OnClickListener {
 			break;
 		case R.id.uploadAgain_create_note_img:
 			// 重新上传
-		//	showDialog();
 			Intent intent2 = new Intent(Intent.ACTION_PICK, null);
 			intent2.setDataAndType(
 					MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
@@ -261,7 +267,8 @@ OnClickListener {
 		switch (requestCode) {
 		case 11:
 			if (resultCode == this.RESULT_OK) {
-				imageUri = data.getData();
+				File f = new File(FILE_LOCAL, String.valueOf(System.currentTimeMillis())+".png");
+				imageUri = Uri.fromFile(f);
 				cropPhoto(data.getData());// 裁剪图片
 			}
 			break;
@@ -269,7 +276,6 @@ OnClickListener {
 			if (resultCode == this.RESULT_OK) {
 				File temp = new File(Environment.getExternalStorageDirectory()
 						+ "/photo_note.png");
-				imageUri = Uri.fromFile(temp);
 				cropPhoto(Uri.fromFile(temp));// 裁剪图片
 			}
 
@@ -291,22 +297,28 @@ OnClickListener {
 				}
 			}*/
 			if(imageUri != null){
-				Bitmap headerPortait= decodeUriAsBitmap(imageUri);
-				if (headerPortait != null) {
-					photoPath = saveHeadImg(headerPortait);
-					photo.setImageBitmap(headerPortait);
-
-					photoUpdateLayout.setVisibility(View.GONE);
-					photoUpdateLayout.setFocusable(false);
-					photoLayout.setVisibility(View.VISIBLE);
-					uploadAgain.setFocusable(true);
-					if(!headerPortait.isRecycled()){ 
-						// 回收并且置为null
-						headerPortait.recycle(); 
-						headerPortait = null; 
-					}  
+				if(headerPortait != null && !headerPortait.isRecycled()){
+					headerPortait.recycle();
+					headerPortait = null;
 				}
-				imageUri = null;
+				log.e("图片处理", "bbb");
+				try {
+					headerPortait = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+					if (headerPortait != null) {
+						photoPath = saveHeadImg(headerPortait);
+						photo.setImageBitmap(headerPortait);
+						photoUpdateLayout.setVisibility(View.GONE);
+						photoUpdateLayout.setFocusable(false);
+						photoLayout.setVisibility(View.VISIBLE);
+						uploadAgain.setFocusable(true);
+					}
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+					return;
+				}catch (OutOfMemoryError e) {
+					// TODO: handle exception
+					return;
+				}
 			}
 			break;
 
@@ -321,6 +333,9 @@ OnClickListener {
 			bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			return null;
+		}catch (OutOfMemoryError e) {
+			// TODO: handle exception
 			return null;
 		}
 		return bitmap;
@@ -357,12 +372,6 @@ OnClickListener {
 
 	}
 
-	public Bitmap readHead() {
-		String file = Environment.getExternalStorageDirectory()
-				+ "/photo_note.png";
-		return BitmapFactory.decodeFile(file);
-	}
-
 	/**
 	 * 调用拍照的裁剪功能
 	 * 
@@ -376,12 +385,13 @@ OnClickListener {
 		intent.setDataAndType(uri, "image/*");
 		intent.putExtra("crop", "true");
 		// aspectX aspectY 是宽和搞的比例
-		intent.putExtra("aspectX", 1);
+		intent.putExtra("aspectX", 1.2);
 		intent.putExtra("aspectY", 1);
 		// // outputX outputY 是裁剪图片宽高
-		intent.putExtra("outputX", 605);
-		intent.putExtra("outputY", 500);
-		//intent.putExtra("return-data", true);
+		intent.putExtra("outputX", 928);
+		intent.putExtra("outputY", 775);
+		intent.putExtra("return-data", false);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 		intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
 		intent.putExtra("noFaceDetection", true); // no face detection
 		startActivityForResult(intent, 33);
@@ -507,5 +517,13 @@ OnClickListener {
 			}
 		});
 	}
-
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		if(headerPortait != null){
+			headerPortait.recycle();
+			headerPortait = null;
+		}
+	}
 }
