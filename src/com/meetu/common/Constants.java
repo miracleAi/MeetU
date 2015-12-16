@@ -5,6 +5,8 @@ import com.avos.avoscloud.AVFile;
 public class Constants {
 	// 消息接收广播
 	public static final String RECEIVE_MSG = "receive_msg";
+	public static final String LOGIN_REGISTOR_FINISH = "loginOrRegistorFinish";
+	public static final String MAIN_FINISH = "main_finish";
 	/**
 	 * 上传头像相关
 	 */

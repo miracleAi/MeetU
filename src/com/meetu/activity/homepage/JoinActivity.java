@@ -459,6 +459,7 @@ OnItemClickListener {
 									"报名失败",
 									Toast.LENGTH_SHORT)
 									.show();
+							isJoin = false;
 						} else {
 							isJoin = true;
 							activityOrder = order;
@@ -495,7 +496,9 @@ OnItemClickListener {
 				// TODO Auto-generated method stub
 				if(e == null){
 					activityOrder = order;
-					isJoin = true;
+					if(order.getOrderStatus()== Constants.OrderStatusPaySuccess){
+						isJoin = true;
+					}
 					updateView();
 				}
 			}

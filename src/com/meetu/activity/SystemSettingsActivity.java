@@ -15,6 +15,7 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.GetDataCallback;
 import com.avos.avoscloud.ProgressCallback;
 import com.avos.avoscloud.LogUtil.log;
+import com.meetu.MainActivity;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjGlobalCallback;
 import com.meetu.cloud.object.ObjGlobalAndroid;
@@ -22,6 +23,7 @@ import com.meetu.cloud.utils.SystemUtils;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjGlobalAndroidWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
+import com.meetu.common.Constants;
 import com.meetu.myapplication.MyApplication;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
@@ -367,7 +369,13 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 				}else if(result){
 					log.e("zcq", "长连接注销成功");
 					ObjUserWrap.logOut();
+					Intent finishIntent = new Intent(Constants.MAIN_FINISH);
+					sendBroadcast(finishIntent);
 					Toast.makeText(getApplicationContext(), "退出", Toast.LENGTH_SHORT).show();	
+					/*Intent i = getBaseContext().getPackageManager() 
+							.getLaunchIntentForPackage(getBaseContext().getPackageName()); 
+					i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+					startActivity(i);*/
 					Intent intent=new Intent(SystemSettingsActivity.this,LoginActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(intent);

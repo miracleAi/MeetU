@@ -15,6 +15,7 @@ import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjExecResult;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.cloud.wrap.ObjWrap;
+import com.meetu.common.Constants;
 import com.meetu.myapplication.MyApplication;
 
 import android.os.Bundle;
@@ -132,6 +133,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 									MainActivity.class);
 							intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							startActivity(intent);
+							Intent finishIntent = new Intent(Constants.LOGIN_REGISTOR_FINISH);
+							sendBroadcast(finishIntent);
+							finish();
 
 							// if(MyApplication.isChatLogin){
 							// Intent intent=new

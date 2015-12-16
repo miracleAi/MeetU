@@ -1,9 +1,14 @@
 package com.meetu.activity;
 
+import com.meetu.common.Constants;
+
 import cc.imeetu.R;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -14,6 +19,7 @@ public class LoginOrRegisterActivity extends Activity implements
 		OnClickListener {
 
 	private Button denglu, zhuce;
+	FinishReceiver fr;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +30,10 @@ public class LoginOrRegisterActivity extends Activity implements
 		super.getWindow();
 		setContentView(R.layout.activity_login_or_register);
 		initView();
+		fr = new FinishReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Constants.LOGIN_REGISTOR_FINISH);
+		registerReceiver(fr, filter);
 	}
 
 	private void initView() {
@@ -31,6 +41,15 @@ public class LoginOrRegisterActivity extends Activity implements
 		zhuce = (Button) super.findViewById(R.id.bt_zhuce_dengluorzhuce);
 		denglu.setOnClickListener(this);
 		zhuce.setOnClickListener(this);
+	}
+	class FinishReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			LoginOrRegisterActivity.this.finish();
+		}
+		
 	}
 
 	@Override
