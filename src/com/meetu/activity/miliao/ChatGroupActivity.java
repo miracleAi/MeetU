@@ -964,9 +964,8 @@ OnItemClickListener {
 				mChatmsgsAdapter.notifyDataSetChanged();
 
 				// ListView数据更新后，自动滚动到底部
-				mChatmsgsListView
-				.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-
+				mChatmsgsListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+			//	mChatmsgsListView.setSelection(mChatmsgsListView.getBottom());
 				refreshComplete();
 				break;
 			case 2:

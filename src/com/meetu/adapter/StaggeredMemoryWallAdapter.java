@@ -24,6 +24,7 @@ import com.meetu.entity.PhotoWall;
 import com.meetu.entity.PhotoWallTest;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.tools.BitmapChange;
+import com.meetu.tools.BitmapCut;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
 
@@ -58,10 +59,10 @@ public class StaggeredMemoryWallAdapter extends
 
 	private ImageLoader mImageLoader;
 
-	private Bitmap bitmap;
+	
 
 	private FinalBitmap finalBitmap;
-	private BitmapUtils bitmapUtils;
+	private BitmapUtils bitmapUtils=null;
 
 	// 网络相关
 	// 当前用户
@@ -111,11 +112,13 @@ public class StaggeredMemoryWallAdapter extends
 		MyApplication app = (MyApplication) context.getApplicationContext();
 		finalBitmap = app.getFinalBitmap();
 
-		bitmapUtils = new BitmapUtils(context);
+		bitmapUtils = new BitmapUtils(context.getApplicationContext());
 		if (currentUser != null) {
 			// 强制类型转换
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
+	
+		
 	}
 
 	@Override
@@ -150,36 +153,60 @@ public class StaggeredMemoryWallAdapter extends
 					+ photoHight);
 			int Hight = (int) ((double) photoWidth / (width / 2) * (photoHight));
 			log.e("lucifer", "Hight==" + Hight);
-			if (photoWidth >= (width / 2)) {
-				finalBitmap.display(holder.ivImg, item.getPhoto().getUrl(),
-						width / 2, Hight);
-			} else {
-				// 处理bitmap
-				bitmapUtils.display(holder.ivImg, item.getPhoto().getUrl(),
-						new BitmapLoadCallBack<ImageView>() {
+			
+			if(item.getPhoto()!=null){
+				if (photoWidth >= (width / 2)) {
 
-							@Override
-							public void onLoadCompleted(ImageView container,
-									String uri, Bitmap bitmap,
-									BitmapDisplayConfig config,
-									BitmapLoadFrom from) {
+					bitmapUtils.display(holder.ivImg, item.getPhoto().getThumbnailUrl(true, item.getPhotoWidth(), item.getPhotoHeight(),100,"jpg"), new BitmapLoadCallBack<ImageView>() {
 
-								bitmap = BitmapChange
-										.zoomImg(bitmap, width / 2);
-								log.e("zcq", "www=== " + bitmap.getWidth()
-										+ " hhh===" + bitmap.getHeight());
-								holder.ivImg.setImageBitmap(bitmap);
-							}
+						@Override
+						public void onLoadCompleted(ImageView arg0, String arg1,
+								Bitmap bitmap, BitmapDisplayConfig arg3,
+								BitmapLoadFrom arg4) {
+							// TODO Auto-generated method stub
+							bitmap=BitmapCut.toRoundCorner(bitmap,12);
+							
+							holder.ivImg.setImageBitmap(bitmap);
+						}
 
-							@Override
-							public void onLoadFailed(ImageView arg0,
-									String arg1, Drawable arg2) {
-								// TODO Auto-generated method stub
+						@Override
+						public void onLoadFailed(ImageView arg0, String arg1,
+								Drawable arg2) {
+							// TODO Auto-generated method stub
+							
+						}
+					});
+				} else {
+					// 处理bitmap
+					bitmapUtils.display(holder.ivImg, item.getPhoto().getThumbnailUrl(true, item.getPhotoWidth(), item.getPhotoHeight(),100,"jpg"),
+							new BitmapLoadCallBack<ImageView>() {
 
-							}
-						});
+								@Override
+								public void onLoadCompleted(ImageView container,
+										String uri, Bitmap bitmap,
+										BitmapDisplayConfig config,
+										BitmapLoadFrom from) {
 
+									bitmap = BitmapChange
+											.zoomImg(bitmap, width / 2);
+									log.e("zcq", "www=== " + bitmap.getWidth()
+											+ " hhh===" + bitmap.getHeight());
+									bitmap=BitmapCut.toRoundCorner(bitmap,12);
+									
+									holder.ivImg.setImageBitmap(bitmap);
+								}
+
+								@Override
+								public void onLoadFailed(ImageView arg0,
+										String arg1, Drawable arg2) {
+									// TODO Auto-generated method stub
+
+								}
+							});
+
+				}
 			}
+			
 			holder.numberFavor.setText("" + item.getPraiseCount());
 
 			// 查询是否对照片点赞
@@ -250,10 +277,7 @@ public class StaggeredMemoryWallAdapter extends
 						.setOnLongClickListener(new OnLongClickListener() {
 							@Override
 							public boolean onLongClick(View v) {
-								// int pos = holder.getLayoutPosition();
-								// mOnItemClickLitener.onItemLongClick(holder.itemView,
-								// pos);
-								// removeData(pos);
+								
 								return false;
 							}
 						});

@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -33,6 +34,10 @@ import cc.imeetu.R;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
+import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
+import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.bean.UserBean;
@@ -68,6 +73,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 	// 网络相关
 	private ObjUser user = null;
 	FinalBitmap finalBitmap;
+	BitmapUtils bitmapUtils=null;
 	Bitmap loadBitmap;
 	int photoW,photoH;
 
@@ -86,6 +92,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 
 		MyApplication app = (MyApplication) context.getApplicationContext();
 		finalBitmap = app.getFinalBitmap();
+		bitmapUtils=new BitmapUtils(context.getApplicationContext());
 		userDao = new UserDao(context);
 		loadBitmap=BitmapFactory.decodeResource(mContext.getResources(), R.drawable.mine_likelist_profile_default);
 	}
@@ -384,7 +391,26 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			});
 			if (item.getImgMsgImageUrl() != null
 					&& !item.getImgMsgImageUrl().equals("")) {
-				finalBitmap.display(holder.photo, item.getImgMsgImageUrl());
+			//	finalBitmap.display(holder.photo, item.getImgMsgImageUrl());
+				bitmapUtils.display(holder.photo, item.getImgMsgImageUrl(), new BitmapLoadCallBack<ImageView>() {
+
+					@Override
+					public void onLoadCompleted(ImageView imageView, String arg1,
+							Bitmap bitmap, BitmapDisplayConfig arg3,
+							BitmapLoadFrom arg4) {
+						
+						bitmap=BitmapCut.toRoundCorner(bitmap, DensityUtil.dip2px(mContext, 10));
+						
+						holder.photo.setImageBitmap(bitmap);
+					}
+
+					@Override
+					public void onLoadFailed(ImageView arg0, String arg1,
+							Drawable arg2) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 			}
 
 			if (item.getIsShowTime() == 1) {
@@ -431,7 +457,26 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			}
 			if (item.getImgMsgImageUrl() != null
 					&& !item.getImgMsgImageUrl().equals("")) {
-				finalBitmap.display(holder.photo, item.getImgMsgImageUrl());
+				bitmapUtils.display(holder.photo, item.getImgMsgImageUrl(), new BitmapLoadCallBack<ImageView>() {
+
+					@Override
+					public void onLoadCompleted(ImageView imageView, String arg1,
+							Bitmap bitmap, BitmapDisplayConfig arg3,
+							BitmapLoadFrom arg4) {
+						
+						bitmap=BitmapCut.toRoundCorner(bitmap, DensityUtil.dip2px(mContext, 10));
+						
+						holder.photo.setImageBitmap(bitmap);
+					}
+
+					@Override
+					public void onLoadFailed(ImageView arg0, String arg1,
+							Drawable arg2) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+	//			finalBitmap.display(holder.photo, item.getImgMsgImageUrl());
 	
 	//计算图片 比例 大小
 	/*			if(item.getImgMsgImageWidth()>item.getImgMsgImageHeight()){

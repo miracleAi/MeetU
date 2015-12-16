@@ -174,12 +174,19 @@ public class MessagesListAdapter extends BaseAdapter {
 		if (item.getUnreadMsgCount() > 99) {
 			holder.noReadLayout.setVisibility(View.VISIBLE);
 			holder.tvNoReadMessages.setText("99+");
+			
+			holder.noReadLayout.setBackgroundResource(R.drawable.massage_newslist_img_unreadtips_2_bg);
 		} else if (item.getUnreadMsgCount() <= 0) {
 			holder.noReadLayout.setVisibility(View.INVISIBLE);
 
 		} else {
 			holder.noReadLayout.setVisibility(View.VISIBLE);
-			holder.tvNoReadMessages.setText("" + item.getUnreadMsgCount()+"999+");
+			holder.tvNoReadMessages.setText("" + item.getUnreadMsgCount());
+			if(item.getUnreadMsgCount()>9){
+				holder.noReadLayout.setBackgroundResource(R.drawable.massage_newslist_img_unreadtips_2_bg);			
+			}else{
+				holder.noReadLayout.setBackgroundResource(R.drawable.massage_newslist_img_unreadtips_1_bg);
+			}
 		}
 
 		if (item.getConversationType() == Constants.ACTYSG) {
