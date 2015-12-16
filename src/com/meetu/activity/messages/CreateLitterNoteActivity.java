@@ -58,7 +58,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class CreateLitterNoteActivity extends Activity implements
-		OnClickListener {
+OnClickListener {
 
 	// 控件相关
 	private ImageView photoUpdate, uploadAgain, photo;
@@ -80,7 +80,7 @@ public class CreateLitterNoteActivity extends Activity implements
 	private FinalBitmap finalBitmap;
 	private ProgressBar noteProgre;
 	boolean isUpEnd = true;
-
+	Uri imageUri;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -247,30 +247,28 @@ public class CreateLitterNoteActivity extends Activity implements
 
 	}
 
-	private Bitmap headerPortait;
-
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		switch (requestCode) {
 		case 11:
 			if (resultCode == this.RESULT_OK) {
+				imageUri = data.getData();
 				cropPhoto(data.getData());// 裁剪图片
-
 			}
 			break;
 		case 22:
 			if (resultCode == this.RESULT_OK) {
 				File temp = new File(Environment.getExternalStorageDirectory()
 						+ "/photo_note.png");
+				imageUri = Uri.fromFile(temp);
 				cropPhoto(Uri.fromFile(temp));// 裁剪图片
-
 			}
 
 			break;
 		case 33:
 			log.e("图片处理", "aaa");
-			if (data != null) {
+			/*if (data != null) {
 				Bundle extras = data.getExtras();
 				headerPortait = extras.getParcelable("data");
 				log.e("headerPortait", headerPortait.toString());
@@ -283,6 +281,24 @@ public class CreateLitterNoteActivity extends Activity implements
 					photoLayout.setVisibility(View.VISIBLE);
 					uploadAgain.setFocusable(true);
 				}
+			}*/
+			if(imageUri != null){
+				Bitmap headerPortait= decodeUriAsBitmap(imageUri);
+				if (headerPortait != null) {
+					photoPath = saveHeadImg(headerPortait);
+					photo.setImageBitmap(headerPortait);
+
+					photoUpdateLayout.setVisibility(View.GONE);
+					photoUpdateLayout.setFocusable(false);
+					photoLayout.setVisibility(View.VISIBLE);
+					uploadAgain.setFocusable(true);
+					if(!headerPortait.isRecycled()){ 
+						// 回收并且置为null
+						headerPortait.recycle(); 
+						headerPortait = null; 
+					}  
+				}
+				imageUri = null;
 			}
 			break;
 
@@ -291,7 +307,16 @@ public class CreateLitterNoteActivity extends Activity implements
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-
+	private Bitmap decodeUriAsBitmap(Uri uri){
+		Bitmap bitmap = null;
+		try {
+			bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return bitmap;
+	}
 	/**
 	 * 把要上传的图片存到本地sd卡上
 	 * 
@@ -304,7 +329,7 @@ public class CreateLitterNoteActivity extends Activity implements
 		try {
 			fos = new FileOutputStream(new File(
 					Environment.getExternalStorageDirectory()
-							+ "/photo_note.png"));
+					+ "/photo_note.png"));
 			photo.compress(CompressFormat.PNG, 100, fos);
 
 		} catch (FileNotFoundException e) {
@@ -346,9 +371,11 @@ public class CreateLitterNoteActivity extends Activity implements
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
 		// // outputX outputY 是裁剪图片宽高
-		intent.putExtra("outputX", 375);
-		intent.putExtra("outputY", 310);
-		intent.putExtra("return-data", true);
+		intent.putExtra("outputX", 605);
+		intent.putExtra("outputY", 500);
+		//intent.putExtra("return-data", true);
+		intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+		intent.putExtra("noFaceDetection", true); // no face detection
 		startActivityForResult(intent, 33);
 	}
 
@@ -416,7 +443,7 @@ public class CreateLitterNoteActivity extends Activity implements
 		// 上传图片
 		noteProgre.setVisibility(View.VISIBLE);
 		groupf.saveInBackground(new SaveCallback() {
-			
+
 			@Override
 			public void done(AVException e) {
 				// TODO Auto-generated method stub
@@ -432,7 +459,7 @@ public class CreateLitterNoteActivity extends Activity implements
 				}
 			}
 		}, new ProgressCallback() {
-			
+
 			@Override
 			public void done(Integer progress) {
 				// TODO Auto-generated method stub

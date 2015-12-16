@@ -35,6 +35,7 @@ import android.os.Environment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -141,7 +142,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 					break;
 				case UpdateStatus.No: // has no update
 					log.d("mytest", "no update");
-					 Toast.makeText(SystemSettingsActivity.this, "已经是最新版本啦！", Toast.LENGTH_SHORT).show();
+					Toast.makeText(SystemSettingsActivity.this, "已经是最新版本啦！", Toast.LENGTH_SHORT).show();
 					break;
 				case UpdateStatus.NoneWifi: // none wifi
 					log.d("mytest", "no wifi");
@@ -203,23 +204,6 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 				}).create();
 		dialog.show();
 	}
-	//检查版本
-	public void getVersion(){
-		ObjGlobalAndroidWrap.checkVersion(new ObjGlobalCallback() {
-
-			@Override
-			public void callback(ObjGlobalAndroid object, AVException e) {
-				// TODO Auto-generated method stub
-				if(e == null){
-					globalObject = object;
-					if(!globalObject.getVersion().equals(SystemUtils.getVersion(getApplicationContext()))){
-						//Toast.makeText(getApplicationContext(), "有新版本", 1000).show();
-						showDialog();
-					}
-				}
-			}
-		});
-	}
 	//下载apk文件
 	public void downloadApk(){
 		AVFile avfile = globalObject.getApk();
@@ -279,6 +263,9 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 	private static boolean deleteDir(File dir) {
 		if (dir != null && dir.isDirectory()) {
 			String[] children = dir.list();
+			if(children.length == 0){
+				return false;
+			}
 			for (int i = 0; i < children.length; i++) {
 				boolean success = deleteDir(new File(dir, children[i]));
 				if (!success) {
@@ -299,10 +286,15 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 			Toast.makeText(SystemSettingsActivity.this, "您还未安装任何应用市场", 1000).show();
 			return;
 		}
-		Uri uri = Uri.parse("market://details?id="+getPackageName());  
-		Intent intent = new Intent(Intent.ACTION_VIEW,uri);  
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
-		startActivity(intent);  
+		try {
+			Uri uri = Uri.parse("market://details?id="+getPackageName());  
+			Intent intent = new Intent(Intent.ACTION_VIEW,uri);  
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+			startActivity(intent);  
+		} catch (ActivityNotFoundException e) {
+			// TODO: handle exception
+			Toast.makeText(SystemSettingsActivity.this, "您还未安装任何应用市场", 1000).show();
+		}
 		// 判断360市场是否存在
 		/*if (isAvilible(SystemSettingsActivity.this, "com.qihoo.appstore")) {
 			// 市场存在

@@ -289,7 +289,7 @@ OnClickListener {
 						miliaoImv.setImageResource(R.drawable.chat_navi_btn_joinchat);
 						List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(),
 								Constants.CONVERSATION_TYPE,seekChatBeansList.get(positonNow).getConversationId());
-						if(memList.size() >= 500){
+						if(memList.size() >= 20){
 							joinChatTv.setText("人数已满");
 							Toast.makeText(getActivity(), "觅聊人数已满", 1000).show();
 							return;
@@ -660,7 +660,7 @@ OnClickListener {
 			miliaoImv.setImageResource(R.drawable.chat_navi_btn_joinchat);
 			List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
 					Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
-			if(memList.size()>=500){
+			if(memList.size()>=20){
 				joinChatTv.setText("人数已满");
 			}else{
 				joinChatTv.setText("加入觅聊");
