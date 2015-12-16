@@ -190,7 +190,7 @@ OnPageChangeListener, OnClickListener {
 		adapter = new BoardPageFragmentAdapter(getSupportFragmentManager(),
 				fragmentList);
 		mViewPager.setAdapter(adapter);
-		mViewPager.setOffscreenPageLimit(2);
+		mViewPager.setOffscreenPageLimit(objScripsList.size());
 		mViewPager.setCurrentItem(0);
 
 		mViewPager.setOnClickListener(this);

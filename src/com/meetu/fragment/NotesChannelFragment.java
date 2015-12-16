@@ -897,7 +897,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 
 				content.setText("" + spannableString);
 
-				// getTextWH(""+arg0);
+				
 			}
 
 			/*log.e("lucifer", "content.getWidth()===" + content.getWidth()
@@ -907,32 +907,22 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 			if ((windowWidth - windowFocusX) < ((DensityUtil.dip2px(
 					getActivity(), 34) + 1))) {
 				// 随着字体 textview 中的 字体宽度 让view内容不要出右屏幕
-				if ((content.getWidth() + DensityUtil.dip2px(getActivity(), 20)) >= DensityUtil
+				if ((content.getWidth() + DensityUtil.dip2px(getActivity(), 4)) >= DensityUtil
 						.dip2px(getActivity(), 69)) {
-					viewX = windowWidth
-							- (content.getWidth() + DensityUtil.dip2px(
-									getActivity(), 30));
+					viewX = windowWidth- (content.getWidth() + DensityUtil.dip2px(getActivity(), 30));
 				}
 			}
 			// 随着字体 textview 中的 字体宽度 让view内容不要出下屏幕
-			/*log.e("lucifer",
-					"字条距离下表的距离"
-							+ (DensityUtil.dip2px(getActivity(), 54)
-									+ noteHight - windowFocusY)
-							+ "文本view的高度"
-							+ (content.getHeight() + DensityUtil.dip2px(
-									getActivity(), 44 + 33)));
-			log.e("lucifer", "content.getHeight()===" + content.getHeight());*/
+			log.e("lucifer","字条距离下表的距离"+ (DensityUtil.dip2px(getActivity(), 54)+ noteHight - windowFocusY)+ "文本view的高度"+ (content.getHeight() + DensityUtil.dip2px(getActivity(), 44 + 33)));
+			log.e("lucifer", "content.getHeight()===" + content.getHeight()+" content.getWidth()=="+content.getWidth());
 			if ((content.getHeight() + DensityUtil.dip2px(getActivity(),
 					44 + 33)) >= (DensityUtil.dip2px(getActivity(), 54)
 					+ noteHight - windowFocusY)) {
-				viewY = DensityUtil.dip2px(getActivity(), 54)
-						- content.getHeight()
-						+ DensityUtil.dip2px(getActivity(), 44);
-
+				viewY = DensityUtil.dip2px(getActivity(), 54)- content.getHeight()+ DensityUtil.dip2px(getActivity(), 44);
 			}
 
 			View myView = view.findViewById(numberId);
+			log.e("viewx===", "viewX=="+viewX+"  viewy=="+viewY);
 			myView.setX(viewX);
 			myView.setY(viewY);
 			// log.e("lucifer", "xxx==="+view.getX()+"yyy==="+view.getY());
@@ -1088,13 +1078,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 					}
 
 				} else {
-					// if(null != barrage.getNickName() &&
-					// ("小U").equals(barrage.getNickName())){
-					//
-					// }else{
-					// barrage.setNickName("");
-					// }
-					// barrage.setUserAvator("");
+					
 					ObjUserWrap.getObjUser(chatmsgs.getClientId(),
 							new ObjUserInfoCallback() {
 
@@ -1164,115 +1148,6 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 		return view;
 	}
 
-	// /**
-	// * 用来接收消息的handle
-	// * @author lucifer
-	// *
-	// */
-	// public class MessageHandler extends
-	// AVIMTypedMessageHandler<AVIMTypedMessage>{
-	//
-	// @Override
-	// public void onMessage(AVIMTypedMessage message,
-	// AVIMConversation conversation, AVIMClient client) {
-	// super.onMessage(message, conversation, client);
-	// // 请按自己需求改写
-	// switch (message.getMessageType()) {
-	// case Constants.TEXT_TYPE:
-	// log.e("zcq", "接收到一条文本消息"+" MessageId()=="+message.getMessageId());
-	//
-	// createChatMsg(conversation,message);
-	//
-	//
-	//
-	//
-	// break;
-	// case Constants.IMAGE_TYPE:
-	// // createChatPicMsg(conversation,message);
-	// break;
-	// default:
-	// break;
-	// }
-	//
-	// }
-	//
-	//
-	// @Override
-	// public void onMessageReceipt(AVIMTypedMessage message,
-	// AVIMConversation conversation, AVIMClient client) {
-	// // TODO Auto-generated method stub
-	// super.onMessageReceipt(message, conversation, client);
-	// }
-	//
-	// }
-	//
-	// public void createChatMsg(AVIMConversation conversation,
-	// AVIMTypedMessage message) {
-	// // TODO Auto-generated method stub
-	// AVIMTextMessage msg = ((AVIMTextMessage)message);
-	// Chatmsgs chatBean = new Chatmsgs();
-	//
-	// chatBean.setUid(user.getObjectId());
-	// chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
-	// chatBean.setClientId(msg.getFrom());
-	// chatBean.setMessageId(msg.getMessageId());
-	// chatBean.setConversationId(msg.getConversationId());
-	// chatBean.setChatMsgDirection(ChatMsgUtils.getDerection(msg.getMessageIOType()));
-	// chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
-	// // boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
-	// // chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
-	// String scriptId= (String) msg.getAttrs().get(Constants.SCRIP_ID);
-	// int scriptX=(Integer) msg.getAttrs().get(Constants.SCRIP_X);
-	// int scriptY=(Integer) msg.getAttrs().get(Constants.SCRIP_Y);
-	// log.e("zcq 接受", "scriptId=="+scriptId+" x=="+scriptX+" y=="+scriptY);
-	// chatBean.setScriptId(scriptId);
-	// chatBean.setScripX(scriptX);
-	// chatBean.setScripY(scriptY);
-	// chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
-	// chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
-	// chatBean.setContent(msg.getText());
-	// int style=(Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
-	// // //我接受别人的消息
-	// //
-	// if(style==0&&ChatMsgUtils.getDerection(msg.getMessageIOType())==Constants.IOTYPE_IN){
-	// //
-	// // chatBean.setChatMsgType(12);
-	// // }else{
-	// // //接收到自己发的消息
-	// // chatBean.setChatMsgType(10);
-	// // }
-	// //接收到本人id 发送的消息 不插入到本地消息数据库
-	//
-	// if(!user.getObjectId().equals(msg.getFrom())){
-	// chatmsgsDao.insert(chatBean);
-	// log.e("lucifer", "插入成功");
-	// }
-	//
-	// if(conversation.getConversationId().equals(objScripBox.getConversationId())){
-	// //测试显示 刷新adapter
-	//
-	// handler.sendEmptyMessage(1);
-	//
-	// }else{
-	// //未读消息加1
-	// // messagesDao.updateUnread(user.getObjectId(), msg.getConversationId());
-	// }
-	//
-	// }
-	// @Override
-	// public void onPause() {
-	// // TODO Auto-generated method stub
-	// super.onPause();
-	// // AVIMMessageManager.unregisterMessageHandler(AVIMTypedMessage.class,
-	// msgHandler);
-	// }
-	// @Override
-	// public void onResume() {
-	// // TODO Auto-generated method stub
-	// super.onResume();
-	// // AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class,
-	// msgHandler);
-	// }
 
 	/**
 	 * 移除所有的view

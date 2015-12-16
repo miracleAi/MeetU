@@ -16,15 +16,13 @@
             android:id="@+id/content_note_channels_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            
-            android:layout_marginRight="8dp"          
+                     
             android:padding="8dp"         
             android:textSize="11sp"
             android:maxLength="100"
             android:textColor="#d6606366"
-           	android:minWidth="69dp"
-           	android:maxWidth="112dp"          	
+           	android:minWidth="49dp"
+           	android:maxWidth="101dp"          	
             android:text="" />
     </RelativeLayout>
 
@@ -39,14 +37,14 @@
 
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:src="@drawable/massage_letters_show_reply_img_profiles_stroke" />
 
         <ImageView
             android:id="@+id/photoHead_notes_channel_fragment_img"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_margin="2dp"
