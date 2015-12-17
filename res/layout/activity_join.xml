@@ -364,7 +364,7 @@
                         android:layout_width="160dp"
                         android:layout_height="44dp"
                         android:layout_weight="1"
-                        android:background="#0bc7b4"
+                        android:background="@drawable/item_weixin_bg"
                         android:gravity="center" >
 
                         <TextView
@@ -383,7 +383,7 @@
                         android:layout_width="160dp"
                         android:layout_height="44dp"
                         android:layout_weight="1"
-                        android:background="#00acee"
+                        android:background="@drawable/item_zhifubao_bg"
                         android:gravity="center" >
 
                         <TextView
