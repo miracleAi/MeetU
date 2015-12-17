@@ -41,6 +41,7 @@ import android.R.integer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -48,6 +49,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -61,6 +63,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -68,6 +71,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TwoLineListItem;
@@ -114,6 +118,9 @@ public class SetPersonalInformation2Activity extends BaseActivity implements
 	private Boolean isShowTwo = false;// 是否显示第二个view 学校家乡那个
 	private LinearLayout oneViewLayout, towViewLayout;
 	private Boolean isUpHead = false;
+	private RelativeLayout sexLayout;
+	private boolean sexIsShow=false;
+	private ImageView manImageView,womanImageView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -178,7 +185,14 @@ public class SetPersonalInformation2Activity extends BaseActivity implements
 				.findViewById(R.id.one_settingInfo_ll);
 		towViewLayout = (LinearLayout) super
 				.findViewById(R.id.two_settingInfo_ll);
-
+		sexLayout=(RelativeLayout) findViewById(R.id.include_userInfo);
+		
+		ivman_selector = (ImageView) 
+				findViewById(R.id.iv_man_sexselector);
+		ivwoman_selector = (ImageView)
+				findViewById(R.id.iv_woman_sexselector);
+		ivman_selector.setOnClickListener(this);
+		ivwoman_selector.setOnClickListener(this);
 	}
 
 	public Bitmap readHead() {
@@ -558,22 +572,44 @@ public class SetPersonalInformation2Activity extends BaseActivity implements
 		// 点击事件搬迁
 
 		case R.id.selfinfo1_sex_et:
-			initPopupWindowSex();
-			popupWindowSex.showAsDropDown(v, 72, 400);
+			if(sexIsShow==false){
+				InputMethodManager inputManager = (InputMethodManager) username
+						.getContext().getSystemService(
+								Context.INPUT_METHOD_SERVICE);
+				inputManager.hideSoftInputFromWindow(username.getWindowToken(), 0);
+				
+				sexIsShow=true;
+				sexLayout.setVisibility(View.VISIBLE);
+			}else{
+				sexLayout.setVisibility(View.GONE);
+				sexIsShow=false;
+			}
+			// 落下软键盘
+		
+//			initPopupWindowSex();
+//			popupWindowSex.showAsDropDown(v, 72, 400);
 			break;
 		case R.id.iv_man_sexselector:
 
 			// ivman_selector.setImageResource(R.drawable.complete_gender_ms_720);
-			popupWindowSex.dismiss();
+			//popupWindowSex.dismiss();
+			sexLayout.setVisibility(View.GONE);
+			sexIsShow=false;
 			sex.setText("男生");
 			break;
 		case R.id.iv_woman_sexselector:
 			// ivwoman_selector.setImageResource(R.drawable.complete_gender_fs_720);
-			popupWindowSex.dismiss();
+		//	popupWindowSex.dismiss();
+			sexLayout.setVisibility(View.GONE);
+			sexIsShow=false;
 			sex.setText("女生");
 
 			break;
 		case R.id.selfinfo_birth_et:
+			if(sexIsShow==true){
+				sexLayout.setVisibility(View.GONE);
+				sexIsShow=false;
+			}
 			showDialog(1);
 			break;
 		default:

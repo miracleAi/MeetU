@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:background="@color/white">
+    android:background="@drawable/complete_complete_bg">
 
     <!-- title -->
 
@@ -53,8 +53,8 @@
 
         <ImageView
             android:id="@+id/iv_touxiang_shezhigerenxinxi2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
             android:layout_gravity="center_horizontal"
             android:scaleType="fitCenter"
             android:src="@drawable/complete_add_720" />
@@ -116,7 +116,7 @@
                 <ImageView
                     android:id="@+id/img2"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/complete_major_720" />
 
                 <TextView
@@ -275,5 +275,13 @@
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
+    <include 
+        android:id="@+id/include_userInfo"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/dialog_sex_selector"
+        android:visibility="gone"
+        />
 
 </LinearLayout>
