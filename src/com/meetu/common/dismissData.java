@@ -23,7 +23,6 @@ public class dismissData {
 		log.e("zcq", "numbers"+numbers);
 		if((timeOver-nowData)>=1000*60*60*24){
 			//大于24小时  不显示
-			
 			return null;
 		}else  if((timeOver-nowData)>=1000*60*60){
 				String string=""+((timeOver-nowData)/(1000*60*60))+"h";

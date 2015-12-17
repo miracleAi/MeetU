@@ -195,7 +195,7 @@ public class MessagesListAdapter extends BaseAdapter {
 			.setImageResource(R.drawable.massage_newslist_img_acty);
 			if(dismissData.getDismissData(item.getTimeOver())!=null){
 				if(dismissData.getDismissData(item.getTimeOver()).equals("dismiss")){
-					holder.tvTime.setText("觅聊已消失");
+					holder.tvTime.setText("活动群聊已消失");
 				}else{
 					holder.tvTime.setText(""+dismissData.getDismissData(item.getTimeOver())+"后消失");
 				}
@@ -203,7 +203,6 @@ public class MessagesListAdapter extends BaseAdapter {
 				if(chatmsgs!=null && chatmsgs.getSendTimeStamp()!=null){
 					holder.tvTime.setText(""+com.meetu.cloud.utils.DateUtils.getFormattedTimeInterval(Long.valueOf(chatmsgs.getSendTimeStamp())));
 				}
-
 			}
 		} else if (item.getConversationType() == Constants.SEEKMSG) {
 			holder.tvName.setText(item.getChatName());
