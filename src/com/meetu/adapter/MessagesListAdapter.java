@@ -86,6 +86,7 @@ public class MessagesListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		chatmsgs=null;
 		ViewHolder holder = null;
 		Messages item = messagesList.get(position);
 		if (convertView == null) {
