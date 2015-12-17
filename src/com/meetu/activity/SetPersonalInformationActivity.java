@@ -65,7 +65,6 @@ public class SetPersonalInformationActivity extends Activity implements
 		setContentView(R.layout.activity_shezhigerenxinxi);
 		initView();
 		String p = getFilesDir().toString();
-		Log.d("lucifer", p);
 	}
 
 	private void initView() {

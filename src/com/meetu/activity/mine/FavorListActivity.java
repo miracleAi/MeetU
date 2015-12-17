@@ -104,7 +104,6 @@ OnRefreshListener2<ListView>, OnItemClickListener, OnClickListener {
 					userList.clear();
 					userList.addAll(newList);
 					if(hisList.size()>0 && newList.size()>0){
-						log.d("mytest", "zhixing");
 						FavorBean hisItem = new FavorBean();
 						hisItem.setUser(new ObjUser());
 						hisItem.setPraiseTime(0);

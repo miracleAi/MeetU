@@ -122,7 +122,6 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		Log.d("lucifer", "getCount()");
 		// return newsList.size();
 		return chatmsgsList.size();
 	}
@@ -130,14 +129,12 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 	@Override
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		Log.d("lucifer", "getItem()");
 		return chatmsgsList.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
 		// TODO Auto-generated method stub
-		Log.d("lucifer", "getItemId()");
 		return position;
 	}
 
@@ -669,7 +666,6 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 
 		}
 
-		Log.d("lucifer", "getView()");
 
 		return convertView;
 	}

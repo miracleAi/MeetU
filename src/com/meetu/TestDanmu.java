@@ -101,9 +101,7 @@ public class TestDanmu extends Activity {
 					return;
 				}
 				if (result) {
-					Log.d("mytest", "小U退出聊天登录成功");
 				} else {
-					Log.d("mytest", "小U退出聊天登录成功失败");
 				}
 			}
 		});
@@ -123,10 +121,8 @@ public class TestDanmu extends Activity {
 							return;
 						}
 						if (result) {
-							Log.d("mytest", "本人聊天登录");
 							isOrder();
 						} else {
-							Log.d("mytest", "本人聊天未登录");
 							chatLogin();
 						}
 					}
@@ -147,7 +143,6 @@ public class TestDanmu extends Activity {
 							return;
 						}
 						MyApplication.chatClient = client;
-						Log.d("mytest", "本人聊天登录成功");
 						isOrder();
 					}
 				});
@@ -251,7 +246,6 @@ public class TestDanmu extends Activity {
 								return;
 							}
 							if (result) {
-								Log.d("mytest", "本人聊天登录成功且已报名");
 								getHisList(MyApplication.chatClient);
 							} else {
 								uLigin();
@@ -276,7 +270,6 @@ public class TestDanmu extends Activity {
 							return;
 						}
 						uClient = client;
-						Log.d("mytest", "小U聊天登录成功");
 						getHisList(uClient);
 					}
 				});
@@ -304,8 +297,6 @@ public class TestDanmu extends Activity {
 										if (e != null) {
 											return;
 										}
-										Log.d("mytest",
-												"获取历史消息成功" + msgs.size());
 										for (AVIMMessage message : msgs) {
 											if (message instanceof AVIMTextMessage) {
 												AVIMTextMessage msg = ((AVIMTextMessage) message);
@@ -318,8 +309,6 @@ public class TestDanmu extends Activity {
 												hisList.add(bean);
 											}
 										}
-										Log.d("mytest",
-												"获取历史消息成功" + hisList.size());
 									}
 								});
 					}
@@ -336,7 +325,6 @@ public class TestDanmu extends Activity {
 			super.onMessage(message, conversation, client);
 			switch (message.getMessageType()) {
 			case Constants.TEXT_TYPE:
-				Log.d("mytest", "接收到实时消息");
 				if (conversation.getConversationId().equals(conversationId)) {
 					AVIMTextMessage msg = ((AVIMTextMessage) message);
 					BarrageMsgBean bean = new BarrageMsgBean();

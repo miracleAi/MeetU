@@ -75,7 +75,6 @@ public class StaggeredHomeAdapter extends
 
 		mInflater = LayoutInflater.from(context);
 		this.mPhotos = datas;
-		log.d("mytest", "datas.size()==" + datas.size());
 		width = DisplayUtils.getWindowWidth((Activity) context)
 				- DensityUtil.dip2px(context, 28);
 		mContext = context;
@@ -87,7 +86,6 @@ public class StaggeredHomeAdapter extends
 
 	@Override
 	public int getItemCount() {
-		log.d("mytest", "mPhotos.size()==" + mPhotos.size());
 		return mPhotos.size();
 
 	}

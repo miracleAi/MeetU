@@ -136,8 +136,6 @@ public class TestMsgTwoActivity extends Activity {
 							clickBtn.setText(LOADFAIL);
 							return;
 						}
-						log.d("mytest", "conversation:===" + objects);
-						log.d("mytest", "conversation:===" + objects.size());
 						clickBtn.setText(QUERYLOCALCOVERSATION);
 						ArrayList<AVIMConversation> convList = new ArrayList<AVIMConversation>();
 						for (AVIMConversation conversation : objects) {
@@ -209,7 +207,6 @@ public class TestMsgTwoActivity extends Activity {
 	public void testQuery() {
 		ArrayList<Messages> msgList = messageDao.getMessage(user.getObjectId(),
 				conversationId);
-		log.d("mytest", "msg" + msgList);
 		infoTv.setText("count" + msgList.get(0).getUnreadMsgCount());
 		clickBtn.setText(LOADSUC);
 	}

@@ -89,11 +89,9 @@ public class MessagesDao {
 			ContentValues values = new ContentValues();
 			values.put("_unread_count", count);
 			values.put("_update_time", System.currentTimeMillis());
-			Log.d("mytest", "" + count);
 			int s = sdb.update("messages", values, Constants.USERID
 					+ "=? and _conversation_id=?", new String[] { userId,
 					convId });
-			Log.d("mytest", "s" + s);
 		}
 		sdb.close();
 	}
@@ -111,7 +109,6 @@ public class MessagesDao {
 			int s = sdb.update("messages", values, Constants.USERID
 					+ "=? and _conversation_id=?", new String[] { userId,
 					convId });
-			Log.d("mytest", "s" + s);
 		}
 		sdb.close();
 	}
@@ -133,11 +130,9 @@ public class MessagesDao {
 			int count = 0;
 			ContentValues values = new ContentValues();
 			values.put("_unread_count", count);
-			Log.d("mytest", "" + count);
 			int s = sdb.update("messages", values, Constants.USERID
 					+ "=? and _conversation_id=?", new String[] { userId,
 					convId });
-			Log.d("mytest", "s" + s);
 		}
 		sdb.close();
 	}

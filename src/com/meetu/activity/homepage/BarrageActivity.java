@@ -252,7 +252,6 @@ public class BarrageActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				log.d("mytest", "click");
 				if (actyBean.getStatus() == Constants.ActyStatusOver) {
 					return;
 				}
@@ -289,7 +288,6 @@ public class BarrageActivity extends Activity {
 					intent.putExtra("ConversationStyle", "1");
 					intent.putExtra("ConversationId", actyBean.getConversationId());
 					intent.putExtra("title", actyBean.getTitle());
-					log.d("mytest", "time over ==== "+actyBean.getTimeChatStop());
 					intent.putExtra("TimeOver",String.valueOf(actyBean.getTimeChatStop()));
 					startActivity(intent);
 				}

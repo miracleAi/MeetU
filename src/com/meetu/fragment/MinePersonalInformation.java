@@ -197,7 +197,6 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 
 		userschool.setText(user.getSchool());
 		usermajor.setText(user.getDepartment());
-		log.d("mytest", "" + user.getHometown());
 		if (user.getHometown() != null && !user.getHometown().equals("")) {
 			String homeString = ""
 					+ cityDao.getCity(user.getHometown()).get(0).getPrivance()

@@ -260,8 +260,6 @@ OnClickListener {
 							.getScrollTabHolders();
 
 					ScrollTabHolder fragmentContent;
-					log.d("mytest", "pager" + position);
-					log.d("mytest", "size" + scrollTabHolders.size());
 					if (position < currentItem) {
 						// Revealed the previous page
 						fragmentContent = scrollTabHolders.valueAt(position);
@@ -349,7 +347,6 @@ OnClickListener {
 	public void onRecyclerViewScroll(RecyclerView view, int scrollY,
 			int pagePosition) {
 		if (userPager.getCurrentItem() == pagePosition) {
-			log.d("mytest", "zhixing2");
 			scrollHeader(scrollY);
 		}
 	}

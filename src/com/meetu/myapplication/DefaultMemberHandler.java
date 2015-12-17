@@ -82,7 +82,6 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 	public void handleMemberAdd(final AVIMClient client,
 			final AVIMConversation conversation, List<String> array,
 			String str, final ObjUser user) {
-		log.d("mytest", "conversation" + conversation);
 		for (String userId : array) {
 			if (userId.equals(user.getObjectId())) {
 				continue;

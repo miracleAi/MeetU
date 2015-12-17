@@ -56,7 +56,6 @@ public class ChatmsgsDao {
 	 * 更新消息状态
 	 * */
 	public void updateStatus(String userId,String msgCacheId,int status) {
-		log.d("mytest", "4------"+msgCacheId);
 		SQLiteDatabase sdb = helper.getWritableDatabase();
 		Cursor cursor = sdb.rawQuery("select * from chatmsgs where "
 				+ Constants.USERID + "=? and _message_cache_id=?", new String[] {
@@ -65,7 +64,6 @@ public class ChatmsgsDao {
 			ContentValues values = new ContentValues();
 			values.put("_chat_msg_status", status);
 			int s = sdb.update("chatmsgs", values," _message_cache_id=?", new String[] {msgCacheId});
-			Log.d("mytest", "s" + s);
 		}
 		sdb.close();
 	}

@@ -131,27 +131,21 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 	}
 	private void checkUpdate() {
 		// TODO Auto-generated method stub
-		log.d("mytest", "zhixinging");
 		UmengUpdateAgent.setUpdateAutoPopup(false);
 		UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
 			@Override
 			public void onUpdateReturned(int updateStatus,UpdateResponse updateInfo) {
-				log.d("mytest", "zhixing");
 				switch (updateStatus) {
 				case UpdateStatus.Yes: // has update
-					log.d("mytest", "update2");
 					UmengUpdateAgent.showUpdateDialog(getApplicationContext(), updateInfo);
 					break;
 				case UpdateStatus.No: // has no update
-					log.d("mytest", "no update");
 					Toast.makeText(SystemSettingsActivity.this, "已经是最新版本啦！", Toast.LENGTH_SHORT).show();
 					break;
 				case UpdateStatus.NoneWifi: // none wifi
-					log.d("mytest", "no wifi");
 					Toast.makeText(getApplicationContext(), "no wifi ", Toast.LENGTH_SHORT).show();
 					break;
 				case UpdateStatus.Timeout: // time out
-					log.d("mytest", "time out");
 					Toast.makeText(getApplicationContext(), "time out", Toast.LENGTH_SHORT).show();
 					break;
 				}
@@ -244,7 +238,6 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 			@Override
 			public void done(Integer progress) {
 				// TODO Auto-generated method stub
-				log.d("mytest", Integer.toString(progress));
 				progressTv.setText(String.valueOf(progress));
 			}
 		}); 

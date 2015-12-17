@@ -171,7 +171,6 @@ public class ObjFollowWrap {
 							return;
 						}
 						if (result != null) {
-							log.d("mytest", "follow result++" + result);
 							callback.callback(result, null);
 						} else {
 							callback.callback(null, new AVException(0,

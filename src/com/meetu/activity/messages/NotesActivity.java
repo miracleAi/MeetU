@@ -251,7 +251,6 @@ OnPageChangeListener, OnClickListener {
 	public void onPageSelected(int arg0) {
 		// TODO Auto-generated method stub
 		visible();
-		log.d("lucifer", "" + arg0);
 		// NotesChannelFragment.dismissAll();
 
 		// 获取系统软件盘的状态

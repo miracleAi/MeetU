@@ -734,7 +734,6 @@ OnItemClickListener {
 
 			chatmsgsDao.insert(mchatmsgs);
 			handler.sendEmptyMessage(1);
-			log.d("mytest", "1------"+mchatmsgs.getMessageCacheId());
 			sendTextMessage(mchatmsgs);
 			mEditText.setText("");
 
@@ -1315,7 +1314,6 @@ OnItemClickListener {
 
 	public void sendTextMessage(final Chatmsgs mchatmsgs) {
 		AVIMTextMessage msg = new AVIMTextMessage();
-		log.d("mytest", "2------"+mchatmsgs.getMessageCacheId());
 		msg.setText("" + mchatmsgs.getContent());
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1337,7 +1335,6 @@ OnItemClickListener {
 			public void callback(boolean result, AVException e) {
 				if (e != null) {
 					log.e("zcq-------", "文本消息发送失败====="+e);
-					log.d("mytest", "3------"+mchatmsgs.getMessageCacheId());
 					chatmsgsDao.updateStatus(user.getObjectId(),mchatmsgs.getMessageCacheId(), Constants.STATUES_FAILED);
 					handler.sendEmptyMessage(1);
 				} else if (result) {

@@ -68,7 +68,6 @@ public class ObjActivityOrderWrap {
 						ObjUser user = AVUser.cast(avUser, ObjUser.class);
 						orderUsers.add(user);
 					} else {
-						Log.d("mytest", "user null");
 					}
 				}
 				callback.callback(orderUsers, null);

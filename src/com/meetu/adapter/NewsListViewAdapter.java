@@ -102,7 +102,6 @@ public class NewsListViewAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 
-		Log.d("lucifer", "getCount()");
 
 		return newsList.size();
 	}
@@ -110,14 +109,12 @@ public class NewsListViewAdapter extends BaseAdapter {
 	@Override
 	public Object getItem(int position) {
 
-		Log.d("lucifer", "getItem()");
 		return newsList.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
 
-		Log.d("lucifer", "getItemId()");
 		return position;
 	}
 
@@ -154,7 +151,6 @@ public class NewsListViewAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		Log.d("lucifer", "getView()");
 		// RelativeLayout.LayoutParams params=(LayoutParams)
 		// holder.topRl.getLayoutParams();
 		// if(position==0){

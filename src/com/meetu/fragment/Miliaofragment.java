@@ -181,7 +181,6 @@ OnClickListener {
 		if(adapter!= null){
 			adapter.setFragments(fragmentList);
 			fragmentList.clear();
-			log.d("mytest", "remove zhixing");
 		}
 		for (int i = 0; i < seekChatBeansList.size(); i++) {
 			MiliaoChannelFragment frag = new MiliaoChannelFragment();
@@ -453,54 +452,29 @@ OnClickListener {
 					noneFailLayout.setVisibility(View.GONE);
 
 					chatBean = new SeekChatInfoBean();
-					log.d("mytest", "result=" + object);
 					chatBean.setNeedAuthorise((Boolean) object
 							.get("needAuthorise"));
-					log.d("mytest",
-							"NeedAuthorise=" + chatBean.getNeedAuthorise());
 					if (chatBean.getNeedAuthorise()) {
 						// 需要授权
 						chatBean.setIsApply((Boolean) object.get("isApply"));
-						log.d("mytest", "isApply=" + chatBean.getIsApply());
 						if (chatBean.getIsApply()) {
 							// 已经申请
 							chatBean.setFreshStatus((Boolean) object
 									.get("freshStatus"));
-							log.d("mytest",
-									"freshStatus="
-											+ chatBean.getFreshStatus());
 							chatBean.setApplyResult((Integer) object
 									.get("applyResult"));
-							log.d("mytest",
-									"applyResult="
-											+ chatBean.getApplyResult());
 							chatBean.setApplyReply((String) object
 									.get("applyReply"));
-							log.d("mytest",
-									"applyReply="
-											+ chatBean.getApplyReply());
 							chatBean.setArgument((String) object
 									.get("argument"));
-							log.d("mytest",
-									"argument=" + chatBean.getArgument());
 							chatBean.setApplyId((String) object
 									.get("applyId"));
-							log.d("mytest",
-									"applyId=" + chatBean.getApplyId());
 							chatBean.setAuthoriseCategoryId((String) object
 									.get("authoriseCategoryId"));
-							log.d("mytest",
-									"applyId="
-											+ chatBean
-											.getAuthoriseCategoryId());
 						} else {
 							// 未申请
 							chatBean.setAuthoriseCategoryId((String) object
 									.get("authoriseCategoryId"));
-							log.d("mytest",
-									"applyId="
-											+ chatBean
-											.getAuthoriseCategoryId());
 						}
 					} else {
 						// 不需要授权，直接创建
@@ -508,15 +482,12 @@ OnClickListener {
 					// 有觅聊
 					chatBean.setSeekChatCount((Integer) object
 							.get("seekChatCount"));
-					log.d("mytest",
-							"seekChatCount" + chatBean.getSeekChatCount());
 					if (chatBean.getSeekChatCount() == 0) {
 						return;
 					}
 					// createAt是Date类型，timeChatStop为long类型，取值是注意
 					chatBean.setChatList((List<Map<String, Object>>) object
 							.get("seekChats"));
-					log.d("mytest", "seekChats=" + chatBean.getChatList());
 					
 					seekChatBeansList.clear();
 					seekChatBeansList = new ArrayList<SeekChatBean>();
@@ -526,37 +497,25 @@ OnClickListener {
 						List<Map<String, Object>> members = (List<Map<String, Object>>) chatBean
 								.getChatList().get(i).get("members");
 						bean.setMembers(members);
-						log.d("mytest", "members" + members);
 
 						bean.setConversationId((String) chatBean
 								.getChatList().get(i).get("conversationId"));
-						log.d("mytest",
-								"conversationId" + bean.getConversationId());
 						AVUser avUser = (AVUser) chatBean.getChatList()
 								.get(i).get("creator");
 						bean.setCreator(AVUser.cast(avUser, ObjUser.class));
-						log.d("mytest", "creator" + bean.getCreator());
 						bean.setFolloweeCount((Integer) chatBean
 								.getChatList().get(i).get("followeeCount"));
-						log.d("mytest",
-								"followeeCount" + bean.getFolloweeCount());
 						Date date = (Date) chatBean.getChatList().get(i)
 								.get("createdAt");
 						bean.setCreateAt(date.getTime());
-						log.d("mytest", "createdAt" + bean.getCreateAt());
 						bean.setObjectId((String) chatBean.getChatList()
 								.get(i).get("objectId"));
-						log.d("mytest", "objectId" + bean.getObjectId());
 						bean.setPictureUrl((String) chatBean.getChatList()
 								.get(i).get("pictureUrl"));
-						log.d("mytest", "pictureUrl" + bean.getPictureUrl());
 						bean.setTitle((String) chatBean.getChatList()
 								.get(i).get("title"));
-						log.d("mytest", "title" + bean.getTitle());
 						bean.setTimeChatStop((Long) chatBean.getChatList()
 								.get(i).get("timeChatStop"));
-						log.d("mytest",
-								"timeChatStop" + bean.getTimeChatStop());
 
 						seekChatBeansList.add(bean);
 
@@ -704,7 +663,6 @@ OnClickListener {
 	 * @date 2015-11-28
 	 */
 	public void getMember(List<String> list,String conversationId) {
-		log.d("mytest", "wode====="+list.size());
 		userAboutBeansList = new ArrayList<UserAboutBean>();
 		if (list != null) {
 			for (String string : list) {

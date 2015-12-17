@@ -86,7 +86,6 @@ public class UserPhotoWallAdapter extends
 	public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int pos) {
 		// TODO Auto-generated method stub
 		if (mPhotos != null && mPhotos.size() > 0) {
-			log.d("mytest", "pos" + pos);
 			if (getItemViewType(pos) == TYPE_HEADER) {
 				RecyclerHeaderViewHolder holder = (RecyclerHeaderViewHolder) viewHolder;
 				StaggeredGridLayoutManager.LayoutParams clp = (StaggeredGridLayoutManager.LayoutParams) holder.headView

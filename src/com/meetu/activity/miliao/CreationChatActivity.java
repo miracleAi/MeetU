@@ -438,7 +438,6 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 			@Override
 			public void done(Integer pro) {
 				// TODO Auto-generated method stub
-				log.d("mytest", "jindu"+pro);
 				chatUpProgre.setProgress(pro);
 			}
 		});

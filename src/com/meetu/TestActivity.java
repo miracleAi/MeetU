@@ -515,7 +515,6 @@ public class TestActivity extends Activity {
 					return;
 				}
 				if (objects == null) {
-					Log.d("mytest", "obj null");
 					actyList.get(0).setOrderAndFollow(0);
 				} else {
 					actyList.get(0).setOrderAndFollow(objects.size());
