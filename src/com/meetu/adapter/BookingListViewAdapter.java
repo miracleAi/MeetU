@@ -52,6 +52,9 @@ public class BookingListViewAdapter extends BaseAdapter implements
 	public void setSelectedPosition(int i) {
 		selectedPosition = i;
 	}
+	public int getSelectPosition(){
+		return selectedPosition;
+	}
 
 	@Override
 	public int getViewTypeCount() {

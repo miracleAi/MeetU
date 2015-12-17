@@ -208,13 +208,13 @@ public class NewsListViewAdapter extends BaseAdapter {
 											onItemImageFavorClickCallBack
 													.onItemCancleImageFavorClick(position);
 											holder.favourImg
-													.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
+													.setImageResource(R.drawable.acty_show_navi_btn_like_line_nor);
 										}
 									});
 						} else {
 							// 表示未点赞
 							holder.favourImg
-									.setImageResource(R.drawable.acty_cardimg_btn_like_nor);
+									.setImageResource(R.drawable.acty_show_navi_btn_like_line_nor);
 							holder.favorLayout
 									.setOnClickListener(new OnClickListener() {
 

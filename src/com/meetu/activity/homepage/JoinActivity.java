@@ -136,8 +136,14 @@ OnItemClickListener {
 					} else if (result.equals(BCPayResult.RESULT_UNKNOWN)) {
 						//可能出现在支付宝8000返回状态
 						Toast.makeText(JoinActivity.this, "订单状态未知", Toast.LENGTH_LONG).show();
+						Toast.makeText(JoinActivity.this, "报名失败", Toast.LENGTH_LONG).show();
+						isJoin = false;
+						updateOrder(Constants.OrderStatusPayFail);
 					} else {
 						Toast.makeText(JoinActivity.this, "invalid return", Toast.LENGTH_LONG).show();
+						Toast.makeText(JoinActivity.this, "报名失败", Toast.LENGTH_LONG).show();
+						isJoin = false;
+						updateOrder(Constants.OrderStatusPayFail);
 					}
 				}
 			});
@@ -278,9 +284,15 @@ OnItemClickListener {
 			payLayout.setVisibility(View.GONE);
 			paylRelativeLayout.setVisibility(View.GONE);
 		}else{
-			payJoinedLayout.setVisibility(View.GONE);
-			payLayout.setVisibility(View.GONE);
-			paylRelativeLayout.setVisibility(View.VISIBLE);
+			if(adapter.getSelectPosition()>=0 && tickets.get(adapter.getSelectPosition()).getPrice() > 0){
+				payJoinedLayout.setVisibility(View.GONE);
+				payLayout.setVisibility(View.VISIBLE);
+				paylRelativeLayout.setVisibility(View.GONE);
+			}else{
+				payJoinedLayout.setVisibility(View.GONE);
+				payLayout.setVisibility(View.GONE);
+				paylRelativeLayout.setVisibility(View.VISIBLE);
+			}
 		}
 	}
 	//根据输入姓名修改用户真实姓名
@@ -539,6 +551,8 @@ OnItemClickListener {
 					bcCallback);            //支付完成后回调入口
 
 		} else {
+			isJoin = false;
+			updateOrder(Constants.OrderStatusPayFail);
 			Toast.makeText(JoinActivity.this,
 					"您尚未安装微信或者安装的微信版本不支持", Toast.LENGTH_LONG).show();
 		}
