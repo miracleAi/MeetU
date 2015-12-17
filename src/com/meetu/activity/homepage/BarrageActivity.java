@@ -556,7 +556,7 @@ public class BarrageActivity extends Activity {
 			bitmapUtils.display(headPhoto, bean.getUserAvator());
 		} else {
 			headPhoto
-			.setImageResource(R.drawable.mine_likelist_profile_default);
+			.setImageResource(R.drawable.img_profiles_u);
 		}
 		if (null != bean.getNickName() && !("").equals(bean.getNickName())) {
 			uName.setText(bean.getNickName());
