@@ -122,6 +122,7 @@ OnItemClickListener {
 						updateOrder(Constants.OrderStatusPaySuccess);
 					} else if (result.equals(BCPayResult.RESULT_CANCEL)){
 						Toast.makeText(JoinActivity.this, "报名失败", Toast.LENGTH_LONG).show();
+						isJoin = false;
 						updateOrder(Constants.OrderStatusPayFail);
 					}else if (result.equals(BCPayResult.RESULT_FAIL)) {
 						String toastMsg = "支付失败, 原因: " + bcPayResult.getErrCode() +
@@ -130,7 +131,6 @@ OnItemClickListener {
 						/**
 						 * 以下是正常流程，请按需处理失败信息
 						 */
-
 						Toast.makeText(JoinActivity.this, "报名失败", Toast.LENGTH_LONG).show();
 						updateOrder(Constants.OrderStatusPayFail);
 					} else if (result.equals(BCPayResult.RESULT_UNKNOWN)) {
@@ -498,6 +498,8 @@ OnItemClickListener {
 					activityOrder = order;
 					if(order.getOrderStatus()== Constants.OrderStatusPaySuccess){
 						isJoin = true;
+					}else{
+						isJoin = false;
 					}
 					updateView();
 				}
