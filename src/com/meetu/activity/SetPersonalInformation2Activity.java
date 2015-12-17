@@ -125,26 +125,12 @@ public class SetPersonalInformation2Activity extends BaseActivity implements
 		setContentView(R.layout.activity_shezhigerenxinxi2);
 		// 取得前边传过来的数据
 		Intent intent = this.getIntent();
-		//
-		// uName=intent.getStringExtra("name");
-		// uSex=intent.getStringExtra("sex");
-		// uBrith=intent.getStringExtra("birth");
 
-		// TODO YOUWENTI
 
 		log.e("lucifer", "birthString==" + birthString);
 
 		initView();
-		// if(schoolId==null){
-		// oneViewLayout.setVisibility(View.VISIBLE);
-		// towViewLayout.setVisibility(View.GONE);
-		// isShowTwo=false;
-		// }else{
-		// oneViewLayout.setVisibility(View.GONE);
-		// towViewLayout.setVisibility(View.VISIBLE);
-		// isShowTwo=true;
-		//
-		// }
+
 	}
 
 	private void initView() {
@@ -536,19 +522,21 @@ public class SetPersonalInformation2Activity extends BaseActivity implements
 				towViewLayout.setVisibility(View.VISIBLE);
 				isShowTwo = true;
 			} else {
-
-				if (etSchool.getText().length() != 0
-						&& tvHome.getText().length() != 0
-						&& major.getText().length() != 0) {
-					Toast.makeText(SetPersonalInformation2Activity.this,
-							"正在上传信息", Toast.LENGTH_SHORT).show();
-
+				
+				if(fHeadPath.equals("")||yHeadPath.equals("")){
+					Toast.makeText(getApplicationContext(), "请选择头像", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if (etSchool.getText().length() != 0&& tvHome.getText().length() != 0&& major.getText().length() != 0) {
+					
 					// 拿本地的 user
 					AVUser currentUser = AVUser.getCurrentUser();
 					if (currentUser != null) {
 						// 强制类型转换
 						ObjUser user = AVUser.cast(currentUser, ObjUser.class);
 						completeInfo(user);
+						Toast.makeText(SetPersonalInformation2Activity.this,
+								"正在上传信息", Toast.LENGTH_SHORT).show();
 					}
 				}
 			}

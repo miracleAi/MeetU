@@ -18,6 +18,7 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.LogUtil.log;
 import com.lidroid.xutils.BitmapUtils;
+import com.meetu.activity.SetPersonalInformation2Activity;
 import com.meetu.activity.SystemSettingsActivity;
 import com.meetu.activity.mine.UpdatepictureActivity;
 import com.meetu.activity.mine.UserPagerActivity;
@@ -199,6 +200,11 @@ OnClickListener {
 
 			@Override
 			public void onClick(View arg0) {
+				if(!user.isCompleteUserInfo()){
+					Intent data=new Intent(getActivity(),SetPersonalInformation2Activity.class);
+					startActivity(data);
+					return;
+				}
 				showDialog();
 
 			}

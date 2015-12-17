@@ -9,6 +9,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.activity.ChooseSchoolActivity;
+import com.meetu.activity.SetPersonalInformation2Activity;
 import com.meetu.activity.mine.ChangeBirthdayActivity;
 import com.meetu.activity.mine.ChangeCityActivity;
 import com.meetu.activity.mine.ChangeMajorActivity;
@@ -222,13 +223,23 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 		switch (v.getId()) {
 		// 修改名字
 		case R.id.minesetting_username_ll:
-
+			
+			if(!user.isCompleteUserInfo()){
+				Intent data=new Intent(getActivity(),SetPersonalInformation2Activity.class);
+				startActivity(data);
+				break;
+			}
 			Intent intent = new Intent(getActivity(), ChangeNameActivity.class);
 			intent.putExtra("name", username.getText().toString());
 			startActivityForResult(intent, 0);
 			break;
 		// 修改生日
 		case R.id.minesetting_birthday_ll:
+			if(!user.isCompleteUserInfo()){
+				Intent data=new Intent(getActivity(),SetPersonalInformation2Activity.class);
+				startActivity(data);
+				break;
+			}
 			Intent intent5 = new Intent(getActivity(),
 					ChangeBirthdayActivity.class);
 			intent5.putExtra("birthday", userbirthday.getText().toString());
@@ -236,6 +247,11 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 			break;
 		// 修改 学校
 		case R.id.minesetting_school_ll:
+			if(!user.isCompleteUserInfo()){
+				Intent data=new Intent(getActivity(),SetPersonalInformation2Activity.class);
+				startActivity(data);
+				break;
+			}
 			Intent intent1 = new Intent(getActivity(),
 					ChangeSchoolActivity.class);
 			intent1.putExtra("school", userschool.getText());
@@ -243,6 +259,11 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 			break;
 		// 星座的修改
 		case R.id.minesetting_Constellation_ll:
+			if(!user.isCompleteUserInfo()){
+				Intent data=new Intent(getActivity(),SetPersonalInformation2Activity.class);
+				startActivity(data);
+				break;
+			}
 			Intent intent2 = new Intent(getActivity(),
 					ChangexingzuoActivity.class);
 			intent2.putExtra("Constellation", userConstellation.getText());
@@ -251,6 +272,11 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 		// 专业的修改
 		case R.id.minesetting_major_ll:
 			// 传个学校对象过去 和 完善信息保持一致
+			if(!user.isCompleteUserInfo()){
+				Intent data=new Intent(getActivity(),SetPersonalInformation2Activity.class);
+				startActivity(data);
+				break;
+			}
 			if(user.getSchoolNum()!=0){
 				Schools schools = new Schools();
 				schools.setUnivsId("" + user.getSchoolNum());
@@ -274,6 +300,11 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 			
 		// 家乡的修改
 		case R.id.minesetting_hometown_ll:
+			if(!user.isCompleteUserInfo()){
+				Intent data=new Intent(getActivity(),SetPersonalInformation2Activity.class);
+				startActivity(data);
+				break;
+			}
 			Intent intent4 = new Intent(getActivity(), ChangeCityActivity.class);
 			intent4.putExtra("hometown", userhometown.getText());
 			startActivityForResult(intent4, 4);

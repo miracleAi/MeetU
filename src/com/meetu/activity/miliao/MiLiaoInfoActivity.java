@@ -392,8 +392,8 @@ OnMiLiaoInfoItemClickCallBack {
 			if (detele == false) {
 
 				if (position == mList2.size() - 1) {
-					Toast.makeText(this, "点击了删除。进入删除模式" + position,
-							Toast.LENGTH_SHORT).show();
+//					Toast.makeText(this, "点击了删除。进入删除模式" + position,
+//							Toast.LENGTH_SHORT).show();
 					detele = true;
 					mList2.remove(mList2.size() - 1);
 					for (UserAbout user : mList2) {
