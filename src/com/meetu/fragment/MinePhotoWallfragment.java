@@ -109,7 +109,6 @@ implements com.meetu.adapter.UserPhotoWallAdapter.OnItemClickCallBack {
 	public void adjustScroll(int scrollHeight, int headerHeight) {
 		if (mRecyclerView == null)
 			return;
-
 		mScrollY = headerHeight - scrollHeight;
 		// 滑块偏移某值之后为零点，滑块偏移量与view运动方向相反
 		mLayoutMgr.scrollToPositionWithOffset(0, -mScrollY);
@@ -161,16 +160,14 @@ implements com.meetu.adapter.UserPhotoWallAdapter.OnItemClickCallBack {
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
 				mScrollY += dy;
-				float y = recyclerView.getTranslationY();
-				log.d("mytest", "tans---"+y);
-				log.d("mytest", "dy---"+dy);
+				//加入此行，调整由于检测不到的移动所产生的误差
+				mLayoutMgr.scrollToPositionWithOffset(0, -mScrollY);
 				if (mScrollTabHolder != null) {
 					mScrollTabHolder.onRecyclerViewScroll(recyclerView,
 							mScrollY, mPosition);
 				}
 			}
 		});
-
 	}
 
 	public void setGridViewHeightaListener(
@@ -276,7 +273,14 @@ implements com.meetu.adapter.UserPhotoWallAdapter.OnItemClickCallBack {
 	 * @author lucifer
 	 * @date 2015-11-9
 	 */
-	public void reflesh() {
+	public void reflesh(Boolean isDel) {
+		if(!isDel){
+			mScrollY = 0;
+			// 滑块偏移某值之后为零点，滑块偏移量与view运动方向相反
+			mLayoutMgr.scrollToPositionWithOffset(0, -mScrollY);
+			mScrollTabHolder.onRecyclerViewScroll(mRecyclerView,
+					mScrollY, mPosition);
+		}
 		loaddata();
 
 	}
@@ -285,7 +289,7 @@ implements com.meetu.adapter.UserPhotoWallAdapter.OnItemClickCallBack {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if(requestCode == SCAN_PHOTO && resultCode == MinephotoActivity.RESULT_OK){
-			reflesh();
+			reflesh(true);
 		}
 	}
 }

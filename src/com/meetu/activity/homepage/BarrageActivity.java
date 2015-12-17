@@ -548,7 +548,7 @@ public class BarrageActivity extends Activity {
 		return bottomBean;
 	}
 
-	public void initBottom(BarrageMsgBean bean, boolean isClick) {
+	public void initBottom(final BarrageMsgBean bean, boolean isClick) {
 		if(bean.getNickName().equals("小U")){
 			headPhoto
 			.setImageResource(R.drawable.img_profiles_u);
@@ -565,11 +565,18 @@ public class BarrageActivity extends Activity {
 		}
 		timeTv.setText(bean.getTime());
 		uContent.setText(bean.getContent());
-		if(bean.getUserId() != null && !("").equals(bean.getUserId())){
-			Intent intent = new Intent(BarrageActivity.this, UserPagerActivity.class);
-			intent.putExtra("userId",bean.getUserId());
-			startActivity(intent);
-		}
+		headPhoto.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(bean.getUserId() != null && !("").equals(bean.getUserId())){
+					Intent intent = new Intent(BarrageActivity.this, UserPagerActivity.class);
+					intent.putExtra("userId",bean.getUserId());
+					startActivity(intent);
+				}
+			}
+		});
 		if (isClick) {
 			handler.postDelayed(bottomRunnable, 8000);
 		} else {

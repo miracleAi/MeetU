@@ -392,7 +392,7 @@ public class Minefragment extends Fragment implements OnPageChangeListener,
 				// TODO 刷新 照片列表
 				log.e("lucifer", "上传照片成功刷新照片列表");
 
-				((MinePhotoWallfragment) list.get(1)).reflesh();
+				((MinePhotoWallfragment) list.get(1)).reflesh(false);
 			}
 			break;
 

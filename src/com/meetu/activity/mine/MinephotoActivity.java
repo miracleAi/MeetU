@@ -17,6 +17,9 @@ import com.meetu.entity.PhotoWall;
 import android.os.Bundle;
 import android.R.integer;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -30,7 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MinephotoActivity extends Activity implements OnClickListener,
-		OnPageChangeListener {
+OnPageChangeListener {
 	private String itemid;
 	private String pid;
 	private PhotoWall dataPhotoWall;
@@ -118,31 +121,7 @@ public class MinephotoActivity extends Activity implements OnClickListener,
 			finish();
 			break;
 		case R.id.deldect_mine_photoview_fullscreen_rl:
-			Toast.makeText(MinephotoActivity.this,"正在删除", 1000).show();
-			ObjUserPhotoWrap.deleteUserPhoto(objUserPhotos.get(positionNow),new ObjFunBooleanCallback() {
-				
-				@Override
-				public void callback(boolean result, AVException e) {
-					// TODO Auto-generated method stub
-					if(result){
-						Toast.makeText(MinephotoActivity.this, "已删除", 1000).show();
-						setResult(RESULT_OK);
-						objUserPhotos.remove(positionNow);
-						adapter = new MinePhotoAdapter(MinephotoActivity.this, objUserPhotos, userId);
-						viewPager.setAdapter(adapter);
-						if(objUserPhotos.size() == 0){
-							//回到主页需要刷新UU秀墙
-							finish();
-						}else if(positionNow > objUserPhotos.size()-1){
-							viewPager.setCurrentItem(positionNow-1);
-						}else{
-							viewPager.setCurrentItem(positionNow);
-						}
-					}else{
-						Toast.makeText(MinephotoActivity.this, "删除失败", 1000).show();
-					}
-				}
-			});
+			showDeleteDialog();
 			break;
 
 		default:
@@ -170,4 +149,53 @@ public class MinephotoActivity extends Activity implements OnClickListener,
 		dateTv.setText(DateUtils.format(objUserPhotos.get(positionNow).getCreatedAt().getTime(), DateUtils.DateFormat_Date));
 	}
 
+	//退出登录弹窗
+	private void showDeleteDialog() {
+		// TODO Auto-generated method stub
+		Dialog dialog = new AlertDialog.Builder(this).setTitle("提示").setMessage("亲爱的，真的删掉么？")
+				.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int arg1) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+					}
+				}).setNeutralButton("删除", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int arg1) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+						delete();
+					}
+				}).create();
+		dialog.show();
+	}
+	public void delete(){
+		Toast.makeText(MinephotoActivity.this,"正在删除", 1000).show();
+		ObjUserPhotoWrap.deleteUserPhoto(objUserPhotos.get(positionNow),new ObjFunBooleanCallback() {
+
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(result){
+					Toast.makeText(MinephotoActivity.this, "已删除", 1000).show();
+					setResult(RESULT_OK);
+					objUserPhotos.remove(positionNow);
+					adapter = new MinePhotoAdapter(MinephotoActivity.this, objUserPhotos, userId);
+					viewPager.setAdapter(adapter);
+					if(objUserPhotos.size() == 0){
+						//回到主页需要刷新UU秀墙
+						finish();
+					}else if(positionNow > objUserPhotos.size()-1){
+						viewPager.setCurrentItem(positionNow-1);
+					}else{
+						viewPager.setCurrentItem(positionNow);
+					}
+				}else{
+					Toast.makeText(MinephotoActivity.this, "删除失败", 1000).show();
+				}
+			}
+		});
+	}
 }

@@ -876,7 +876,7 @@ ScrollTabHolder, OnClickListener {
 				log.e("lucifer", "上传照片成功刷新照片列表");
 
 				// ((MinePhotoWallfragment)list.get(1)).reflesh();
-				photoWallFragment.reflesh();
+				photoWallFragment.reflesh(false);
 			}
 			break;
 

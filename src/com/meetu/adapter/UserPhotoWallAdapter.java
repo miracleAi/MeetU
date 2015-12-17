@@ -94,7 +94,7 @@ public class UserPhotoWallAdapter extends
 				if (clp != null) {
 					clp.setFullSpan(true);
 					clp.width = width;
-					clp.height = DensityUtil.dip2px(mContext, 335);
+					clp.height = DensityUtil.dip2px(mContext, 345);
 					holder.headView.setLayoutParams(clp);
 				}
 			} else {
@@ -227,6 +227,7 @@ public class UserPhotoWallAdapter extends
 
 		public RecyclerHeaderViewHolder(View itemView) {
 			super(itemView);
+			//由于顶部留空隙，比head高10dp
 			headView = itemView.findViewById(R.id.cv);
 		}
 	}

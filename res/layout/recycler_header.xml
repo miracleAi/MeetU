@@ -2,6 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/cv"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="@dimen/header_height">
+    android:layout_height="345dp">
 
 </RelativeLayout>

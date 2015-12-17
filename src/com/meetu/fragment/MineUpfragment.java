@@ -315,7 +315,7 @@ OnClickListener {
 	@SuppressLint("NewApi")
 	private void scrollHeader(int scrollY) {
 		float translationY = Math.max(-scrollY, minHeaderTranslation);
-		if(translationY>0){
+		if(translationY<0){
 			headView.setTranslationY(translationY);
 		}else{
 			headView.setTranslationY(translationY);
@@ -548,7 +548,7 @@ OnClickListener {
 
 			//	 ((MinePhotoWallfragment)MinePhotoWallfragment.newInstance(1));
 			//	 MinePhotoWallfragment.newInstance(1);
-				 photoWallFragment.reflesh();
+				 photoWallFragment.reflesh(false);
 				
 			}
 			break;
