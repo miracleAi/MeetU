@@ -39,7 +39,8 @@
     <color name="touming">#00000000</color>
     <color name="child_backgroud">#64eeeeee</color>
     <color name="ruoqu">#1a000000</color>
-    
+    <color name="zhifubao">#00acee</color>
+    <color name="weixin">#0bc7b4</color>
    
     
 </resources>

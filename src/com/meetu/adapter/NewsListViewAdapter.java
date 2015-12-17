@@ -146,26 +146,17 @@ public class NewsListViewAdapter extends BaseAdapter {
 			holder.praiseCount = (TextView) convertView
 					.findViewById(R.id.praiseCount_huodong_fragment_tv);
 			holder.favorLayout=(RelativeLayout) convertView.findViewById(R.id.favour_hongdong_fragment_rl);
+			holder.maoLayout=(RelativeLayout) convertView.findViewById(R.id.maoglass_item_huodong_fragment_rl);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		// RelativeLayout.LayoutParams params=(LayoutParams)
-		// holder.topRl.getLayoutParams();
-		// if(position==0){
-		// params.topMargin=DensityUtil.dip2px(mContext, 44);
-		// holder.topRl.setLayoutParams(params);
-		// }
-
-		// holder.ivImgUrl.setImageResource(item.getImg());
-		// bitmapUtils.display(holder.ivImgUrl, item.getActivityCover());
 		if (item.getActivityCover() != null) {
 			finalBitmap.display(holder.ivImgUrl, item.getActivityCover());
 		}
 
-		// new ImageLoader().showImageByThread(holder.ivImgUrl, item.getImg());
-		// mImageLoader.showImageByAsyncTask(holder.ivImgUrl, item.getImg());
+	
 		holder.tvTilte.setText(item.getTitle()+"---"+item.getTitleSub());
 		holder.tvAdress.setText( "地址: "
 				+ item.getLocationPlace());
@@ -228,6 +219,8 @@ public class NewsListViewAdapter extends BaseAdapter {
 					}
 				});
 
+		
+		
 
 
 		return convertView;
@@ -247,6 +240,7 @@ public class NewsListViewAdapter extends BaseAdapter {
 		private ImageView favourImg;// 点赞图片
 		private TextView praiseCount;// 点赞数量
 		private RelativeLayout favorLayout;//点赞布局
+		private RelativeLayout maoLayout;
 	}
 
 	/**
@@ -263,7 +257,7 @@ public class NewsListViewAdapter extends BaseAdapter {
 					activityId);
 
 		} catch (AVException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 
