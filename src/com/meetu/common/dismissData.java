@@ -29,7 +29,7 @@ public class dismissData {
 				String string=""+((timeOver-nowData)/(1000*60*60))+"h";
 				return string;
 			}else if((timeOver-nowData)>=1000*60){
-				String string=""+((timeOver-nowData)/(1000*60))+"f";
+				String string=""+((timeOver-nowData)/(1000*60))+"min";
 				return string;
 			}else if((timeOver-nowData)>=1000){
 				String string=""+((timeOver-nowData)/1000)+"s";
