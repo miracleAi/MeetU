@@ -67,11 +67,7 @@ public class MyApplication extends Application {
 		int memory = (int) Runtime.getRuntime().maxMemory() / 8;
 		finalBitmap.configMemoryCacheSize(memory);
 		finalBitmap.configLoadingImage(R.drawable.mine_img_loading);
-		finalBitmap.configLoadfailImage(R.drawable.mine_img_loading);
-		
-		
-
-		
+	//	finalBitmap.configLoadfailImage(R.drawable.mine_img_loading);	
 		// finalBitmap.configBitmapMaxHeight(bitmapHeight);
 		/**
 		 * 第三方支付相关

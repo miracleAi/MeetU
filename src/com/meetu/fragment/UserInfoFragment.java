@@ -61,6 +61,8 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements
 	private static final String ARG_POSITION = "position";
 	private int mPosition;
 	private static Boolean isMyself = false;
+	
+	private ImageView one,two,three,four,five,six;
 
 	public static Fragment newInstance(int position, String userID) {
 		
@@ -197,6 +199,13 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements
 				.findViewById(R.id.minesetting_major_ll);
 		hometownLayout = (LinearLayout) view
 				.findViewById(R.id.minesetting_hometown_ll);
+		
+		one=(ImageView) view.findViewById(R.id.image_one_img);
+		two=(ImageView) view.findViewById(R.id.image_two_img);
+		three=(ImageView) view.findViewById(R.id.image_three_img);
+		four=(ImageView) view.findViewById(R.id.image_four_img);
+		five=(ImageView) view.findViewById(R.id.minesetting_major_img);
+		six=(ImageView) view.findViewById(R.id.image_six_img);
 
 		// 如果是我自己
 		if (isMyself) {
@@ -208,7 +217,17 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements
 			majorLayout.setOnClickListener(this);
 
 			hometownLayout.setOnClickListener(this);
+		}else{
+			one.setVisibility(View.GONE);
+			two.setVisibility(View.GONE);
+			three.setVisibility(View.GONE);
+			four.setVisibility(View.GONE);
+			five.setVisibility(View.GONE);
+			six.setVisibility(View.GONE);
 		}
+		
+		
+		
 
 	}
 

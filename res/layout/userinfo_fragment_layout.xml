@@ -13,7 +13,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <include layout="@layout/header_placeholder" />
+        <include layout="@layout/header_placeholder" 
+        ></include>y
 
         <LinearLayout
             android:id="@+id/minesetting_username_ll"
@@ -57,7 +58,7 @@
                     android:textColor="@color/textColor_setting" />
 
                 <ImageView
-                    android:id="@+id/imageView1"
+                    android:id="@+id/image_one_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -148,6 +149,7 @@
                     android:textColor="@color/textColor_setting" />
 
                 <ImageView
+                    android:id="@+id/image_two_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -197,6 +199,7 @@
                     android:textColor="@color/textColor_setting" />
 
                 <ImageView
+                    android:id="@+id/image_three_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -252,6 +255,7 @@
                     android:textColor="@color/textColor_setting" />
 
                 <ImageView
+                    android:id="@+id/image_four_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -347,6 +351,7 @@
                     android:textColor="@color/textColor_setting" />
 
                 <ImageView
+                   
                     android:id="@+id/minesetting_major_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -397,6 +402,7 @@
                     android:textColor="@color/textColor_setting" />
 
                 <ImageView
+                    android:id="@+id/image_six_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -415,7 +421,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp" >
+            android:layout_marginTop="60dp" >
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -434,13 +440,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp" >
+            android:layout_marginTop="6dp" 
+            android:layout_marginBottom="100dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center" 
-                android:layout_marginBottom="150dp">
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
