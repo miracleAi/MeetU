@@ -130,8 +130,14 @@
                         android:id="@+id/msg_photo_img"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        
-                        android:src="@drawable/acty_barrage_img_comment_profiles_default" />
+                         />
+                    <ImageView 
+                        android:id="@+id/load_imv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                       />
+                    
                 </RelativeLayout>
 
                 <RelativeLayout

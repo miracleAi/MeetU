@@ -112,8 +112,30 @@ public class UserPhotoWallAdapter extends
 				int Hight = (int) ((double) photoWidth / (width / 2) * (photoHight));
 				if (photoWidth >= (width / 2)) {
 					if (item.getPhoto() != null) {
-						finalBitmap.display(holder.ivImg, item.getPhoto()
-								.getThumbnailUrl(true, item.getImageWidth(), item.getImageHeight(),100,"jpg"), width / 2, Hight);
+						/*finalBitmap.display(holder.ivImg, item.getPhoto()
+								.getThumbnailUrl(true, item.getImageWidth(), item.getImageHeight(),100,"jpg"), width / 2, Hight);*/
+						bitmapUtils.display(holder.ivImg, item.getPhoto().getThumbnailUrl(true, item.getImageWidth(), item.getImageHeight(),100,"jpg"),
+								new BitmapLoadCallBack<ImageView>() {
+
+									@Override
+									public void onLoadCompleted(
+											ImageView view, String uri,
+											Bitmap bitmap,
+											BitmapDisplayConfig config,
+											BitmapLoadFrom from) {
+
+										/*holder.loadImv.setVisibility(View.GONE);
+										holder.ivImg.setImageBitmap(bitmap);*/
+										((RelativeLayout)view.getTag()).setVisibility(View.GONE);
+										((ImageView)view).setImageBitmap(bitmap);
+									}
+									@Override
+									public void onLoadFailed(ImageView arg0,
+											String arg1, Drawable arg2) {
+										// TODO Auto-generated method stub
+
+									}
+								});
 					}
 
 				} else {
@@ -124,16 +146,18 @@ public class UserPhotoWallAdapter extends
 
 									@Override
 									public void onLoadCompleted(
-											ImageView container, String uri,
+											ImageView view, String uri,
 											Bitmap bitmap,
 											BitmapDisplayConfig config,
 											BitmapLoadFrom from) {
 
 										bitmap = BitmapChange.zoomImg(bitmap,
 												width / 2);
-										holder.ivImg.setImageBitmap(bitmap);
+										/*holder.loadImv.setVisibility(View.GONE);
+										holder.ivImg.setImageBitmap(bitmap);*/
+										((RelativeLayout)view.getTag()).setVisibility(View.GONE);
+										((ImageView)view).setImageBitmap(bitmap);
 									}
-
 									@Override
 									public void onLoadFailed(ImageView arg0,
 											String arg1, Drawable arg2) {
@@ -205,11 +229,15 @@ public class UserPhotoWallAdapter extends
 	private static class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
 		private RelativeLayout rlAll;
 		private ImageView ivImg;
+		private RelativeLayout loadLayout;
 		private TextView ivFavorNumber, ivViewNumber, ivphotoDate, ivDesc;
 
 		public RecyclerItemViewHolder(View view) {
 			super(view);
 			ivImg = (ImageView) view.findViewById(R.id.mine_img_loading);
+			loadLayout = (RelativeLayout) view.findViewById(R.id.load_layout);
+			ivImg.setTag(loadLayout);
+			loadLayout.setVisibility(View.VISIBLE);
 			rlAll = (RelativeLayout) view.findViewById(R.id.rl_all_rl);
 			ivFavorNumber = (TextView) view
 					.findViewById(R.id.mine_favourNumber);

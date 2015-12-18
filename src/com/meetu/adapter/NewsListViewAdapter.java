@@ -7,6 +7,8 @@ import java.util.Map;
 import net.tsz.afinal.FinalBitmap;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +29,9 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
+import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
+import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 import com.meetu.bean.ActivityBean;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjActivity;
@@ -131,6 +136,9 @@ public class NewsListViewAdapter extends BaseAdapter {
 					R.layout.item_huodong_fragment, null);
 			holder.ivImgUrl = (ImageView) convertView
 					.findViewById(R.id.img_huodong_homepage);
+			holder.loadLayout = (RelativeLayout) convertView.findViewById(R.id.load_layout);
+			holder.ivImgUrl.setTag(holder.loadLayout);
+			holder.loadLayout.setVisibility(View.VISIBLE);
 			holder.tvTilte = (TextView) convertView
 					.findViewById(R.id.title_huodong_homepage);
 			holder.styleTextView = (TextView) convertView
@@ -153,7 +161,26 @@ public class NewsListViewAdapter extends BaseAdapter {
 		}
 
 		if (item.getActivityCover() != null) {
-			finalBitmap.display(holder.ivImgUrl, item.getActivityCover());
+			//finalBitmap.display(holder.ivImgUrl, item.getActivityCover());
+			bitmapUtils.display(holder.ivImgUrl, item.getActivityCover(), new BitmapLoadCallBack<ImageView>(){
+
+				@Override
+				public void onLoadCompleted(ImageView view, String arg1,
+						Bitmap bitmap, BitmapDisplayConfig arg3,
+						BitmapLoadFrom arg4) {
+					// TODO Auto-generated method stub
+					((RelativeLayout)view.getTag()).setVisibility(View.GONE);
+					((ImageView)view).setImageBitmap(bitmap);
+				}
+
+				@Override
+				public void onLoadFailed(ImageView arg0, String arg1,
+						Drawable arg2) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
 		}
 
 	
@@ -231,6 +258,7 @@ public class NewsListViewAdapter extends BaseAdapter {
 		private TextView tvDigest;
 		private TextView tvReply;
 		private ImageView ivImgUrl;
+		private RelativeLayout loadLayout;
 		private ImageView ivExtImg1;
 		private ImageView ivExtImg2;
 		private TextView styleTextView;

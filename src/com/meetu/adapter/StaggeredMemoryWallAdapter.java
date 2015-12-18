@@ -32,6 +32,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.IBinder;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -156,17 +157,18 @@ public class StaggeredMemoryWallAdapter extends
 			
 			if(item.getPhoto()!=null){
 				if (photoWidth >= (width / 2)) {
-
 					bitmapUtils.display(holder.ivImg, item.getPhoto().getThumbnailUrl(true, item.getPhotoWidth(), item.getPhotoHeight(),100,"jpg"), new BitmapLoadCallBack<ImageView>() {
 
 						@Override
-						public void onLoadCompleted(ImageView arg0, String arg1,
+						public void onLoadCompleted(ImageView view, String arg1,
 								Bitmap bitmap, BitmapDisplayConfig arg3,
 								BitmapLoadFrom arg4) {
 							// TODO Auto-generated method stub
 							bitmap=BitmapCut.toRoundCorner(bitmap,12);
 							
-							holder.ivImg.setImageBitmap(bitmap);
+							//holder.ivImg.setImageBitmap(bitmap);
+							((RelativeLayout)view.getTag()).setVisibility(View.GONE);
+							((ImageView)view).setImageBitmap(bitmap);
 						}
 
 						@Override
@@ -182,7 +184,7 @@ public class StaggeredMemoryWallAdapter extends
 							new BitmapLoadCallBack<ImageView>() {
 
 								@Override
-								public void onLoadCompleted(ImageView container,
+								public void onLoadCompleted(ImageView view,
 										String uri, Bitmap bitmap,
 										BitmapDisplayConfig config,
 										BitmapLoadFrom from) {
@@ -192,8 +194,9 @@ public class StaggeredMemoryWallAdapter extends
 									log.e("zcq", "www=== " + bitmap.getWidth()
 											+ " hhh===" + bitmap.getHeight());
 									bitmap=BitmapCut.toRoundCorner(bitmap,12);
-									
-									holder.ivImg.setImageBitmap(bitmap);
+									((RelativeLayout)view.getTag()).setVisibility(View.GONE);
+									((ImageView)view).setImageBitmap(bitmap);
+									//holder.ivImg.setImageBitmap(bitmap);
 								}
 
 								@Override
@@ -289,6 +292,7 @@ public class StaggeredMemoryWallAdapter extends
 	class MyViewHolder extends ViewHolder {
 		private RelativeLayout rlAll;
 		private ImageView ivImg;// 图片
+		private RelativeLayout loadLayout;
 		private ImageView favorImg;// 点赞
 		private TextView numberFavor;// 点赞数量
 
@@ -298,6 +302,9 @@ public class StaggeredMemoryWallAdapter extends
 			super(view);
 
 			ivImg = (ImageView) view.findViewById(R.id.img_item_memorywall);
+			loadLayout = (RelativeLayout) view.findViewById(R.id.load_layout);
+			ivImg.setTag(loadLayout);
+			loadLayout.setVisibility(View.VISIBLE);
 			rlAll = (RelativeLayout) view.findViewById(R.id.item_memorywall_rl);
 			favorImg = (ImageView) view
 					.findViewById(R.id.favor_item_memorywall);

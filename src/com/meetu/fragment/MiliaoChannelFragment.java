@@ -10,6 +10,10 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
+import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
+import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 import com.meetu.activity.miliao.MiLiaoUsersListActivity;
 import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.bean.SeekChatBean;
@@ -28,6 +32,7 @@ import com.meetu.tools.DensityUtil;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -45,6 +50,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 	// 控件相关
 	private TextView dismissData;
 	private ImageView photoManager, backgroud;
+	private RelativeLayout loadLayout;
 	private TextView titile;
 	private TextView numberAll, numberFavor, numberUserAll;
 	private View view;
@@ -53,6 +59,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 	// 网络数据相关
 	private ObjChat objChat = new ObjChat();
 	private FinalBitmap finalBitmap=null;
+	BitmapUtils bitmaputils;
 	private AVIMConversation conv;
 	// 会话成员列表
 	ArrayList<ObjUser> memberUserList = new ArrayList<ObjUser>();
@@ -91,6 +98,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 			MyApplication app = (MyApplication) getActivity()
 					.getApplicationContext();
 			finalBitmap = app.getFinalBitmap();
+			bitmaputils = new BitmapUtils(getActivity());
 			// conv =
 			// MyApplication.chatClient.getConversation(""+seekChatBean.getCreator());
 			initView();
@@ -119,6 +127,9 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 				.findViewById(R.id.numberFavor_miliao_channel);
 		backgroud = (ImageView) view
 				.findViewById(R.id.backgroud_miliao_channel_img);
+		loadLayout = (RelativeLayout) view.findViewById(R.id.load_layout);
+		backgroud.setTag(loadLayout);
+		loadLayout.setVisibility(View.VISIBLE);
 
 		// 参加觅聊的人
 		oneUser = (ImageView) view.findViewById(R.id.one_photoHead_channel_img);
@@ -142,7 +153,24 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 		}
 		if (seekChatBean.getPictureUrl() != null) {
 			log.e("zcq", "设置背景");
-			finalBitmap.display(backgroud, seekChatBean.getPictureUrl());
+			//finalBitmap.display(backgroud, seekChatBean.getPictureUrl());
+			bitmaputils.display(backgroud, seekChatBean.getPictureUrl(), new BitmapLoadCallBack<View>() {
+
+				@Override
+				public void onLoadCompleted(View view, String arg1,
+						Bitmap bitmap, BitmapDisplayConfig arg3,
+						BitmapLoadFrom arg4) {
+					// TODO Auto-generated method stub
+					((RelativeLayout)view.getTag()).setVisibility(View.GONE);
+					((ImageView)view).setImageBitmap(bitmap);
+				}
+
+				@Override
+				public void onLoadFailed(View arg0, String arg1, Drawable arg2) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
 		}
 		numberLayout=(RelativeLayout) view.findViewById(R.id.number_user_fragment_miliao_channel_rl);
 		numberLayout.setOnClickListener(new OnClickListener() {

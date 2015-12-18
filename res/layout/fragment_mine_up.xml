@@ -28,9 +28,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="44dp" >
-
-               
-
                 <RelativeLayout
                     android:id="@+id/setting_mine_up_fragment_rl"
                     android:layout_width="44dp"

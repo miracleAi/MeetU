@@ -177,7 +177,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 										Toast.LENGTH_SHORT).show();
 							}
 						}
-
 					}
 				});
 

@@ -2,102 +2,115 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/cv"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"   
-	android:layout_marginRight="8dp" 
-	android:layout_marginBottom="8dp"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginRight="8dp"
     android:background="@drawable/tupian_bg"
     android:orientation="vertical" >
 
-  <RelativeLayout 
-      android:id="@+id/rl_all_rl"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      >  
     <RelativeLayout
-        android:id="@+id/rl_all"
-        android:layout_width="wrap_content"       
-        android:layout_height="wrap_content"
-         >
+        android:id="@+id/rl_all_rl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
 
-        <ImageView
-            android:id="@+id/mine_img_loading"
+        <RelativeLayout
+            android:id="@+id/rl_all"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"			     
-            android:src="@drawable/mine_img_loading" />
- 
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/mine_img_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true" />
+
+            <RelativeLayout
+                android:id="@+id/load_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/uu_img_default_load_bg" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/uu_show_banner_img_default_load_state" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@+id/rl_all" >
+
+            <TextView
+                android:id="@+id/desc_item_photo_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="8dp"
+                android:text=""
+                android:textColor="#606366"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/mine_date_item_photoWall_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/desc_item_photo_tv"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:text=""
+                android:textColor="#33c6e5"
+                android:textSize="10sp" />
+
+            <ImageView
+                android:id="@+id/mine_icon_no_favorites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/mine_date_item_photoWall_tv"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="3dp"
+                android:src="@drawable/mine_photoview_cell_btn_like_nor" />
+
+            <TextView
+                android:id="@+id/mine_favourNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/mine_icon_no_favorites"
+                android:layout_marginLeft="4dp"
+                android:layout_toRightOf="@+id/mine_icon_no_favorites"
+                android:text="0"
+                android:textColor="#cccccc"
+                android:textSize="10sp" />
+
+            <ImageView
+                android:id="@+id/mine_icon_views"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/mine_favourNumber"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/mine_favourNumber"
+                android:src="@drawable/mine_photoview_cell_img_views" />
+
+            <TextView
+                android:id="@+id/mine_viewNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/mine_icon_views"
+                android:layout_marginLeft="4dp"
+                android:layout_toRightOf="@+id/mine_icon_views"
+                android:text="0"
+                android:textColor="#cccccc"
+                android:textSize="10sp" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"
+                android:layout_below="@+id/mine_favourNumber" />
+        </RelativeLayout>
     </RelativeLayout>
-
-    
-    <RelativeLayout android:layout_width="match_parent"
-        android:layout_height="60dp"
-         android:layout_below="@+id/rl_all">
-    <TextView
-        android:id="@+id/desc_item_photo_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"     
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="8dp"
-        android:textSize="11sp"
-        android:textColor="#606366"
-        android:text="" />
-    <TextView
-        android:id="@+id/mine_date_item_photoWall_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/desc_item_photo_tv"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:textSize="10sp"
-        android:textColor="#33c6e5"
-        android:text="" />
-    
-      <ImageView
-          android:id="@+id/mine_icon_no_favorites"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_below="@id/mine_date_item_photoWall_tv"
-          android:layout_marginLeft="10dp"
-          android:layout_marginTop="3dp"
-          android:src="@drawable/mine_photoview_cell_btn_like_nor" />
-
-        <TextView
-            android:id="@+id/mine_favourNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/mine_icon_no_favorites"
-            android:layout_marginLeft="4dp"
-            android:layout_toRightOf="@+id/mine_icon_no_favorites"
-            android:textSize="10sp"
-            android:text="0"
-            android:textColor="#cccccc" />
-
-        <ImageView
-            android:id="@+id/mine_icon_views"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/mine_favourNumber"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/mine_favourNumber"
-            android:src="@drawable/mine_photoview_cell_img_views" />
-
-        <TextView
-            android:id="@+id/mine_viewNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/mine_icon_views"
-            android:layout_marginLeft="4dp"
-            android:layout_toRightOf="@+id/mine_icon_views"  
-            android:textSize="10sp"          
-            android:text="0"
-            android:textColor="#cccccc" />
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="10dp"           
-            android:layout_below="@+id/mine_favourNumber"/>
-        </RelativeLayout>
-        </RelativeLayout>
 
 </RelativeLayout>

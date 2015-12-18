@@ -39,12 +39,9 @@ import com.meetu.tools.DisplayUtils;
 
 import android.app.Activity;
 import android.content.Intent;
-
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-
 import android.nfc.cardemulation.CardEmulation;
-
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -195,6 +192,8 @@ public class SystemMsgActivity extends Activity implements
 						.findViewById(R.id.content_chat_item_newjoin_tv);
 				holder.msgImv = (ImageView) convertView
 						.findViewById(R.id.msg_photo_img);
+				holder.loadImv = (ImageView) convertView.findViewById(R.id.load_imv);
+				holder.msgImv.setTag(holder.loadImv);
 				holder.schoolIconImv = (ImageView) convertView
 						.findViewById(R.id.school_icon_imv);
 				holder.sexImv = (ImageView) convertView
@@ -229,6 +228,8 @@ public class SystemMsgActivity extends Activity implements
 						.getTime(), DateUtils.DateFormat_YearTime));
 				break;
 			case Constants.SysMsgTypeFollow:
+				holder.loadImv.setImageResource(R.drawable.massage_people_card_img_defaultloading);
+				holder.loadImv.setVisibility(View.VISIBLE);
 				holder.schoolIconImv.setVisibility(View.VISIBLE);
 				holder.sexImv.setVisibility(View.VISIBLE);
 				ObjUser followUser = AVUser.cast(bean.getAVUser("towardsUser"),
@@ -241,7 +242,26 @@ public class SystemMsgActivity extends Activity implements
 						+ followUser.getNameNick() + "已相互关注");
 				if (user.getProfileClip() != null) {
 					bitmapUtils.display(holder.msgImv, followUser
-							.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(SystemMsgActivity.this, 40), DensityUtil.dip2px(SystemMsgActivity.this, 40)));
+							.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(SystemMsgActivity.this, 40), DensityUtil.dip2px(SystemMsgActivity.this, 40)),
+							new BitmapLoadCallBack<View>() {
+
+								@Override
+								public void onLoadCompleted(View view,
+										String arg1, Bitmap bitmap,
+										BitmapDisplayConfig arg3,
+										BitmapLoadFrom arg4) {
+									// TODO Auto-generated method stub
+									((ImageView)view.getTag()).setVisibility(View.GONE);
+									((ImageView)view).setImageBitmap(bitmap);
+								}
+
+								@Override
+								public void onLoadFailed(View arg0,
+										String arg1, Drawable arg2) {
+									// TODO Auto-generated method stub
+									
+								}
+							});
 				} else {
 					holder.msgImv
 							.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
@@ -255,6 +275,8 @@ public class SystemMsgActivity extends Activity implements
 				}
 				break;
 			case Constants.SysMsgTypeActy:
+				holder.loadImv.setImageResource(R.drawable.massage_acty_card_img_defaultloading);
+				holder.loadImv.setVisibility(View.VISIBLE);
 				holder.schoolIconImv.setVisibility(View.GONE);
 				holder.sexImv.setVisibility(View.GONE);
 				try {
@@ -274,13 +296,15 @@ public class SystemMsgActivity extends Activity implements
 								.getActivityCover().getThumbnailUrl(true, DensityUtil.dip2px(SystemMsgActivity.this, 40), DensityUtil.dip2px(SystemMsgActivity.this, 40)),new BitmapLoadCallBack<ImageView>() {
 
 									@Override
-									public void onLoadCompleted(ImageView imageView,
+									public void onLoadCompleted(ImageView view,
 											String arg1, Bitmap bitmap,
 											BitmapDisplayConfig arg3,
 											BitmapLoadFrom arg4) {
 										// TODO Auto-generated method stub
 										bitmap=BitmapCut.toRoundCorner(bitmap, 12);
-										imageView.setImageBitmap(bitmap);
+										//imageView.setImageBitmap(bitmap);
+										((ImageView)view.getTag()).setVisibility(View.GONE);
+										((ImageView)view).setImageBitmap(bitmap);
 									}
 
 									@Override
@@ -301,6 +325,8 @@ public class SystemMsgActivity extends Activity implements
 				}
 				break;
 			case Constants.SysMsgTypeUserPhoto:
+				holder.loadImv.setImageResource(R.drawable.massage_acty_card_img_defaultloading);
+				holder.loadImv.setVisibility(View.VISIBLE);
 				holder.schoolIconImv.setVisibility(View.GONE);
 				holder.sexImv.setVisibility(View.GONE);
 				try {
@@ -314,7 +340,26 @@ public class SystemMsgActivity extends Activity implements
 							.getTime(), DateUtils.DateFormat_YearTime));
 					if (photo.getPhoto() != null) {
 						bitmapUtils.display(holder.msgImv, photo.getPhoto()
-								.getThumbnailUrl(true, DensityUtil.dip2px(SystemMsgActivity.this, 40), DensityUtil.dip2px(SystemMsgActivity.this, 40)));
+								.getThumbnailUrl(true, DensityUtil.dip2px(SystemMsgActivity.this, 40), DensityUtil.dip2px(SystemMsgActivity.this, 40)),
+								new BitmapLoadCallBack<View>() {
+
+									@Override
+									public void onLoadCompleted(View view,
+											String arg1, Bitmap bitmap,
+											BitmapDisplayConfig arg3,
+											BitmapLoadFrom arg4) {
+										// TODO Auto-generated method stub
+										((ImageView)view.getTag()).setVisibility(View.GONE);
+										((ImageView)view).setImageBitmap(bitmap);
+									}
+
+									@Override
+									public void onLoadFailed(View arg0,
+											String arg1, Drawable arg2) {
+										// TODO Auto-generated method stub
+										
+									}
+								});
 					} else {
 						holder.msgImv
 								.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
@@ -378,6 +423,7 @@ public class SystemMsgActivity extends Activity implements
 			TextView nameTv;
 			TextView timeTv;
 			ImageView msgImv;
+			ImageView loadImv;
 			ImageView schoolIconImv;
 			ImageView sexImv;
 			RelativeLayout textLayout;

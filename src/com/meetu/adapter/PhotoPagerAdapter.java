@@ -10,6 +10,9 @@ import cc.imeetu.R;
 
 import com.avos.avoscloud.LogUtil.log;
 import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
+import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
+import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 import com.meetu.activity.homepage.HomePageDetialActivity;
 import com.meetu.cloud.object.ObjActivityCover;
 import com.meetu.cloud.object.ObjActivityPhoto;
@@ -20,11 +23,14 @@ import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class PhotoPagerAdapter extends PagerAdapter {
@@ -74,10 +80,29 @@ public class PhotoPagerAdapter extends PagerAdapter {
 				R.layout.item_photolunbo_detial, null);
 		ImageView img = (ImageView) view
 				.findViewById(R.id.photo_lunbo_item_homepage_img);
+		RelativeLayout loadLayout = (RelativeLayout) view.findViewById(R.id.load_layout);
+		img.setTag(loadLayout);
+		loadLayout.setVisibility(View.VISIBLE);
 		
 		log.e("zcq url", item.getCover().getUrl());
 		
-		finalBitmap.display(img, item.getCover().getUrl());
+		//finalBitmap.display(img, item.getCover().getUrl());
+		bitmapUtils.display(img, item.getCover().getUrl(), new BitmapLoadCallBack<View>() {
+
+			@Override
+			public void onLoadCompleted(View view, String arg1, Bitmap bitmap,
+					BitmapDisplayConfig arg3, BitmapLoadFrom arg4) {
+				// TODO Auto-generated method stub
+				((RelativeLayout)view.getTag()).setVisibility(View.GONE);
+				((ImageView)view).setImageBitmap(bitmap);
+			}
+
+			@Override
+			public void onLoadFailed(View arg0, String arg1, Drawable arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		
 		container.addView(view);
