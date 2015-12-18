@@ -19,6 +19,7 @@ import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
 import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
 import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 import com.meetu.activity.homepage.HomePageDetialActivity;
+import com.meetu.activity.miliao.EmojiParser;
 import com.meetu.activity.mine.FavorListActivity;
 import com.meetu.activity.mine.FavorPhotoScanActivity;
 import com.meetu.activity.mine.UserPagerActivity;
@@ -31,8 +32,11 @@ import com.meetu.cloud.object.ObjUserPhoto;
 import com.meetu.cloud.utils.DateUtils;
 import com.meetu.cloud.wrap.ObjSysMsgWrap;
 import com.meetu.common.Constants;
+import com.meetu.common.EmojisRelevantUtils;
 import com.meetu.common.SharepreferencesUtils;
+import com.meetu.entity.ChatEmoji;
 import com.meetu.sqlite.ActivityDao;
+import com.meetu.sqlite.EmojisDao;
 import com.meetu.tools.BitmapCut;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
@@ -44,6 +48,7 @@ import android.graphics.drawable.Drawable;
 import android.nfc.cardemulation.CardEmulation;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +65,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class SystemMsgActivity extends Activity implements
-		OnRefreshListener2<ListView> {
+OnRefreshListener2<ListView> {
 	private ImageView backImv;
 	private PullToRefreshListView systemLv;
 	ArrayList<ObjSysMsg> msgList = new ArrayList<ObjSysMsg>();
@@ -68,6 +73,10 @@ public class SystemMsgActivity extends Activity implements
 	ObjUser user;
 	BitmapUtils bitmapUtils;
 	private ActivityDao activityDao;
+	// 表情相关 xml解析
+	private static EmojiParser parser;
+	private static List<ChatEmoji> chatEmojis;
+	private static EmojisDao emojisDao;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +88,8 @@ public class SystemMsgActivity extends Activity implements
 		bitmapUtils = new BitmapUtils(getApplicationContext());
 		bitmapUtils.configDiskCacheEnabled(true);
 		activityDao = new ActivityDao(getApplicationContext());
+		emojisDao = new EmojisDao(SystemMsgActivity.this);
+		chatEmojis = emojisDao.getChatEmojisList();
 		initView();
 		loadSysMsg();
 		PreferenceManager.getDefaultSharedPreferences(SystemMsgActivity.this).edit()
@@ -113,6 +124,7 @@ public class SystemMsgActivity extends Activity implements
 				if (e == null) {
 					msgList.clear();
 					msgList.addAll(objects);
+					log.d("mytest", "sys"+msgList);
 					sysAdapter.notifyDataSetChanged();
 				} else {
 					// 查询出错
@@ -195,6 +207,7 @@ public class SystemMsgActivity extends Activity implements
 						.findViewById(R.id.msg_photo_img);
 				holder.loadImv = (ImageView) convertView.findViewById(R.id.load_imv);
 				holder.msgImv.setTag(holder.loadImv);
+				holder.coverImv = (ImageView) convertView.findViewById(R.id.cover_imv);
 				holder.schoolIconImv = (ImageView) convertView
 						.findViewById(R.id.school_icon_imv);
 				holder.sexImv = (ImageView) convertView
@@ -204,27 +217,31 @@ public class SystemMsgActivity extends Activity implements
 				holder.cardLayout = (LinearLayout) convertView
 						.findViewById(R.id.card_layout);
 				holder.cardClickLayout = (LinearLayout) convertView.findViewById(R.id.card_click_layout);
-				if (bean.getMsgType() == Constants.SysMsgTypeText) {
-					// 文本消息
-					holder.textLayout.setVisibility(View.VISIBLE);
-					holder.cardLayout.setVisibility(View.GONE);
-				} else {
-					// 卡片消息
-					holder.textLayout.setVisibility(View.GONE);
-					holder.cardLayout.setVisibility(View.VISIBLE);
-				}
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
+			}
+			holder.coverImv.setVisibility(View.GONE);
+			if (bean.getMsgType() == Constants.SysMsgTypeText) {
+				// 文本消息
+				holder.textLayout.setVisibility(View.VISIBLE);
+				holder.cardLayout.setVisibility(View.GONE);
+			} else {
+				// 卡片消息
+				holder.textLayout.setVisibility(View.GONE);
+				holder.cardLayout.setVisibility(View.VISIBLE);
 			}
 			switch (bean.getMsgType()) {
 			case Constants.SysMsgTypeText:
 				holder.textContent.setMaxWidth(mMaxItemWidth);
 				holder.textContent.setMinWidth(mMinItemWidth);
-				holder.textContent.setText(bean.getContent());
 				holder.textName.setText("小U");
+				SpannableString spannableString = EmojisRelevantUtils
+						.getExpressionString(SystemMsgActivity.this, bean.getContent(),
+								chatEmojis);
+				holder.textContent.setText(spannableString);
 				holder.textAvator
-						.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
+				.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
 				holder.textTime.setText(DateUtils.format(bean.getCreatedAt()
 						.getTime(), DateUtils.DateFormat_YearTime));
 				break;
@@ -246,33 +263,33 @@ public class SystemMsgActivity extends Activity implements
 							.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(SystemMsgActivity.this, 40), DensityUtil.dip2px(SystemMsgActivity.this, 40)),
 							new BitmapLoadCallBack<View>() {
 
-								@Override
-								public void onLoadCompleted(View view,
-										String arg1, Bitmap bitmap,
-										BitmapDisplayConfig arg3,
-										BitmapLoadFrom arg4) {
-									// TODO Auto-generated method stub
-									((ImageView)view.getTag()).setVisibility(View.GONE);
-									((ImageView)view).setImageBitmap(bitmap);
-								}
+						@Override
+						public void onLoadCompleted(View view,
+								String arg1, Bitmap bitmap,
+								BitmapDisplayConfig arg3,
+								BitmapLoadFrom arg4) {
+							// TODO Auto-generated method stub
+							((ImageView)view.getTag()).setVisibility(View.GONE);
+							((ImageView)view).setImageBitmap(bitmap);
+						}
 
-								@Override
-								public void onLoadFailed(View arg0,
-										String arg1, Drawable arg2) {
-									// TODO Auto-generated method stub
-									
-								}
-							});
+						@Override
+						public void onLoadFailed(View arg0,
+								String arg1, Drawable arg2) {
+							// TODO Auto-generated method stub
+
+						}
+					});
 				} else {
 					holder.msgImv
-							.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
+					.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
 				}
 				if (followUser.getGender() == 2) {
 					holder.sexImv
-							.setImageResource(R.drawable.acty_joinlist_img_female);
+					.setImageResource(R.drawable.acty_joinlist_img_female);
 				} else {
 					holder.sexImv
-							.setImageResource(R.drawable.acty_joinlist_img_male);
+					.setImageResource(R.drawable.acty_joinlist_img_male);
 				}
 				break;
 			case Constants.SysMsgTypeActy:
@@ -293,32 +310,33 @@ public class SystemMsgActivity extends Activity implements
 					holder.timeTv.setText(DateUtils.format(bean.getCreatedAt()
 							.getTime(), DateUtils.DateFormat_YearTime));
 					if (acty.getActivityCover() != null) {
+						holder.coverImv.setVisibility(View.VISIBLE);
 						bitmapUtils.display(holder.msgImv, acty
-								.getActivityCover().getThumbnailUrl(true, DensityUtil.dip2px(SystemMsgActivity.this, 40), DensityUtil.dip2px(SystemMsgActivity.this, 40)),new BitmapLoadCallBack<ImageView>() {
+								.getActivityCover().getThumbnailUrl(true, DensityUtil.dip2px(SystemMsgActivity.this, 60), DensityUtil.dip2px(SystemMsgActivity.this, 60)),new BitmapLoadCallBack<ImageView>() {
 
-									@Override
-									public void onLoadCompleted(ImageView view,
-											String arg1, Bitmap bitmap,
-											BitmapDisplayConfig arg3,
-											BitmapLoadFrom arg4) {
-										// TODO Auto-generated method stub
-										bitmap=BitmapCut.toRoundCorner(bitmap, 12);
-										//imageView.setImageBitmap(bitmap);
-										((ImageView)view.getTag()).setVisibility(View.GONE);
-										((ImageView)view).setImageBitmap(bitmap);
-									}
+							@Override
+							public void onLoadCompleted(ImageView view,
+									String arg1, Bitmap bitmap,
+									BitmapDisplayConfig arg3,
+									BitmapLoadFrom arg4) {
+								// TODO Auto-generated method stub
+								//bitmap=BitmapCut.toRoundCorner(bitmap, 12);
+								//imageView.setImageBitmap(bitmap);
+								((ImageView)view.getTag()).setVisibility(View.GONE);
+								((ImageView)view).setImageBitmap(bitmap);
+							}
 
-									@Override
-									public void onLoadFailed(ImageView arg0,
-											String arg1, Drawable arg2) {
-										// TODO Auto-generated method stub
-										
-									}
-								});
-						
+							@Override
+							public void onLoadFailed(ImageView arg0,
+									String arg1, Drawable arg2) {
+								// TODO Auto-generated method stub
+
+							}
+						});
+
 					} else {
 						holder.msgImv
-								.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
+						.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
 					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -340,30 +358,31 @@ public class SystemMsgActivity extends Activity implements
 					holder.timeTv.setText(DateUtils.format(bean.getCreatedAt()
 							.getTime(), DateUtils.DateFormat_YearTime));
 					if (photo.getPhoto() != null) {
+						holder.coverImv.setVisibility(View.VISIBLE);
 						bitmapUtils.display(holder.msgImv, photo.getPhoto()
-								.getThumbnailUrl(true, DensityUtil.dip2px(SystemMsgActivity.this, 40), DensityUtil.dip2px(SystemMsgActivity.this, 40)),
+								.getThumbnailUrl(true, DensityUtil.dip2px(SystemMsgActivity.this, 60), DensityUtil.dip2px(SystemMsgActivity.this, 60)),
 								new BitmapLoadCallBack<View>() {
 
-									@Override
-									public void onLoadCompleted(View view,
-											String arg1, Bitmap bitmap,
-											BitmapDisplayConfig arg3,
-											BitmapLoadFrom arg4) {
-										// TODO Auto-generated method stub
-										((ImageView)view.getTag()).setVisibility(View.GONE);
-										((ImageView)view).setImageBitmap(bitmap);
-									}
+							@Override
+							public void onLoadCompleted(View view,
+									String arg1, Bitmap bitmap,
+									BitmapDisplayConfig arg3,
+									BitmapLoadFrom arg4) {
+								// TODO Auto-generated method stub
+								((ImageView)view.getTag()).setVisibility(View.GONE);
+								((ImageView)view).setImageBitmap(bitmap);
+							}
 
-									@Override
-									public void onLoadFailed(View arg0,
-											String arg1, Drawable arg2) {
-										// TODO Auto-generated method stub
-										
-									}
-								});
+							@Override
+							public void onLoadFailed(View arg0,
+									String arg1, Drawable arg2) {
+								// TODO Auto-generated method stub
+
+							}
+						});
 					} else {
 						holder.msgImv
-								.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
+						.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
 					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -374,7 +393,7 @@ public class SystemMsgActivity extends Activity implements
 				break;
 			}
 			holder.cardClickLayout.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
@@ -424,6 +443,7 @@ public class SystemMsgActivity extends Activity implements
 			TextView nameTv;
 			TextView timeTv;
 			ImageView msgImv;
+			ImageView coverImv;
 			ImageView loadImv;
 			ImageView schoolIconImv;
 			ImageView sexImv;

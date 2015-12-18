@@ -43,7 +43,8 @@
         android:dividerHeight="0px"
         android:fadingEdge="none"
         android:listSelector="@android:color/transparent"
-        android:scrollingCache="false" >
+        android:scrollingCache="false"
+        android:layout_marginBottom="10dp" >
     </com.handmark.pulltorefresh.library.PullToRefreshListView>
 
 </LinearLayout>

@@ -16,6 +16,7 @@ public class ObjSysMsgWrap {
 			final ObjSysMsgListCallback callback) {
 		AVQuery<ObjSysMsg> query = AVObject.getQuery(ObjSysMsg.class);
 		query.whereEqualTo("user", user);
+		query.orderByAscending("createdAt");
 		query.include("towardsUser");
 		query.include("acty");
 		query.include("userPhoto");
