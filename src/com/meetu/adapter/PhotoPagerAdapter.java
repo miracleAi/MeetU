@@ -44,6 +44,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
 		this.mContext = context;
 		this.Newslist = list;
 		bitmapUtils = new BitmapUtils(mContext);
+		bitmapUtils.configDiskCacheEnabled(true);
 		HomePageDetialActivity activity = (HomePageDetialActivity) context;
 		// NewsApplication
 		// app=(NewsApplication)activity.getApplicationContext();

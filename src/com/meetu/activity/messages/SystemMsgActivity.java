@@ -77,6 +77,7 @@ public class SystemMsgActivity extends Activity implements
 		setContentView(R.layout.system_msg_layout);
 		user = AVUser.cast(AVUser.getCurrentUser(), ObjUser.class);
 		bitmapUtils = new BitmapUtils(getApplicationContext());
+		bitmapUtils.configDiskCacheEnabled(true);
 		activityDao = new ActivityDao(getApplicationContext());
 		initView();
 		loadSysMsg();

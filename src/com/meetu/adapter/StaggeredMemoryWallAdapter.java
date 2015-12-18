@@ -114,6 +114,7 @@ public class StaggeredMemoryWallAdapter extends
 		finalBitmap = app.getFinalBitmap();
 
 		bitmapUtils = new BitmapUtils(context.getApplicationContext());
+		bitmapUtils.configDiskCacheEnabled(true);
 		if (currentUser != null) {
 			// 强制类型转换
 			user = AVUser.cast(currentUser, ObjUser.class);

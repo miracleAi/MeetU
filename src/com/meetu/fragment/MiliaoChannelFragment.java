@@ -99,6 +99,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 					.getApplicationContext();
 			finalBitmap = app.getFinalBitmap();
 			bitmaputils = new BitmapUtils(getActivity());
+			bitmaputils.configDiskCacheEnabled(true);
 			// conv =
 			// MyApplication.chatClient.getConversation(""+seekChatBean.getCreator());
 			initView();

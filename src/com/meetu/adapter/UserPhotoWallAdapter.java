@@ -72,6 +72,7 @@ public class UserPhotoWallAdapter extends
 				- DensityUtil.dip2px(context, 28);
 		mContext = context;
 		this.bitmapUtils = new BitmapUtils(mContext);
+		bitmapUtils.configDiskCacheEnabled(true);
 		MyApplication app = (MyApplication) context.getApplicationContext();
 		finalBitmap = app.getFinalBitmap();
 	}

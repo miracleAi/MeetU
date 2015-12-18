@@ -68,6 +68,7 @@ public class NewsListViewAdapter extends BaseAdapter {
 		this.newsList = newsList;
 
 		bitmapUtils = new BitmapUtils(mContext);
+		bitmapUtils.configDiskCacheEnabled(true);
 		MyApplication app = (MyApplication) context.getApplicationContext();
 		finalBitmap = app.getFinalBitmap();
 		activityDao = new ActivityDao(mContext);
