@@ -202,14 +202,12 @@ OnClickListener {
 
 	@Override
 	public void onPageScrollStateChanged(int position) {
-		// TODO Auto-generated method stub
-		// log.e("lucifer", "position="+position);
+		
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
-		// log.e("lucifer", "arg0="+arg0 +" arg1="+arg1+ "arg2="+arg2);
+	
 	}
 
 	@Override
@@ -537,7 +535,12 @@ OnClickListener {
 			}
 		});
 	}
-
+/**
+ * 创建觅聊
+ *   
+ * @author lucifer
+ * @date 2015-12-18
+ */
 	public void cteatMiliao() {
 		if (chatBean.getNeedAuthorise()) {
 			if (chatBean.getIsApply() == true) {
