@@ -138,7 +138,6 @@ public class NewsListViewAdapter extends BaseAdapter {
 					.findViewById(R.id.img_huodong_homepage);
 			holder.loadLayout = (RelativeLayout) convertView.findViewById(R.id.load_layout);
 			holder.ivImgUrl.setTag(holder.loadLayout);
-			holder.loadLayout.setVisibility(View.VISIBLE);
 			holder.tvTilte = (TextView) convertView
 					.findViewById(R.id.title_huodong_homepage);
 			holder.styleTextView = (TextView) convertView
@@ -159,7 +158,7 @@ public class NewsListViewAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-
+		holder.loadLayout.setVisibility(View.VISIBLE);
 		if (item.getActivityCover() != null) {
 			//finalBitmap.display(holder.ivImgUrl, item.getActivityCover());
 			bitmapUtils.display(holder.ivImgUrl, item.getActivityCover(), new BitmapLoadCallBack<ImageView>(){
