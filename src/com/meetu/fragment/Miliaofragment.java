@@ -231,9 +231,9 @@ OnClickListener {
 		case R.id.add_miliao_rl:
 			// queryAuthoriseCategory(100);
 			if(user.isCompleteUserInfo()){
-				//if (chatBean != null) {
+				if (chatBean != null) {
 					cteatMiliao();
-				//}
+				}
 			}else{
 				PerfectInformation.showDiolagPerfertInformation(getActivity(), "亲爱的 完善个人信息后才能和小伙伴们玩耍呢");
 			}
@@ -436,12 +436,51 @@ OnClickListener {
 					return;
 				}
 				if(object.get("seekChatCount")==null||(Integer)object.get("seekChatCount")<=0){
-					log.e("zcq datanull", "没取到觅聊列表");
+					log.e("zcq datanull", "没取到觅聊列表  没有觅聊a");
 					noneFailLayout.setEnabled(false);
 					//没获取到数据
 					noneFailLayout.setVisibility(View.VISIBLE);
 					nonoTextView.setVisibility(View.VISIBLE);
 					failTextView.setVisibility(View.GONE);
+					
+					chatBean = new SeekChatInfoBean();
+					
+					chatBean.setNeedAuthorise((Boolean) object
+							.get("needAuthorise"));
+					
+					
+					if (chatBean.getNeedAuthorise()) {
+						// 需要授权
+						chatBean.setIsApply((Boolean) object.get("isApply"));
+						if (chatBean.getIsApply()) {
+							// 已经申请
+							chatBean.setFreshStatus((Boolean) object
+									.get("freshStatus"));
+							chatBean.setApplyResult((Integer) object
+									.get("applyResult"));
+							chatBean.setApplyReply((String) object
+									.get("applyReply"));
+							chatBean.setArgument((String) object
+									.get("argument"));
+							chatBean.setApplyId((String) object
+									.get("applyId"));
+							chatBean.setAuthoriseCategoryId((String) object
+									.get("authoriseCategoryId"));
+						} else {
+							// 未申请
+							chatBean.setAuthoriseCategoryId((String) object
+									.get("authoriseCategoryId"));
+						}
+					} else {
+						// 不需要授权，直接创建
+					}
+					// 有觅聊
+					chatBean.setSeekChatCount((Integer) object
+							.get("seekChatCount"));
+					if (chatBean.getSeekChatCount() == 0) {
+						return;
+					}
+					
 
 				}else{
 					noneFailLayout.setEnabled(false);
@@ -449,8 +488,11 @@ OnClickListener {
 					noneFailLayout.setVisibility(View.GONE);
 
 					chatBean = new SeekChatInfoBean();
+					
 					chatBean.setNeedAuthorise((Boolean) object
 							.get("needAuthorise"));
+					
+					
 					if (chatBean.getNeedAuthorise()) {
 						// 需要授权
 						chatBean.setIsApply((Boolean) object.get("isApply"));
