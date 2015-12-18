@@ -30,6 +30,7 @@ import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.sqlite.UserDao;
 import com.meetu.sqlite.UserShieldDao;
+import com.meetu.tools.DisplayUtils;
 import com.meetu.tools.SystemBarTintManager;
 import com.meetu.view.ScrollTabHolder;
 import com.umeng.update.UmengUpdateAgent;
@@ -124,6 +125,8 @@ public class MainActivity extends FragmentActivity implements
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Constants.MAIN_FINISH);
 		registerReceiver(fr, filter);
+		
+		log.e("zcq wh", "w=="+DisplayUtils.getWindowWidth(this)+"  hh=="+DisplayUtils.getWindowHeight(this));
 
 	}
 	class FinishReceiver extends BroadcastReceiver{

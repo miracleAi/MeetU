@@ -1,30 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/outmost_miliao_channel_fragment_rl"
         android:layout_width="match_parent"
-        android:layout_height="402dp"
+        android:layout_height="0dp"
         android:layout_marginLeft="36dp"
         android:layout_marginRight="36dp"
-        android:background="@drawable/chat_img_card_bg" >
+        android:layout_weight="1"
+        android:background="@drawable/chat_img_card_bg"
+        android:orientation="vertical" >
 
         <RelativeLayout
             android:id="@+id/backgroud_miliao_channel_rl"
             android:layout_width="match_parent"
-            android:layout_height="259dp"
+            android:layout_height="0dp"
             android:layout_marginLeft="14dp"
             android:layout_marginRight="14dp"
-            android:layout_marginTop="14dp" >
+            android:layout_marginTop="12dp"
+            android:layout_weight="1" >
 
             <ImageView
                 android:id="@+id/backgroud_miliao_channel_img"
                 android:layout_width="match_parent"
-                android:layout_height="258dp"
+                android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="2dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/acty_barrage_img_bg" />
 
@@ -32,19 +37,80 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:layout_marginBottom="0dp"
+                android:scaleType="fitXY"
                 android:src="@drawable/chat_img_card_ellipse" />
+
+            <RelativeLayout
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="0dp"
+                android:gravity="center" >
+
+                <ImageView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/massage_letters_show_reply_img_profiles_stroke" />
+
+                <ImageView
+                    android:id="@+id/photoHead_manage_miliao_channel_img"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/chat_img_sponsor_profiles_default" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/imageView7"
+                android:layout_width="41dp"
+                android:layout_height="47dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="-2dp"
+                android:background="@drawable/chat_img_disappeartag"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/date_top_miliao_channel_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="4dp"
+                    android:text=""
+                    android:textColor="#d6ffffff"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/dismiss_miliao_channel_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/date_top_miliao_channel_tv"
+                    android:layout_centerHorizontal="true"
+                    android:text="消失"
+                    android:textColor="#d6ffffff"
+                    android:textSize="10dp" />
+            </RelativeLayout>
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/content_center_miliao_channel_tv"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/backgroud_miliao_channel_rl"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:text="来，我们聊聊摄影"
-            android:textColor="#606366"
-            android:textSize="15dp" />
+            android:layout_marginTop="20dp" >
+
+            <TextView
+                android:id="@+id/content_center_miliao_channel_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="来，我们聊聊摄影"
+                android:textColor="#606366"
+                android:textSize="15dp" />
+        </RelativeLayout>
 
         <View
             android:id="@+id/View_center_miliao_channel"
@@ -56,70 +122,74 @@
             android:layout_marginTop="6dp"
             android:background="#cccccc" />
 
-        <LinearLayout
-            android:id="@+id/number_miliao_channel_ll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/View_center_miliao_channel"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="4dp" >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-            <TextView
-                android:id="@+id/numberAll_miliao_channel"
+            <LinearLayout
+                android:id="@+id/number_miliao_channel_ll"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1"
-                android:textColor="#a0a0a0"
-                android:textSize="11dp" />
+                android:layout_height="wrap_content"                
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp" >
 
-            <TextView
-                android:id="@+id/tv1_miliao_channel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="个小伙伴正在热聊"
-                android:textColor="#a0a0a0"
-                android:textSize="11dp" />
+                <TextView
+                    android:id="@+id/numberAll_miliao_channel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:textColor="#a0a0a0"
+                    android:textSize="11dp" />
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="11dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="1dp"
-                android:background="#a0a0a0" />
+                <TextView
+                    android:id="@+id/tv1_miliao_channel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="个小伙伴正在热聊"
+                    android:textColor="#a0a0a0"
+                    android:textSize="11dp" />
 
-            <TextView
-                android:id="@+id/tv2_miliao_channel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="其中"
-                android:textColor="#a0a0a0"
-                android:textSize="11dp" />
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="11dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginTop="1dp"
+                    android:background="#a0a0a0" />
 
-            <TextView
-                android:id="@+id/numberFavor_miliao_channel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textColor="#a0a0a0"
-                android:textSize="11dp" />
+                <TextView
+                    android:id="@+id/tv2_miliao_channel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="其中"
+                    android:textColor="#a0a0a0"
+                    android:textSize="11dp" />
 
-            <TextView
-                android:id="@+id/tv3_miliao_channel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="个你关注的"
-                android:textColor="#a0a0a0"
-                android:textSize="11dp" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/numberFavor_miliao_channel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="#a0a0a0"
+                    android:textSize="11dp" />
+
+                <TextView
+                    android:id="@+id/tv3_miliao_channel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="个你关注的"
+                    android:textColor="#a0a0a0"
+                    android:textSize="11dp" />
+            </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="14dp" >
+            android:layout_centerHorizontal="true" >
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -214,61 +284,15 @@
                     android:textColor="#33c6e5" />
             </RelativeLayout>
         </LinearLayout>
+        <View android:layout_width="match_parent"
+            android:layout_height="14dp"
+            />
+    </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_alignBottom="@+id/backgroud_miliao_channel_rl"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="0dp"
-            android:gravity="center" >
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="89dp"
+        android:layout_marginTop="20dp"
+         />
 
-            <ImageView
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/massage_letters_show_reply_img_profiles_stroke" />
-
-            <ImageView
-                android:id="@+id/photoHead_manage_miliao_channel_img"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/chat_img_sponsor_profiles_default" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/imageView7"
-            android:layout_width="41dp"
-            android:layout_height="47dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/chat_img_disappeartag"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/date_top_miliao_channel_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="4dp"
-                android:text=""
-                android:textColor="#d6ffffff"
-                android:textSize="13dp" />
-
-            <TextView
-                android:id="@+id/dismiss_miliao_channel_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/date_top_miliao_channel_tv"
-                android:layout_centerHorizontal="true"
-                android:text="消失"
-                android:textColor="#d6ffffff"
-                android:textSize="10dp" />
-        </RelativeLayout>
-    </RelativeLayout>
-
-</RelativeLayout>
+</LinearLayout>

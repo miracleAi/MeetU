@@ -67,6 +67,9 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 
 	List<String> list=new ArrayList<String>();//存放用户的id
 	Bitmap loadBitmapIng=null;
+	
+	private RelativeLayout outmoseLayout;
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -104,6 +107,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 
 	private void initView() {
 		// TODO Auto-generated method stub
+		
 		dismissData = (TextView) view
 				.findViewById(R.id.date_top_miliao_channel_tv);
 		photoManager = (ImageView) view
