@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="64dp"
             android:layout_marginRight="64dp"
-            android:background="@drawable/msgbg"
+            android:background="@drawable/card_view_click"
             android:orientation="vertical" >
 
             <RelativeLayout

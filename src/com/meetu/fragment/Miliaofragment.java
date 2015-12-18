@@ -232,11 +232,10 @@ OnClickListener {
 		// 申请觅聊
 		case R.id.add_miliao_rl:
 			// queryAuthoriseCategory(100);
-
 			if(user.isCompleteUserInfo()){
-				if (chatBean != null) {
+				//if (chatBean != null) {
 					cteatMiliao();
-				}
+				//}
 			}else{
 				PerfectInformation.showDiolagPerfertInformation(getActivity(), "亲爱的 完善个人信息后才能和小伙伴们玩耍呢");
 			}
