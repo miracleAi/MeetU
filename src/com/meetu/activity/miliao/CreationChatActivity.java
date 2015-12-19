@@ -370,11 +370,11 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 		intent.setDataAndType(uri, "image/*");
 		intent.putExtra("crop", "true");
 		// aspectX aspectY 是宽和搞的比例
-		intent.putExtra("aspectX", 1);
-		intent.putExtra("aspectY", 1);
+		intent.putExtra("aspectX", 275);
+		intent.putExtra("aspectY", 258);
 		// // outputX outputY 是裁剪图片宽高
-		intent.putExtra("outputX", 275);
-		intent.putExtra("outputY", 258);
+		intent.putExtra("outputX", 550);
+		intent.putExtra("outputY", 516);
 		intent.putExtra("return-data", true);
 		startActivityForResult(intent, 33);
 	}
