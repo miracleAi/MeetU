@@ -20,6 +20,7 @@ public class BoardPageFragmentAdapter extends FragmentPagerAdapter {
 		this.fragmentList = fragmentList;
 	}
 
+
 	@Override
 	public Fragment getItem(int idx) {
 		// TODO Auto-generated method stub

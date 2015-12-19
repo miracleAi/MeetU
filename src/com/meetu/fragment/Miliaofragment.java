@@ -178,10 +178,7 @@ OnClickListener {
 		/*for(int i=0;i<fragmentList.size();i++){
 			getActivity().getSupportFragmentManager().beginTransaction().remove(fragmentList.get(i)).commit();
 		}*/
-		if(adapter!= null){
-			adapter.setFragments(fragmentList);
-			fragmentList.clear();
-		}
+		fragmentList.clear();
 		for (int i = 0; i < seekChatBeansList.size(); i++) {
 			MiliaoChannelFragment frag = new MiliaoChannelFragment();
 			Bundle bundle = new Bundle();
@@ -192,6 +189,7 @@ OnClickListener {
 
 		adapter = new BoardPageFragmentAdapter(super.getActivity()
 				.getSupportFragmentManager(), fragmentList);
+		adapter.setFragments(fragmentList);
 		viewPager.setAdapter(adapter);
 		viewPager.setOffscreenPageLimit(0);
 		viewPager.setCurrentItem(positonNow);
