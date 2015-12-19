@@ -218,7 +218,6 @@ OnClickListener {
 		// 传过去当前页面
 		positonNow = position;
 		isAddconvesition();
-
 		conv = MyApplication.chatClient.getConversation(""
 				+ seekChatBeansList.get(positonNow).getConversationId());
 		// initViewPager();
@@ -249,7 +248,7 @@ OnClickListener {
 						miliaoImv.setImageResource(R.drawable.miliao_in);
 						List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
 								Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
-						if(memList.size()<5){
+						if(memList.size()<3){
 							joinChatTv.setText("等待开启");
 							Toast.makeText(getActivity(), "觅聊尚未开启", 1000).show();
 							return;
@@ -364,7 +363,7 @@ OnClickListener {
 					isAdd=true;
 					((MiliaoChannelFragment) fragmentList.get(positonNow)).setUserInfo();
 		
-					if(memList.size()<5){
+					if(memList.size()<3){
 						joinChatTv.setText("等待开启");
 						return;
 					}else{
@@ -564,7 +563,6 @@ OnClickListener {
 							userList.add(""+bean.getMembers().get(j).get("userId"));
 						}
 						getMember(userList,""+bean.getConversationId());
-
 					}
 
 					numberAll.setText("" + seekChatBeansList.size());
@@ -653,7 +651,7 @@ OnClickListener {
 			miliaoImv.setImageResource(R.drawable.miliao_in);
 			List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
 					Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
-			if(memList.size()<5){
+			if(memList.size()<3){
 				joinChatTv.setText("等待开启");
 			}else{
 				joinChatTv.setText("进入觅聊");
@@ -717,12 +715,8 @@ OnClickListener {
 				item.setAboutColetctionId(conversationId);
 				userAboutBeansList.add(item);
 			}
-
 		}
-		userAboutDao.deleteByType(user.getObjectId(), 2,
-				conversationId);
 		userAboutDao.saveUserAboutList(userAboutBeansList);
-
 	}
 
 

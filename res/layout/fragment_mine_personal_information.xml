@@ -418,7 +418,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="130dp" >
+            android:layout_marginTop="130dp"
+            android:layout_marginBottom="20dp" >
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -428,7 +429,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="真诚以待 以个人信息开始"
+                    android:text="青春校园 从[我想认识你]开始"
                     android:textColor="#bfbfbf"
                     android:textSize="10dp" />
             </RelativeLayout>
@@ -437,7 +438,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp" >
+            android:layout_marginTop="6dp"
+            android:visibility="gone" >
 
             <RelativeLayout
                 android:layout_width="match_parent"

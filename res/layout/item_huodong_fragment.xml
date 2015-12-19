@@ -23,6 +23,7 @@
             android:id="@+id/load_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="36dp"
             android:background="@drawable/acty_card_img_default_load_state_bg" >
 
             <ImageView

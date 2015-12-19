@@ -13,11 +13,12 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
-
 import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.adapter.PhotoPagerAdapter;
 import com.meetu.baidumapdemo.BaiduMapMainActivity;
 import com.meetu.bean.ActivityBean;
+import com.meetu.bean.UserAboutBean;
+import com.meetu.bean.UserBean;
 import com.meetu.cloud.callback.ObjActivityCoverCallback;
 import com.meetu.cloud.callback.ObjActivityPhotoCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
@@ -26,16 +27,17 @@ import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityCover;
 import com.meetu.cloud.object.ObjActivityPhoto;
 import com.meetu.cloud.object.ObjUser;
-
 import com.meetu.cloud.wrap.ObjActivityCoverWrap;
 import com.meetu.cloud.wrap.ObjActivityOrderWrap;
 import com.meetu.cloud.wrap.ObjActivityPhotoWrap;
 import com.meetu.cloud.wrap.ObjPraiseWrap;
+import com.meetu.common.Constants;
 import com.meetu.common.PerfectInformation;
 import com.meetu.entity.PhotoWall;
 import com.meetu.entity.Photolunbo;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.ActivityDao;
+import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DateUtils;
 import com.meetu.tools.DensityUtil;
 import com.meetu.view.MyScrollView;
@@ -123,6 +125,7 @@ public class HomePageDetialActivity extends Activity implements
 	private ImageView backImage;
 
 	Bitmap loadBitmapIng = null;
+	UserAboutDao userAboutDao;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +142,7 @@ public class HomePageDetialActivity extends Activity implements
 			// 强制类型转换
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
+		userAboutDao = new UserAboutDao(HomePageDetialActivity.this);
 		loadBitmapIng = BitmapFactory.decodeResource(getResources(),
 				R.drawable.mine_likelist_profile_default);
 		activityDao = new ActivityDao(this);
@@ -758,6 +762,7 @@ public class HomePageDetialActivity extends Activity implements
 							return;
 						} else if (objects != null) {
 							userList.addAll(objects);
+							saveActyMember(userList);
 							log.e("zcq", "userList==" + userList.size());
 							userNumber.setText("" + userList.size());
 							// TODO 点击进入个人主页 未完成
@@ -903,6 +908,22 @@ public class HomePageDetialActivity extends Activity implements
 					}
 				});
 
+	}
+
+	protected void saveActyMember(ArrayList<ObjUser> list) {
+		// TODO Auto-generated method stub
+		ArrayList<UserAboutBean> actyMemList = new ArrayList<UserAboutBean>();
+		if(list.size()>0){
+			for(int i=0;i<list.size();i++){
+				UserAboutBean bean = new UserAboutBean();
+				bean.setUserId(user.getObjectId());
+				bean.setAboutType(Constants.ACTIVITY_TYPE);
+				bean.setAboutUserId(list.get(i).getObjectId());
+				bean.setAboutColetctionId(activityBean.getActyId());
+				actyMemList.add(bean);
+			}
+			userAboutDao.saveUserAboutList(actyMemList);
+		}
 	}
 
 	/**

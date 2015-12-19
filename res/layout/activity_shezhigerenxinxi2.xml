@@ -189,7 +189,7 @@
                 android:layout_height="wrap_content" >
 
                 <ImageView
-                    android:id="@+id/img3"
+                    android:id="@+id/img33"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/complete_name_720" />
@@ -199,7 +199,7 @@
                     android:layout_width="210dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="2dp"
-                    android:layout_toRightOf="@id/img3"
+                    android:layout_toRightOf="@id/img33"
                     android:background="@drawable/register_sent_dark_720"
                     android:gravity="center"
                     android:hint="昵称"
@@ -222,7 +222,7 @@
                 android:layout_height="wrap_content" >
 
                 <ImageView
-                    android:id="@+id/img2"
+                    android:id="@+id/img22"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/complete_gender_720" />
@@ -232,7 +232,7 @@
                     android:layout_width="94dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="2dp"
-                    android:layout_toRightOf="@id/img2"
+                    android:layout_toRightOf="@id/img22"
                     android:background="@drawable/register_sent_dark_720"
                     android:gravity="center"
                     android:hint="性别"
@@ -255,7 +255,7 @@
                 android:layout_height="wrap_content" >
 
                 <ImageView
-                    android:id="@+id/img1"
+                    android:id="@+id/img11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/complete_birth_720" />
@@ -265,7 +265,7 @@
                     android:layout_width="153dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="2dp"
-                    android:layout_toRightOf="@id/img1"
+                    android:layout_toRightOf="@id/img11"
                     android:background="@drawable/register_sent_dark_720"
                     android:gravity="center"
                     android:hint="出生日期"

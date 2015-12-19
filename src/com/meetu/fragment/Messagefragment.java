@@ -364,19 +364,22 @@ OnClickListener {
 								.getAttribute("title");
 						long overTime = (Long) conversation
 								.getAttribute("overTime");
-						if (type == 1) {
-							msg.setActyId(id);
-							msg.setActyName(title);
-						} else {
-							log.e("zcq", "觅聊觅聊");
-							msg.setChatId(id);
-							msg.setChatName(title);
-						}
 						msg.setTimeOver(overTime);
 						msg.setCreatorID(convList.get(i).getCreator());
 						// 插入时所有标记为未踢出
 						msg.setTiStatus(0);
-						list.add(msg);
+						if (type == 1) {
+							msg.setActyId(id);
+							msg.setActyName(title);
+							list.add(msg);
+						} else {
+							log.e("zcq", "觅聊觅聊");
+							msg.setChatId(id);
+							msg.setChatName(title);
+							if(conversation.getMembers().size()>2){
+								list.add(msg);
+							}
+						}
 
 					}
 					messagesDao.insertList(list);
