@@ -71,11 +71,6 @@ public class FollowActivity extends FragmentActivity implements
 		});
 		titleGroup.setOnCheckedChangeListener(this);
 		followPager.setOnPageChangeListener(this);
-		pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
-				fragmentList);
-		followPager.setAdapter(pagerAdapter);
-		
-		followPager.setOffscreenPageLimit(2);
 		titleGroup.check(1);
 	}
 
@@ -96,8 +91,10 @@ public class FollowActivity extends FragmentActivity implements
 		fragmentList.clear();
 		fragmentList.add(myFollowFragment);
 		fragmentList.add(bothFollowFragment);
-		
+		pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
+				fragmentList);
 		pagerAdapter.setFragments(fragmentList);
+		followPager.setAdapter(pagerAdapter);
 	}
 
 	public void setTag(int idx) {
@@ -119,14 +116,17 @@ public class FollowActivity extends FragmentActivity implements
 				}
 				List<String> followL = (List<String>) map.get("followees");
 				if (followL != null && followL.size() > 0) {
+					followList.clear();
 					followList.addAll(followL);
 				}
 				List<String> followerL = (List<String>) map.get("followers");
 				if (followerL != null && followerL.size() > 0) {
+					followerList.clear();
 					followerList.addAll(followerL);
 				}
 				List<String> bothL = (List<String>) map.get("boths");
 				if (bothL != null && bothL.size() > 0) {
+					bothList.clear();
 					bothList.addAll(bothL);
 				}
 				initViewpager();
