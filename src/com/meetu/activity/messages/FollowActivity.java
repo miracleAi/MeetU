@@ -16,6 +16,7 @@ import com.meetu.fragment.BothFollowFragment;
 import com.meetu.fragment.MyFollowFragment;
 
 import android.app.Activity;
+import android.graphics.RadialGradient;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -35,6 +36,8 @@ public class FollowActivity extends FragmentActivity implements
 	private ImageView backImvl;
 	private RadioGroup titleGroup;
 	private ViewPager followPager;
+	private RadioButton folowRbtn;
+	private RadioButton followBothRbtn;
 
 	private ViewPagerAdapter pagerAdapter;
 	private List<Fragment> fragmentList = new ArrayList<Fragment>();
@@ -61,6 +64,8 @@ public class FollowActivity extends FragmentActivity implements
 		backImvl = (ImageView) findViewById(R.id.back_follow_img);
 		titleGroup = (RadioGroup) findViewById(R.id.group_follow_tab);
 		followPager = (ViewPager) findViewById(R.id.follow_viewpager);
+		folowRbtn = (RadioButton) findViewById(R.id.follow_radio);
+		followBothRbtn = (RadioButton) findViewById(R.id.follow_both_radio);
 		backImvl.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -71,8 +76,7 @@ public class FollowActivity extends FragmentActivity implements
 		});
 		titleGroup.setOnCheckedChangeListener(this);
 		followPager.setOnPageChangeListener(this);
-		titleGroup.check(1);
-		followPager.setCurrentItem(1);
+		titleGroup.check(folowRbtn.getId());
 	}
 
 	private void initViewpager() {
@@ -98,10 +102,10 @@ public class FollowActivity extends FragmentActivity implements
 		followPager.setAdapter(pagerAdapter);
 	}
 
-	/*public void setTag(int idx) {
+	public void setTag(int idx) {
 		RadioButton rb = (RadioButton) titleGroup.getChildAt(idx);
 		rb.setChecked(true);
-	}*/
+	}
 
 	private void loadData() {
 		// TODO Auto-generated method stub
@@ -136,9 +140,13 @@ public class FollowActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onCheckedChanged(RadioGroup arg0, int position) {
+	public void onCheckedChanged(RadioGroup arg0, int checkId) {
 		// TODO Auto-generated method stub
-		followPager.setCurrentItem(position - 1);
+		if(checkId == followBothRbtn.getId()){
+			followPager.setCurrentItem(1);
+		}else{
+			followPager.setCurrentItem(0);
+		}
 	}
 
 	@Override
@@ -156,8 +164,7 @@ public class FollowActivity extends FragmentActivity implements
 	@Override
 	public void onPageSelected(int position) {
 		// TODO Auto-generated method stub
-		//setTag(position);
-		titleGroup.check(position+1);
+		setTag(position);
 	}
 
 }
