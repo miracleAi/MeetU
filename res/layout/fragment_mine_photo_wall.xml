@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/emptystatus_photoview_mine_img_phiz" />
+                android:src="@drawable/kongemptystatus_photoview_mine_img_phiz" />
 
             <TextView
                 android:id="@+id/none_mine_photo_fragment_tv"

@@ -123,7 +123,7 @@ public class ChangeCityActivity extends BaseActivity implements
 	public void onChanged(WheelView wheel, int oldValue, int newValue) {
 		// TODO Auto-generated method stub
 		if (wheel == mViewProvince) {
-			updateCities();
+																																																																																																																																																																																																																																													updateCities();
 			cityName.setText("" + mCurrentProviceName + mCurrentCityName
 					+ mCurrentDistrictName);
 		} else if (wheel == mViewCity) {
