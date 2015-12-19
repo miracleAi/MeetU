@@ -11,6 +11,7 @@ import com.meetu.cloud.callback.ObjFunObjectCallback;
 import com.meetu.cloud.wrap.ObjExecResult;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.cloud.wrap.ObjWrap;
+import com.meetu.common.CloseJianpan;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -30,6 +31,7 @@ public class RegisterActivity extends Activity implements OnClickListener {
 	private ImageView back;
 	private Button registerButton;
 	private EditText uphone, upassward;
+	private ImageView imgCloseBg;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +56,11 @@ public class RegisterActivity extends Activity implements OnClickListener {
 		upassward.addTextChangedListener(watcher);
 		registerButton = (Button) super.findViewById(R.id.rigister_bt_rigister);
 		registerButton.setOnClickListener(this);
+		imgCloseBg=(ImageView) findViewById(R.id.img_register_bg);
+		imgCloseBg.setOnClickListener(this);
 	};
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.zhuce, menu);
-		return true;
-	}
+
 
 	/**
 	 * Editview 输入框监听事件
@@ -104,6 +103,9 @@ public class RegisterActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.activity_register_back_img:
 			finish();
+			break;
+		case R.id.img_register_bg:
+			CloseJianpan.closeKeyboard(this, uphone);
 			break;
 		case R.id.rigister_bt_rigister:
 

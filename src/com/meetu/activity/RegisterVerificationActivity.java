@@ -30,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ public class RegisterVerificationActivity extends Activity implements
 
 	private LinearLayout numberLayout;
 	private EditText allEditText;
+	private ImageView backImageView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,15 @@ public class RegisterVerificationActivity extends Activity implements
 	}
 
 	private void initView() {
+		backImageView=(ImageView) findViewById(R.id.activity_register_back_img);
+		backImageView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
 		fasongphone = (TextView) super.findViewById(R.id.phone_fasong_zhuce);
 		fasongphone.setText(uphone);
 		register = (TextView) super

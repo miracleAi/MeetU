@@ -15,9 +15,11 @@ import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjExecResult;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.cloud.wrap.ObjWrap;
+import com.meetu.common.CloseJianpan;
 import com.meetu.common.Constants;
 import com.meetu.myapplication.MyApplication;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -40,6 +42,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private EditText uphone, upassward;
 	private TextView forgert;
 	private TextView forgetPassword;
+	private ImageView imgBg;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +68,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 		forgert = (TextView) super
 				.findViewById(R.id.forget_to_torgetactivty_tv);
 		forgert.setOnClickListener(this);
-
+		
+		imgBg=(ImageView) findViewById(R.id.img_login_bg);
+		imgBg.setOnClickListener(this);
 	}
 
 	/**
@@ -109,6 +114,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.iv_back_denglu:
 			finish();
+			break;
+		case R.id.img_login_bg:
+			CloseJianpan.closeKeyboard(this, uphone);
+			
 			break;
 		case R.id.denglu_bt_denglu:
 			if (uphone.getText().length() != 11) {

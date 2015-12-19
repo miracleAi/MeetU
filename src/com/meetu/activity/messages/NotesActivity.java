@@ -161,7 +161,7 @@ OnPageChangeListener, OnClickListener {
 				}
 			}
 		}
-		if (!userId.equals("")) {
+		if (!userId.equals("")) { 
 			getUserInfo(userId);
 			
 			userHeadPhoto.setOnClickListener(new OnClickListener() {

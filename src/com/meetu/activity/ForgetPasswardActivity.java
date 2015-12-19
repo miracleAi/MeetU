@@ -7,6 +7,7 @@ import com.avos.avoscloud.LogUtil.log;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjUserWrap;
+import com.meetu.common.CloseJianpan;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -27,6 +28,7 @@ public class ForgetPasswardActivity extends Activity implements OnClickListener 
 	private ImageView back;
 	private Button registerButton;
 	private EditText uphone, upassward;
+	private ImageView imgCloseBg;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,8 @@ public class ForgetPasswardActivity extends Activity implements OnClickListener 
 		registerButton = (Button) super
 				.findViewById(R.id.next_bt_forgetpassward);
 		registerButton.setOnClickListener(this);
+		imgCloseBg=(ImageView) findViewById(R.id.img_forget_bg);
+		imgCloseBg.setOnClickListener(this);
 
 	};
 
@@ -97,6 +101,9 @@ public class ForgetPasswardActivity extends Activity implements OnClickListener 
 		switch (v.getId()) {
 		case R.id.back_login_ForgetPassward_img:
 			finish();
+		case R.id.img_forget_bg:
+			CloseJianpan.closeKeyboard(this, uphone);
+			break;
 		case R.id.next_bt_forgetpassward:
 
 			if (uphone.getText().length() != 11) {
