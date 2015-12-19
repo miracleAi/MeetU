@@ -204,7 +204,7 @@ public class MessagesListAdapter extends BaseAdapter {
 				if(chatmsgs!=null && chatmsgs.getSendTimeStamp()!=null){
 					holder.tvTime.setText(""+DateUtils.getFormattedTimeInterval(Long.valueOf(chatmsgs.getSendTimeStamp())));
 				}else{
-					holder.tvTime.setText(""+DateUtils.getFormattedTimeInterval(item.getTimeOver()));
+					holder.tvTime.setText("");
 				}
 			}
 		} else if (item.getConversationType() == Constants.SEEKMSG) {

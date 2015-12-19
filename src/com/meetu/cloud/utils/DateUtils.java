@@ -55,7 +55,7 @@ public class DateUtils {
 			if((todayZero - time)> (-24* Time_Of_Hour)){
 				return format(time, DateFormat_Time);
 			}else{
-				return format(time, DateFormat_YearTime);
+				return "";
 			}
 		}
 		if (todayZero - time < (24* Time_Of_Hour)) {
