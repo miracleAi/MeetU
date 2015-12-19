@@ -303,6 +303,7 @@ OnClickListener {
 			}
 			break;
 		case R.id.system_msg_layout:
+			sysMsgCountTv.setText("0");
 			Intent intent2 = new Intent(getActivity(), SystemMsgActivity.class);
 			startActivity(intent2);
 			break;
