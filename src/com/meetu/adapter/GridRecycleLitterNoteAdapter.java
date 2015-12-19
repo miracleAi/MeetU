@@ -135,13 +135,27 @@ public class GridRecycleLitterNoteAdapter extends
 			if (item.getSender().getObjectId().equals(user.getObjectId())) {
 				// 我是创建者
 				holder.ivNoReadNumber.setText("" + item.getSenderUnreadCount());
+				
+				
 				holder.ivImg.setOnClickListener(new OnClickListener() {
 					
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
+						objUsers = new ArrayList<ObjUser>();
+						String	otheruserId="";
+						if (item.getUsers() != null) {
+
+							objUsers.addAll(item.getUsers());
+
+							for (ObjUser objUser : objUsers) {
+								if (!user.getObjectId().equals(objUser.getObjectId())) {
+								otheruserId = objUser.getObjectId();
+								}
+							}
+						}
 						Intent intent=new Intent(mContext,UserPagerActivity.class);
-						intent.putExtra("userId", user.getObjectId());
+						intent.putExtra("userId", otheruserId);
 						mContext.startActivity(intent);
 					}
 				});
@@ -153,6 +167,19 @@ public class GridRecycleLitterNoteAdapter extends
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
+						objUsers = new ArrayList<ObjUser>();
+						String	otheruserId="";
+						if (item.getUsers() != null) {
+
+							objUsers.addAll(item.getUsers());
+
+							for (ObjUser objUser : objUsers) {
+								if (!user.getObjectId().equals(objUser.getObjectId())) {
+								otheruserId = objUser.getObjectId();
+								}
+							}
+						}
+						
 						Intent intent=new Intent(mContext,UserPagerActivity.class);
 						intent.putExtra("userId", item.getSender().getObjectId());
 						mContext.startActivity(intent);

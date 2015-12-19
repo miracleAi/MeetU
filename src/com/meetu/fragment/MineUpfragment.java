@@ -205,7 +205,12 @@ OnClickListener {
 					startActivity(data);
 					return;
 				}
-				showDialog();
+			//	showDialog();
+				Intent intent1 = new Intent(Intent.ACTION_PICK, null);
+				intent1.setDataAndType(
+						MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+				startActivityForResult(intent1, 11);
+		
 
 			}
 		});

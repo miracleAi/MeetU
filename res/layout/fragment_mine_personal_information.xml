@@ -428,7 +428,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="真诚以待 以个人信息开始"
+                    android:text=""
                     android:textColor="#bfbfbf"
                     android:textSize="10dp" />
             </RelativeLayout>
@@ -448,7 +448,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Meet U致力于打造轻松健康有趣的交友平台"
+                    android:text="青春校园  从[我想认识你]开始"
                     android:textColor="#bfbfbf"
                     android:textSize="10dp" />
             </RelativeLayout>

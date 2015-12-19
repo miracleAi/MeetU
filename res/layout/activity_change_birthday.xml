@@ -99,7 +99,7 @@
         android:layout_marginTop="6dp"
         android:src="@drawable/mine_likelist_img_blueline" />
 
-    <TextView
+    <!-- <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
         android:layout_marginBottom="10dp"
         android:text="真诚以待 以个人信息开始"
         android:textColor="#bfbfbf"
-        android:textSize="12sp" />
+        android:textSize="12sp" /> -->
 
     <TextView
         android:id="@+id/textView2"
@@ -117,7 +117,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
-        android:text="Meet U致力打造轻松健康有趣的社交平台"
+        android:text="青春校园  从[我想认识你]开始"
         android:textColor="#bfbfbf"
         android:textSize="12sp" />
 

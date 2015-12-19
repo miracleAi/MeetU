@@ -291,7 +291,11 @@ ScrollTabHolder, OnClickListener {
 			@Override
 			public void onClick(View arg0) {
 				if (isMyself == true) {
-					showDialog();
+					//showDialog();
+					Intent intent1 = new Intent(Intent.ACTION_PICK, null);
+					intent1.setDataAndType(
+							MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+					startActivityForResult(intent1, 11);
 				} else {
 					log.e("zcq", "此处应放大图片");
 
