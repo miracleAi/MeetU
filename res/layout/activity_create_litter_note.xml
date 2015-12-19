@@ -155,9 +155,9 @@
                 android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="0dp"
-                android:adjustViewBounds="true"
                 android:background="@color/gainsboro"
-                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
                 android:src="@drawable/chat_show_btn_uploadphoto" />
 
             <ImageView

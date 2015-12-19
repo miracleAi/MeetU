@@ -390,8 +390,8 @@ OnClickListener {
 		intent.putExtra("aspectX", 375);
 		intent.putExtra("aspectY", 310);
 		// // outputX outputY 是裁剪图片宽高
-		intent.putExtra("outputX", 928);
-		intent.putExtra("outputY", 775);
+		/*intent.putExtra("outputX", 928);
+		intent.putExtra("outputY", 775);*/
 		intent.putExtra("return-data", false);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 		intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
