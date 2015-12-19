@@ -77,6 +77,8 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 			.getExternalStorageDirectory();
 	private static final File FILE_LOCAL = new File(FILE_SDCARD, "meetu");
 	Uri imageUri;//The Uri to store the big bitmap
+	
+	private RelativeLayout allLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +144,7 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 		backLayout = (RelativeLayout) super
 				.findViewById(R.id.back_creationChat_rl);
 		backLayout.setOnClickListener(this);
+		allLayout=(RelativeLayout) findViewById(R.id.all_createion_chat_rl);
 	}
 
 	/**

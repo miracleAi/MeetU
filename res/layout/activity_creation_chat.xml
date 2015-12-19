@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/all_createion_chat_rl"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -204,6 +205,7 @@
             android:textColorHint="#bfbfbf"
             android:textColorLink="#33c6e5"
             android:textSize="12dp" >
+             <requestFocus />
         </EditText>
 
         <View
@@ -238,7 +240,10 @@
                 android:text="0"
                 android:textColor="#33c6e5"
                 android:textSize="11dp" />
+            
         </RelativeLayout>
     </LinearLayout>
+
+   
 
 </RelativeLayout>
