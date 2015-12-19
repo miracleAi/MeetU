@@ -138,7 +138,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		db.execSQL(sb3.toString());
 
 		/**
-		 * 消息总表
+		 * 消息总表,会话表
 		 */
 		StringBuffer sb4 = new StringBuffer();
 		sb4.append("create table if not exists ");
@@ -213,11 +213,12 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		StringBuffer aboutSb = new StringBuffer();
 		aboutSb.append("create table if not exists ");
 		aboutSb.append(Constants.USERABOUT_CACHE_TB + "(");
-		aboutSb.append("id integer primary key autoincrement ,");
 		aboutSb.append(Constants.USERID + " varchar(100) ,");
 		aboutSb.append(Constants.ABOUTTYPE + " Integer ,");
 		aboutSb.append(Constants.ABOUTUSERID + " varchar(100) ,");
-		aboutSb.append(Constants.ABOUTCOLECTIONID + " varchar(100) ");
+		aboutSb.append(Constants.ABOUTCOLECTIONID + " varchar(100) ,");
+		aboutSb.append("constraint " + Constants.ABOUTCACHEID + " primary key ("
+				+ Constants.USERID + ","+ Constants.ABOUTUSERID + "," + Constants.ABOUTCOLECTIONID + ") ");
 		aboutSb.append(")");
 		db.execSQL(aboutSb.toString());
 		/**

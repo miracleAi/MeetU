@@ -85,12 +85,12 @@
                 <TextView
                     android:id="@+id/content_bottom_barrage_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="70dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:text="今天是个好日子，心想的事情都能成。今天是个好日子，心想的事情都能成。"
                     android:textColor="#959595"
-                    android:textSize="11dip" />
+                    android:textSize="13dip" />
             </RelativeLayout>
         </RelativeLayout>
 

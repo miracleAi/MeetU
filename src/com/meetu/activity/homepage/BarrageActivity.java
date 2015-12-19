@@ -24,6 +24,7 @@ import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.bean.ActivityBean;
 import com.meetu.bean.BarrageMsgBean;
+import com.meetu.bean.UserAboutBean;
 import com.meetu.bean.UserBean;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.callback.ObjCoversationCallback;
@@ -39,6 +40,7 @@ import com.meetu.common.Constants;
 import com.meetu.common.PerfectInformation;
 import com.meetu.entity.Barrage;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.UserAboutDao;
 import com.meetu.sqlite.UserDao;
 import com.meetu.tools.DenUtil;
 import com.meetu.tools.DensityUtil;
@@ -120,7 +122,8 @@ public class BarrageActivity extends Activity {
 	// 标记是否参加活动
 	private boolean isJoined = false;
 	private ActivityBean actyBean = new ActivityBean();
-
+	private int screenWidth = 0;
+	private UserAboutDao userAboutDao;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -142,6 +145,8 @@ public class BarrageActivity extends Activity {
 		validHeightSpace = DensityUtil.dip2px(this, 350);
 		bitmapUtils = new BitmapUtils(getApplicationContext());
 		userDao = new UserDao(getApplicationContext());
+		userAboutDao = new UserAboutDao(BarrageActivity.this);
+		screenWidth = DisplayUtils.getWindowWidth(BarrageActivity.this);
 		initView();
 		initChange();
 		isOrder();
@@ -164,7 +169,7 @@ public class BarrageActivity extends Activity {
 		topTitle = (TextView) super.findViewById(R.id.title_top_barrary_tv);
 		back = (RelativeLayout) super.findViewById(R.id.back_barrage_rl);
 		back.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -313,6 +318,7 @@ public class BarrageActivity extends Activity {
 					}
 					if (result) {
 						isJoined = true;
+						saveMembers();
 						isChatLogin();
 					} else {
 						isJoined = false;
@@ -324,6 +330,23 @@ public class BarrageActivity extends Activity {
 		} catch (AVException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+		}
+	}
+	//将觅聊成员插入数据库  既活动成员
+	protected void saveMembers() {
+		// TODO Auto-generated method stub
+		ArrayList<UserAboutBean> converMemList = new ArrayList<UserAboutBean>();
+		ArrayList<UserAboutBean> actyMemList = userAboutDao.queryUserAbout(user.getObjectId(), Constants.ACTIVITY_TYPE, actyBean.getActyId());
+		if(actyMemList != null && actyMemList.size()>0){
+			for(UserAboutBean bean:actyMemList){
+				UserAboutBean converBean = new UserAboutBean();
+				converBean.setUserId(user.getObjectId());
+				converBean.setAboutType(Constants.CONVERSATION_TYPE);
+				converBean.setAboutUserId(bean.getAboutUserId());
+				converBean.setAboutColetctionId(actyBean.getConversationId());
+				converMemList.add(converBean);
+			}
+			userAboutDao.saveUserAboutList(converMemList);
 		}
 	}
 
@@ -452,6 +475,8 @@ public class BarrageActivity extends Activity {
 		tv.setClickable(true);
 		tv.setTextSize(13);
 		tv.setTag(barrage.getId());
+		tv.setMaxLines(1);
+		tv.setMaxWidth(DensityUtil.dip2px(this, screenWidth/2));
 		if (null != barrage.getNickName()
 				&& !("").equals(barrage.getNickName())) {
 			tv.setText(barrage.getNickName() + ":" + barrage.getContent());
@@ -564,7 +589,7 @@ public class BarrageActivity extends Activity {
 		timeTv.setText(bean.getTime());
 		uContent.setText(bean.getContent());
 		headPhoto.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub

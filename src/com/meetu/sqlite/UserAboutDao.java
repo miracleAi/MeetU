@@ -24,23 +24,17 @@ public class UserAboutDao {
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
 		for (int i = 0; i < list.size(); i++) {
 			UserAboutBean bean = list.get(i);
-			ContentValues cv = new ContentValues();
-			cv.put(Constants.USERID, bean.getUserId());
-			cv.put(Constants.ABOUTTYPE, bean.getAboutType());
-			cv.put(Constants.ABOUTUSERID, bean.getAboutUserId());
-			cv.put(Constants.ABOUTCOLECTIONID, bean.getAboutColetctionId());
-			sdb.insert(Constants.USERABOUT_CACHE_TB, null, cv);
+			sdb.execSQL(
+					"insert or replace into userabout_cache_tb values(" + "?,?,?,?)",
+					new Object[] {bean.getUserId(), bean.getAboutType(),bean.getAboutUserId(),bean.getAboutColetctionId()});
 		}
 		sdb.close();
 	}
 	public void saveUserAboutBean(UserAboutBean bean) {
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
-		ContentValues cv = new ContentValues();
-		cv.put(Constants.USERID, bean.getUserId());
-		cv.put(Constants.ABOUTTYPE, bean.getAboutType());
-		cv.put(Constants.ABOUTUSERID, bean.getAboutUserId());
-		cv.put(Constants.ABOUTCOLECTIONID, bean.getAboutColetctionId());
-		sdb.insert(Constants.USERABOUT_CACHE_TB, null, cv);
+		sdb.execSQL(
+				"insert or replace into userabout_cache_tb values(" + "?,?,?,?)",
+				new Object[] {bean.getUserId(), bean.getAboutType(),bean.getAboutUserId(),bean.getAboutColetctionId()});
 		sdb.close();
 	}
 

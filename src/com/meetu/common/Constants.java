@@ -206,6 +206,7 @@ public class Constants {
 	/**
 	 * 表字段常量名
 	 * */
+	public static final String ABOUTCACHEID="about_cache_id";
 	// 类型ID
 	public static final String ABOUTTYPE = "about_type";
 	// 相关用户ID
