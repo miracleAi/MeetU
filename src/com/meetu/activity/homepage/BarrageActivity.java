@@ -482,19 +482,23 @@ public class BarrageActivity extends Activity {
 		tv.setGravity(Gravity.CENTER);
 		tv.setBackgroundResource(R.drawable.barrage_text_bg);
 		// 动态设置的padding一定要放在设置背景后面才能起作用
-		tv.setPadding(24, 10, 24, 10);
+		tv.setPadding(24, 8, 24, 8);
 		tv.setClickable(true);
 		tv.setTextSize(13);
 		tv.setTag(barrage.getId());
 		tv.setMaxLines(1);
+		tv.setGravity(Gravity.CENTER_VERTICAL);
 		tv.setMaxWidth(DensityUtil.dip2px(this, screenWidth/2));
-		SpannableString spannableString = EmojisRelevantUtils
-				.getExpressionString(BarrageActivity.this, barrage.getContent(),
-						chatEmojis);
 		if (null != barrage.getNickName()
 				&& !("").equals(barrage.getNickName())) {
-			tv.setText(barrage.getNickName() + ":" + spannableString);
+			SpannableString spannableString = EmojisRelevantUtils
+					.getExpressionString(BarrageActivity.this,barrage.getNickName() + ":" + barrage.getContent(),
+							chatEmojis);
+			tv.setText(spannableString);
 		} else {
+			SpannableString spannableString = EmojisRelevantUtils
+					.getExpressionString(BarrageActivity.this,barrage.getContent(),
+							chatEmojis);
 			tv.setText(spannableString);
 		}
 		tv.setOnClickListener(new OnClickListener() {

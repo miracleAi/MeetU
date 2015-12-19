@@ -487,9 +487,9 @@ OnMiLiaoInfoItemClickCallBack {
 		RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) mRecyclerView
 				.getLayoutParams();
 		if (mList2.size() != 0 && (mList2.size()) % 4 == 0) {
-			mHight = (((mList2.size()) / 4)) * DensityUtil.dip2px(this, 65);
+			mHight = (((mList2.size()) / 4)) * DensityUtil.dip2px(this, 85);
 		} else {
-			mHight = (((mList2.size()) / 4) + 1) * DensityUtil.dip2px(this, 65);
+			mHight = (((mList2.size()) / 4) + 1) * DensityUtil.dip2px(this, 85);
 		}
 		params.height = mHight;
 		mRecyclerView.setLayoutParams(params);
