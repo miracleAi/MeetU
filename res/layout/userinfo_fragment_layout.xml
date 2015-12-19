@@ -454,9 +454,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="青春校园  从[我想认识你]开始"
+                    android:text="青春校园    从[我想认识你 ]开始"
                     android:textColor="#bfbfbf"
-                    android:textSize="10dp" />
+                    android:textSize="12sp" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
