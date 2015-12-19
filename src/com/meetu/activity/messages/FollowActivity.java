@@ -72,6 +72,7 @@ public class FollowActivity extends FragmentActivity implements
 		titleGroup.setOnCheckedChangeListener(this);
 		followPager.setOnPageChangeListener(this);
 		titleGroup.check(1);
+		followPager.setCurrentItem(1);
 	}
 
 	private void initViewpager() {
@@ -97,10 +98,10 @@ public class FollowActivity extends FragmentActivity implements
 		followPager.setAdapter(pagerAdapter);
 	}
 
-	public void setTag(int idx) {
+	/*public void setTag(int idx) {
 		RadioButton rb = (RadioButton) titleGroup.getChildAt(idx);
 		rb.setChecked(true);
-	}
+	}*/
 
 	private void loadData() {
 		// TODO Auto-generated method stub
@@ -155,7 +156,8 @@ public class FollowActivity extends FragmentActivity implements
 	@Override
 	public void onPageSelected(int position) {
 		// TODO Auto-generated method stub
-		setTag(position);
+		//setTag(position);
+		titleGroup.check(position+1);
 	}
 
 }
