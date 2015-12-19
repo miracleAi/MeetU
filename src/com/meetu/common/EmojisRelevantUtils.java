@@ -101,8 +101,8 @@ public class EmojisRelevantUtils {
 				Bitmap bitmap = BitmapFactory.decodeResource(
 						context.getResources(), resId);
 				bitmap = Bitmap.createScaledBitmap(bitmap,
-						DensityUtil.dip2px(context, 50),
-						DensityUtil.dip2px(context, 50), true);
+						DensityUtil.dip2px(context, 45),
+						DensityUtil.dip2px(context, 45), true);
 				// 通过图片资源id来得到bitmap，用一个ImageSpan来包装
 				ImageSpan imageSpan = new ImageSpan(bitmap);
 				// 计算该图片名字的长度，也就是要替换的字符串的长度
