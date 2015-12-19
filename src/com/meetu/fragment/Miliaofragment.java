@@ -147,26 +147,13 @@ OnClickListener {
 					.findViewById(R.id.join_miliao_rl);
 			addLayout.setOnClickListener(this);
 			joinLayout.setOnClickListener(this);
-
-			initView();
+			
 		}
 		ViewGroup parent = (ViewGroup) view.getParent();
 		if (parent != null) {
 			parent.removeView(view);
 		}
 		return view;
-	}
-
-	/**
-	 * 控件相关处理
-	 */
-	private void initView() {
-
-		addLayout.setOnClickListener(this);
-		joinLayout.setOnClickListener(this);
-		// TODO 此处应设置为卡片的总数量。
-
-		//		numberPosition.setText("" + 1);
 	}
 
 	/**
@@ -186,7 +173,6 @@ OnClickListener {
 			frag.setArguments(bundle);
 			fragmentList.add(frag);
 		}
-
 		adapter = new BoardPageFragmentAdapter(super.getActivity()
 				.getSupportFragmentManager(), fragmentList);
 		adapter.setFragments(fragmentList);
