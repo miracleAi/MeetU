@@ -20,7 +20,9 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.lidroid.xutils.BitmapUtils;
+import com.meetu.activity.messages.SystemMsgActivity;
 import com.meetu.activity.miliao.ChatGroupActivity;
+import com.meetu.activity.miliao.EmojiParser;
 import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.bean.ActivityBean;
 import com.meetu.bean.BarrageMsgBean;
@@ -37,9 +39,12 @@ import com.meetu.cloud.wrap.ObjActivityWrap;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
+import com.meetu.common.EmojisRelevantUtils;
 import com.meetu.common.PerfectInformation;
 import com.meetu.entity.Barrage;
+import com.meetu.entity.ChatEmoji;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.EmojisDao;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.sqlite.UserDao;
 import com.meetu.tools.DenUtil;
@@ -58,6 +63,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -124,6 +130,9 @@ public class BarrageActivity extends Activity {
 	private ActivityBean actyBean = new ActivityBean();
 	private int screenWidth = 0;
 	private UserAboutDao userAboutDao;
+	private static EmojiParser parser;
+	private static List<ChatEmoji> chatEmojis;
+	private static EmojisDao emojisDao;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -147,6 +156,8 @@ public class BarrageActivity extends Activity {
 		userDao = new UserDao(getApplicationContext());
 		userAboutDao = new UserAboutDao(BarrageActivity.this);
 		screenWidth = DisplayUtils.getWindowWidth(BarrageActivity.this);
+		emojisDao = new EmojisDao(BarrageActivity.this);
+		chatEmojis = emojisDao.getChatEmojisList();
 		initView();
 		initChange();
 		isOrder();
@@ -477,11 +488,14 @@ public class BarrageActivity extends Activity {
 		tv.setTag(barrage.getId());
 		tv.setMaxLines(1);
 		tv.setMaxWidth(DensityUtil.dip2px(this, screenWidth/2));
+		SpannableString spannableString = EmojisRelevantUtils
+				.getExpressionString(BarrageActivity.this, barrage.getContent(),
+						chatEmojis);
 		if (null != barrage.getNickName()
 				&& !("").equals(barrage.getNickName())) {
-			tv.setText(barrage.getNickName() + ":" + barrage.getContent());
+			tv.setText(barrage.getNickName() + ":" + spannableString);
 		} else {
-			tv.setText(barrage.getContent());
+			tv.setText(spannableString);
 		}
 		tv.setOnClickListener(new OnClickListener() {
 
@@ -587,7 +601,10 @@ public class BarrageActivity extends Activity {
 			uName.setText("");
 		}
 		timeTv.setText(bean.getTime());
-		uContent.setText(bean.getContent());
+		SpannableString spannableString = EmojisRelevantUtils
+				.getExpressionString(BarrageActivity.this, bean.getContent(),
+						chatEmojis);
+		uContent.setText(spannableString);
 		headPhoto.setOnClickListener(new OnClickListener() {
 
 			@Override
