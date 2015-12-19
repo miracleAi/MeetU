@@ -109,8 +109,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:drawableLeft="@drawable/mine_alter_img_point_blue"
-                    android:drawablePadding="10dp"
+                   
                     android:text="新人加入了，打个招呼吧"
                     android:textColor="#a0a0a0"
                     android:textSize="12dp" />
@@ -126,7 +125,7 @@
                     android:layout_height="44dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:gravity="center" >
 
                     <ImageView
@@ -218,9 +217,9 @@
                         android:layout_centerVertical="true" >
 
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/acty_barrage_img_arrow" />
+                            android:layout_width="8dp"
+                            android:layout_height="14dp"
+                            android:src="@drawable/complete_school_arrow_720" />
                     </RelativeLayout>
                 </RelativeLayout>
             </RelativeLayout>

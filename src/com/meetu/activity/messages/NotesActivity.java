@@ -17,6 +17,7 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.meetu.activity.ReportActivity;
 import com.meetu.activity.miliao.ChatGroupActivity;
+import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
@@ -162,6 +163,17 @@ OnPageChangeListener, OnClickListener {
 		}
 		if (!userId.equals("")) {
 			getUserInfo(userId);
+			
+			userHeadPhoto.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					Intent intent=new Intent(NotesActivity.this,UserPagerActivity.class);
+					intent.putExtra("userId", userId);
+					startActivity(intent);
+				}
+			});
 		}
 
 		mViewPager = (ViewPager) super.findViewById(R.id.mViewpager_notes);
