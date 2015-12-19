@@ -30,6 +30,8 @@ import android.R.string;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
@@ -62,7 +64,7 @@ public class MinePhotoAdapter extends PagerAdapter {
 	private boolean isFavor = false;
 	//标记点赞数
 	private int praiseNum = 0;
-
+	Bitmap loadingBitmap;
 	public MinePhotoAdapter(Context context, List<ObjUserPhoto> list,
 			String userID) {
 		super();
@@ -81,6 +83,7 @@ public class MinePhotoAdapter extends PagerAdapter {
 		if (userId != null) {
 			isMyself = false;
 		}
+		loadingBitmap=BitmapFactory.decodeResource(mContext.getResources(), R.drawable.mine_btn_profile);
 	}
 
 	@Override
@@ -148,7 +151,7 @@ public class MinePhotoAdapter extends PagerAdapter {
 			}
 			if (userMy.getProfileClip() != null) {
 				finalBitmap
-				.display(photoHead, userMy.getProfileClip().getUrl());
+				.display(photoHead, userMy.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(mContext, 40), DensityUtil.dip2px(mContext, 40)),loadingBitmap);
 			}
 			favorLayout.setOnClickListener(new View.OnClickListener() {
 

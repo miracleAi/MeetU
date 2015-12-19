@@ -66,7 +66,7 @@ public class MyApplication extends Application {
 		finalBitmap.configDiskCacheSize(1024 * 1024 * 100);
 		int memory = (int) Runtime.getRuntime().maxMemory() / 8;
 		finalBitmap.configMemoryCacheSize(memory);
-		finalBitmap.configLoadingImage(R.drawable.mine_img_loading);
+		finalBitmap.configLoadingImage(R.drawable.acty_card_img_default_load_state_bg);
 	//	finalBitmap.configLoadfailImage(R.drawable.mine_img_loading);	
 		// finalBitmap.configBitmapMaxHeight(bitmapHeight);
 		/**
