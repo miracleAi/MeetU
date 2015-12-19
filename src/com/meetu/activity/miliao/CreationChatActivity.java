@@ -373,8 +373,8 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 		intent.putExtra("aspectX", 275);
 		intent.putExtra("aspectY", 258);
 		// // outputX outputY 是裁剪图片宽高
-		intent.putExtra("outputX", 550);
-		intent.putExtra("outputY", 516);
+		intent.putExtra("outputX", 275);
+		intent.putExtra("outputY", 258);
 		intent.putExtra("return-data", true);
 		startActivityForResult(intent, 33);
 	}
