@@ -73,6 +73,10 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 	ObjUser user = new ObjUser();
 	AVUser currentUser = ObjUser.getCurrentUser();
 	boolean isUpEnd = true;
+	private static final File FILE_SDCARD = Environment
+			.getExternalStorageDirectory();
+	private static final File FILE_LOCAL = new File(FILE_SDCARD, "meetu");
+	Uri imageUri;//The Uri to store the big bitmap
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +179,7 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.photoUpdate_creationChat_rl:
 
-		//	showDialog();
+			//	showDialog();
 			Intent intent1 = new Intent(Intent.ACTION_PICK, null);
 			intent1.setDataAndType(
 					MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
@@ -184,7 +188,7 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.uploadAgain_creationChat_img:
 			// Toast.makeText(this, "重新上传", Toast.LENGTH_SHORT).show();
-		//	showDialog();
+			//	showDialog();
 			Intent intent2 = new Intent(Intent.ACTION_PICK, null);
 			intent2.setDataAndType(
 					MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
@@ -286,6 +290,8 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 		switch (requestCode) {
 		case 11:
 			if (resultCode == this.RESULT_OK) {
+				File f = new File(FILE_LOCAL, String.valueOf(System.currentTimeMillis())+".png");
+				imageUri = Uri.fromFile(f);
 				cropPhoto(data.getData());// 裁剪图片
 			}
 			break;
@@ -293,6 +299,8 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 			if (resultCode == this.RESULT_OK) {
 				File temp = new File(Environment.getExternalStorageDirectory()
 						+ "/photo.png");
+				File f = new File(FILE_LOCAL, String.valueOf(System.currentTimeMillis())+".png");
+				imageUri = Uri.fromFile(f);
 				cropPhoto(Uri.fromFile(temp));// 裁剪图片
 
 			}
@@ -301,7 +309,7 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 		case 33:
 			log.e("图片处理", "aaa");
 			if (data != null) {
-				Bundle extras = data.getExtras();
+				/*Bundle extras = data.getExtras();
 				headerPortait = extras.getParcelable("data");
 				log.e("headerPortait", headerPortait.toString());
 				if (headerPortait != null) {
@@ -311,6 +319,30 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 					photoUpdateLayout.setFocusable(false);
 					photoLayout.setVisibility(View.VISIBLE);
 					uploadAgain.setFocusable(true);
+				}*/
+				if(imageUri != null){
+					if(headerPortait != null && !headerPortait.isRecycled()){
+						headerPortait.recycle();
+						headerPortait = null;
+					}
+					log.e("图片处理", "bbb");
+					try {
+						headerPortait = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+						if (headerPortait != null) {
+							photoPath = saveHeadImg(headerPortait);
+							photo.setImageBitmap(headerPortait);
+							photoUpdateLayout.setVisibility(View.GONE);
+							photoUpdateLayout.setFocusable(false);
+							photoLayout.setVisibility(View.VISIBLE);
+							uploadAgain.setFocusable(true);
+						}
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+						return;
+					}catch (OutOfMemoryError e) {
+						// TODO: handle exception
+						return;
+					}
 				}
 			}
 			break;
@@ -373,9 +405,12 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 		intent.putExtra("aspectX", 275);
 		intent.putExtra("aspectY", 258);
 		// // outputX outputY 是裁剪图片宽高
-		intent.putExtra("outputX", 275);
-		intent.putExtra("outputY", 258);
-		intent.putExtra("return-data", true);
+		intent.putExtra("outputX", 550);
+		intent.putExtra("outputY", 516);
+		intent.putExtra("return-data", false);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+		intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+		intent.putExtra("noFaceDetection", true); // no face detection
 		startActivityForResult(intent, 33);
 	}
 
@@ -434,7 +469,7 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 				}
 			}
 		},new ProgressCallback() {
-			
+
 			@Override
 			public void done(Integer pro) {
 				// TODO Auto-generated method stub
@@ -448,22 +483,22 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 		ObjChatWrap.saveGroupInfo(user, groupf,
 				updateText.getText().toString(), new ObjChatBeanCallback() {
 
-					@Override
-					public void callback(ObjChat object, AVException e) {
-						// TODO Auto-generated method stub
-						if (e != null) {
-							// clickBtn.setText(LOADFAIL);
-							Toast.makeText(CreationChatActivity.this, "觅聊创建失败", 1000).show();
-							return;
-						} else {
-							Toast.makeText(CreationChatActivity.this, "觅聊已创建", 1000).show();
-							Intent intent = getIntent();
-							setResult(RESULT_OK, intent);
-							finish();
-						}
+			@Override
+			public void callback(ObjChat object, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					// clickBtn.setText(LOADFAIL);
+					Toast.makeText(CreationChatActivity.this, "觅聊创建失败", 1000).show();
+					return;
+				} else {
+					Toast.makeText(CreationChatActivity.this, "觅聊已创建", 1000).show();
+					Intent intent = getIntent();
+					setResult(RESULT_OK, intent);
+					finish();
+				}
 
-					}
-				});
+			}
+		});
 	}
 
 	@Override

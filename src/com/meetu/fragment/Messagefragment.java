@@ -372,6 +372,7 @@ OnClickListener {
 						if (type == 1) {
 							msg.setActyId(id);
 							msg.setActyName(title);
+							log.d("mytest", "1overtime--"+overTime);
 							list.add(msg);
 						} else {
 							log.e("zcq", "觅聊觅聊");

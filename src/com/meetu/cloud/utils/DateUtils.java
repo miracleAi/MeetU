@@ -51,8 +51,12 @@ public class DateUtils {
 		int yearMsg = calMsg.get(Calendar.YEAR);
 		long todayZero = System.currentTimeMillis() - hour * Time_Of_Hour
 				- minute * Time_Of_Minute - second * 1000;
-		if (todayZero - time < 0) {
-			return format(time, DateFormat_Time);
+		if ((todayZero - time) < 0 ) {
+			if((todayZero - time)> (-24* Time_Of_Hour)){
+				return format(time, DateFormat_Time);
+			}else{
+				return format(time, DateFormat_YearTime);
+			}
 		}
 		if (todayZero - time < (24* Time_Of_Hour)) {
 			return "昨天 " + format(time, DateFormat_Time);

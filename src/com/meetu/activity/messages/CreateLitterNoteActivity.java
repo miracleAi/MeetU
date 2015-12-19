@@ -80,9 +80,9 @@ OnClickListener {
 	private FinalBitmap finalBitmap;
 	private ProgressBar noteProgre;
 	boolean isUpEnd = true;
-	public static final File FILE_SDCARD = Environment
+	private static final File FILE_SDCARD = Environment
 			.getExternalStorageDirectory();
-	public static final File FILE_LOCAL = new File(FILE_SDCARD, "meetu");
+	private static final File FILE_LOCAL = new File(FILE_SDCARD, "meetu");
 	Uri imageUri;//The Uri to store the big bitmap
 	Bitmap headerPortait;
 	@Override
@@ -276,6 +276,8 @@ OnClickListener {
 			if (resultCode == this.RESULT_OK) {
 				File temp = new File(Environment.getExternalStorageDirectory()
 						+ "/photo_note.png");
+				File f = new File(FILE_LOCAL, String.valueOf(System.currentTimeMillis())+".png");
+				imageUri = Uri.fromFile(f);
 				cropPhoto(Uri.fromFile(temp));// 裁剪图片
 			}
 

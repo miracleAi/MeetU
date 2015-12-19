@@ -202,7 +202,9 @@ public class MessagesListAdapter extends BaseAdapter {
 				}
 			}else{
 				if(chatmsgs!=null && chatmsgs.getSendTimeStamp()!=null){
-					holder.tvTime.setText(""+com.meetu.cloud.utils.DateUtils.getFormattedTimeInterval(Long.valueOf(chatmsgs.getSendTimeStamp())));
+					holder.tvTime.setText(""+DateUtils.getFormattedTimeInterval(Long.valueOf(chatmsgs.getSendTimeStamp())));
+				}else{
+					holder.tvTime.setText(""+DateUtils.getFormattedTimeInterval(item.getTimeOver()));
 				}
 			}
 		} else if (item.getConversationType() == Constants.SEEKMSG) {
