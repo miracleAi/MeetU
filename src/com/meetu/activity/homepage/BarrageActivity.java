@@ -114,6 +114,7 @@ public class BarrageActivity extends Activity {
 	// 控件相关
 	private ImageView headPhoto,barrageBack;
 	private TextView uName, uContent, topTitle, timeTv;
+	ImageView reportImv;
 	private RelativeLayout back, userJoinList;
 	// 底部布局
 	RelativeLayout bottomRl;
@@ -194,6 +195,7 @@ public class BarrageActivity extends Activity {
 		bottomTv = (TextView) findViewById(R.id.bottom_tv);
 		bottomImv = (ImageView) findViewById(R.id.bottom_arrow);
 		barrageBack = (ImageView) findViewById(R.id.back_barrage_img);
+		reportImv = (ImageView) findViewById(R.id.report_imv);
 
 		topTitle.setText(actyBean.getTitle());
 		barrageBack.setOnClickListener(new OnClickListener() {
@@ -683,7 +685,7 @@ public class BarrageActivity extends Activity {
 	private void initDefData() {
 		for (int i = 0; i < defContents.length; i++) {
 			BarrageMsgBean bean = new BarrageMsgBean();
-			bean.setUserId("");
+			bean.setUserId("5630843900b0ec3f9c9d2e03");
 			bean.setNickName("小U");
 			bean.setContent(defContents[i]);
 			bean.setTime(defExtras[i]);
