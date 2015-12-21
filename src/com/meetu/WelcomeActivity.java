@@ -173,8 +173,8 @@ public class WelcomeActivity extends Activity {
 				// 根据String类型id获取对应资源id
 				int resID = this.getResources().getIdentifier(
 						emoji.getFaceName(), "drawable", this.getPackageName());
-				log.e("lucifer222222", "name" + emoji.getFaceName()
-						+ " resID==" + resID);
+//				log.e("lucifer222222", "name" + emoji.getFaceName()
+//						+ " resID==" + resID);
 				emoji.setId(resID);
 			}
 

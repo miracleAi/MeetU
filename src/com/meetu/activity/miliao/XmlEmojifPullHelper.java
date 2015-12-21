@@ -35,29 +35,29 @@ public class XmlEmojifPullHelper implements EmojiParser {
 
 					break;
 				case XmlPullParser.START_TAG:
-					log.e(parser.getName());
+			//		log.e(parser.getName());
 					if (parser.getName().equals("emoji")) {
 						emoji = new ChatEmoji();
 					} else if (parser.getName().equals("key")) {
 						eventType = parser.next();
 						emoji.setCharacter(parser.getText());
 
-						log.e("lucifer", "key=" + parser.getText());
+			//			log.e("lucifer", "key=" + parser.getText());
 
 					} else if (parser.getName().equals("value")) {
 						eventType = parser.next();
 
 						emoji.setFaceName("" + parser.getText());
 
-						log.e("lucifer", "key=" + parser.getText());
+			//			log.e("lucifer", "key=" + parser.getText());
 					}
 					break;
 				case XmlPullParser.END_TAG:
 					if (parser.getName().equals("emoji")) {
 						chatEmojis.add(emoji);
-						log.e("emoji===", "emoji===" + emoji.getCharacter());
+			//			log.e("emoji===", "emoji===" + emoji.getCharacter());
 						emoji = null;
-						log.e("i" + i++);
+			//			log.e("i" + i++);
 					}
 					break;
 				}
@@ -69,7 +69,7 @@ public class XmlEmojifPullHelper implements EmojiParser {
 
 			e.printStackTrace();
 		}
-		log.e("lucifer========", "chatEmojis=" + chatEmojis.size());
+	//	log.e("lucifer========", "chatEmojis=" + chatEmojis.size());
 		return chatEmojis;
 	}
 

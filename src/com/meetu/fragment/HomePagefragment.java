@@ -284,7 +284,7 @@ public class HomePagefragment extends Fragment implements
 					log.e("lucifer", "信息拉取成功");
 
 					for (ObjActivity activity : objects) {
-						System.out.println(objects);
+					//	System.out.println(objects);
 						activityItem = activity;
 						objactyList.add(activity);
 						log.e("zcq",
@@ -337,18 +337,18 @@ public class HomePagefragment extends Fragment implements
 					/**
 					 * 此处执行活动信息保存
 					 * */
-					log.e("zcq", "actyList=" + actyList.size());
+				//	log.e("zcq", "actyList=" + actyList.size());
 					actyDao.deleteByUser(user.getObjectId());
-					log.e("zcq", "actyList=" + actyList.size());
-					log.e("zcq", "actyList.url=="
-							+ actyList.get(0).getActivityCover() + " =="
-							+ actyList.get(1).getActivityCover());
+				//	log.e("zcq", "actyList=" + actyList.size());
+//					log.e("zcq", "actyList.url=="
+//							+ actyList.get(0).getActivityCover() + " =="
+//							+ actyList.get(1).getActivityCover());
 					actyDao.saveActyList(actyList);
 
-					log.e("zcq", "actyList==" + actyList.size());
+//					log.e("zcq", "actyList==" + actyList.size());
 					actyListCache.clear();
 					actyListCache.addAll(actyDao.queryActys(user.getObjectId()));
-					log.e("zcq", "actyListCache==" + actyListCache.size());
+//					log.e("zcq", "actyListCache==" + actyListCache.size());
 					
 					
 
