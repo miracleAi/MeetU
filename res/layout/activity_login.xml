@@ -169,6 +169,7 @@
                         android:textSize="12sp" />
 
                     <LinearLayout
+                        android:id="@+id/useragereement_login_ll"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical" >

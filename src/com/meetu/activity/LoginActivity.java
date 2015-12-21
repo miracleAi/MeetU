@@ -1,6 +1,7 @@
 package com.meetu.activity;
 
 import cc.imeetu.R;
+import cc.imeetu.UserAgreementActivity;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
@@ -32,6 +33,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +45,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private TextView forgert;
 	private TextView forgetPassword;
 	private ImageView imgBg;
+	private LinearLayout userAgreementLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		
 		imgBg=(ImageView) findViewById(R.id.img_login_bg);
 		imgBg.setOnClickListener(this);
+		userAgreementLayout=(LinearLayout) findViewById(R.id.useragereement_login_ll);
+		userAgreementLayout.setOnClickListener(this);
 	}
 
 	/**
@@ -118,6 +123,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 		case R.id.img_login_bg:
 			CloseJianpan.closeKeyboard(this, uphone);
 			
+			break;
+		case R.id.useragereement_login_ll:
+			Intent user=new Intent(this,UserAgreementActivity.class);
+			startActivity(user);
 			break;
 		case R.id.denglu_bt_denglu:
 			if (uphone.getText().length() != 11) {

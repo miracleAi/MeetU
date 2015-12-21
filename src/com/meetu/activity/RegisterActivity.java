@@ -1,6 +1,7 @@
 package com.meetu.activity;
 
 import cc.imeetu.R;
+import cc.imeetu.UserAgreementActivity;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
@@ -25,6 +26,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class RegisterActivity extends Activity implements OnClickListener {
@@ -32,6 +34,7 @@ public class RegisterActivity extends Activity implements OnClickListener {
 	private Button registerButton;
 	private EditText uphone, upassward;
 	private ImageView imgCloseBg;
+	private LinearLayout userAgreementLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,8 @@ public class RegisterActivity extends Activity implements OnClickListener {
 		registerButton.setOnClickListener(this);
 		imgCloseBg=(ImageView) findViewById(R.id.img_register_bg);
 		imgCloseBg.setOnClickListener(this);
+		userAgreementLayout=(LinearLayout) findViewById(R.id.userAgreement_register_ll);
+		userAgreementLayout.setOnClickListener(this);
 	};
 
 
@@ -106,6 +111,10 @@ public class RegisterActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.img_register_bg:
 			CloseJianpan.closeKeyboard(this, uphone);
+			break;
+		case R.id.userAgreement_register_ll:
+			Intent intent=new Intent(this,UserAgreementActivity.class);
+			startActivity(intent);
 			break;
 		case R.id.rigister_bt_rigister:
 

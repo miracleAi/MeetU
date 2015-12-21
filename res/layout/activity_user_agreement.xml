@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+   >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+       >
+
+        <RelativeLayout 
+            android:id="@+id/back_useragreement"
+            android:layout_width="54dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/kongjianruoqu_bg"
+             android:layout_alignParentLeft="true"
+             android:gravity="center">
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           
+           
+            
+            android:src="@drawable/navi_btn_close" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/title_userAgreement_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="18sp"
+            android:textColor="#808080"
+            android:text="用户协议" />
+
+    </RelativeLayout>
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#cccccc"/>
+    <WebView 
+        android:id="@+id/webview_useragreement"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+   
+  
+</LinearLayout>

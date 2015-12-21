@@ -70,7 +70,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <activity-alias
-            android:name=".wxapi.WXPayEntryActivity"
+            android:name="cc.imeetu.wxapi.WXPayEntryActivity"
             android:exported="true"
             android:targetActivity="cn.beecloud.BCWechatPaymentActivity" />
         <!-- WXPay sdk end -->
@@ -373,7 +373,10 @@
             android:label="@string/title_activity_create_litter_note"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="cc.imeetu.UserAgreementActivity"
+            android:label="@string/title_activity_user_agreement" >
+        </activity>
     </application>
-
 
 </manifest>

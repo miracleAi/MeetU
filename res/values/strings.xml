@@ -64,5 +64,6 @@
     <string name="report_title_fillInReason">填写举报原因（选填）</string>
     <string name="report_title_Description">亲爱的，描述一下你要举报的情况吧...</string>
     <string name="title_activity_create_litter_note">CreateLitterNoteActivity</string>
+    <string name="title_activity_user_agreement">UserAgreementActivity</string>
 
 </resources>
