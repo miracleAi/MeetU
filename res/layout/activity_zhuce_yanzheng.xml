@@ -33,7 +33,7 @@
             android:text="注册"
             android:textColor="#404040"
             android:textSize="18sp" />
-
+<!-- 
         <TextView
             android:id="@+id/activity_register_to_yanzhengma_img"
             android:layout_width="wrap_content"
@@ -43,14 +43,14 @@
             android:layout_marginTop="12dp"
             android:text="完成"
             android:textColor="#00b8de"
-            android:textSize="16dp" />
+            android:textSize="16dp" /> -->
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="180dp"
+        android:layout_marginBottom="165dp"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -65,19 +65,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="已发送验证码到(+86)"
-                android:textColor="#404040" />
+                android:textColor="#808080"
+                 />
 
             <TextView
                 android:id="@+id/phone_fasong_zhuce"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1234567890"
-                android:textColor="#404040" />
+                android:textColor="#808080" />
         </LinearLayout>
         
         <View android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_marginTop="2dp"
+             android:layout_marginLeft="@dimen/nornal_margin_left"
+            android:layout_marginRight="@dimen/nornal_margin_right"
             android:background="#cccccc"/>
 
         <LinearLayout
@@ -98,6 +101,7 @@
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="1"
+                android:textSize="14sp"
                 android:text=""
                 android:textColor="#ffffff" />
 
@@ -111,6 +115,7 @@
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="1"
+                 android:textSize="14sp"
                 android:text=""
                 android:textColor="#ffffff" />
 
@@ -123,6 +128,7 @@
                 android:background="@drawable/register_ver_h_720"
                 android:gravity="center"
                 android:inputType="number"
+                 android:textSize="14sp"
                 android:maxLength="1"
                 android:text=""
                 android:textColor="#ffffff" />
@@ -137,6 +143,7 @@
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="1"
+                 android:textSize="14sp"
                 android:text=""
                 android:textColor="#ffffff" />
 
@@ -149,6 +156,7 @@
                 android:background="@drawable/register_ver_h_720"
                 android:gravity="center"
                 android:inputType="number"
+                 android:textSize="14sp"
                 android:maxLength="1"
                 android:text=""
                 android:textColor="#ffffff" />
@@ -162,6 +170,7 @@
                 android:background="@drawable/register_ver_h_720"
                 android:gravity="center"
                 android:inputType="number"
+                 android:textSize="14sp"
                 android:maxLength="1"
                 android:text=""
                 android:textColor="#ffffff" />
@@ -180,8 +189,8 @@
                 android:layout_width="104dp"
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/register_sent_light_720"
+                android:layout_centerHorizontal="true"               
+                android:background="@drawable/register_sent_grey_720"
                 android:textSize="12sp"
                 android:textColor="#ffffff" />
         </RelativeLayout>
@@ -200,6 +209,32 @@
 
             <requestFocus />
         </EditText>
+        
+        <RelativeLayout
+            android:id="@+id/activity_forgetPassword_to_forgetPasswordVerification_rl"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+           android:layout_marginTop="50dp"
+           
+            android:gravity="center" >
+			
+             <RelativeLayout 
+                 android:id="@+id/register_yanzheng_rl"
+                 android:layout_width="180dp"
+                 android:layout_height="36dp"
+                 android:layout_centerHorizontal="true"
+                  android:background="@drawable/register_login_1_720"
+                 android:gravity="center">
+            <TextView
+                android:id="@+id/activity_forgetPassword_to_forgetPasswordVerification_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+               
+                android:text="完  成"
+                android:textColor="#ffffff"
+                android:textSize="14dp" />
+            </RelativeLayout>
+        </RelativeLayout>
     </LinearLayout>
 
     <ImageView

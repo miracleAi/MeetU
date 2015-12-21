@@ -46,6 +46,7 @@ public class ForgetPasswordVerificationActivity extends Activity implements
 
 	private EditText allEditText;
 	private LinearLayout allLayout;
+	private RelativeLayout saveLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,8 @@ public class ForgetPasswordVerificationActivity extends Activity implements
 	}
 
 	private void initView() {
+		saveLayout=(RelativeLayout) findViewById(R.id.forget_pw_rl);
+		saveLayout.setOnClickListener(this);
 		sent = (Button) findViewById(R.id.sent_forgetPassword_bt);
 		sent.setOnClickListener(this);
 
@@ -244,11 +247,13 @@ public class ForgetPasswordVerificationActivity extends Activity implements
 							"num6==" + num2 + "  aaa" + allEditText.getText());
 					number6.setText((allEditText.getText()).toString()
 							.substring(5));
+					saveLayout.setBackgroundResource(R.drawable.register_login_720);
 				}
 
 				if (allEditText.length() < 6) {
 					number6.setText("");
 					number6.setBackgroundResource(R.drawable.register_ver_h_720);
+					saveLayout.setBackgroundResource(R.drawable.register_login_1_720);
 				}
 				if (allEditText.length() < 5) {
 					number5.setText("");
@@ -307,12 +312,12 @@ public class ForgetPasswordVerificationActivity extends Activity implements
 				// do some action
 
 				sent.setEnabled(false);
-				sent.setText("已发送验证码" + i);
+				sent.setText("重新发送" + "("+i+"s)");
 				i--;
 				if (i < 0) {
 					sent.setText("重新发送");
 					sent.setEnabled(true);
-					sent.setBackgroundResource(R.drawable.register_sent_light_720);
+					sent.setBackgroundResource(R.drawable.register_sent_dark_720);
 					break;
 				}
 				break;
@@ -332,12 +337,14 @@ public class ForgetPasswordVerificationActivity extends Activity implements
 			// Toast.LENGTH_SHORT).show();
 			initLoad();
 			i = 59;
+			sent.setBackgroundResource(R.drawable.register_sent_grey_720);
+			
 
 			break;
 		/**
 		 * 进行提交修改密码
 		 */
-		case R.id.activity_forgetPassword_to_forgetPasswordVerification_rl:
+		case R.id.forget_pw_rl:
 
 			number = allEditText.getText().toString();
 			log.e("yanzhengma", number.toString());

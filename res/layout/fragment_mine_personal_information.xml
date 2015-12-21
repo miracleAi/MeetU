@@ -55,7 +55,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@+id/textView1"
                     android:background="@null"
-                    android:text="lucifer"
+                    android:text=""
                     android:textColor="@color/textColor_setting" />
 
                 <ImageView
@@ -105,7 +105,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@+id/sex_tag_tv"
-                    android:text="男"
+                    android:text=""
                     android:textColor="@color/textColor_setting" />
             </RelativeLayout>
 
@@ -146,7 +146,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@+id/birth_tag_tv"
-                    android:text="1995-06-06"
+                    android:text=""
                     android:textColor="@color/textColor_setting" />
 
                 <ImageView
@@ -195,7 +195,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@+id/conste_tag_tv"
-                    android:text="双鱼座"
+                    android:text=""
                     android:textColor="@color/textColor_setting" />
 
                 <ImageView
@@ -250,7 +250,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@+id/school_tv"
-                    android:text="北京大学"
+                    android:text=""
                     android:textColor="@color/textColor_setting" />
 
                 <ImageView
@@ -346,7 +346,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@+id/major_tag_tv"
-                    android:text="美术"
+                    android:text=""
                     android:textColor="@color/textColor_setting" />
 
                 <ImageView
@@ -396,7 +396,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@+id/home_tag_tv"
-                    android:text="北京 北京"
+                    android:text=""
                     android:textColor="@color/textColor_setting" />
 
                 <ImageView
