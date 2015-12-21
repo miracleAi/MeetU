@@ -24,6 +24,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/all_card_item_newjoin_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="64dp"

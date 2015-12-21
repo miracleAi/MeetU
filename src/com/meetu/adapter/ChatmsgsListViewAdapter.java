@@ -25,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -240,6 +241,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						.findViewById(R.id.sex_icon_imv);
 				holder.time = (TextView) convertView
 						.findViewById(R.id.time_chat_item_newjoin_tv);
+				holder.allItem=(LinearLayout) convertView.findViewById(R.id.all_card_item_newjoin_ll);
 				break;
 			case Constants.SHOW_SELF_DEL:
 			case Constants.SHOW_SELF_CHANGE:
@@ -584,7 +586,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				if (item.getNowJoinUserId() != null
 						&& !("").equals(item.getNowJoinUserId())) {
 					
-					holder.userHeadPhoto.setOnClickListener(new OnClickListener() {
+					holder.allItem.setOnClickListener(new OnClickListener() {
 						
 						@Override
 						public void onClick(View arg0) {
@@ -682,6 +684,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 		private ImageView failPhoto;
 		private RelativeLayout resentLayout;
 		private ImageView leftPhotoUp;
+		private LinearLayout allItem;
 	}
 
 }
