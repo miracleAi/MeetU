@@ -26,7 +26,7 @@ import com.meetu.activity.homepage.HomePageDetialActivity;
 import com.meetu.activity.homepage.JoinActivity;
 import com.meetu.activity.homepage.JoinUsersActivity;
 import com.meetu.activity.homepage.MemoryWallActivity;
-import com.meetu.activity.messages.CopyOfNotesActivity;
+
 import com.meetu.activity.messages.CreateLitterNoteActivity;
 import com.meetu.activity.messages.NotesActivity;
 import com.meetu.activity.miliao.ApplyForMiLiaoActivity;
