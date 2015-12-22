@@ -246,7 +246,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20dp"
-                    android:text="新消息提醒"
+                    android:text="消息免打扰"
                     android:textColor="#606366"
                     android:textSize="14sp" />
 

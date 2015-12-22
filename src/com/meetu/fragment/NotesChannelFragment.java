@@ -913,8 +913,8 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 				}
 			}
 			// 随着字体 textview 中的 字体宽度 让view内容不要出下屏幕
-			log.e("lucifer","字条距离下表的距离"+ (DensityUtil.dip2px(getActivity(), 54)+ noteHight - windowFocusY)+ "文本view的高度"+ (content.getHeight() + DensityUtil.dip2px(getActivity(), 44 + 33)));
-			log.e("lucifer", "content.getHeight()===" + content.getHeight()+" content.getWidth()=="+content.getWidth());
+//			log.e("lucifer","字条距离下表的距离"+ (DensityUtil.dip2px(getActivity(), 54)+ noteHight - windowFocusY)+ "文本view的高度"+ (content.getHeight() + DensityUtil.dip2px(getActivity(), 44 + 33)));
+//			log.e("lucifer", "content.getHeight()===" + content.getHeight()+" content.getWidth()=="+content.getWidth());
 			if ((content.getHeight() + DensityUtil.dip2px(getActivity(),
 					44 + 33)) >= (DensityUtil.dip2px(getActivity(), 54)
 					+ noteHight - windowFocusY)) {
