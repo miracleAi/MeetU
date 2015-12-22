@@ -241,7 +241,7 @@ OnRefreshListener2<ListView> {
 								chatEmojis);
 				holder.textContent.setText(spannableString);
 				holder.textAvator
-				.setImageResource(R.drawable.acty_barrage_img_comment_profiles_default);
+				.setImageResource(R.drawable.img_profiles_u);
 				holder.textTime.setText(DateUtils.format(bean.getCreatedAt()
 						.getTime(), DateUtils.DateFormat_YearTime));
 				break;
