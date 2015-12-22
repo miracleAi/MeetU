@@ -26,6 +26,7 @@ import android.view.View.OnClickListener;
 import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class JoinUserFavorAdapter extends BaseAdapter {
@@ -81,6 +82,7 @@ public class JoinUserFavorAdapter extends BaseAdapter {
 					.findViewById(R.id.school_item_joinUsers_tv);
 			holder.tvWeizhi = (TextView) convertView
 					.findViewById(R.id.position_item_joinUser_tv);
+			holder.all=(RelativeLayout) convertView.findViewById(R.id.center2_joinUsers_rl);
 
 			convertView.setTag(holder);
 		} else {
@@ -89,7 +91,7 @@ public class JoinUserFavorAdapter extends BaseAdapter {
 		if(item.getProfileClip()!=null){
 			finalBitmap.display(holder.ivImgUrl, item.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(mContext, 40),  DensityUtil.dip2px(mContext, 40)),loadBitmapIng);
 		}
-		holder.ivImgUrl.setOnClickListener(new OnClickListener() {
+		holder.all.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
@@ -115,6 +117,7 @@ public class JoinUserFavorAdapter extends BaseAdapter {
 		private TextView tvWeizhi;
 		private ImageView ivImgUrl;
 		private ImageView ivSex;
+		private RelativeLayout all;
 
 	}
 

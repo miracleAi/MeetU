@@ -586,6 +586,8 @@ public class SetPersonalInformation2Activity extends BaseActivity implements
 						Toast.makeText(SetPersonalInformation2Activity.this,
 								"正在上传信息", Toast.LENGTH_SHORT).show();
 					}
+				}else{
+					Toast.makeText(SetPersonalInformation2Activity.this, "请将信息填写完整", Toast.LENGTH_SHORT).show();
 				}
 			}
 
