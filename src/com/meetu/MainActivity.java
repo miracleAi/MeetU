@@ -1,5 +1,6 @@
 package com.meetu;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,16 +11,20 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.meetu.activity.LoginActivity;
+import com.meetu.activity.SystemSettingsActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjGlobalCallback;
 import com.meetu.cloud.callback.ObjUserCallback;
 import com.meetu.cloud.callback.ObjUserShieldCallback;
+import com.meetu.cloud.object.ObjGlobalAndroid;
 import com.meetu.cloud.object.ObjShieldUser;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjFollowWrap;
+import com.meetu.cloud.wrap.ObjGlobalAndroidWrap;
 import com.meetu.cloud.wrap.ObjShieldUserWrap;
 import com.meetu.common.ChatConnection;
 import com.meetu.common.Constants;
@@ -33,14 +38,22 @@ import com.meetu.sqlite.UserShieldDao;
 import com.meetu.tools.DisplayUtils;
 import com.meetu.tools.SystemBarTintManager;
 import com.meetu.view.ScrollTabHolder;
+import com.umeng.update.UmengDialogButtonListener;
 import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UmengUpdateListener;
+import com.umeng.update.UpdateResponse;
+import com.umeng.update.UpdateStatus;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -48,6 +61,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -63,7 +77,7 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 
 public class MainActivity extends FragmentActivity implements
-		OnTabChangeListener {
+OnTabChangeListener {
 
 	private FragmentTabHost tabHost;
 	// private ContentViewPager vpContent;
@@ -73,15 +87,18 @@ public class MainActivity extends FragmentActivity implements
 	private String pageString;
 
 	public static MineUpfragment fMineUpfragment;
-	
+
 	// 当前用户
-		ObjUser user = new ObjUser();
-		AVUser currentUser = AVUser.getCurrentUser();
+	ObjUser user = new ObjUser();
+	AVUser currentUser = AVUser.getCurrentUser();
 	UserAboutDao userAboutDao;
 	UserDao userDao;
 	UserShieldDao shieldDao;
 	FinishReceiver fr;
-	
+	private ObjGlobalAndroid globalObject;
+	UpdateResponse updateInfoAll;
+	Dialog updatedialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,11 +120,7 @@ public class MainActivity extends FragmentActivity implements
 				R.id.contentLayout);
 		tabHost.getTabWidget().setDividerDrawable(null);
 		tabHost.setOnTabChangedListener(this);
-		//友盟自动更新
-		UmengUpdateAgent.setDefault();
-		UmengUpdateAgent.setUpdateOnlyWifi(false);
-		UmengUpdateAgent.update(this);
-		
+		isUpdate();
 		initTab();
 		pageString = super.getIntent().getStringExtra("page");
 		ChatConnection.isConnection();
@@ -120,15 +133,119 @@ public class MainActivity extends FragmentActivity implements
 		}
 		getShieldList();
 		getMyFollowUser();
-		
+
 		fr = new FinishReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Constants.MAIN_FINISH);
 		registerReceiver(fr, filter);
-		
+
 		log.e("zcq wh", "w=="+DisplayUtils.getWindowWidth(this)+"  hh=="+DisplayUtils.getWindowHeight(this));
 
 	}
+	private void isUpdate(){
+		UmengUpdateAgent.setDefault();
+		ObjGlobalAndroidWrap.checkVersion(new ObjGlobalCallback() {
+
+			@Override
+			public void callback(ObjGlobalAndroid object, AVException e) {
+				// TODO Auto-generated method stub
+				if(e == null){
+					globalObject = object;
+					checkUpdate();
+				}
+			}
+		});
+	}
+	private void checkUpdate() {
+		// TODO Auto-generated method stub
+		UmengUpdateAgent.setUpdateAutoPopup(false);
+		UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
+			@Override
+			public void onUpdateReturned(int updateStatus,UpdateResponse updateInfo) {
+				updateInfoAll = updateInfo;
+				switch (updateStatus) {
+				case UpdateStatus.Yes: // has update
+					//UmengUpdateAgent.showUpdateDialog(getApplicationContext(), updateInfo);
+					showDialog(updateInfo);
+					break;
+				case UpdateStatus.No: // has no update
+					Toast.makeText(MainActivity.this, "已经是最新版本啦！", Toast.LENGTH_SHORT).show();
+					break;
+				case UpdateStatus.NoneWifi: // none wifi
+					Toast.makeText(getApplicationContext(), "no wifi ", Toast.LENGTH_SHORT).show();
+					break;
+				case UpdateStatus.Timeout: // time out
+					Toast.makeText(getApplicationContext(), "time out", Toast.LENGTH_SHORT).show();
+					break;
+				}
+			}
+		});
+		UmengUpdateAgent.setUpdateOnlyWifi(false);
+		UmengUpdateAgent.update(this);
+	}
+	//版本更新弹窗
+	public void showDialog(final UpdateResponse updateInfo){
+		if(globalObject.getIsupdate()){
+			updatedialog = new AlertDialog.Builder(this)
+			.setTitle("有新版本")
+			.setMessage("\n"+"最新版本："+updateInfoAll.version+"\n\n更新内容：\n"+updateInfoAll.updateLog+"\n")
+			.setCancelable(false)
+			.setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int arg1) {
+					// TODO Auto-generated method stub
+					UmengUpdateAgent.setUpdateUIStyle(UpdateStatus.STYLE_NOTIFICATION);
+					File file = UmengUpdateAgent.downloadedFile(MainActivity.this, updateInfo);
+					if (file == null) {
+						UmengUpdateAgent.startDownload(MainActivity.this, updateInfo);
+					} else {
+						UmengUpdateAgent.startInstall(MainActivity.this, file);
+					}
+					dialog.dismiss();
+				}
+			}).create();
+			updatedialog.show();
+		}else{
+			updatedialog = new AlertDialog.Builder(this)
+			.setTitle("有新版本")
+			.setMessage("\n"+"最新版本："+updateInfoAll.version+"\n\n更新内容：\n"+updateInfoAll.updateLog+"\n")
+			.setCancelable(false)
+			.setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int arg1) {
+					// TODO Auto-generated method stub
+					UmengUpdateAgent.setUpdateUIStyle(UpdateStatus.STYLE_NOTIFICATION);
+					File file = UmengUpdateAgent.downloadedFile(MainActivity.this, updateInfo);
+					if (file == null) {
+						UmengUpdateAgent.startDownload(MainActivity.this, updateInfo);
+					} else {
+						UmengUpdateAgent.startInstall(MainActivity.this, file);
+					}
+					dialog.dismiss();
+					//downloadApk();
+				}
+			}).setNeutralButton("以后再说", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int arg1) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+				}
+			}).create();
+			updatedialog.show();
+		}
+	}
+	OnKeyListener keylistener = new DialogInterface.OnKeyListener(){
+		public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+			if (keyCode==KeyEvent.KEYCODE_BACK&&event.getRepeatCount()==0){
+				return true;
+			}else{
+				return false;
+			}
+		}
+	} ;
 	class FinishReceiver extends BroadcastReceiver{
 
 		@Override
@@ -136,7 +253,7 @@ public class MainActivity extends FragmentActivity implements
 			// TODO Auto-generated method stub
 			finish();
 		}
-		
+
 	}
 
 	// 状态栏相关
@@ -180,7 +297,7 @@ public class MainActivity extends FragmentActivity implements
 		View view = LayoutInflater.from(this).inflate(R.layout.footer_tabs,
 				null);
 		((TextView) view.findViewById(R.id.tvTab))
-				.setText(TabDb.getTabsTxt()[idx]);
+		.setText(TabDb.getTabsTxt()[idx]);
 		if (idx == 0) {
 			((TextView) view.findViewById(R.id.tvTab)).setTextColor(this
 					.getResources().getColor(R.color.tablebar_check));
@@ -210,8 +327,8 @@ public class MainActivity extends FragmentActivity implements
 				iv.setImageResource(TabDb.getTabsImgLight()[i]);
 			} else {
 				((TextView) view.findViewById(R.id.tvTab))
-						.setTextColor(getResources().getColor(
-								R.color.foot_txt_gray));
+				.setTextColor(getResources().getColor(
+						R.color.foot_txt_gray));
 				iv.setImageResource(TabDb.getTabsImg()[i]);
 			}
 
@@ -255,7 +372,7 @@ public class MainActivity extends FragmentActivity implements
 	 * */
 	public void getShieldList(){
 		ObjShieldUserWrap.queryShieldList(user, new ObjUserShieldCallback() {
-			
+
 			@Override
 			public void callback(List<ObjShieldUser> objects, AVException e) {
 				// TODO Auto-generated method stub
@@ -275,7 +392,7 @@ public class MainActivity extends FragmentActivity implements
 	public void getMyFollowUser(){
 		log.e("zcq", "正在加载我关注的人");
 		ObjFollowWrap.getFollowee(user, new ObjUserCallback() {
-			
+
 			@Override
 			public void callback(List<ObjUser> objects, AVException e) {
 				if(e!=null){
@@ -283,7 +400,7 @@ public class MainActivity extends FragmentActivity implements
 					return;
 				}
 				if(objects==null){
-					
+
 				}else{
 					log.e("zcq", "objects.size()=="+objects.size());
 					ArrayList<UserAboutBean> userAboutBeanList;
@@ -295,18 +412,18 @@ public class MainActivity extends FragmentActivity implements
 						userAboutBean.setAboutType(Constants.FOLLOW_TYPE);
 						userAboutBean.setAboutUserId(objects.get(i).getObjectId());
 						userAboutBeanList.add(userAboutBean);
-						
+
 						userDao.insertOrReplaceUser(objects.get(i));
 					}
-					
+
 					userAboutDao.saveUserAboutList(userAboutBeanList);
-					
+
 				}
-				
-				
+
+
 			}
 		});
-		
+
 	}
 
 }

@@ -25,6 +25,7 @@ import com.meetu.cloud.wrap.ObjGlobalAndroidWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
 import com.meetu.myapplication.MyApplication;
+import com.umeng.update.UmengDialogButtonListener;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
@@ -65,6 +66,7 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 
 	private ObjGlobalAndroid globalObject;
 	private TextView progressTv;
+	UpdateResponse updateInfoAll = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -135,9 +137,11 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 		UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
 			@Override
 			public void onUpdateReturned(int updateStatus,UpdateResponse updateInfo) {
+				updateInfoAll = updateInfo;
 				switch (updateStatus) {
 				case UpdateStatus.Yes: // has update
-					UmengUpdateAgent.showUpdateDialog(getApplicationContext(), updateInfo);
+					//UmengUpdateAgent.showUpdateDialog(getApplicationContext(), updateInfo);
+					showUpdateDialog();
 					break;
 				case UpdateStatus.No: // has no update
 					Toast.makeText(SystemSettingsActivity.this, "已经是最新版本啦！", Toast.LENGTH_SHORT).show();
@@ -156,7 +160,32 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 		//UmengUpdateAgent.forceUpdate(SystemSettingsActivity.this);
 		UmengUpdateAgent.update(SystemSettingsActivity.this);
 	}
+	private void showUpdateDialog(){
+		Dialog dialog = new AlertDialog.Builder(this).setTitle("有新版本").setMessage("\n"+"最新版本："+updateInfoAll.version+"\n\n更新内容：\n"+updateInfoAll.updateLog+"\n")
+				.setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
 
+					@Override
+					public void onClick(DialogInterface dialog, int arg1) {
+						// TODO Auto-generated method stub
+						UmengUpdateAgent.setUpdateUIStyle(UpdateStatus.STYLE_NOTIFICATION);
+						File file = UmengUpdateAgent.downloadedFile(SystemSettingsActivity.this, updateInfoAll);
+						if (file == null) {
+							UmengUpdateAgent.startDownload(SystemSettingsActivity.this, updateInfoAll);
+						} else {
+							UmengUpdateAgent.startInstall(SystemSettingsActivity.this, file);
+						}
+						dialog.dismiss();
+					}
+				}).setNeutralButton("以后再说", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int arg1) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+					}
+				}).create();
+		dialog.show();
+	}
 	//退出登录弹窗
 	private void showSignOutDialog() {
 		// TODO Auto-generated method stub
@@ -178,69 +207,6 @@ public class SystemSettingsActivity extends Activity implements OnClickListener 
 					}
 				}).create();
 		dialog.show();
-	}
-	//版本更新弹窗
-	public void showDialog(){
-		Dialog dialog = new AlertDialog.Builder(this).setTitle("有新版本").setMessage("是否安装新版本？")
-				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int arg1) {
-						// TODO Auto-generated method stub
-						dialog.dismiss();
-						downloadApk();
-					}
-				}).setNeutralButton("暂不更新", new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int arg1) {
-						// TODO Auto-generated method stub
-						dialog.dismiss();
-					}
-				}).create();
-		dialog.show();
-	}
-	//下载apk文件
-	public void downloadApk(){
-		AVFile avfile = globalObject.getApk();
-		avfile.getDataInBackground(new GetDataCallback() {
-
-			@Override
-			public void done(byte[] data, AVException e) {
-				// TODO Auto-generated method stub
-				if(e == null){
-					File file=new File(Environment .getExternalStorageDirectory()+"/meetu","MeetU.apk");
-					if(!file.exists()){
-						file.getParentFile().mkdirs();
-					}
-					try {
-						FileOutputStream fos = new FileOutputStream(file);
-						fos.write(data);
-						//下载完成后自动弹出安装
-						Intent intent = new Intent(Intent.ACTION_VIEW);  
-						intent.setDataAndType(Uri.fromFile(new File(Environment  
-								.getExternalStorageDirectory()+"/meetu", "MeetU.apk")),  
-								"application/vnd.android.package-archive");  
-						startActivity(intent);  
-					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}else{
-					Toast.makeText(getApplicationContext(), "下载安装包出错", 1000).show();
-				}
-			}
-		}, new ProgressCallback() {
-
-			@Override
-			public void done(Integer progress) {
-				// TODO Auto-generated method stub
-				progressTv.setText(String.valueOf(progress));
-			}
-		}); 
 	}
 	/**
 	 * 清除缓存

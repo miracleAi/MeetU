@@ -12,10 +12,14 @@ public class ObjGlobalAndroid extends AVObject{
 	public static final Creator CREATOR = AVObjectCreator.instance;
 	public static  String VERSION = "version";
 	public static String APK = "apk";
+	public static String ISUPDATE = "isUpdate";
 	public String getVersion() {
 		return this.getString(VERSION);
 	}
 	public AVFile getApk() {
 		return this.getAVFile(APK);
+	}
+	public boolean getIsupdate(){
+		return this.getBoolean(ISUPDATE);
 	}
 }
