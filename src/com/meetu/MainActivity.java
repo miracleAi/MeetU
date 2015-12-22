@@ -169,13 +169,13 @@ OnTabChangeListener {
 					showDialog(updateInfo);
 					break;
 				case UpdateStatus.No: // has no update
-					Toast.makeText(MainActivity.this, "已经是最新版本啦！", Toast.LENGTH_SHORT).show();
+				//	Toast.makeText(MainActivity.this, "已经是最新版本啦！", Toast.LENGTH_SHORT).show();
 					break;
 				case UpdateStatus.NoneWifi: // none wifi
-					Toast.makeText(getApplicationContext(), "no wifi ", Toast.LENGTH_SHORT).show();
+			//		Toast.makeText(getApplicationContext(), "no wifi ", Toast.LENGTH_SHORT).show();
 					break;
 				case UpdateStatus.Timeout: // time out
-					Toast.makeText(getApplicationContext(), "time out", Toast.LENGTH_SHORT).show();
+			//		Toast.makeText(getApplicationContext(), "time out", Toast.LENGTH_SHORT).show();
 					break;
 				}
 			}
