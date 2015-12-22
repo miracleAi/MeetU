@@ -13,7 +13,7 @@
         android:layout_alignParentBottom="true"
         />
     
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/center_dialog_sex_selector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,12 +29,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal" 
+            android:layout_alignParentLeft="true"
             android:gravity="center">
 
             <ImageView
                 android:id="@+id/iv_man_sexselector"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@drawable/sex_man_selector_bg" />
 
             <TextView
@@ -51,12 +52,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal"
+            android:layout_alignParentRight="true"
             android:gravity="center" >
 
             <ImageView
                 android:id="@+id/iv_woman_sexselector"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@drawable/sex_woman_selector_bg" />
 
             <TextView
@@ -67,7 +69,7 @@
                 android:layout_marginLeft="8dp"
                 android:text="女生" />
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
     
     <LinearLayout
         android:id="@+id/center2_dialog_sex_selector" 
@@ -85,7 +87,7 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:textColor="#808080"
-        android:text="  性别确认后，就不能修改了哦!  "/>
+        android:text="  性别确认后，就不能修改了哦  "/>
     <View android:layout_width="20dp"
             android:layout_height="1dp"
             android:background="#808080"/>

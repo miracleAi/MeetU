@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.tsz.afinal.FinalBitmap;
+
 import cc.imeetu.R;
 
 import com.avos.avoscloud.AVException;
@@ -32,9 +34,11 @@ import com.meetu.entity.City;
 import com.meetu.entity.Department;
 import com.meetu.entity.Middle;
 import com.meetu.entity.Schools;
+import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.CityDao;
 import com.meetu.tools.BitmapCut;
 import com.meetu.tools.DateUtils;
+import com.meetu.tools.DensityUtil;
 import com.meetu.tools.StringToDate;
 
 import android.R.integer;
@@ -121,7 +125,12 @@ public class SetPersonalInformation2Activity extends BaseActivity implements
 	private RelativeLayout sexLayout;
 	private boolean sexIsShow=false;
 	private ImageView manImageView,womanImageView;
-
+	// 拿本地的 user
+	private AVUser currentUser = AVUser.getCurrentUser();
+	private ObjUser user;
+	private String headURl = "";// 头像的URL
+	Bitmap loadingBitmap=null;
+	private FinalBitmap finalBitmapHead;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -133,9 +142,10 @@ public class SetPersonalInformation2Activity extends BaseActivity implements
 		// 取得前边传过来的数据
 		Intent intent = this.getIntent();
 
-
+		MyApplication application=(MyApplication) this.getApplicationContext();
+		finalBitmapHead=application.getFinalBitmap();
 		log.e("lucifer", "birthString==" + birthString);
-
+		loadingBitmap=BitmapFactory.decodeResource(getResources(), R.drawable.mine_btn_profile);
 		initView();
 
 	}
@@ -143,22 +153,46 @@ public class SetPersonalInformation2Activity extends BaseActivity implements
 	private void initView() {
 		ivTouxiang = (ImageView) super
 				.findViewById(R.id.iv_touxiang_shezhigerenxinxi2);
-		Bitmap head = readHead();
-		if (head != null) {
+//		Bitmap head = readHead();
+//		if (head != null) {
+//
+//			fHeadPath = Environment.getExternalStorageDirectory()
+//					+ "/f_user_header.png";
+//			yHeadPath = Environment.getExternalStorageDirectory()
+//					+ "/user_header.png";
+//
+//			ivTouxiang.setImageBitmap(head);
+//		}
+		if (currentUser != null) {
+			// 强制类型转换
+			user = AVUser.cast(currentUser, ObjUser.class);
 
-			fHeadPath = Environment.getExternalStorageDirectory()
-					+ "/f_user_header.png";
-			yHeadPath = Environment.getExternalStorageDirectory()
-					+ "/user_header.png";
+			if(user.getProfileClip()!=null){
+				headURl = user.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(this, 85), DensityUtil.dip2px(this, 85));
+			}
 
-			ivTouxiang.setImageBitmap(head);
+			log.e("lucifer", "url" + headURl);
 		}
+		
+		if (headURl != null) {
+			// ivTouxiang.setImageBitmap(head);
+			// 加载网络图片
+			
+		
+			finalBitmapHead.display(ivTouxiang, headURl, loadingBitmap);
+		}
+		
 		ivTouxiang.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				showDialog();
+			//	showDialog();
+				Intent intent1 = new Intent(Intent.ACTION_PICK, null);
+				intent1.setDataAndType(
+						MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+				startActivityForResult(intent1, 11);
+				
 			}
 		});
 

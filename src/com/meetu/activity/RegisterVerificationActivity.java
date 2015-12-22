@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,13 +45,14 @@ public class RegisterVerificationActivity extends Activity implements
 	private int i = 59;
 	private Boolean running;
 	private TextView number1, number2, number3, number4, number5, number6;
-	private TextView register;
+	private ImageView register;
 	private String uphone, upassward, number;
 	private TextView fasongphone;
 
 	private LinearLayout numberLayout;
 	private EditText allEditText;
 	private ImageView backImageView;
+	private RelativeLayout registerLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,8 @@ public class RegisterVerificationActivity extends Activity implements
 	}
 
 	private void initView() {
+		registerLayout=(RelativeLayout) findViewById(R.id.register_yanzheng_rl);
+		registerLayout.setOnClickListener(this);
 		backImageView=(ImageView) findViewById(R.id.activity_register_back_img);
 		backImageView.setOnClickListener(new OnClickListener() {
 			
@@ -99,9 +103,9 @@ public class RegisterVerificationActivity extends Activity implements
 		});
 		fasongphone = (TextView) super.findViewById(R.id.phone_fasong_zhuce);
 		fasongphone.setText(uphone);
-		register = (TextView) super
-				.findViewById(R.id.activity_register_to_yanzhengma_img);
-		register.setOnClickListener(this);
+//		register = (ImageView) super
+//				.findViewById(R.id.activity_register_to_yanzhengma_img);
+//		register.setOnClickListener(this);
 		sent = (Button) findViewById(R.id.register_sent_bt);
 		sent.setOnClickListener(this);
 
@@ -209,11 +213,13 @@ public class RegisterVerificationActivity extends Activity implements
 							"num6==" + num2 + "  aaa" + allEditText.getText());
 					number6.setText((allEditText.getText()).toString()
 							.substring(5));
+					registerLayout.setBackgroundResource(R.drawable.register_login_720);
 				}
 
 				if (allEditText.length() < 6) {
 					number6.setText("");
 					number6.setBackgroundResource(R.drawable.register_ver_h_720);
+					registerLayout.setBackgroundResource(R.drawable.register_login_1_720);
 				}
 				if (allEditText.length() < 5) {
 					number5.setText("");
@@ -271,12 +277,12 @@ public class RegisterVerificationActivity extends Activity implements
 			case 1:
 				// do some action
 				sent.setEnabled(false);
-				sent.setText("已发送验证码" + i);
+				sent.setText("重新发送" + "("+i+"s)");
 				i--;
 				if (i < 0) {
 					sent.setText("重新发送");
 					sent.setEnabled(true);
-					sent.setBackgroundResource(R.drawable.register_sent_light_720);
+					sent.setBackgroundResource(R.drawable.register_sent_dark_720);
 					break;
 				}
 				break;
@@ -306,22 +312,27 @@ public class RegisterVerificationActivity extends Activity implements
 
 			initLoad();
 			i = 59;
+			sent.setBackgroundResource(R.drawable.register_sent_grey_720);
 			// Toast.makeText(RegisterVerificationActivity.this, "可点击测试",
 			// Toast.LENGTH_SHORT).show();
 			break;
 
-		case R.id.activity_register_to_yanzhengma_img:
+		case R.id.register_yanzheng_rl:
 
 			number = allEditText.getText().toString();
 			log.e("yanzhengma", number.toString());
 
-			// Toast.makeText(RegisterVerificationActivity.this, number,
-			// Toast.LENGTH_SHORT).show();
+		
 			ObjUserWrap.register(uphone, upassward, number,
 					new ObjFunBooleanCallback() {
 
 						@Override
 						public void callback(boolean result, AVException e) {
+							if(e!=null){
+								log.e("zcq", e);
+								Toast.makeText(RegisterVerificationActivity.this, "验证码不正确", Toast.LENGTH_SHORT).show();
+								return;
+							}
 							if (result == true) {
 								Intent intent = new Intent(
 										RegisterVerificationActivity.this,
@@ -331,6 +342,7 @@ public class RegisterVerificationActivity extends Activity implements
 								startActivity(intent);
 							} else {
 								log.e("failure", e);
+								Toast.makeText(RegisterVerificationActivity.this, "验证码不正确", Toast.LENGTH_SHORT).show();
 							}
 
 						}

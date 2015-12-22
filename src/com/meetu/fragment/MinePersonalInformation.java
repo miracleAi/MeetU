@@ -181,18 +181,27 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 		} else if (user.getGender() == 2) {
 			usersex.setText("女生");
 		} else {
-			usersex.setText("未知");
+			usersex.setText("");
 		}
 		Long birthLong = user.getBirthday();
-		String birthString = DateUtils.getDateToString(birthLong);
-		log.e("zcq", "birthString" + birthString);
-		userbirthday.setText(birthString);
+		if (user.getBirthday() == 0) {
+			userbirthday.setText("");
+		} else {
+			String birthString = DateUtils.getDateToString(birthLong);
+
+			userbirthday.setText(birthString);
+		}
 
 		if (user.getConstellation() != null
 				&& !user.getConstellation().equals("")) {
 			userConstellation.setText(user.getConstellation());
 		} else {
-			userConstellation.setText(getConstellation(user.getBirthday()));
+			if (user.getBirthday() == 0) {
+				userConstellation.setText("");
+			} else {
+				userConstellation.setText(getConstellation(user.getBirthday()));
+			}
+
 		}
 
 		userschool.setText(user.getSchool());
@@ -222,9 +231,10 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 		switch (v.getId()) {
 		// 修改名字
 		case R.id.minesetting_username_ll:
-			
-			if(!user.isCompleteUserInfo()){
-				Intent data=new Intent(getActivity(),SetPersonalInformation2Activity.class);
+
+			if (!user.isCompleteUserInfo()) {
+				Intent data = new Intent(getActivity(),
+						SetPersonalInformation2Activity.class);
 				startActivity(data);
 				break;
 			}
@@ -234,8 +244,9 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 			break;
 		// 修改生日
 		case R.id.minesetting_birthday_ll:
-			if(!user.isCompleteUserInfo()){
-				Intent data=new Intent(getActivity(),SetPersonalInformation2Activity.class);
+			if (!user.isCompleteUserInfo()) {
+				Intent data = new Intent(getActivity(),
+						SetPersonalInformation2Activity.class);
 				startActivity(data);
 				break;
 			}
@@ -246,8 +257,9 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 			break;
 		// 修改 学校
 		case R.id.minesetting_school_ll:
-			if(!user.isCompleteUserInfo()){
-				Intent data=new Intent(getActivity(),SetPersonalInformation2Activity.class);
+			if (!user.isCompleteUserInfo()) {
+				Intent data = new Intent(getActivity(),
+						SetPersonalInformation2Activity.class);
 				startActivity(data);
 				break;
 			}
@@ -258,8 +270,9 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 			break;
 		// 星座的修改
 		case R.id.minesetting_Constellation_ll:
-			if(!user.isCompleteUserInfo()){
-				Intent data=new Intent(getActivity(),SetPersonalInformation2Activity.class);
+			if (!user.isCompleteUserInfo()) {
+				Intent data = new Intent(getActivity(),
+						SetPersonalInformation2Activity.class);
 				startActivity(data);
 				break;
 			}
@@ -271,12 +284,13 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 		// 专业的修改
 		case R.id.minesetting_major_ll:
 			// 传个学校对象过去 和 完善信息保持一致
-			if(!user.isCompleteUserInfo()){
-				Intent data=new Intent(getActivity(),SetPersonalInformation2Activity.class);
+			if (!user.isCompleteUserInfo()) {
+				Intent data = new Intent(getActivity(),
+						SetPersonalInformation2Activity.class);
 				startActivity(data);
 				break;
 			}
-			if(user.getSchoolNum()!=0){
+			if (user.getSchoolNum() != 0) {
 				Schools schools = new Schools();
 				schools.setUnivsId("" + user.getSchoolNum());
 				schools.setUnivsNameString(schoolDao
@@ -288,19 +302,20 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 				bundle.putSerializable("schools", schools);
 				intent3.putExtras(bundle);
 				startActivityForResult(intent3, 3);
-				
-			}else{
+
+			} else {
 				Intent intent3 = new Intent(getActivity(),
 						ChangeSchoolActivity.class);
 				intent3.putExtra("school", userschool.getText());
 				startActivityForResult(intent3, 1);
 			}
 			break;
-			
+
 		// 家乡的修改
 		case R.id.minesetting_hometown_ll:
-			if(!user.isCompleteUserInfo()){
-				Intent data=new Intent(getActivity(),SetPersonalInformation2Activity.class);
+			if (!user.isCompleteUserInfo()) {
+				Intent data = new Intent(getActivity(),
+						SetPersonalInformation2Activity.class);
 				startActivity(data);
 				break;
 			}
@@ -332,8 +347,8 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 			if (resultCode == getActivity().RESULT_OK) {
 				String schoolID = data.getExtras().getString("schools");
 				String majorID = data.getExtras().getString("departments");
-				final String schoolName = schoolDao.getschoolName(schoolID).get(0)
-						.getUnivsNameString();
+				final String schoolName = schoolDao.getschoolName(schoolID)
+						.get(0).getUnivsNameString();
 				final String majorName = schoolDao
 						.getDepartmentsName(schoolID, majorID).get(0)
 						.getDepartmentName();
@@ -347,26 +362,28 @@ public class MinePersonalInformation extends ScrollTabHolderMineupFragment
 				// 专业分类编码，数据库查询
 				user.setDepartmentId(Integer.valueOf(majorID));
 				ObjUserWrap.completeUserInfo(user, new ObjFunBooleanCallback() {
-					
+
 					@Override
 					public void callback(boolean result, AVException e) {
 						// TODO Auto-generated method stub
-						if(e!=null){
-							Toast.makeText(getActivity(), "修改失败", Toast.LENGTH_SHORT).show();
+						if (e != null) {
+							Toast.makeText(getActivity(), "修改失败",
+									Toast.LENGTH_SHORT).show();
 							return;
 						}
-						if(result){
-							Toast.makeText(getActivity(), "修改成功", Toast.LENGTH_SHORT).show();
+						if (result) {
+							Toast.makeText(getActivity(), "修改成功",
+									Toast.LENGTH_SHORT).show();
 							userschool.setText(schoolName);
 							usermajor.setText(majorName);
-						}else{
-							Toast.makeText(getActivity(), "修改失败", Toast.LENGTH_SHORT).show();
+						} else {
+							Toast.makeText(getActivity(), "修改失败",
+									Toast.LENGTH_SHORT).show();
 						}
-						
+
 					}
 				});
-				
-				
+
 			}
 			break;
 		case 2:

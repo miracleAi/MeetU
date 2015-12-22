@@ -114,7 +114,7 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements
 				} else if (userMy.getGender() == 2) {
 					usersex.setText("女生");
 				} else {
-					usersex.setText("未知");
+					usersex.setText("");
 				}
 				Long birthLong = userMy.getBirthday();
 				String birthString = DateUtils.getDateToString(birthLong);
@@ -392,20 +392,30 @@ public class UserInfoFragment extends ScrollTabHolderFragment implements
 					} else if (userObjUser.getGender() == 2) {
 						usersex.setText("女生");
 					} else {
-						usersex.setText("未知");
+						usersex.setText("");
 					}
 					Long birthLong = userObjUser.getBirthday();
-					String birthString = DateUtils.getDateToString(birthLong);
-					log.e("zcq", "birthString" + birthString);
-					userbirthday.setText(birthString);
+					if(userObjUser.getBirthday()==0){
+						userbirthday.setText("");
+					}else{
+						String birthString = DateUtils.getDateToString(birthLong);
+						log.e("zcq", "birthString" + birthString);
+						userbirthday.setText(birthString);
+					}
+					
 
 					if (user.getConstellation() != null
 							&& !user.getConstellation().equals("")) {
 						userConstellation.setText(userObjUser
 								.getConstellation());
 					} else {
-						userConstellation.setText(getConstellation(user
-								.getBirthday()));
+						if(userObjUser.getBirthday()==0){
+							userConstellation.setText("");
+						}else{
+							userConstellation.setText(getConstellation(user
+									.getBirthday()));
+						}
+						
 					}
 
 					userschool.setText(userObjUser.getSchool());
