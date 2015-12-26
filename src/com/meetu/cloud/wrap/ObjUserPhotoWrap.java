@@ -149,6 +149,7 @@ public class ObjUserPhotoWrap {
 	 */
 	public static void savePhoto(AVFile file,
 			final ObjFunBooleanCallback callback) {
+		//上传完成后可以用此file得到URL
 		file.saveInBackground(new SaveCallback() {
 
 			@Override

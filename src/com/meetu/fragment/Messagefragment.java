@@ -226,6 +226,10 @@ OnClickListener {
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
 		// TODO Auto-generated method stub
+		//点击之后将失效会话删掉
+		if (mdataListCache.get(position).getTiStatus() == 1) {
+			messagesDao.deleteConv(user.getObjectId(),mdataListCache.get(position).getConversationID());
+		}
 		Intent intent = new Intent(getActivity(), ChatGroupActivity.class);
 		intent.putExtra("ConversationId", ""
 				+ mdataListCache.get(position).getConversationID());
@@ -247,10 +251,6 @@ OnClickListener {
 		// 清空该项未读消息
 		messagesDao.updateUnreadClear(user.getObjectId(),
 				mdataListCache.get(position).getConversationID());
-		//点击之后将失效会话删掉
-		if (mdataListCache.get(position).getTiStatus() == 1) {
-			messagesDao.deleteConv(user.getObjectId(),mdataListCache.get(position).getConversationID());
-		}
 	}
 
 	@Override
@@ -339,7 +339,7 @@ OnClickListener {
 				if (convList.size() > 0) {
 					// 修改状态
 					messagesDao.updeteStatus(user.getObjectId());
-					
+
 					ArrayList<Messages> list = new ArrayList<Messages>();
 					log.e("zcq",
 							"user.getObjectId()==" + user.getObjectId());

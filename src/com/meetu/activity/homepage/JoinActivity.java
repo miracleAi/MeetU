@@ -522,7 +522,7 @@ OnItemClickListener {
 	protected void payZfb(String orderId,float price) {
 		// TODO Auto-generated method stub
 		Map<String, String> mapOptional = new HashMap<String, String>();
-		mapOptional.put("phone", "android");
+		mapOptional.put("type", "acty");
 		int payPrice = (int) (price*100);
 		BCPay.getInstance(JoinActivity.this).reqAliPaymentAsync(
 				activityBean.getTitle()+"报名",
@@ -538,7 +538,7 @@ OnItemClickListener {
 		//这个是微信自身存在的问题
 		Map<String, String> mapOptional = new HashMap<String, String>();
 
-		mapOptional.put("phone", "android");
+		mapOptional.put("type", "acty");
 		int payPrice = (int) (price*100);
 		if (BCPay.isWXAppInstalledAndSupported() &&
 				BCPay.isWXPaySupported()) {

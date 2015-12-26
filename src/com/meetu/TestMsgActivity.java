@@ -433,6 +433,7 @@ public class TestMsgActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		groupf.addMetaData("type", "test");
 		// 上传图片
 		ObjUserPhotoWrap.savePhoto(groupf, new ObjFunBooleanCallback() {
 
