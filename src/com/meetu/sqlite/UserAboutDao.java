@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.avos.avoscloud.LogUtil.log;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.common.Constants;
+import com.meetu.common.DbConstents;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -47,17 +48,17 @@ public class UserAboutDao {
 		if (!"".equals(colectionId)) {
 			// 查询指定成员
 			cursor = sdb.rawQuery("select * from "
-					+ Constants.USERABOUT_CACHE_TB + " where "
-					+ Constants.USERID + "=? and " + Constants.ABOUTTYPE
-					+ "=? and " + Constants.ABOUTCOLECTIONID + "=?",
+					+ DbConstents.USERABOUT_CACHE_TB + " where "
+					+ DbConstents.ID_MINE + "=? and " + DbConstents.ABOUTTYPE
+					+ "=? and " + DbConstents.ABOUTCOLECTIONID + "=?",
 					new String[] { userId, Integer.toString(aboutType),
 							colectionId });
 		} else {
 			// 根据类型查询指定类型所有
 			cursor = sdb.rawQuery(
-					"select * from " + Constants.USERABOUT_CACHE_TB + " where "
-							+ Constants.USERID + "=? and "
-							+ Constants.ABOUTTYPE + "=?", new String[] {
+					"select * from " + DbConstents.USERABOUT_CACHE_TB + " where "
+							+ DbConstents.ID_MINE + "=? and "
+							+ DbConstents.ABOUTTYPE + "=?", new String[] {
 							userId, Integer.toString(aboutType) });
 		}
 
@@ -65,13 +66,13 @@ public class UserAboutDao {
 		while (!cursor.isAfterLast()) {
 			UserAboutBean bean = new UserAboutBean();
 			bean.setUserId(cursor.getString(cursor
-					.getColumnIndex(Constants.USERID)));
+					.getColumnIndex(DbConstents.ID_MINE)));
 			bean.setAboutType(cursor.getInt(cursor
-					.getColumnIndex(Constants.ABOUTTYPE)));
+					.getColumnIndex(DbConstents.ABOUTTYPE)));
 			bean.setAboutUserId(cursor.getString(cursor
-					.getColumnIndex(Constants.ABOUTUSERID)));
+					.getColumnIndex(DbConstents.ABOUTUSERID)));
 			bean.setAboutColetctionId(cursor.getString(cursor
-					.getColumnIndex(Constants.ABOUTCOLECTIONID)));
+					.getColumnIndex(DbConstents.ABOUTCOLECTIONID)));
 			aboutList.add(bean);
 			cursor.moveToNext();
 		}
@@ -84,13 +85,13 @@ public class UserAboutDao {
 	public void deleteByType(String userId, int aboutType, String colectionId) {
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
 		if (!"".equals(colectionId)) {
-			sdb.delete(Constants.USERABOUT_CACHE_TB, Constants.USERID
-					+ "=? and " + Constants.ABOUTTYPE + "=? and "
-					+ Constants.ABOUTCOLECTIONID + "=?", new String[] { userId,
+			sdb.delete(DbConstents.USERABOUT_CACHE_TB, DbConstents.ID_MINE
+					+ "=? and " + DbConstents.ABOUTTYPE + "=? and "
+					+ DbConstents.ABOUTCOLECTIONID + "=?", new String[] { userId,
 					Integer.toString(aboutType), colectionId });
 		} else {
-			sdb.delete(Constants.USERABOUT_CACHE_TB, Constants.USERID
-					+ "=? and " + Constants.ABOUTTYPE + "=?", new String[] {
+			sdb.delete(DbConstents.USERABOUT_CACHE_TB, DbConstents.ID_MINE
+					+ "=? and " + DbConstents.ABOUTTYPE + "=?", new String[] {
 					userId, Integer.toString(aboutType) });
 		}
 		sdb.close();
@@ -107,8 +108,8 @@ public class UserAboutDao {
 	public void deleteUserTypeUserId(String userId,int aboutType,String convercationId,String deleteUserId){
 
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
-		sdb.delete(Constants.USERABOUT_CACHE_TB, Constants.USERID
-				+ "=? and " + Constants.ABOUTTYPE + "=? and " + Constants.ABOUTUSERID + "=?", new String[] {
+		sdb.delete(DbConstents.USERABOUT_CACHE_TB, DbConstents.ID_MINE
+				+ "=? and " + DbConstents.ABOUTTYPE + "=? and " + DbConstents.ABOUTUSERID + "=?", new String[] {
 				userId, Integer.toString(aboutType) ,deleteUserId});
 		sdb.close();
 		log.e("zcq", "删除数据库成员成功");

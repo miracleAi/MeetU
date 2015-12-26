@@ -6,6 +6,7 @@ import com.avos.avoscloud.LogUtil.log;
 import com.meetu.bean.ActivityBean;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.common.Constants;
+import com.meetu.common.DbConstents;
 
 import android.R.string;
 import android.content.ContentValues;
@@ -27,29 +28,29 @@ public class ActivityDao {
 		for (int i = 0; i < list.size(); i++) {
 			ActivityBean bean = list.get(i);
 			ContentValues cv = new ContentValues();
-			cv.put(Constants.USERID, bean.getUserId());
-			cv.put(Constants.ACTIVITYID, bean.getActyId());
-			cv.put(Constants.ACTIVITYCONTENT, bean.getActivityContent());
-			cv.put(Constants.ACTIVITYCOVER, bean.getActivityCover());
-			cv.put(Constants.ACTIVITYFOLLOWCOUNT, bean.getOrderAndFollow());
-			cv.put(Constants.ACTIVITYINDEX, bean.getIndex());
-			cv.put(Constants.ISACTIVITYPRAISE, bean.getIsFavor());
-			cv.put(Constants.TIMESTART, bean.getTimeStart());
-			cv.put(Constants.TIMESTOP, bean.getTimeStop());
-			cv.put(Constants.TIMECHATSTOP, bean.getTimeChatStop());
-			cv.put(Constants.TITLE, bean.getTitle());
-			cv.put(Constants.TITLESUB, bean.getTitleSub());
-			cv.put(Constants.STATUS, bean.getStatus());
-			cv.put(Constants.PRAISECOUNT, bean.getPraiseCount());
-			cv.put(Constants.ORDERCOUNTBOY, bean.getOrderCountBoy());
-			cv.put(Constants.ORDERCOUNTGIRL, bean.getOrderCountGirl());
-			cv.put(Constants.LOCATIONADDRESS, bean.getLocationAddress());
-			cv.put(Constants.LOCATIONPLACE, bean.getLocationPlace());
-			cv.put(Constants.LOCATIONGOVERNMENT, bean.getLocationGovernment());
-			cv.put(Constants.LOCATIONLATITUDE, bean.getLocationLatitude());
-			cv.put(Constants.LOCATIONLONGTITUDE, bean.getLocationLongtitude());
-			cv.put(Constants.CONVERSATIONID, bean.getConversationId());
-			sdb.insert(Constants.ACTIVITY_CACHE_TB, null, cv);
+			cv.put(DbConstents.ID_MINE, bean.getUserId());
+			cv.put(DbConstents.ACTIVITYID, bean.getActyId());
+			cv.put(DbConstents.ACTIVITYCONTENT, bean.getActivityContent());
+			cv.put(DbConstents.ACTIVITYCOVER, bean.getActivityCover());
+			cv.put(DbConstents.ACTIVITYFOLLOWCOUNT, bean.getOrderAndFollow());
+			cv.put(DbConstents.ACTIVITYINDEX, bean.getIndex());
+			cv.put(DbConstents.ISACTIVITYPRAISE, bean.getIsFavor());
+			cv.put(DbConstents.TIMESTART, bean.getTimeStart());
+			cv.put(DbConstents.TIMESTOP, bean.getTimeStop());
+			cv.put(DbConstents.TIMECHATSTOP, bean.getTimeChatStop());
+			cv.put(DbConstents.TITLE, bean.getTitle());
+			cv.put(DbConstents.TITLESUB, bean.getTitleSub());
+			cv.put(DbConstents.STATUS, bean.getStatus());
+			cv.put(DbConstents.PRAISECOUNT, bean.getPraiseCount());
+			cv.put(DbConstents.ORDERCOUNTBOY, bean.getOrderCountBoy());
+			cv.put(DbConstents.ORDERCOUNTGIRL, bean.getOrderCountGirl());
+			cv.put(DbConstents.LOCATIONADDRESS, bean.getLocationAddress());
+			cv.put(DbConstents.LOCATIONPLACE, bean.getLocationPlace());
+			cv.put(DbConstents.LOCATIONGOVERNMENT, bean.getLocationGovernment());
+			cv.put(DbConstents.LOCATIONLATITUDE, bean.getLocationLatitude());
+			cv.put(DbConstents.LOCATIONLONGTITUDE, bean.getLocationLongtitude());
+			cv.put(DbConstents.CONVERSATIONID, bean.getConversationId());
+			sdb.insert(DbConstents.ACTIVITY_CACHE_TB, null, cv);
 		}
 		sdb.close();
 	}
@@ -58,9 +59,9 @@ public class ActivityDao {
 	public void updateIsFavor(String userId, String activityId, int flag) {
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
-		values.put(Constants.ISACTIVITYPRAISE, flag);
-		sdb.update(Constants.ACTIVITY_CACHE_TB, values, Constants.USERID
-				+ "=? and " + Constants.ACTIVITYID + "=?", new String[] {
+		values.put(DbConstents.ISACTIVITYPRAISE, flag);
+		sdb.update(DbConstents.ACTIVITY_CACHE_TB, values, DbConstents.ID_MINE
+				+ "=? and " + DbConstents.ACTIVITYID + "=?", new String[] {
 				userId, activityId });
 		sdb.close();
 	}
@@ -75,9 +76,9 @@ public class ActivityDao {
 	public void updateFavourNumber(String userId, String activityId, int flag){
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
-		values.put(Constants.PRAISECOUNT, flag);
-		sdb.update(Constants.ACTIVITY_CACHE_TB, values, Constants.USERID
-				+ "=? and " + Constants.ACTIVITYID + "=?", new String[] {
+		values.put(DbConstents.PRAISECOUNT, flag);
+		sdb.update(DbConstents.ACTIVITY_CACHE_TB, values, DbConstents.ID_MINE
+				+ "=? and " + DbConstents.ACTIVITYID + "=?", new String[] {
 				userId, activityId });
 		sdb.close();
 		
@@ -93,9 +94,9 @@ public class ActivityDao {
 	public void updateFavorUserNumber(String userId, String activityId, int flag){
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
-		values.put(Constants.ACTIVITYFOLLOWCOUNT, flag);
-		sdb.update(Constants.ACTIVITY_CACHE_TB, values, Constants.USERID
-				+ "=? and " + Constants.ACTIVITYID + "=?", new String[] {
+		values.put(DbConstents.ACTIVITYFOLLOWCOUNT, flag);
+		sdb.update(DbConstents.ACTIVITY_CACHE_TB, values, DbConstents.ID_MINE
+				+ "=? and " + DbConstents.ACTIVITYID + "=?", new String[] {
 				userId, activityId });
 		sdb.close();
 		
@@ -106,9 +107,9 @@ public class ActivityDao {
 	public void updateOrderFollow(String userId, int index, int count) {
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
-		values.put(Constants.ACTIVITYFOLLOWCOUNT, count);
-		sdb.update(Constants.ACTIVITY_CACHE_TB, values, Constants.USERID
-				+ "=? and " + Constants.ACTIVITYINDEX + "=?", new String[] {
+		values.put(DbConstents.ACTIVITYFOLLOWCOUNT, count);
+		sdb.update(DbConstents.ACTIVITY_CACHE_TB, values, DbConstents.ID_MINE
+				+ "=? and " + DbConstents.ACTIVITYINDEX + "=?", new String[] {
 				userId, String.valueOf(index) });
 		sdb.close();
 	}
@@ -117,57 +118,57 @@ public class ActivityDao {
 	public ArrayList<ActivityBean> queryActys(String userId) {
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
 		Cursor cursor = sdb.rawQuery("select * from "
-				+ Constants.ACTIVITY_CACHE_TB + " where " + Constants.USERID
-				+ "=? order by " + Constants.STATUS + "," + Constants.TIMESTART
+				+ DbConstents.ACTIVITY_CACHE_TB + " where " + DbConstents.ID_MINE
+				+ "=? order by " + DbConstents.STATUS + "," + DbConstents.TIMESTART
 				+ " desc", new String[] { userId });
 		cursor.moveToFirst();
 		ArrayList<ActivityBean> list = new ArrayList<ActivityBean>();
 		while (!cursor.isAfterLast()) {
 			ActivityBean bean = new ActivityBean();
 			bean.setActyId(cursor.getString(cursor
-					.getColumnIndex(Constants.ACTIVITYID)));
+					.getColumnIndex(DbConstents.ACTIVITYID)));
 			bean.setUserId(cursor.getString(cursor
-					.getColumnIndex(Constants.USERID)));
+					.getColumnIndex(DbConstents.ID_MINE)));
 			bean.setActivityContent(cursor.getString(cursor
-					.getColumnIndex(Constants.ACTIVITYCONTENT)));
+					.getColumnIndex(DbConstents.ACTIVITYCONTENT)));
 			bean.setActivityCover(cursor.getString(cursor
-					.getColumnIndex(Constants.ACTIVITYCOVER)));
+					.getColumnIndex(DbConstents.ACTIVITYCOVER)));
 			bean.setLocationAddress(cursor.getString(cursor
-					.getColumnIndex(Constants.LOCATIONADDRESS)));
+					.getColumnIndex(DbConstents.LOCATIONADDRESS)));
 			bean.setLocationPlace(cursor.getString(cursor
-					.getColumnIndex(Constants.LOCATIONPLACE)));
+					.getColumnIndex(DbConstents.LOCATIONPLACE)));
 			bean.setOrderCountBoy(cursor.getInt(cursor
-					.getColumnIndex(Constants.ORDERCOUNTBOY)));
+					.getColumnIndex(DbConstents.ORDERCOUNTBOY)));
 			bean.setOrderCountGirl(cursor.getInt(cursor
-					.getColumnIndex(Constants.ORDERCOUNTGIRL)));
+					.getColumnIndex(DbConstents.ORDERCOUNTGIRL)));
 			bean.setPraiseCount(cursor.getInt(cursor
-					.getColumnIndex(Constants.PRAISECOUNT)));
+					.getColumnIndex(DbConstents.PRAISECOUNT)));
 			bean.setStatus(cursor.getInt(cursor
-					.getColumnIndex(Constants.STATUS)));
+					.getColumnIndex(DbConstents.STATUS)));
 			bean.setTimeStart(cursor.getLong(cursor
-					.getColumnIndex(Constants.TIMESTART)));
+					.getColumnIndex(DbConstents.TIMESTART)));
 			bean.setTitle(cursor.getString(cursor
-					.getColumnIndex(Constants.TITLE)));
+					.getColumnIndex(DbConstents.TITLE)));
 			bean.setTitleSub(cursor.getString(cursor
-					.getColumnIndex(Constants.TITLESUB)));
+					.getColumnIndex(DbConstents.TITLESUB)));
 			bean.setTimeStop(cursor.getLong(cursor
-					.getColumnIndex(Constants.TIMESTOP)));
+					.getColumnIndex(DbConstents.TIMESTOP)));
 			bean.setTimeChatStop(cursor.getLong(cursor
-					.getColumnIndex(Constants.TIMECHATSTOP)));
+					.getColumnIndex(DbConstents.TIMECHATSTOP)));
 			bean.setLocationGovernment(cursor.getString(cursor
-					.getColumnIndex(Constants.LOCATIONGOVERNMENT)));
+					.getColumnIndex(DbConstents.LOCATIONGOVERNMENT)));
 			bean.setLocationLatitude(cursor.getString(cursor
-					.getColumnIndex(Constants.LOCATIONLATITUDE)));
+					.getColumnIndex(DbConstents.LOCATIONLATITUDE)));
 			bean.setLocationLongtitude(cursor.getString(cursor
-					.getColumnIndex(Constants.LOCATIONLONGTITUDE)));
+					.getColumnIndex(DbConstents.LOCATIONLONGTITUDE)));
 			bean.setConversationId(cursor.getString(cursor
-					.getColumnIndex(Constants.CONVERSATIONID)));
+					.getColumnIndex(DbConstents.CONVERSATIONID)));
 			bean.setIndex(cursor.getInt(cursor
-					.getColumnIndex(Constants.ACTIVITYINDEX)));
+					.getColumnIndex(DbConstents.ACTIVITYINDEX)));
 			bean.setIsFavor(cursor.getInt(cursor
-					.getColumnIndex(Constants.ISACTIVITYPRAISE)));
+					.getColumnIndex(DbConstents.ISACTIVITYPRAISE)));
 			bean.setOrderAndFollow(cursor.getInt(cursor
-					.getColumnIndex(Constants.ACTIVITYFOLLOWCOUNT)));
+					.getColumnIndex(DbConstents.ACTIVITYFOLLOWCOUNT)));
 			list.add(bean);
 			cursor.moveToNext();
 		}
@@ -180,56 +181,56 @@ public class ActivityDao {
 	public ArrayList<ActivityBean> queryActyBean(String userId, String actyId) {
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
 		Cursor cursor = sdb.rawQuery("select * from "
-				+ Constants.ACTIVITY_CACHE_TB + " where " + Constants.USERID
-				+ "=? and " + Constants.ACTIVITYID + "=?", new String[] {
+				+ DbConstents.ACTIVITY_CACHE_TB + " where " + DbConstents.ID_MINE
+				+ "=? and " + DbConstents.ACTIVITYID + "=?", new String[] {
 				userId, actyId });
 		ArrayList<ActivityBean> list = new ArrayList<ActivityBean>();
 		while (cursor.moveToNext()) {
 			ActivityBean bean = new ActivityBean();
 			bean.setActyId(cursor.getString(cursor
-					.getColumnIndex(Constants.ACTIVITYID)));
+					.getColumnIndex(DbConstents.ACTIVITYID)));
 			bean.setUserId(cursor.getString(cursor
-					.getColumnIndex(Constants.USERID)));
+					.getColumnIndex(DbConstents.ID_MINE)));
 			bean.setActivityContent(cursor.getString(cursor
-					.getColumnIndex(Constants.ACTIVITYCONTENT)));
+					.getColumnIndex(DbConstents.ACTIVITYCONTENT)));
 			bean.setActivityCover(cursor.getString(cursor
-					.getColumnIndex(Constants.ACTIVITYCOVER)));
+					.getColumnIndex(DbConstents.ACTIVITYCOVER)));
 			bean.setLocationAddress(cursor.getString(cursor
-					.getColumnIndex(Constants.LOCATIONADDRESS)));
+					.getColumnIndex(DbConstents.LOCATIONADDRESS)));
 			bean.setLocationPlace(cursor.getString(cursor
-					.getColumnIndex(Constants.LOCATIONPLACE)));
+					.getColumnIndex(DbConstents.LOCATIONPLACE)));
 			bean.setOrderCountBoy(cursor.getInt(cursor
-					.getColumnIndex(Constants.ORDERCOUNTBOY)));
+					.getColumnIndex(DbConstents.ORDERCOUNTBOY)));
 			bean.setOrderCountGirl(cursor.getInt(cursor
-					.getColumnIndex(Constants.ORDERCOUNTGIRL)));
+					.getColumnIndex(DbConstents.ORDERCOUNTGIRL)));
 			bean.setPraiseCount(cursor.getInt(cursor
-					.getColumnIndex(Constants.PRAISECOUNT)));
+					.getColumnIndex(DbConstents.PRAISECOUNT)));
 			bean.setStatus(cursor.getInt(cursor
-					.getColumnIndex(Constants.STATUS)));
+					.getColumnIndex(DbConstents.STATUS)));
 			bean.setTimeStart(cursor.getLong(cursor
-					.getColumnIndex(Constants.TIMESTART)));
+					.getColumnIndex(DbConstents.TIMESTART)));
 			bean.setTitle(cursor.getString(cursor
-					.getColumnIndex(Constants.TITLE)));
+					.getColumnIndex(DbConstents.TITLE)));
 			bean.setTitleSub(cursor.getString(cursor
-					.getColumnIndex(Constants.TITLESUB)));
+					.getColumnIndex(DbConstents.TITLESUB)));
 			bean.setTimeStop(cursor.getLong(cursor
-					.getColumnIndex(Constants.TIMESTOP)));
+					.getColumnIndex(DbConstents.TIMESTOP)));
 			bean.setTimeChatStop(cursor.getLong(cursor
-					.getColumnIndex(Constants.TIMECHATSTOP)));
+					.getColumnIndex(DbConstents.TIMECHATSTOP)));
 			bean.setLocationGovernment(cursor.getString(cursor
-					.getColumnIndex(Constants.LOCATIONGOVERNMENT)));
+					.getColumnIndex(DbConstents.LOCATIONGOVERNMENT)));
 			bean.setLocationLatitude(cursor.getString(cursor
-					.getColumnIndex(Constants.LOCATIONLATITUDE)));
+					.getColumnIndex(DbConstents.LOCATIONLATITUDE)));
 			bean.setLocationLongtitude(cursor.getString(cursor
-					.getColumnIndex(Constants.LOCATIONLONGTITUDE)));
+					.getColumnIndex(DbConstents.LOCATIONLONGTITUDE)));
 			bean.setConversationId(cursor.getString(cursor
-					.getColumnIndex(Constants.CONVERSATIONID)));
+					.getColumnIndex(DbConstents.CONVERSATIONID)));
 			bean.setIndex(cursor.getInt(cursor
-					.getColumnIndex(Constants.ACTIVITYINDEX)));
+					.getColumnIndex(DbConstents.ACTIVITYINDEX)));
 			bean.setIsFavor(cursor.getInt(cursor
-					.getColumnIndex(Constants.ISACTIVITYPRAISE)));
+					.getColumnIndex(DbConstents.ISACTIVITYPRAISE)));
 			bean.setOrderAndFollow(cursor.getInt(cursor
-					.getColumnIndex(Constants.ACTIVITYFOLLOWCOUNT)));
+					.getColumnIndex(DbConstents.ACTIVITYFOLLOWCOUNT)));
 			list.add(bean);
 		}
 		cursor.close();
@@ -240,7 +241,7 @@ public class ActivityDao {
 	// 根据用户清除活动缓存
 	public void deleteByUser(String userId) {
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
-		sdb.delete(Constants.ACTIVITY_CACHE_TB, Constants.USERID + "=?",
+		sdb.delete(DbConstents.ACTIVITY_CACHE_TB, DbConstents.ID_MINE + "=?",
 				new String[] { userId });
 		sdb.close();
 	}

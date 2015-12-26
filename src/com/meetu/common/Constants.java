@@ -49,63 +49,8 @@ public class Constants {
 	public static final int OrderStatusArrive = 40;
 	// 失效
 	public static final int OrderStatusLoseEfficacy = 0;
-	/**
-	 * 数据库名
-	 * */
-	public static final String DBNAME = "meetu.db";
-	/**
-	 * 活动缓存表表名
-	 * */
-	public static final String ACTIVITY_CACHE_TB = "activity_cache_tb";
-	/**
-	 * 表字段常量名
-	 * */
 	// 用户ID
-	public static final String USERID = "user_id";
-	// 活动ID
-	public static final String ACTIVITYID = "activity_id";
-	// 是否对活动点赞
-	public static final String ISACTIVITYPRAISE = "is_activity_praise";
-	// 参加活动人中我关注的人
-	public static final String ACTIVITYFOLLOWCOUNT = "activity_follow_count";
-	// 活动封面
-	public static final String ACTIVITYCOVER = "activity_cover";
-	// 活动开始时间
-	public static final String TIMESTART = "time_start";
-	// 活动内容网页
-	public static final String ACTIVITYCONTENT = "activity_content";
-	// 活动点赞数
-	public static final String PRAISECOUNT = "praise_count";
-	// 参加活动的女生
-	public static final String ORDERCOUNTGIRL = "order_count_girl";
-	// 参加活动的男生
-	public static final String ORDERCOUNTBOY = "order_count_boy";
-	// 活动标题
-	public static final String TITLE = "activity_title";
-	// 活动子标题
-	public static final String TITLESUB = "title_sub";
-	// 活动状态
-	public static final String STATUS = "activity_status";
-	// 活动大概地址
-	public static final String LOCATIONADDRESS = "location_address";
-	// 活动详细地址
-	public static final String LOCATIONPLACE = "location_place";
-	// 活动行政地址
-	public static final String LOCATIONGOVERNMENT = "location_government";
-	// 活动经度
-	public static final String LOCATIONLONGTITUDE = "location_longtitude";
-	// 活动纬度
-	public static final String LOCATIONLATITUDE = "location_latitude";
-	// 活动结束时间
-	public static final String TIMESTOP = "time_stop";
-	//活动群聊结束时间
-	public static final String TIMECHATSTOP = "time_chat_stop";
-	// 活动群聊ID
-	public static final String CONVERSATIONID = "conversation_id";
-	// 活动index
-	public static final String ACTIVITYINDEX = "activity_index";
-	// 是否对点赞 和参加活动关注的人 缓存了
-	public static final String ISCACHEFLAG = "is_cache_flag";
+	public static final String USERID = "id_mine";
 	/**
 	 * 活动信息缓存时间
 	 * */
@@ -200,21 +145,6 @@ public class Constants {
 	public static final int CONVERSATION_TYPE = 2;// 群聊聊天回话成员
 	public static final int ACTIVITY_TYPE = 3;// 活动成员
 	/**
-	 * 用户集合相关
-	 * */
-	public static final String USERABOUT_CACHE_TB = "userabout_cache_tb";
-	/**
-	 * 表字段常量名
-	 * */
-	public static final String ABOUTCACHEID="about_cache_id";
-	// 类型ID
-	public static final String ABOUTTYPE = "about_type";
-	// 相关用户ID
-	public static final String ABOUTUSERID = "about_user_id";
-	// 集合ID,用于存储活动ID--活动参与者 会话ID--会话成员
-	public static final String ABOUTCOLECTIONID = "about_conversation_id";
-
-	/**
 	 * 系统消息类型
 	 * */
 	// 未知
@@ -227,52 +157,4 @@ public class Constants {
 	public static final int SysMsgTypeActy = 3;
 	// 用户墙照片点赞
 	public static final int SysMsgTypeUserPhoto = 4;
-	/**
-	 * 表字段常量名
-	 * */
-	// 用户表名
-	public static final String USERINFO_TB = "userinfo_tb";
-	// 用户类型
-	public static final String USERTYPE = "user_type";
-	// 用户是否是Vip用户
-	public static final String ISVIP = "is_vip";
-	// 用户是否已完成验证
-	public static final String ISVERIFY = "is_verify";
-	// 用户是否已完善个人信息
-	public static final String ISCOMPLETE = "is_complete";
-	// 昵称
-	public static final String NICKNAME = "nick_name";
-	// 真实名称
-	public static final String REALNAME = "real_name";
-	// 性别
-	public static final String GENDER = "gender";
-	// 生日
-	public static final String BIRTHDAY = "birthday";
-	// 星座
-	public static final String CONSTELLATION = "constellation";
-	// 学校
-	public static final String SCHOOL = "school";
-	// 学校所在地编码
-	public static final String SCHOOLLOCATION = "shool_location";
-	// 学校编码
-	public static final String SCHOOLNUM = "school_num";
-	// 专业
-	public static final String DEPARTMENT = "department";
-	// 专业编码
-	public static final String DEPARTMENTID = "department_id";
-	// 家乡
-	public static final String HOMETOWN = "hometown";
-	// 切圆后的头像
-	public static final String PROFILECLIP = "profile_clip";
-	// 原始头像
-	public static final String PROFILEORIGN = "profile_orign";
-	// 用户信息缓存时间
-	public static final String USER_CACHE_TIME = "user_cache_time";
-	/**
-	 * 用户拉黑表，存储拉黑我的人
-	 * */
-	//表名
-	public static final String USER_SHIELD_TB = "user_shield_tb";
-	//屏蔽我的人的ID
-	public static final String SHIELD_USER_ID = "shield_user_id";
 }

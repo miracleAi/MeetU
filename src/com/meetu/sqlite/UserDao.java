@@ -13,6 +13,7 @@ import com.avos.avoscloud.LogUtil.log;
 import com.meetu.bean.UserBean;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.common.Constants;
+import com.meetu.common.DbConstents;
 import com.meetu.tools.DensityUtil;
 
 public class UserDao {
@@ -62,36 +63,36 @@ public class UserDao {
 		ArrayList<UserBean> list = new ArrayList<UserBean>();
 		while (c.moveToNext()) {
 			UserBean user = new UserBean();
-			user.setUserId(c.getString(c.getColumnIndex(Constants.USERID)));
-			user.setUserType(c.getInt(c.getColumnIndex(Constants.USERTYPE)));
-			user.setVipUser(intToBol(c.getInt(c.getColumnIndex(Constants.ISVIP))));
+			user.setUserId(c.getString(c.getColumnIndex(DbConstents.ID_MINE)));
+			user.setUserType(c.getInt(c.getColumnIndex(DbConstents.USERTYPE)));
+			user.setVipUser(intToBol(c.getInt(c.getColumnIndex(DbConstents.ISVIP))));
 			user.setVerifyUser(intToBol(c.getInt(c
-					.getColumnIndex(Constants.ISVERIFY))));
+					.getColumnIndex(DbConstents.ISVERIFY))));
 			user.setCompleteUserInfo(intToBol(c.getInt(c
-					.getColumnIndex(Constants.ISCOMPLETE))));
-			user.setNameNick(c.getString(c.getColumnIndex(Constants.NICKNAME)));
-			user.setNameReal(c.getString(c.getColumnIndex(Constants.REALNAME)));
-			user.setGender(c.getInt(c.getColumnIndex(Constants.GENDER)));
+					.getColumnIndex(DbConstents.ISCOMPLETE))));
+			user.setNameNick(c.getString(c.getColumnIndex(DbConstents.NICKNAME)));
+			user.setNameReal(c.getString(c.getColumnIndex(DbConstents.REALNAME)));
+			user.setGender(c.getInt(c.getColumnIndex(DbConstents.GENDER)));
 			user.setBirthday(Long.parseLong(c.getString(c
-					.getColumnIndex(Constants.BIRTHDAY))));
+					.getColumnIndex(DbConstents.BIRTHDAY))));
 			user.setConstellation(c.getString(c
-					.getColumnIndex(Constants.CONSTELLATION)));
-			user.setSchool(c.getString(c.getColumnIndex(Constants.SCHOOL)));
+					.getColumnIndex(DbConstents.CONSTELLATION)));
+			user.setSchool(c.getString(c.getColumnIndex(DbConstents.SCHOOL)));
 			user.setSchoolLocation(Long.parseLong(c.getString(c
-					.getColumnIndex(Constants.SCHOOLLOCATION))));
+					.getColumnIndex(DbConstents.SCHOOLLOCATION))));
 			user.setSchoolNum(Integer.parseInt(c.getString(c
-					.getColumnIndex(Constants.SCHOOLNUM))));
+					.getColumnIndex(DbConstents.SCHOOLNUM))));
 			user.setDepartment(c.getString(c
-					.getColumnIndex(Constants.DEPARTMENT)));
+					.getColumnIndex(DbConstents.DEPARTMENT)));
 			user.setDepartmentId(Integer.parseInt(c.getString(c
-					.getColumnIndex(Constants.DEPARTMENTID))));
-			user.setHometown(c.getString(c.getColumnIndex(Constants.HOMETOWN)));
+					.getColumnIndex(DbConstents.DEPARTMENTID))));
+			user.setHometown(c.getString(c.getColumnIndex(DbConstents.HOMETOWN)));
 			user.setProfileClip(c.getString(c
-					.getColumnIndex(Constants.PROFILECLIP)));
+					.getColumnIndex(DbConstents.PROFILECLIP)));
 			user.setProfileOrign(c.getString(c
-					.getColumnIndex(Constants.PROFILEORIGN)));
+					.getColumnIndex(DbConstents.PROFILEORIGN)));
 			user.setCacheTime(c.getString(c
-					.getColumnIndex(Constants.USER_CACHE_TIME)));
+					.getColumnIndex(DbConstents.USER_CACHE_TIME)));
 			list.add(user);
 		}
 		c.close();
@@ -105,34 +106,34 @@ public class UserDao {
 		ArrayList<UserBean> list = new ArrayList<UserBean>();
 		while (c.moveToNext()) {
 			UserBean user = new UserBean();
-			user.setUserId(c.getString(c.getColumnIndex(Constants.USERID)));
-			user.setUserType(c.getInt(c.getColumnIndex(Constants.USERTYPE)));
-			user.setVipUser(intToBol(c.getInt(c.getColumnIndex(Constants.ISVIP))));
+			user.setUserId(c.getString(c.getColumnIndex(DbConstents.ID_MINE)));
+			user.setUserType(c.getInt(c.getColumnIndex(DbConstents.USERTYPE)));
+			user.setVipUser(intToBol(c.getInt(c.getColumnIndex(DbConstents.ISVIP))));
 			user.setVerifyUser(intToBol(c.getInt(c
-					.getColumnIndex(Constants.ISVERIFY))));
+					.getColumnIndex(DbConstents.ISVERIFY))));
 			user.setCompleteUserInfo(intToBol(c.getInt(c
-					.getColumnIndex(Constants.ISCOMPLETE))));
-			user.setNameNick(c.getString(c.getColumnIndex(Constants.NICKNAME)));
-			user.setNameReal(c.getString(c.getColumnIndex(Constants.REALNAME)));
-			user.setGender(c.getInt(c.getColumnIndex(Constants.GENDER)));
+					.getColumnIndex(DbConstents.ISCOMPLETE))));
+			user.setNameNick(c.getString(c.getColumnIndex(DbConstents.NICKNAME)));
+			user.setNameReal(c.getString(c.getColumnIndex(DbConstents.REALNAME)));
+			user.setGender(c.getInt(c.getColumnIndex(DbConstents.GENDER)));
 			user.setBirthday(Long.parseLong(c.getString(c
-					.getColumnIndex(Constants.BIRTHDAY))));
+					.getColumnIndex(DbConstents.BIRTHDAY))));
 			user.setConstellation(c.getString(c
-					.getColumnIndex(Constants.CONSTELLATION)));
-			user.setSchool(c.getString(c.getColumnIndex(Constants.SCHOOL)));
+					.getColumnIndex(DbConstents.CONSTELLATION)));
+			user.setSchool(c.getString(c.getColumnIndex(DbConstents.SCHOOL)));
 			user.setSchoolLocation(Long.parseLong(c.getString(c
-					.getColumnIndex(Constants.SCHOOLLOCATION))));
+					.getColumnIndex(DbConstents.SCHOOLLOCATION))));
 			user.setSchoolNum(Integer.parseInt(c.getString(c
-					.getColumnIndex(Constants.SCHOOLNUM))));
+					.getColumnIndex(DbConstents.SCHOOLNUM))));
 			user.setDepartment(c.getString(c
-					.getColumnIndex(Constants.DEPARTMENT)));
+					.getColumnIndex(DbConstents.DEPARTMENT)));
 			user.setDepartmentId(Integer.parseInt(c.getString(c
-					.getColumnIndex(Constants.DEPARTMENTID))));
-			user.setHometown(c.getString(c.getColumnIndex(Constants.HOMETOWN)));
+					.getColumnIndex(DbConstents.DEPARTMENTID))));
+			user.setHometown(c.getString(c.getColumnIndex(DbConstents.HOMETOWN)));
 			user.setProfileClip(c.getString(c
-					.getColumnIndex(Constants.PROFILECLIP)));
+					.getColumnIndex(DbConstents.PROFILECLIP)));
 			user.setProfileOrign(c.getString(c
-					.getColumnIndex(Constants.PROFILEORIGN)));
+					.getColumnIndex(DbConstents.PROFILEORIGN)));
 			list.add(user);
 		}
 		c.close();

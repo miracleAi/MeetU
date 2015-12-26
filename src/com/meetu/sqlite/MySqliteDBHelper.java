@@ -4,6 +4,7 @@ import com.avos.avoscloud.DeleteCallback;
 import com.avos.avoscloud.im.v2.Conversation;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.common.Constants;
+import com.meetu.common.DbConstents;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -73,11 +74,11 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 	private static final String TBL_EMOJIS_CACHE_ID = "_emojis_cache_id";// 缓存id
 	private static final String TBL_EMOJIS_ID = "_emojis_id";// 表情对应的本子资源图片的id
 	private static final String TBL_EMOJIS_CHARACTER = "_character";// 表情对应的文字表述
-																	// 例如【微笑】
+	// 例如【微笑】
 	private static final String TBL_EMOJIS_FACE_NAME = "_face_name";// 表情资源文件名
 
 	public MySqliteDBHelper(Context context) {
-		super(context, Constants.DBNAME, null, VERSION);
+		super(context, DbConstents.DBNAME, null, VERSION);
 	}
 
 	@Override
@@ -180,31 +181,31 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		 * */
 		StringBuffer activitySb = new StringBuffer();
 		activitySb.append("create table if not exists ");
-		activitySb.append(Constants.ACTIVITY_CACHE_TB + "(");
+		activitySb.append(DbConstents.ACTIVITY_CACHE_TB + "(");
 		activitySb.append("id integer primary key autoincrement ,");
-		activitySb.append(Constants.USERID + " varchar(100) ,");
-		activitySb.append(Constants.ACTIVITYID + " varchar(100) ,");
-		activitySb.append(Constants.ISACTIVITYPRAISE + " integer ,");
-		activitySb.append(Constants.ACTIVITYFOLLOWCOUNT + " integer ,");
-		activitySb.append(Constants.ACTIVITYCOVER + " varchar(100) ,");
-		activitySb.append(Constants.TIMESTART + " Integer ,");
-		activitySb.append(Constants.STATUS + " Integer ,");
-		activitySb.append(Constants.ACTIVITYCONTENT + " varchar(100) ,");
-		activitySb.append(Constants.PRAISECOUNT + " Integer ,");
-		activitySb.append(Constants.ORDERCOUNTBOY + " Integer ,");
-		activitySb.append(Constants.ORDERCOUNTGIRL + " Integer ,");
-		activitySb.append(Constants.TITLE + " varchar(100) ,");
-		activitySb.append(Constants.TITLESUB + " varchar(100) ,");
-		activitySb.append(Constants.LOCATIONADDRESS + " varchar(100) ,");
-		activitySb.append(Constants.LOCATIONPLACE + " varchar(100) ,");
-		activitySb.append(Constants.LOCATIONGOVERNMENT + " varchar(100) ,");
-		activitySb.append(Constants.TIMESTOP + " Integer ,");
-		activitySb.append(Constants.TIMECHATSTOP + " Integer ,");
-		activitySb.append(Constants.ACTIVITYINDEX + " Integer ,");
-		activitySb.append(Constants.LOCATIONLONGTITUDE + " varchar(100) ,");
-		activitySb.append(Constants.LOCATIONLATITUDE + " varchar(100) ,");
-		activitySb.append(Constants.CONVERSATIONID + " varchar(100) ,");
-		activitySb.append(Constants.ISCACHEFLAG + " varchar(100) ");
+		activitySb.append(DbConstents.ID_MINE + " varchar(100) ,");
+		activitySb.append(DbConstents.ACTIVITYID + " varchar(100) ,");
+		activitySb.append(DbConstents.ISACTIVITYPRAISE + " integer ,");
+		activitySb.append(DbConstents.ACTIVITYFOLLOWCOUNT + " integer ,");
+		activitySb.append(DbConstents.ACTIVITYCOVER + " varchar(100) ,");
+		activitySb.append(DbConstents.TIMESTART + " Integer ,");
+		activitySb.append(DbConstents.STATUS + " Integer ,");
+		activitySb.append(DbConstents.ACTIVITYCONTENT + " varchar(100) ,");
+		activitySb.append(DbConstents.PRAISECOUNT + " Integer ,");
+		activitySb.append(DbConstents.ORDERCOUNTBOY + " Integer ,");
+		activitySb.append(DbConstents.ORDERCOUNTGIRL + " Integer ,");
+		activitySb.append(DbConstents.TITLE + " varchar(100) ,");
+		activitySb.append(DbConstents.TITLESUB + " varchar(100) ,");
+		activitySb.append(DbConstents.LOCATIONADDRESS + " varchar(100) ,");
+		activitySb.append(DbConstents.LOCATIONPLACE + " varchar(100) ,");
+		activitySb.append(DbConstents.LOCATIONGOVERNMENT + " varchar(100) ,");
+		activitySb.append(DbConstents.TIMESTOP + " Integer ,");
+		activitySb.append(DbConstents.TIMECHATSTOP + " Integer ,");
+		activitySb.append(DbConstents.ACTIVITYINDEX + " Integer ,");
+		activitySb.append(DbConstents.LOCATIONLONGTITUDE + " varchar(100) ,");
+		activitySb.append(DbConstents.LOCATIONLATITUDE + " varchar(100) ,");
+		activitySb.append(DbConstents.CONVERSATIONID + " varchar(100) ,");
+		activitySb.append(DbConstents.ISCACHEFLAG + " varchar(100) ");
 		activitySb.append(")");
 		db.execSQL(activitySb.toString());
 		/**
@@ -212,13 +213,13 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		 * */
 		StringBuffer aboutSb = new StringBuffer();
 		aboutSb.append("create table if not exists ");
-		aboutSb.append(Constants.USERABOUT_CACHE_TB + "(");
-		aboutSb.append(Constants.USERID + " varchar(100) ,");
-		aboutSb.append(Constants.ABOUTTYPE + " Integer ,");
-		aboutSb.append(Constants.ABOUTUSERID + " varchar(100) ,");
-		aboutSb.append(Constants.ABOUTCOLECTIONID + " varchar(100) ,");
-		aboutSb.append("constraint " + Constants.ABOUTCACHEID + " primary key ("
-				+ Constants.USERID + ","+ Constants.ABOUTUSERID + "," + Constants.ABOUTCOLECTIONID + ") ");
+		aboutSb.append(DbConstents.USERABOUT_CACHE_TB + "(");
+		aboutSb.append(DbConstents.ID_MINE + " varchar(100) ,");
+		aboutSb.append(DbConstents.ABOUTTYPE + " Integer ,");
+		aboutSb.append(DbConstents.ABOUTUSERID + " varchar(100) ,");
+		aboutSb.append(DbConstents.ABOUTCOLECTIONID + " varchar(100) ,");
+		aboutSb.append("constraint " + DbConstents.ABOUTCACHEID + " primary key ("
+				+ DbConstents.ID_MINE + ","+ DbConstents.ABOUTUSERID + "," + DbConstents.ABOUTCOLECTIONID + ") ");
 		aboutSb.append(")");
 		db.execSQL(aboutSb.toString());
 		/**
@@ -226,26 +227,26 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		 * */
 		StringBuffer userSb = new StringBuffer();
 		userSb.append("create table if not exists ");
-		userSb.append(Constants.USERINFO_TB + "(");
-		userSb.append(Constants.USERID + " varchar(100) primary key,");
-		userSb.append(Constants.USERTYPE + " Integer ,");
-		userSb.append(Constants.ISVIP + " Integer ,");
-		userSb.append(Constants.ISCOMPLETE + " Integer ,");
-		userSb.append(Constants.ISVERIFY + " Integer ,");
-		userSb.append(Constants.GENDER + " Integer ,");
-		userSb.append(Constants.NICKNAME + " varchar(100) ,");
-		userSb.append(Constants.REALNAME + " varchar(100) ,");
-		userSb.append(Constants.CONSTELLATION + " varchar(100) ,");
-		userSb.append(Constants.BIRTHDAY + " Integer ,");
-		userSb.append(Constants.SCHOOL + " varchar(100) ,");
-		userSb.append(Constants.SCHOOLLOCATION + " Integer ,");
-		userSb.append(Constants.SCHOOLNUM + " Integer ,");
-		userSb.append(Constants.DEPARTMENT + " varchar(100) ,");
-		userSb.append(Constants.DEPARTMENTID + " Integer ,");
-		userSb.append(Constants.HOMETOWN + " varchar(100) ,");
-		userSb.append(Constants.PROFILECLIP + " varchar(100) ,");
-		userSb.append(Constants.PROFILEORIGN + " varchar(100) ,");
-		userSb.append(Constants.USER_CACHE_TIME + " varchar(100) ");
+		userSb.append(DbConstents.USERINFO_TB + "(");
+		userSb.append(DbConstents.ID_MINE + " varchar(100) primary key,");
+		userSb.append(DbConstents.USERTYPE + " Integer ,");
+		userSb.append(DbConstents.ISVIP + " Integer ,");
+		userSb.append(DbConstents.ISCOMPLETE + " Integer ,");
+		userSb.append(DbConstents.ISVERIFY + " Integer ,");
+		userSb.append(DbConstents.GENDER + " Integer ,");
+		userSb.append(DbConstents.NICKNAME + " varchar(100) ,");
+		userSb.append(DbConstents.REALNAME + " varchar(100) ,");
+		userSb.append(DbConstents.CONSTELLATION + " varchar(100) ,");
+		userSb.append(DbConstents.BIRTHDAY + " Integer ,");
+		userSb.append(DbConstents.SCHOOL + " varchar(100) ,");
+		userSb.append(DbConstents.SCHOOLLOCATION + " Integer ,");
+		userSb.append(DbConstents.SCHOOLNUM + " Integer ,");
+		userSb.append(DbConstents.DEPARTMENT + " varchar(100) ,");
+		userSb.append(DbConstents.DEPARTMENTID + " Integer ,");
+		userSb.append(DbConstents.HOMETOWN + " varchar(100) ,");
+		userSb.append(DbConstents.PROFILECLIP + " varchar(100) ,");
+		userSb.append(DbConstents.PROFILEORIGN + " varchar(100) ,");
+		userSb.append(DbConstents.USER_CACHE_TIME + " varchar(100) ");
 		userSb.append(")");
 		db.execSQL(userSb.toString());
 		/**
@@ -253,12 +254,88 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		 * */
 		StringBuffer userShieldTb = new StringBuffer();
 		userShieldTb.append("create table if not exists ");
-		userShieldTb.append(Constants.USER_SHIELD_TB + "(");
+		userShieldTb.append(DbConstents.USER_SHIELD_TB + "(");
 		userShieldTb.append("id integer primary key autoincrement ,");
-		userShieldTb.append(Constants.USERID + " varchar(100) ,");
-		userShieldTb.append(Constants.SHIELD_USER_ID + " varchar(100) ");
+		userShieldTb.append(DbConstents.ID_MINE + " varchar(100) ,");
+		userShieldTb.append(DbConstents.SHIELD_USER_ID + " varchar(100) ");
 		userShieldTb.append(")");
 		db.execSQL(userShieldTb.toString());
+
+		/**
+		 * 活动成员表
+		 * */
+		StringBuffer actyMemSb = new StringBuffer();
+		actyMemSb.append("create table if not exists ");
+		actyMemSb.append(DbConstents.MEMBER_ACTY_TB + "(");
+		actyMemSb.append(DbConstents.ID_MINE + " varchar(100) ,");
+		actyMemSb.append(DbConstents.ID_ACTY + " varchar(100) ,");
+		actyMemSb.append(DbConstents.ID_ACTY_MEMBER + " varchar(100) ,");
+		actyMemSb.append(DbConstents.ID_ACTY_CONVERSATION + " varchar(100) ,");
+		actyMemSb.append(DbConstents.STATUS_ACTY_CONV + " Integer ,");
+		actyMemSb.append("constraint " + DbConstents.ID_MINE_MEMBER_ACTY + " primary key ("
+				+ DbConstents.ID_MINE + "," + DbConstents.ID_ACTY + ") ");
+		actyMemSb.append(")");
+		db.execSQL(actyMemSb.toString());
+		/**
+		 * 觅聊成员表
+		 * */
+		StringBuffer seekMemSb = new StringBuffer();
+		seekMemSb.append("create table if not exists ");
+		seekMemSb.append(DbConstents.MEMBER_SEEK_TB + "(");
+		seekMemSb.append(DbConstents.ID_MINE + " varchar(100) ,");
+		seekMemSb.append(DbConstents.ID_SEEK_MEMBER + " varchar(100) ,");
+		seekMemSb.append(DbConstents.ID_SEEK_CONVERSATION + " varchar(100) ,");
+		seekMemSb.append(DbConstents.STATUS_SEEK_CONV + " Integer ,");
+		seekMemSb.append("constraint " + DbConstents.ID_MINE_MEMBER_SEEK + " primary key ("
+				+ DbConstents.ID_MINE + "," + DbConstents.ID_SEEK_CONVERSATION + ") ");
+		seekMemSb.append(")");
+		db.execSQL(seekMemSb.toString());
+		/**
+		 * 用户-会话表
+		 */
+		StringBuffer convSb = new StringBuffer();
+		convSb.append("create table if not exists ");
+		convSb.append(DbConstents.CONVERSATION_USER_TB + "(");
+		convSb.append(DbConstents.ID_MINE + " varchar(100) ,");
+		convSb.append(DbConstents.ID_CONVERSATION + " varchar(100) ,");
+		convSb.append(DbConstents.ID_CONV_APPEND + " varchar(100) ,");
+		convSb.append(DbConstents.ID_CONV_CREATOR + " varchar(100) ,");
+		convSb.append(DbConstents.STATUS_CONV + " Integer ,");
+		convSb.append(DbConstents.TYPE_CONV + " Integer ,");
+		convSb.append(DbConstents.CONV_MUTE + " Integer ,");
+		convSb.append(DbConstents.TITLE_CONV + " varchar(100) ,");
+		convSb.append(DbConstents.CONV_OVER_TIME + " varchar(100) ,");
+		convSb.append(DbConstents.CONV_UPDATE_TIME + " varchar(100) ,");
+		convSb.append("constraint " + DbConstents.ID_MINE_CONVERSATION + " primary key ("
+				+ DbConstents.ID_MINE + "," + DbConstents.ID_CONVERSATION + ") ");
+		convSb.append(")");
+		db.execSQL(convSb.toString());
+		
+		/**
+		 * 聊天消息表
+		 * */
+		StringBuffer chatMsgSb = new StringBuffer();
+		chatMsgSb.append("create table if not exists ");
+		chatMsgSb.append(DbConstents.MSG_CHAT_TB + "(");
+		chatMsgSb.append(DbConstents.ID_MINE + " varchar(100) ,");
+		chatMsgSb.append(DbConstents.ID_MESSAGE + " varchar(100) , ");
+		chatMsgSb.append(DbConstents.ID_CLIENT + " varchar(100) , ");
+		chatMsgSb.append(DbConstents.SEND_TIME_STAMP + " varchar(100) , ");
+		chatMsgSb.append(DbConstents.MSG_TEXT + " varchar(100) , ");
+		chatMsgSb.append(DbConstents.MSG_FILE_URL + " varchar(100) , ");
+		chatMsgSb.append(DbConstents.MSG_IMG_HEIGH + " varchar(100) , ");
+		chatMsgSb.append(DbConstents.MSG_IMG_WIDTH + " varchar(100) , ");
+		chatMsgSb.append(DbConstents.ID_MSG_CONVERSATION + " varchar(100) , ");
+		chatMsgSb.append(DbConstents.TITLE_CONV + " varchar(100) , ");
+		chatMsgSb.append(DbConstents.ID_OPERATED + " varchar(100) , ");
+		chatMsgSb.append(DbConstents.TYPE_CONV + " Integer , ");
+		chatMsgSb.append(DbConstents.STATUS_MSG + " Integer , ");
+		chatMsgSb.append(DbConstents.DIRECTION_MSG + " varchar(100) , ");
+		chatMsgSb.append(DbConstents.IS_SHOW_TIME + " varchar(100) , ");
+		chatMsgSb.append("constraint " + DbConstents.ID_CACHE_MSG + " primary key ("
+				+ DbConstents.ID_MINE + "," + DbConstents.ID_MESSAGE + ") ");
+		chatMsgSb.append(")");
+		db.execSQL(chatMsgSb.toString());
 	}
 
 	@Override

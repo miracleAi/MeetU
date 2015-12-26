@@ -6,6 +6,7 @@ import java.util.List;
 import com.meetu.bean.UserShieldBean;
 import com.meetu.cloud.object.ObjShieldUser;
 import com.meetu.common.Constants;
+import com.meetu.common.DbConstents;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -35,9 +36,9 @@ public class UserShieldDao {
 			bean.setUserId(objShieldUser.getShieldUser().getObjectId());
 			bean.setShieldUserId(objShieldUser.getUser().getObjectId());
 			ContentValues cv = new ContentValues();
-			cv.put(Constants.USERID, bean.getUserId());
-			cv.put(Constants.SHIELD_USER_ID, bean.getShieldUserId());
-			sdb.insert(Constants.USER_SHIELD_TB, null, cv);
+			cv.put(DbConstents.ID_MINE, bean.getUserId());
+			cv.put(DbConstents.SHIELD_USER_ID, bean.getShieldUserId());
+			sdb.insert(DbConstents.USER_SHIELD_TB, null, cv);
 		}
 		sdb.close();
 	}
@@ -45,8 +46,8 @@ public class UserShieldDao {
 	public boolean queryIsShield(String userId, String shieldUserId) {
 		SQLiteDatabase sdb = helper.getWritableDatabase();
 		Cursor cursor = sdb.rawQuery("select * from "
-				+ Constants.USER_SHIELD_TB + " where " + Constants.USERID
-				+ "=? and " + Constants.SHIELD_USER_ID + "=?", new String[] {
+				+ DbConstents.USER_SHIELD_TB + " where " + DbConstents.ID_MINE
+				+ "=? and " + DbConstents.SHIELD_USER_ID + "=?", new String[] {
 				userId, shieldUserId });
 		if (cursor.moveToNext()) {
 			// 存在，即被shieldUserId屏蔽
@@ -59,7 +60,7 @@ public class UserShieldDao {
 	// 根据用户清除屏蔽列表缓存
 	public void deleteByUser(String userId) {
 		SQLiteDatabase sdb = helper.getWritableDatabase();
-		sdb.delete(Constants.USER_SHIELD_TB, Constants.SHIELD_USER_ID + "=?",
+		sdb.delete(DbConstents.USER_SHIELD_TB, DbConstents.SHIELD_USER_ID + "=?",
 				new String[] { userId });
 		sdb.close();
 	}
