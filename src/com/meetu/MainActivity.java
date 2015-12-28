@@ -123,7 +123,6 @@ OnTabChangeListener {
 		isUpdate();
 		initTab();
 		pageString = super.getIntent().getStringExtra("page");
-		ChatConnection.isConnection();
 		userAboutDao=new UserAboutDao(this);
 		userDao=new UserDao(this);
 		shieldDao = new UserShieldDao(this);

@@ -280,8 +280,8 @@ OnItemClickListener,ChatViewInterface {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		/*AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class,
-				msgHandler);*/
+		AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class,
+				msgHandler);
 		AVIMMessageManager
 		.setConversationEventHandler(new MemberChangeHandler(getApplicationContext()));
 

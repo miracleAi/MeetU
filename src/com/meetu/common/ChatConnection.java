@@ -26,7 +26,7 @@ public class ChatConnection {
 	 * @author lucifer
 	 * @date 2015-11-24
 	 */
-	public static void isConnection() {
+	public static void isConnection(final ObjFunBooleanCallback callback) {
 		chatClient = AVIMClient.getInstance(AVUser.getCurrentUser()
 				.getObjectId());
 		ObjChatMessage.getClientStatus(chatClient, new ObjFunBooleanCallback() {
@@ -39,6 +39,7 @@ public class ChatConnection {
 					return;
 				} else if (result) {
 					log.e("zcq", "已经建立过长连接");
+					callback.callback(true, null);
 				} else {
 					ObjChatMessage.connectToChatServer(chatClient,
 							new ObjAvimclientCallback() {
@@ -48,15 +49,17 @@ public class ChatConnection {
 										AVException e) {
 									if (e != null) {
 										log.e("zcq", e);
+										callback.callback(false, e);
 										return;
 									}
 									if (client != null) {
 										MyApplication.chatClient = client;
+										callback.callback(true, null);
 										log.e("zcq", "连接聊天长连接成功");
 
 									} else {
 										log.e("zcq", "连接聊天长连接失败");
-
+										callback.callback(false, null);
 									}
 								}
 							});
