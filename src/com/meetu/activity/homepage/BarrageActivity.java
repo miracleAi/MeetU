@@ -130,7 +130,7 @@ public class BarrageActivity extends Activity {
 	private boolean isJoined = false;
 	private ActivityBean actyBean = new ActivityBean();
 	private int screenWidth = 0;
-	private UserAboutDao userAboutDao;
+//	private UserAboutDao userAboutDao;
 	private static EmojiParser parser;
 	private static List<ChatEmoji> chatEmojis;
 	private static EmojisDao emojisDao;
@@ -155,7 +155,7 @@ public class BarrageActivity extends Activity {
 		validHeightSpace = DensityUtil.dip2px(this, 350);
 		bitmapUtils = new BitmapUtils(getApplicationContext());
 		userDao = new UserDao(getApplicationContext());
-		userAboutDao = new UserAboutDao(BarrageActivity.this);
+//		userAboutDao = new UserAboutDao(BarrageActivity.this);
 		screenWidth = DisplayUtils.getWindowWidth(BarrageActivity.this);
 		emojisDao = new EmojisDao(BarrageActivity.this);
 		chatEmojis = emojisDao.getChatEmojisList();
@@ -331,7 +331,7 @@ public class BarrageActivity extends Activity {
 					}
 					if (result) {
 						isJoined = true;
-						saveMembers();
+//						saveMembers();
 						isChatLogin();
 					} else {
 						isJoined = false;
@@ -345,23 +345,23 @@ public class BarrageActivity extends Activity {
 			e1.printStackTrace();
 		}
 	}
-	//将觅聊成员插入数据库  既活动成员
-	protected void saveMembers() {
-		// TODO Auto-generated method stub
-		ArrayList<UserAboutBean> converMemList = new ArrayList<UserAboutBean>();
-		ArrayList<UserAboutBean> actyMemList = userAboutDao.queryUserAbout(user.getObjectId(), Constants.ACTIVITY_TYPE, actyBean.getActyId());
-		if(actyMemList != null && actyMemList.size()>0){
-			for(UserAboutBean bean:actyMemList){
-				UserAboutBean converBean = new UserAboutBean();
-				converBean.setUserId(user.getObjectId());
-				converBean.setAboutType(Constants.CONVERSATION_TYPE);
-				converBean.setAboutUserId(bean.getAboutUserId());
-				converBean.setAboutColetctionId(actyBean.getConversationId());
-				converMemList.add(converBean);
-			}
-			userAboutDao.saveUserAboutList(converMemList);
-		}
-	}
+//	//将觅聊成员插入数据库  既活动成员
+//	protected void saveMembers() {
+//		// TODO Auto-generated method stub
+//		ArrayList<UserAboutBean> converMemList = new ArrayList<UserAboutBean>();
+//		ArrayList<UserAboutBean> actyMemList = userAboutDao.queryUserAbout(user.getObjectId(), Constants.ACTIVITY_TYPE, actyBean.getActyId());
+//		if(actyMemList != null && actyMemList.size()>0){
+//			for(UserAboutBean bean:actyMemList){
+//				UserAboutBean converBean = new UserAboutBean();
+//				converBean.setUserId(user.getObjectId());
+//				converBean.setAboutType(Constants.CONVERSATION_TYPE);
+//				converBean.setAboutUserId(bean.getAboutUserId());
+//				converBean.setAboutColetctionId(actyBean.getConversationId());
+//				converMemList.add(converBean);
+//			}
+//			userAboutDao.saveUserAboutList(converMemList);
+//		}
+//	}
 
 	// 检查本人客户端是否登录
 	private void isChatLogin() {

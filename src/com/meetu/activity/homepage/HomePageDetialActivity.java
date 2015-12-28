@@ -762,7 +762,7 @@ public class HomePageDetialActivity extends Activity implements
 							return;
 						} else if (objects != null) {
 							userList.addAll(objects);
-							saveActyMember(userList);
+						//	saveActyMember(userList);
 							log.e("zcq", "userList==" + userList.size());
 							userNumber.setText("" + userList.size());
 							// TODO 点击进入个人主页 未完成
@@ -910,21 +910,21 @@ public class HomePageDetialActivity extends Activity implements
 
 	}
 
-	protected void saveActyMember(ArrayList<ObjUser> list) {
-		// TODO Auto-generated method stub
-		ArrayList<UserAboutBean> actyMemList = new ArrayList<UserAboutBean>();
-		if(list.size()>0){
-			for(int i=0;i<list.size();i++){
-				UserAboutBean bean = new UserAboutBean();
-				bean.setUserId(user.getObjectId());
-				bean.setAboutType(Constants.ACTIVITY_TYPE);
-				bean.setAboutUserId(list.get(i).getObjectId());
-				bean.setAboutColetctionId(activityBean.getActyId());
-				actyMemList.add(bean);
-			}
-			userAboutDao.saveUserAboutList(actyMemList);
-		}
-	}
+//	protected void saveActyMember(ArrayList<ObjUser> list) {
+//		// TODO Auto-generated method stub
+//		ArrayList<UserAboutBean> actyMemList = new ArrayList<UserAboutBean>();
+//		if(list.size()>0){
+//			for(int i=0;i<list.size();i++){
+//				UserAboutBean bean = new UserAboutBean();
+//				bean.setUserId(user.getObjectId());
+//				bean.setAboutType(Constants.ACTIVITY_TYPE);
+//				bean.setAboutUserId(list.get(i).getObjectId());
+//				bean.setAboutColetctionId(activityBean.getActyId());
+//				actyMemList.add(bean);
+//			}
+//			userAboutDao.saveUserAboutList(actyMemList);
+//		}
+//	}
 
 	/**
 	 * 点赞

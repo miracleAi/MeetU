@@ -318,7 +318,7 @@ public class JoinUsersActivity extends Activity implements OnItemClickListener,
 							
 							List<UserAboutBean> userAbouts=new ArrayList<UserAboutBean>();
 							
-							userAbouts=userAboutDao.queryUserAbout(user.getObjectId(), 1, "");
+							userAbouts=userAboutDao.queryUserAbout(user.getObjectId(), Constants.FOLLOW_TYPE, "");
 							
 							if(userAbouts!=null&&userAbouts.size()>0){
 								for(int i=0;i<objects.size();i++){

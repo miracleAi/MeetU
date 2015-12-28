@@ -274,7 +274,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		actyMemSb.append(DbConstents.ID_ACTY_CONVERSATION + " varchar(100) ,");
 		actyMemSb.append(DbConstents.STATUS_ACTY_CONV + " Integer ,");
 		actyMemSb.append("constraint " + DbConstents.ID_MINE_MEMBER_ACTY + " primary key ("
-				+ DbConstents.ID_MINE + "," + DbConstents.ID_ACTY + ") ");
+				+ DbConstents.ID_MINE + "," +DbConstents.ID_ACTY+","+ DbConstents.ID_ACTY_MEMBER + ") ");
 		actyMemSb.append(")");
 		db.execSQL(actyMemSb.toString());
 		/**
@@ -285,10 +285,11 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		seekMemSb.append(DbConstents.MEMBER_SEEK_TB + "(");
 		seekMemSb.append(DbConstents.ID_MINE + " varchar(100) ,");
 		seekMemSb.append(DbConstents.ID_SEEK_MEMBER + " varchar(100) ,");
+		seekMemSb.append(DbConstents.ID_SEEK + " varchar(100) ,");
 		seekMemSb.append(DbConstents.ID_SEEK_CONVERSATION + " varchar(100) ,");
 		seekMemSb.append(DbConstents.STATUS_SEEK_CONV + " Integer ,");
 		seekMemSb.append("constraint " + DbConstents.ID_MINE_MEMBER_SEEK + " primary key ("
-				+ DbConstents.ID_MINE + "," + DbConstents.ID_SEEK_CONVERSATION + ") ");
+				+ DbConstents.ID_MINE + "," +DbConstents.ID_SEEK+","+ DbConstents.ID_SEEK_MEMBER + ") ");
 		seekMemSb.append(")");
 		db.execSQL(seekMemSb.toString());
 		/**

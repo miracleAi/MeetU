@@ -1,6 +1,7 @@
 package com.meetu.sqlite;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.meetu.bean.MemberActivityBean;
 import com.meetu.bean.UserAboutBean;
@@ -39,6 +40,26 @@ public class MemberActivityDao {
 						bean.getConvStatus() });
 		sdb.close();
 	}
+	
+/**
+ * 插入一列成员
+ * @param list  
+ * @author lucifer
+ * @date 2015-12-28
+ */
+	public void saveAllUserActivity(List<MemberActivityBean> list) {
+		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
+		
+		for (int i = 0; i < list.size(); i++) {			
+			MemberActivityBean bean = list.get(i);
+			sdb.execSQL(
+					"insert or replace into member_activity_tb values("
+							+ "?,?,?,?,?)",
+					new Object[] { bean.getMineId(), bean.getActivityId(),bean.getMemberId(), bean.getConversationId(),
+							bean.getConvStatus() });
+		}
+		sdb.close();
+	}
 
 	/**
 	 * 删除指定缓存
@@ -51,8 +72,8 @@ public class MemberActivityDao {
 	public void deleteByConv(String userId, String conversitionId) {
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
 
-		sdb.execSQL("deleteb from member_activity_tb where "
-				+ DbConstents.ID_MINE + "=? and"
+		sdb.execSQL("delete from member_activity_tb where "
+				+ DbConstents.ID_MINE + "=? and "
 				+ DbConstents.ID_ACTY_CONVERSATION + "=?", new String[] {
 				userId, conversitionId });
 		sdb.close();
@@ -60,9 +81,10 @@ public class MemberActivityDao {
 
 	/**
 	 * 查询指定集合
+	 * 
 	 * @param userId
 	 * @param conversitionId
-	 * @return  
+	 * @return
 	 * @author lucifer
 	 * @date 2015-12-28
 	 */

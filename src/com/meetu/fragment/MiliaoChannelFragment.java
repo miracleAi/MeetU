@@ -16,6 +16,7 @@ import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
 import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 import com.meetu.activity.miliao.MiLiaoUsersListActivity;
 import com.meetu.activity.mine.UserPagerActivity;
+import com.meetu.bean.MemberSeekBean;
 import com.meetu.bean.MessageChatBean;
 import com.meetu.bean.SeekChatBean;
 import com.meetu.bean.UserAboutBean;
@@ -26,7 +27,9 @@ import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
+import com.meetu.common.Log;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.MemberSeekDao;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DensityUtil;
 import com.meetu.view.ChatViewInterface;
@@ -66,7 +69,8 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 	private AVIMConversation conv;
 	// 会话成员列表
 	ArrayList<ObjUser> memberUserList = new ArrayList<ObjUser>();
-	private UserAboutDao userAboutDao;// 成员缓存
+//	private UserAboutDao userAboutDao;// 成员缓存
+	private MemberSeekDao memberSeekDao;
 	AVUser currentUser = ObjUser.getCurrentUser();
 	ObjUser user = new ObjUser();
 	private ArrayList<UserAboutBean> userAboutBeanList = new ArrayList<UserAboutBean>();
@@ -92,11 +96,12 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 			}
 			
 			loadBitmapIng=BitmapFactory.decodeResource(getResources(), R.drawable.mine_likelist_profile_default);
-			userAboutDao = new UserAboutDao(getActivity());
+		//	userAboutDao = new UserAboutDao(getActivity());
 			// objChat=(ObjChat) getArguments().get("ObjChat");
 			// log.e("zcq","objChat=="+objChat.getObjectId()+"  objChat.getConversationId=="+objChat.getConversationId());
 
 			seekChatBean = (SeekChatBean) getArguments().get("SeekChatBean");
+			memberSeekDao=new MemberSeekDao(getActivity());
 			log.e("seekChatBean", seekChatBean.toString());
 			MyApplication app = (MyApplication) getActivity()
 					.getApplicationContext();
@@ -230,6 +235,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 	}
 
 	private void getUsersListInfo(final List<String> list) {
+		
 		memberUserList.clear();
 
 		for (int i = 0; i < list.size(); i++) {
@@ -339,16 +345,27 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 
 	};
 
+	/**
+	 * 设置头像
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-28
+	 */
 	public void setUserInfo() {
 
 		log.e("zcq", "设置头像");
 
 		list = new ArrayList<String>();
 
-		List<UserAboutBean> list2=userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, seekChatBean.getConversationId());
+	//	List<UserAboutBean> list2=userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, seekChatBean.getConversationId());
+		
+		 
+		List<MemberSeekBean> list2=memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBean.getConversationId());
+		
 		for(int i=0;i<list2.size();i++){
-			list.add(list2.get(i).getAboutUserId());
+			list.add(list2.get(i).getMemberSeekId());
 		}
+		Log.e("list2==",""+list2.size()+ " list=="+list.size());
 		getUsersListInfo(list);
 
 		numberUserAll.setText("" + list.size());

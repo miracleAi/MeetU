@@ -11,6 +11,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
@@ -31,6 +32,7 @@ import com.meetu.cloud.wrap.ObjActivityOrderWrap;
 import com.meetu.cloud.wrap.ObjActivityWrap;
 import com.meetu.cloud.wrap.ObjPraiseWrap;
 import com.meetu.common.Constants;
+import com.meetu.common.Log;
 import com.meetu.entity.Huodong;
 import com.meetu.sqlite.ActivityDao;
 import com.meetu.sqlite.MemberActivityDao;
@@ -50,7 +52,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -107,7 +109,7 @@ public class HomePagefragment extends Fragment implements
 
 	private ObjActivity objActivity = null;
 	private UserAboutDao userAboutDao;
-	private ArrayList<UserAboutBean> userAboutBeanList = new ArrayList<UserAboutBean>();
+	private ArrayList<MemberActivityBean> memberBeanList = new ArrayList<MemberActivityBean>();
 	
 	private RelativeLayout cityLayout;
 	
@@ -276,7 +278,8 @@ public class HomePagefragment extends Fragment implements
 	 */
 	private void loadData() {
 		// TODO Auto-generated method stub
-		log.e("lucifer", "正在加载网络数据");
+		Log.e("lucifer", "正在加载网络数据");
+		
 		actyList = new ArrayList<ActivityBean>();
 		numberCache=0;
 		ObjActivityWrap.queryAllActivitys(new ObjActivityCallback() {
@@ -288,7 +291,7 @@ public class HomePagefragment extends Fragment implements
 					return;
 				}
 				if (objects != null && objects.size() > 0) {
-					log.e("lucifer", "信息拉取成功");
+					Log.e("lucifer", "信息拉取成功");
 
 					for (ObjActivity activity : objects) {
 					//	System.out.println(objects);
@@ -612,18 +615,19 @@ public class HomePagefragment extends Fragment implements
 							numberCache++;
 
 							int numberFavor=0;
-							userAboutBeanList = new ArrayList<UserAboutBean>();
+							memberBeanList = new ArrayList<MemberActivityBean>();
 							for (ObjUser objUser : objects) {
-								UserAboutBean item = new UserAboutBean();
-								item.setUserId(user.getObjectId());
-								item.setAboutType(3);
-								item.setAboutColetctionId(conversitionId);
-								item.setAboutUserId(objUser.getObjectId());
-
-								userAboutBeanList.add(item);
+								MemberActivityBean item = new MemberActivityBean();
+								item.setActivityId(activity.getObjectId());
+								item.setConversationId(conversitionId);
+								//TODO 接口暂时没有		
+								item.setConvStatus(""+Constants.NORMAL);
+								item.setMemberId(objUser.getObjectId());
+								item.setMineId(user.getObjectId());
+								memberBeanList.add(item);
 								
 								List<UserAboutBean> lists=new ArrayList<UserAboutBean>();
-								lists=userAboutDao.queryUserAbout(user.getObjectId(), 1, "");
+								lists=userAboutDao.queryUserAbout(user.getObjectId(), Constants.FOLLOW_TYPE, "");
 								if(lists!=null&&lists.size()>0){
 									for(int i=0;i<lists.size();i++){
 										if(objUser.getObjectId().equals(lists.get(i).getAboutUserId())){
@@ -637,18 +641,19 @@ public class HomePagefragment extends Fragment implements
 									//不存在我关注的人
 									
 								}
-
 							}
 							log.e("zcq", "numberFavor=="+numberFavor);
 							activityDao.updateFavorUserNumber(user.getObjectId(), activity.getObjectId(), numberFavor);
 							
 							
-							userAboutDao.deleteByType(user.getObjectId(),
-									Constants.ACTIVITY_TYPE, conversitionId);
-
-							log.e("zcq", "userAboutBeanList=="
-									+ userAboutBeanList.size());
-							userAboutDao.saveUserAboutList(userAboutBeanList);
+//							userAboutDao.deleteByType(user.getObjectId(),
+//									Constants.ACTIVITY_TYPE, conversitionId);
+//
+//							log.e("zcq", "userAboutBeanList=="+ userAboutBeanList.size());
+//							userAboutDao.saveUserAboutList(userAboutBeanList);
+							
+							memberActivityDao.deleteByConv(user.getObjectId(), conversitionId);
+							memberActivityDao.saveAllUserActivity(memberBeanList);
 							
 							log.e("numberCache", ""+numberCache);
 							if(numberCache==actyListCache.size()){

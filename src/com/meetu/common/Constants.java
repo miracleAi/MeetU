@@ -157,4 +157,8 @@ public class Constants {
 	public static final int SysMsgTypeActy = 3;
 	// 用户墙照片点赞
 	public static final int SysMsgTypeUserPhoto = 4;
+	/**
+	 * 用户状态 正常
+	 */
+	public static final int NORMAL=0;
 }
