@@ -1,27 +1,29 @@
-package com.meetu.sqlite;
+ package com.meetu.sqlite;
 
 import java.util.ArrayList;
 
+import com.avos.avoscloud.AVCloud;
 import com.meetu.bean.MemberActivityBean;
-import com.meetu.bean.UserAboutBean;
+import com.meetu.bean.MemberSeekBean;
 import com.meetu.common.DbConstents;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-/**
- * @author lucifer
+/** 
+ * @author  lucifer 
  * @date 2015-12-28
- * @return
+ * @return  
  */
-public class MemberActivityDao {
+public class MemberSeekDao {
 	private MySqliteDBHelper dbHelper;
-
-	public MemberActivityDao(Context context) {
-		dbHelper = new MySqliteDBHelper(context);
-	}
-
+	
+	public void MemberSeekDao(Context context){
+		dbHelper=new MySqliteDBHelper(context);
+		
+	};
+	
 	/**
 	 * 插入一个活动成员
 	 * 
@@ -29,13 +31,13 @@ public class MemberActivityDao {
 	 * @author lucifer
 	 * @date 2015-12-28
 	 */
-	public void saveUserActivity(MemberActivityBean bean) {
+	public void saveUserActivity(MemberSeekBean bean) {
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
 		sdb.execSQL(
-				"insert or replace into member_activity_tb values("
+				"insert or replace into member_seek_tb values("
 						+ "?,?,?,?,?)",
-				new Object[] { bean.getMineId(), bean.getActivityId(),
-						bean.getMemberId(), bean.getConversationId(),
+				new Object[] { bean.getMineId(), bean.getSeekId(),
+						bean.getMemberSeekId(), bean.getConversationId(),
 						bean.getConvStatus() });
 		sdb.close();
 	}
@@ -53,7 +55,7 @@ public class MemberActivityDao {
 
 		sdb.execSQL("deleteb from member_activity_tb where "
 				+ DbConstents.ID_MINE + "=? and"
-				+ DbConstents.ID_ACTY_CONVERSATION + "=?", new String[] {
+				+ DbConstents.ID_SEEK_CONVERSATION + "=?", new String[] {
 				userId, conversitionId });
 		sdb.close();
 	}
@@ -66,10 +68,10 @@ public class MemberActivityDao {
 	 * @author lucifer
 	 * @date 2015-12-28
 	 */
-	public ArrayList<MemberActivityBean> queryUserAbout(String userId,
+	public ArrayList<MemberSeekBean> queryUserAbout(String userId,
 			String conversitionId) {
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
-		ArrayList<MemberActivityBean> aboutList = new ArrayList<MemberActivityBean>();
+		ArrayList<MemberSeekBean> aboutList = new ArrayList<MemberSeekBean>();
 		Cursor cursor = null;
 		// 根据类型查询指定类型所有
 		cursor = sdb.rawQuery("select * from " + DbConstents.MEMBER_ACTY_TB
@@ -78,17 +80,18 @@ public class MemberActivityDao {
 				userId, conversitionId });
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			MemberActivityBean bean = new MemberActivityBean();
+			MemberSeekBean bean = new MemberSeekBean();
+			
 			bean.setMineId(cursor.getString(cursor
 					.getColumnIndex(DbConstents.ID_MINE)));
-			bean.setActivityId(cursor.getString(cursor
-					.getColumnIndex(DbConstents.ID_MINE_MEMBER_ACTY)));
-			bean.setMemberId(cursor.getString(cursor
-					.getColumnIndex(DbConstents.ID_ACTY_MEMBER)));
+			bean.setSeekId(cursor.getString(cursor
+					.getColumnIndex(DbConstents.ID_SEEK)));
+			bean.setMemberSeekId(cursor.getString(cursor
+					.getColumnIndex(DbConstents.ID_SEEK_MEMBER)));
 			bean.setConversationId(cursor.getString(cursor
-					.getColumnIndex(DbConstents.ID_ACTY_CONVERSATION)));
+					.getColumnIndex(DbConstents.ID_SEEK_CONVERSATION)));
 			bean.setConvStatus(cursor.getString(cursor
-					.getColumnIndex(DbConstents.STATUS_ACTY_CONV)));
+					.getColumnIndex(DbConstents.STATUS_SEEK_CONV)));
 
 			aboutList.add(bean);
 			cursor.moveToNext();
@@ -97,5 +100,6 @@ public class MemberActivityDao {
 
 		return aboutList;
 	}
+	
 
 }

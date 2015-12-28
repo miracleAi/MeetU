@@ -6,6 +6,7 @@ import java.util.List;
 import net.tsz.afinal.FinalBitmap;
 import cc.imeetu.R;
 
+import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
@@ -19,6 +20,7 @@ import com.meetu.activity.homepage.JoinUsersActivity;
 import com.meetu.adapter.NewsListViewAdapter;
 import com.meetu.adapter.NewsListViewAdapter.OnItemImageFavorClickCallBack;
 import com.meetu.bean.ActivityBean;
+import com.meetu.bean.MemberActivityBean;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjActivityCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
@@ -31,6 +33,7 @@ import com.meetu.cloud.wrap.ObjPraiseWrap;
 import com.meetu.common.Constants;
 import com.meetu.entity.Huodong;
 import com.meetu.sqlite.ActivityDao;
+import com.meetu.sqlite.MemberActivityDao;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
@@ -115,6 +118,8 @@ public class HomePagefragment extends Fragment implements
 	
 	//所有用户数量
 	private List<String> userAllNumberList=new ArrayList<String>();
+	
+	private MemberActivityDao memberActivityDao;
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -122,6 +127,8 @@ public class HomePagefragment extends Fragment implements
 		activityDao = new ActivityDao(getActivity());
 		pingHight = DisplayUtils.getWindowHeight(getActivity());
 		actyDao = new ActivityDao(getActivity());
+		memberActivityDao=new MemberActivityDao(getActivity());
+		
 	}
 
 	@Override

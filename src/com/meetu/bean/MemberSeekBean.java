@@ -9,25 +9,35 @@ public class MemberSeekBean {
 	/**
 	 * 用户本人ID
 	 */
-	public  String mineId;
+	private  String mineId;
+	/**
+	 * 觅聊 id
+	 */
+	private String seekId;
 
 	/**
 	 * 成员ID
 	 */
-	public  String memberSeekId ;
+	private  String memberSeekId ;
 	/**
 	 * 觅聊ID
 	 */
-	public  String conversationId;
+	private  String conversationId;
 	/**
 	 * 成员状态
 	 */
-	public  String convStatus;
+	private  String convStatus;
 	public String getMineId() {
 		return mineId;
 	}
 	public void setMineId(String mineId) {
 		this.mineId = mineId;
+	}
+	public String getSeekId() {
+		return seekId;
+	}
+	public void setSeekId(String seekId) {
+		this.seekId = seekId;
 	}
 	public String getMemberSeekId() {
 		return memberSeekId;
@@ -47,6 +57,7 @@ public class MemberSeekBean {
 	public void setConvStatus(String convStatus) {
 		this.convStatus = convStatus;
 	}
+	
 	
 
 }

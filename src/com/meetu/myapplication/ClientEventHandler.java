@@ -22,4 +22,10 @@ public class ClientEventHandler extends AVIMClientEventHandler {
 
 	}
 
+	@Override
+	public void onClientOffline(AVIMClient arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

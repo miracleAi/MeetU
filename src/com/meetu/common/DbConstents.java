@@ -11,7 +11,7 @@ public class DbConstents {
 	 * 活动成员列表
 	 */
 	public static String MEMBER_ACTY_TB = "member_activity_tb";
-	//主键
+	//主键 
 	public static String ID_MINE_MEMBER_ACTY = "id_mine_member_acty";
 	//成员ID
 	public static String ID_ACTY_MEMBER = "id_member";
@@ -31,6 +31,8 @@ public class DbConstents {
 	//成员ID
 	public static String ID_SEEK_MEMBER = "id_member";
 	//觅聊ID
+	public static String ID_SEEK ="id_seek";
+	//觅聊群聊ID
 	public static String ID_SEEK_CONVERSATION = "id_conversation";
 	//成员状态
 	public static String STATUS_SEEK_CONV = "status_conv";
