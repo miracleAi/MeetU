@@ -116,20 +116,5 @@ public class UserAboutDao {
 	}
 
 
-	// 查询参加活动并且我关注的人
-	/*
-	 * public ArrayList<UserAboutBean> queryOrderAndFollowUser(String userId,int
-	 * type1,int type2){ ArrayList<UserAboutBean> list = new
-	 * ArrayList<UserAboutBean>(); SQLiteDatabase
-	 * sdb=dbHelper.getWritableDatabase(); Cursor
-	 * cursor=sdb.rawQuery("select * from "+
-	 * Constants.USERABOUT_CACHE_TB+" where "+Constants.USERID +"=? and "
-	 * +Constants
-	 * .ABOUTTYPE+"=? and "+Constants.ABOUTUSERID+" in select "+Constants
-	 * .ABOUTUSERID+" from "+
-	 * Constants.ACTIVITY_CACHE_TB+" where "+Constants.USERID +"=? and "
-	 * +Constants.ABOUTTYPE+"=?",new
-	 * String[]{userId,Integer.toString(type1),userId,Integer.toString(type2)});
-	 * return list; }
-	 */
+	
 }

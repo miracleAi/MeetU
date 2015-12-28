@@ -10,53 +10,54 @@ public class MemberActivityBean {
 	/**
 	 * 用户本人ID
 	 */
-	public static String mineId;
+	public  String mineId;
 	/**
 	 * 成员ID
 	 */
-	public static String memberId;
+	public  String memberId;
 	/**
 	 * 活动ID
 	 */
-	public static String activityId;
+	public  String activityId;
 	/**
 	 * 活动群聊ID
 	 */
-	public static String conversationId;
+	public  String conversationId;
 	/**
 	 * 成员状态
 	 */
-	public static String convStatus;
-	public static String getMineId() {
+	public  String convStatus;
+	public String getMineId() {
 		return mineId;
 	}
-	public static void setMineId(String mineId) {
-		MemberActivityBean.mineId = mineId;
+	public void setMineId(String mineId) {
+		this.mineId = mineId;
 	}
-	public static String getMemberId() {
+	public String getMemberId() {
 		return memberId;
 	}
-	public static void setMemberId(String memberId) {
-		MemberActivityBean.memberId = memberId;
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
 	}
-	public static String getActivityId() {
+	public String getActivityId() {
 		return activityId;
 	}
-	public static void setActivityId(String activityId) {
-		MemberActivityBean.activityId = activityId;
+	public void setActivityId(String activityId) {
+		this.activityId = activityId;
 	}
-	public static String getConversationId() {
+	public String getConversationId() {
 		return conversationId;
 	}
-	public static void setConversationId(String conversationId) {
-		MemberActivityBean.conversationId = conversationId;
+	public void setConversationId(String conversationId) {
+		this.conversationId = conversationId;
 	}
-	public static String getConvStatus() {
+	public String getConvStatus() {
 		return convStatus;
 	}
-	public static void setConvStatus(String convStatus) {
-		MemberActivityBean.convStatus = convStatus;
+	public void setConvStatus(String convStatus) {
+		this.convStatus = convStatus;
 	}
+
 	
 	
 
