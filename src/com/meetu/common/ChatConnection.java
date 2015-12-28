@@ -36,6 +36,7 @@ public class ChatConnection {
 				// TODO Auto-generated method stub
 				if (e != null) {
 					log.e("zcq", e);
+					callback.callback(false, e);
 					return;
 				} else if (result) {
 					log.e("zcq", "已经建立过长连接");
