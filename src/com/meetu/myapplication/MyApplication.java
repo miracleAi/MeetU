@@ -54,6 +54,7 @@ public class MyApplication extends Application {
 	public BitmapUtils bitmapUtils = null;
 	private FinalBitmap finalBitmap = null;
 	private FinalBitmap finalBitmapHead=null;
+	public static DefaultMessageHandler defaultMsgHandler;
 
 	@Override
 	public void onCreate() {
@@ -108,9 +109,10 @@ public class MyApplication extends Application {
 				"8fpp7j815746jg9x26f0d3c5p76xqkyqm586v2onvx3m2k7a");
 		//调试开关
 		AVOSCloud.setDebugLogEnabled(false);
+		defaultMsgHandler = new DefaultMessageHandler(
+				getApplicationContext());
 		AVIMMessageManager
-		.registerDefaultMessageHandler(new DefaultMessageHandler(
-				getApplicationContext()));
+		.registerDefaultMessageHandler(defaultMsgHandler);
 		 AVIMMessageManager.setConversationEventHandler(new
 		 DefaultMemberHandler(getApplicationContext()));
 

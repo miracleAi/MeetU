@@ -21,6 +21,7 @@ import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.activity.miliao.EmojiParser;
 import com.meetu.activity.miliao.XmlEmojifPullHelper;
 import com.meetu.adapter.MessagesListAdapter;
+import com.meetu.bean.MessageChatBean;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjConversationListCallback;
 import com.meetu.cloud.callback.ObjListCallback;
@@ -35,10 +36,12 @@ import com.meetu.common.PerfectInformation;
 import com.meetu.common.SharepreferencesUtils;
 import com.meetu.entity.ChatEmoji;
 import com.meetu.entity.Messages;
+import com.meetu.myapplication.DefaultMessageHandler;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.EmojisDao;
 import com.meetu.sqlite.MessagesDao;
 import com.meetu.sqlite.UserAboutDao;
+import com.meetu.view.ChatViewInterface;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -59,9 +62,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Messagefragment extends Fragment implements OnItemClickListener,
-OnClickListener {
+OnClickListener,ChatViewInterface{
 	private ListView mListView;
 	private List<Messages> mdataList = new ArrayList<Messages>();
 	private List<Messages> mdataListCache = new ArrayList<Messages>();
@@ -118,6 +122,11 @@ OnClickListener {
 		return view;
 
 	}
+	private void initReceiveMsg() {
+		// TODO Auto-generated method stub
+		MyApplication.defaultMsgHandler.setUpdateBean(this);
+	}
+
 	private void loadSysMsg() {
 		ObjSysMsgWrap.querySysMsgs(user, new ObjSysMsgListCallback() {
 
@@ -257,6 +266,7 @@ OnClickListener {
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		initReceiveMsg();
 		handler.sendEmptyMessage(1);
 	}
 
@@ -283,7 +293,6 @@ OnClickListener {
 					// 重新加载
 				}
 				mAdapter.notifyDataSetChanged();
-
 				break;
 
 			}
@@ -425,5 +434,11 @@ OnClickListener {
 		if(requestCode == 1001 && resultCode == ChatGroupActivity.RESULT_OK){
 			getConversation();
 		}
+	}
+
+	@Override
+	public void updateView(MessageChatBean bean) {
+		// TODO Auto-generated method stub
+		Toast.makeText(getActivity(), "message fragment receive msg", 1000).show();
 	}
 }

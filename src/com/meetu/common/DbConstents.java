@@ -31,8 +31,10 @@ public class DbConstents {
 	//成员ID
 	public static String ID_SEEK_MEMBER = "id_member";
 	//觅聊ID
+
 	public static String ID_SEEK ="id_seek";
 	//觅聊群聊ID
+
 	public static String ID_SEEK_CONVERSATION = "id_conversation";
 	//成员状态
 	public static String STATUS_SEEK_CONV = "status_conv";

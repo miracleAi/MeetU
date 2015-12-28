@@ -16,6 +16,7 @@ import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
 import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 import com.meetu.activity.miliao.MiLiaoUsersListActivity;
 import com.meetu.activity.mine.UserPagerActivity;
+import com.meetu.bean.MessageChatBean;
 import com.meetu.bean.SeekChatBean;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjListCallback;
@@ -28,6 +29,7 @@ import com.meetu.common.Constants;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DensityUtil;
+import com.meetu.view.ChatViewInterface;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -45,8 +47,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MiliaoChannelFragment extends Fragment implements OnClickListener {
+public class MiliaoChannelFragment extends Fragment implements OnClickListener,ChatViewInterface{
 	// 控件相关
 	private TextView dismissData;
 	private ImageView photoManager, backgroud;
@@ -390,6 +393,12 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener {
 			break;
 		}
 
+	}
+	//接收到实时消息执行
+	@Override
+	public void updateView(MessageChatBean bean) {
+		// TODO Auto-generated method stub
+		Toast.makeText(getActivity(), "miliao channel fragment receive msg", 1000).show();
 	}
 
 }

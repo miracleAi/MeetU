@@ -41,6 +41,7 @@ import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DepthPageTransformer;
 import com.meetu.tools.MyZoomOutPageTransformer;
 import com.meetu.tools.ZoomOutPageTransformer;
+import com.meetu.view.ChatViewInterface;
 
 import android.R.bool;
 import android.app.Activity;
@@ -155,6 +156,14 @@ OnClickListener {
 		}
 		return view;
 	}
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		if(fragmentList != null && fragmentList.size()>0){
+			MyApplication.defaultMsgHandler.setUpdateBean((ChatViewInterface)fragmentList.get(positonNow));
+		}
+	}
 
 	/**
 	 * viewpager 相关处理
@@ -179,6 +188,7 @@ OnClickListener {
 		viewPager.setAdapter(adapter);
 		viewPager.setOffscreenPageLimit(0);
 		viewPager.setCurrentItem(positonNow);
+		MyApplication.defaultMsgHandler.setUpdateBean((ChatViewInterface)fragmentList.get(positonNow));
 		isAddconvesition();
 		conv = MyApplication.chatClient.getConversation(""
 				+ seekChatBeansList.get(positonNow).getConversationId());
@@ -201,6 +211,7 @@ OnClickListener {
 		numberPosition.setText("" + (position + 1));
 		// 传过去当前页面
 		positonNow = position;
+		MyApplication.defaultMsgHandler.setUpdateBean((ChatViewInterface)fragmentList.get(positonNow));
 		isAddconvesition();
 		conv = MyApplication.chatClient.getConversation(""
 				+ seekChatBeansList.get(positonNow).getConversationId());
@@ -297,7 +308,6 @@ OnClickListener {
 			switch (msg.what) {
 			case 1:
 				initViewPager();
-				
 				break;
 
 			default:
@@ -672,6 +682,7 @@ OnClickListener {
 				// 创建觅聊 成功 执行的操作
 				log.e("lucifer", "需要重新加载头像");
 				((MiliaoChannelFragment) fragmentList.get(positonNow)).setUserInfo();
+				MyApplication.defaultMsgHandler.setUpdateBean((ChatViewInterface)fragmentList.get(positonNow));
 				isAddconvesition();
 			}
 			break;

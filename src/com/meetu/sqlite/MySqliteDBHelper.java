@@ -304,8 +304,8 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		convSb.append(DbConstents.TYPE_CONV + " Integer ,");
 		convSb.append(DbConstents.CONV_MUTE + " Integer ,");
 		convSb.append(DbConstents.TITLE_CONV + " varchar(100) ,");
-		convSb.append(DbConstents.CONV_OVER_TIME + " varchar(100) ,");
-		convSb.append(DbConstents.CONV_UPDATE_TIME + " varchar(100) ,");
+		convSb.append(DbConstents.CONV_OVER_TIME + " Integer ,");
+		convSb.append(DbConstents.CONV_UPDATE_TIME + " Integer ,");
 		convSb.append("constraint " + DbConstents.ID_MINE_CONVERSATION + " primary key ("
 				+ DbConstents.ID_MINE + "," + DbConstents.ID_CONVERSATION + ") ");
 		convSb.append(")");
@@ -320,7 +320,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		chatMsgSb.append(DbConstents.ID_MINE + " varchar(100) ,");
 		chatMsgSb.append(DbConstents.ID_MESSAGE + " varchar(100) , ");
 		chatMsgSb.append(DbConstents.ID_CLIENT + " varchar(100) , ");
-		chatMsgSb.append(DbConstents.SEND_TIME_STAMP + " varchar(100) , ");
+		chatMsgSb.append(DbConstents.SEND_TIME_STAMP + " Integer , ");
 		chatMsgSb.append(DbConstents.MSG_TEXT + " varchar(100) , ");
 		chatMsgSb.append(DbConstents.MSG_FILE_URL + " varchar(100) , ");
 		chatMsgSb.append(DbConstents.MSG_IMG_HEIGH + " varchar(100) , ");
