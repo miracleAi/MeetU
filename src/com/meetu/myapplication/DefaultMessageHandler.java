@@ -12,22 +12,33 @@ import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMMessageHandler;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.meetu.bean.MessageChatBean;
 import com.meetu.cloud.utils.ChatMsgUtils;
 import com.meetu.common.Constants;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.sqlite.ChatmsgsDao;
 import com.meetu.sqlite.MessagesDao;
 import com.meetu.tools.DensityUtil;
+import com.meetu.view.ChatViewInterface;
 
 public class DefaultMessageHandler extends AVIMMessageHandler {
 	MessagesDao msgDao = null;
 	ChatmsgsDao chatDao = null;
 	private Context context;
+	ChatViewInterface updateBean;
+	String conversationId = "";
 
 	public DefaultMessageHandler(Context context) {
 		this.context = context;
 		msgDao = new MessagesDao(context);
 		chatDao = new ChatmsgsDao(context);
+	}
+	public void setUpdateBean(ChatViewInterface updateBean) {
+		this.updateBean = null;
+		this.updateBean = updateBean;
+	}
+	public void setConversationId(String conversationId) {
+		this.conversationId = conversationId;
 	}
 
 	@Override
@@ -35,6 +46,12 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			AVIMClient client) {
 		// TODO Auto-generated method stub
 		super.onMessage(message, conversation, client);
+		MessageChatBean bean = new MessageChatBean();
+		if(conversationId != null && !"".equals(conversationId)){
+			updateBean.updateView(bean);
+		}else{
+			updateBean.updateView(bean);
+		}
 		if (AVUser.getCurrentUser() == null) {
 			return;
 		}

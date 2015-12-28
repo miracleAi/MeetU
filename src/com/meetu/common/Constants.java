@@ -52,7 +52,7 @@ public class Constants {
 	// 用户ID
 	public static final String USERID = "id_mine";
 	/**
-	 * 活动信息缓存时间
+	 * 活动信息缓存时间(待修改)
 	 * */
 	// sharePrefence名
 	public static final String ACTIVITY_CACHE_SP = "activity_cache_sp";

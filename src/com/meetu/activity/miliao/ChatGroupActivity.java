@@ -37,6 +37,7 @@ import com.baidu.location.h.m;
 import com.meetu.TestReceiveMsg.MemberChangeHandler;
 import com.meetu.activity.messages.ShowSysMsgPhotoActivity;
 import com.meetu.adapter.ChatmsgsListViewAdapter;
+import com.meetu.bean.MessageChatBean;
 import com.meetu.bean.SeekChatBean;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
@@ -67,6 +68,7 @@ import com.meetu.tools.DisplayUtils;
 import com.meetu.tools.StringToDrawbleId;
 import com.meetu.tools.UriToimagePath;
 import com.meetu.tools.UrlLocationToBitmap;
+import com.meetu.view.ChatViewInterface;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -118,7 +120,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ChatGroupActivity extends Activity implements OnClickListener,
-OnItemClickListener {
+OnItemClickListener,ChatViewInterface {
 	private Context context;
 	private RelativeLayout backLayout;
 	private ImageView face;
@@ -266,15 +268,20 @@ OnItemClickListener {
 		log.e("lucifer", "number==" + number + " conversationStyle=="
 				+ conversationStyle);
 		userNumber.setText("" + "(" + number + ")");
+		initReceiveMsg();
 
 	}
-
+	private void initReceiveMsg() {
+		// TODO Auto-generated method stub
+		MyApplication.defaultMsgHandler.setUpdateBean(this);
+		MyApplication.defaultMsgHandler.setConversationId(conversationId);
+	}
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class,
-				msgHandler);
+		/*AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class,
+				msgHandler);*/
 		AVIMMessageManager
 		.setConversationEventHandler(new MemberChangeHandler(getApplicationContext()));
 
@@ -376,7 +383,7 @@ OnItemClickListener {
 					intent.putExtra("photoUrl", ""+item.getImgMsgImageUrl());
 					startActivity(intent);
 					overridePendingTransition(R.anim.zoom_inda, R.anim.zoom_inda);
-					
+
 				}
 
 			}
@@ -964,7 +971,7 @@ OnItemClickListener {
 
 				// ListView数据更新后，自动滚动到底部
 				mChatmsgsListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-			//	mChatmsgsListView.setSelection(mChatmsgsListView.getBottom());
+				//	mChatmsgsListView.setSelection(mChatmsgsListView.getBottom());
 				refreshComplete();
 				break;
 			case 2:
@@ -1531,6 +1538,12 @@ OnItemClickListener {
 		Intent intent=getIntent();
 		setResult(RESULT_CANCELED, intent);
 		finish();
+	}
+
+	@Override
+	public void updateView(MessageChatBean bean) {
+		// TODO Auto-generated method stub
+		Toast.makeText(ChatGroupActivity.this, "chatActivity receive msg", 1000).show();
 	}
 
 
