@@ -46,12 +46,6 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			AVIMClient client) {
 		// TODO Auto-generated method stub
 		super.onMessage(message, conversation, client);
-		MessageChatBean bean = new MessageChatBean();
-		if(conversationId != null && !"".equals(conversationId)){
-			updateBean.updateView(bean);
-		}else{
-			updateBean.updateView(bean);
-		}
 		if (AVUser.getCurrentUser() == null) {
 			return;
 		}
@@ -119,7 +113,14 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		// 未读消息加1
 		msgDao.updateUnread(AVUser.getCurrentUser().getObjectId(),
 				conversation.getConversationId());
-
+		MessageChatBean bean = new MessageChatBean();
+		if(conversationId != null && !"".equals(conversationId)){
+			updateBean.updateView(bean);
+		}else{
+			if(msg.getConversationId().equals(conversationId)){
+				updateBean.updateView(bean);	
+			}
+		}
 	}
 
 	// 图片消息处理方法

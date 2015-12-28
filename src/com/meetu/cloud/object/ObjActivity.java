@@ -15,6 +15,10 @@ import com.meetu.common.Constants;
 public class ObjActivity extends AVObject implements Serializable {
 	public static final Creator CREATOR = AVObjectCreator.instance;
 	/**
+	 * 活动创建者
+	 */
+	public static final String ACTYCREATOR = "creator";
+	/**
 	 * 活动封面（图片）（只读）
 	 */
 	// AVFile activityCover;
@@ -106,6 +110,9 @@ public class ObjActivity extends AVObject implements Serializable {
 	public static final String CONVERSATIONID = "conversationId";
 	public static final String TIMECHATSTOP = "timeChatStop";
 
+	public ObjUser getCreator() {
+		return this.getAVUser(ACTYCREATOR,ObjUser.class);
+	}
 	public long getTimeChatStop() {
 		return this.getLong(TIMECHATSTOP);
 	}

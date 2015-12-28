@@ -86,7 +86,7 @@ public class Constants {
 	public static final int SHOW_NOMAL_NOTIFY = 4;
 	// 活动反馈通知
 	public static final int SHOW_ACTY_NOTY = 5;
-	// 小纸条
+	// 小纸条(保留，其他替换)
 	public static final int SHOW_SCRIPT = 6;
 
 	/**

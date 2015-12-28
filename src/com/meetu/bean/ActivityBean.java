@@ -24,6 +24,8 @@ public class ActivityBean implements Serializable {
 
 	// userid 缓存标记用户需要
 	private String userId;
+	//活动创建者ID
+	private String creatorId;
 	// 活动ID
 	private String actyId;
 	// 是否点赞
@@ -66,7 +68,12 @@ public class ActivityBean implements Serializable {
 	private int index;
 	//活动群聊结束时间
 	private long timeChatStop;
-
+	public void setCreatorId(String creatorId) {
+		this.creatorId = creatorId;
+	}
+	public String getCreatorId() {
+		return creatorId;
+	}
 	public long getTimeChatStop() {
 		return timeChatStop;
 	}

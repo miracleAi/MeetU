@@ -30,6 +30,7 @@ public class ActivityDao {
 			ContentValues cv = new ContentValues();
 			cv.put(DbConstents.ID_MINE, bean.getUserId());
 			cv.put(DbConstents.ACTIVITYID, bean.getActyId());
+			cv.put(DbConstents.ACTYCREATORID, bean.getCreatorId());
 			cv.put(DbConstents.ACTIVITYCONTENT, bean.getActivityContent());
 			cv.put(DbConstents.ACTIVITYCOVER, bean.getActivityCover());
 			cv.put(DbConstents.ACTIVITYFOLLOWCOUNT, bean.getOrderAndFollow());
@@ -127,6 +128,8 @@ public class ActivityDao {
 			ActivityBean bean = new ActivityBean();
 			bean.setActyId(cursor.getString(cursor
 					.getColumnIndex(DbConstents.ACTIVITYID)));
+			bean.setCreatorId(cursor.getString(cursor
+					.getColumnIndex(DbConstents.ACTYCREATORID)));
 			bean.setUserId(cursor.getString(cursor
 					.getColumnIndex(DbConstents.ID_MINE)));
 			bean.setActivityContent(cursor.getString(cursor
@@ -189,6 +192,8 @@ public class ActivityDao {
 			ActivityBean bean = new ActivityBean();
 			bean.setActyId(cursor.getString(cursor
 					.getColumnIndex(DbConstents.ACTIVITYID)));
+			bean.setCreatorId(cursor.getString(cursor
+					.getColumnIndex(DbConstents.ACTYCREATORID)));
 			bean.setUserId(cursor.getString(cursor
 					.getColumnIndex(DbConstents.ID_MINE)));
 			bean.setActivityContent(cursor.getString(cursor

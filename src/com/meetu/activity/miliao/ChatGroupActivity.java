@@ -1364,9 +1364,12 @@ OnItemClickListener,ChatViewInterface {
 	public void sendPictureMessage(final Chatmsgs mchatmsgs) {
 		AVIMImageMessage msg;
 		try {
-			msg = new AVIMImageMessage(mchatmsgs.getImgMsgImageUrl());
-			//AVFile f = new AVFile("test", mchatmsgs.getImgMsgImageUrl());
-			//msg = new AVIMImageMessage(f);
+			//msg = new AVIMImageMessage(mchatmsgs.getImgMsgImageUrl());
+			AVFile f = AVFile.withAbsoluteLocalPath("msg", mchatmsgs.getImgMsgImageUrl());
+			f.addMetaData("conversationId", conversationId);
+			f.addMetaData("clientId", user.getObjectId());
+			f.addMetaData("type", "1");
+			msg = new AVIMImageMessage(f);
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put(Constants.CHAT_MSG_TYPE, Constants.SHOW_IMG);
 			if (mchatmsgs.getIsShowTime() == 1) {

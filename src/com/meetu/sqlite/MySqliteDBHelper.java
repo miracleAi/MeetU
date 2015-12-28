@@ -185,6 +185,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		activitySb.append("id integer primary key autoincrement ,");
 		activitySb.append(DbConstents.ID_MINE + " varchar(100) ,");
 		activitySb.append(DbConstents.ACTIVITYID + " varchar(100) ,");
+		activitySb.append(DbConstents.ACTYCREATORID + " varchar(100) ,");
 		activitySb.append(DbConstents.ISACTIVITYPRAISE + " integer ,");
 		activitySb.append(DbConstents.ACTIVITYFOLLOWCOUNT + " integer ,");
 		activitySb.append(DbConstents.ACTIVITYCOVER + " varchar(100) ,");
@@ -306,6 +307,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		convSb.append(DbConstents.TITLE_CONV + " varchar(100) ,");
 		convSb.append(DbConstents.CONV_OVER_TIME + " Integer ,");
 		convSb.append(DbConstents.CONV_UPDATE_TIME + " Integer ,");
+		convSb.append(DbConstents.UNREAD_COUNT + " Integer ,");
 		convSb.append("constraint " + DbConstents.ID_MINE_CONVERSATION + " primary key ("
 				+ DbConstents.ID_MINE + "," + DbConstents.ID_CONVERSATION + ") ");
 		convSb.append(")");

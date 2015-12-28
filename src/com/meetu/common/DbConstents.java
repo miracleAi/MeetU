@@ -96,6 +96,8 @@ public class DbConstents {
 	public static String CONV_OVER_TIME = "over_time";
 	//最后更新时间
 	public static String CONV_UPDATE_TIME = "update_time";
+	//未读消息条数
+	public static String UNREAD_COUNT = "unread_count";
 
 	/**
 	 * 用户表
@@ -161,6 +163,8 @@ public class DbConstents {
 	public static final String ACTIVITY_CACHE_TB = "activity_cache_tb";
 	// 活动ID
 	public static final String ACTIVITYID = "activity_id";
+	// 活动创建者ID
+	public static final String ACTYCREATORID = "creator_id";
 	// 是否对活动点赞
 	public static final String ISACTIVITYPRAISE = "is_activity_praise";
 	// 参加活动人中我关注的人

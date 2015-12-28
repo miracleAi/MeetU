@@ -1,6 +1,8 @@
 package com.meetu.bean;
 
 public class MessageChatBean {
+	//消息ID
+	private String idMessage;
 	//发送者ID
 	private String idClient;
 	//消息发送时间标记
@@ -23,7 +25,86 @@ public class MessageChatBean {
 	private int directionMsg;
 	//消息的状态
 	private int statusMsg;
-	public static String STATUS_MSG = "status_msg";
 	//消息是否显示时间
 	private int isShowTime;
+	
+	public String getIdMessage() {
+		return idMessage;
+	}
+	public void setIdMessage(String idMessage) {
+		this.idMessage = idMessage;
+	}
+	public String getIdClient() {
+		return idClient;
+	}
+	public void setIdClient(String idClient) {
+		this.idClient = idClient;
+	}
+	public long getSendTimeStamp() {
+		return sendTimeStamp;
+	}
+	public void setSendTimeStamp(long sendTimeStamp) {
+		this.sendTimeStamp = sendTimeStamp;
+	}
+	public String getMsgText() {
+		return msgText;
+	}
+	public void setMsgText(String msgText) {
+		this.msgText = msgText;
+	}
+	public String getFileUrl() {
+		return fileUrl;
+	}
+	public void setFileUrl(String fileUrl) {
+		this.fileUrl = fileUrl;
+	}
+	public int getImgHeight() {
+		return imgHeight;
+	}
+	public void setImgHeight(int imgHeight) {
+		this.imgHeight = imgHeight;
+	}
+	public int getImgWidth() {
+		return imgWidth;
+	}
+	public void setImgWidth(int imgWidth) {
+		this.imgWidth = imgWidth;
+	}
+	public String getIdConversation() {
+		return idConversation;
+	}
+	public void setIdConversation(String idConversation) {
+		this.idConversation = idConversation;
+	}
+	public String getIdOperated() {
+		return idOperated;
+	}
+	public void setIdOperated(String idOperated) {
+		this.idOperated = idOperated;
+	}
+	public int getTypeMsg() {
+		return typeMsg;
+	}
+	public void setTypeMsg(int typeMsg) {
+		this.typeMsg = typeMsg;
+	}
+	public int getDirectionMsg() {
+		return directionMsg;
+	}
+	public void setDirectionMsg(int directionMsg) {
+		this.directionMsg = directionMsg;
+	}
+	public int getStatusMsg() {
+		return statusMsg;
+	}
+	public void setStatusMsg(int statusMsg) {
+		this.statusMsg = statusMsg;
+	}
+	public int getIsShowTime() {
+		return isShowTime;
+	}
+	public void setIsShowTime(int isShowTime) {
+		this.isShowTime = isShowTime;
+	}
+	
 }

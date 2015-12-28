@@ -300,6 +300,9 @@ public class HomePagefragment extends Fragment implements
 										+ "  " + activity.getLocationLatitude());
 						bean = new ActivityBean();
 						bean.setActyId(activity.getObjectId());
+						if (activity.getCreator() != null) {
+							bean.setCreatorId(activity.getCreator().getObjectId());
+						}
 						bean.setUserId(user.getObjectId());
 						if (activity.getActivityContent() != null) {
 							bean.setActivityContent(""

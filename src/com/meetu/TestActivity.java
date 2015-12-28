@@ -319,6 +319,9 @@ public class TestActivity extends Activity {
 							activityItem = activity;
 							objactyList.add(activity);
 							bean.setActyId(activity.getObjectId());
+							if (activity.getCreator() != null) {
+								bean.setCreatorId(activity.getCreator().getObjectId());
+							}
 							bean.setUserId(user.getObjectId());
 							bean.setActivityContent(activity
 									.getActivityContent().getUrl());
