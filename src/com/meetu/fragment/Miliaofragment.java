@@ -7,7 +7,6 @@ import java.util.Map;
 
 import cc.imeetu.R;
 
-import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
@@ -17,7 +16,6 @@ import com.meetu.activity.miliao.ApplyForMiLiaoActivity;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.activity.miliao.CreationChatActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
-import com.meetu.bean.MemberSeekBean;
 import com.meetu.bean.SeekChatBean;
 import com.meetu.bean.SeekChatInfoBean;
 import com.meetu.bean.UserAboutBean;
@@ -35,12 +33,10 @@ import com.meetu.cloud.wrap.ObjAuthoriseWrap;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjChatWrap;
 import com.meetu.common.Constants;
-import com.meetu.common.Log;
 import com.meetu.common.PerfectInformation;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.ChatmsgsDao;
-import com.meetu.sqlite.MemberSeekDao;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DepthPageTransformer;
 import com.meetu.tools.MyZoomOutPageTransformer;
@@ -90,8 +86,8 @@ OnClickListener {
 	// 权限
 	ObjAuthoriseCategory category = new ObjAuthoriseCategory();
 	ObjAuthoriseApply apply = new ObjAuthoriseApply();
-//	private UserAboutDao userAboutDao;
-	ArrayList<MemberSeekBean> userAboutBeansList = new ArrayList<MemberSeekBean>();
+	private UserAboutDao userAboutDao;
+	ArrayList<UserAboutBean> userAboutBeansList = new ArrayList<UserAboutBean>();
 
 	SeekChatInfoBean chatBean = null;
 
@@ -102,7 +98,6 @@ OnClickListener {
 	ChatmsgsDao chatmsgsDao;
 	
 	List<Boolean> isAddList=new ArrayList<Boolean>();
-	private MemberSeekDao memberSeekDao;
 
 	//空状态相关
 	private RelativeLayout noneFailLayout;//空状态背景
@@ -127,8 +122,7 @@ OnClickListener {
 			}
 			chatmsgsDao=new ChatmsgsDao(getActivity());
 
-//			userAboutDao = new UserAboutDao(getActivity());
-			memberSeekDao=new MemberSeekDao(getActivity());
+			userAboutDao = new UserAboutDao(getActivity());
 			// 获取觅聊列表
 			// getObjChatList();
 
@@ -247,10 +241,8 @@ OnClickListener {
 				if (seekChatBeansList != null && seekChatBeansList.size() != 0) {
 					if (isAdd) {
 						miliaoImv.setImageResource(R.drawable.miliao_in);
-//						List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
-//								Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
-						List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
-						
+						List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
+								Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
 						if(memList.size()<3){
 							joinChatTv.setText("等待开启");
 							Toast.makeText(getActivity(), "觅聊尚未开启", 1000).show();
@@ -285,9 +277,8 @@ OnClickListener {
 					} else {
 						log.e("zcq", "没加入过当前觅聊");
 						miliaoImv.setImageResource(R.drawable.chat_navi_btn_joinchat);
-//						List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(),
-//								Constants.CONVERSATION_TYPE,seekChatBeansList.get(positonNow).getConversationId());
-						List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
+						List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(),
+								Constants.CONVERSATION_TYPE,seekChatBeansList.get(positonNow).getConversationId());
 						if(memList.size() >= 20){
 							joinChatTv.setText("人数已满");
 							Toast.makeText(getActivity(), "觅聊人数已满", 1000).show();
@@ -350,25 +341,15 @@ OnClickListener {
 					chatmsgs.setConversationId(conversation.getConversationId());
 					chatmsgs.setUid(user.getObjectId());
 					chatmsgsDao.insert(chatmsgs);
-					
-//					UserAboutBean aboutBean = new UserAboutBean();
-//					aboutBean.setUserId(user.getObjectId());
-//					aboutBean.setAboutUserId(user.getObjectId());
-//					aboutBean.setAboutType(Constants.CONVERSATION_TYPE);
-//					aboutBean.setAboutColetctionId(conversation.getConversationId());
-//					userAboutDao.saveUserAboutBean(aboutBean);
-					
-					MemberSeekBean memberSeekBean=new MemberSeekBean();
-					memberSeekBean.setConversationId(conversation.getConversationId());
-					memberSeekBean.setConvStatus(""+Constants.NORMAL);
-					memberSeekBean.setMemberSeekId(user.getObjectId());
-					memberSeekBean.setMineId(user.getObjectId());
-					memberSeekBean.setSeekId(seekChatBeansList.get(positonNow).getObjectId());
-					memberSeekDao.saveUserSeek(memberSeekBean);
+					UserAboutBean aboutBean = new UserAboutBean();
+					aboutBean.setUserId(user.getObjectId());
+					aboutBean.setAboutUserId(user.getObjectId());
+					aboutBean.setAboutType(Constants.CONVERSATION_TYPE);
+					aboutBean.setAboutColetctionId(conversation.getConversationId());
+					userAboutDao.saveUserAboutBean(aboutBean);
 
-//					List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
-//							Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
-					List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
+					List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
+							Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
 					miliaoImv.setImageResource(R.drawable.miliao_in);
 					
 				//	((MiliaoChannelFragment)fragmentList.get(positonNow))).setu
@@ -575,7 +556,7 @@ OnClickListener {
 						for(int j=0;j<bean.getMembers().size();j++){
 							userList.add(""+bean.getMembers().get(j).get("userId"));
 						}
-						getMember(userList,""+bean.getConversationId(),""+bean.getObjectId());
+						getMember(userList,""+bean.getConversationId());
 					}
 
 					numberAll.setText("" + seekChatBeansList.size());
@@ -647,10 +628,10 @@ OnClickListener {
 	public void isAddconvesition() {
 		List<String> list = new ArrayList<String>();
 		SeekChatBean chatBean = seekChatBeansList.get(positonNow);
-	//	List<UserAboutBean> aboutlist = userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, chatBean.getConversationId());
-		List<MemberSeekBean> aboutlist = memberSeekDao.queryUserAbout(user.getObjectId(), chatBean.getConversationId());
+		List<UserAboutBean> aboutlist = userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, chatBean.getConversationId());
+
 		for (int i = 0; i < aboutlist.size(); i++) {
-			list.add(aboutlist.get(i).getMemberSeekId());
+			list.add(aboutlist.get(i).getAboutUserId());
 		}
 		for (String string : list) {
 			if (user.getObjectId().equals(string)) {
@@ -662,9 +643,8 @@ OnClickListener {
 		}
 		if(isAdd){
 			miliaoImv.setImageResource(R.drawable.miliao_in);
-//			List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
-//					Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
-			List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
+			List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
+					Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
 			if(memList.size()<3){
 				joinChatTv.setText("等待开启");
 			}else{
@@ -672,9 +652,8 @@ OnClickListener {
 			}
 		}else{
 			miliaoImv.setImageResource(R.drawable.chat_navi_btn_joinchat);
-//			List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
-//					Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
-			List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
+			List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
+					Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
 			if(memList.size()>=20){
 				joinChatTv.setText("人数已满");
 			}else{
@@ -720,25 +699,19 @@ OnClickListener {
 	 * @author lucifer
 	 * @date 2015-11-28
 	 */
-	public void getMember(List<String> list,String conversationId,String seekId) {
-		userAboutBeansList = new ArrayList<MemberSeekBean>();
-		
+	public void getMember(List<String> list,String conversationId) {
+		userAboutBeansList = new ArrayList<UserAboutBean>();
 		if (list != null) {
 			for (String string : list) {
-				MemberSeekBean item = new MemberSeekBean();
-				item.setConversationId(conversationId);
-				item.setConvStatus(""+Constants.NORMAL);
-				item.setMemberSeekId(string);
-				item.setMineId(user.getObjectId());
-				item.setSeekId(seekId);
-				
-
+				UserAboutBean item = new UserAboutBean();
+				item.setUserId(user.getObjectId());
+				item.setAboutType(2);
+				item.setAboutUserId(string);
+				item.setAboutColetctionId(conversationId);
 				userAboutBeansList.add(item);
 			}
 		}
-		Log.e("userAboutBeansList", ""+userAboutBeansList.size());
-		
-		memberSeekDao.saveAllUserSeek(userAboutBeansList);
+		userAboutDao.saveUserAboutList(userAboutBeansList);
 	}
 
 
