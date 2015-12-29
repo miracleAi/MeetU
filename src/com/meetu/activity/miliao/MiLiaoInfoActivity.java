@@ -15,6 +15,8 @@ import com.meetu.activity.ReportActivity;
 import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.adapter.GridRecycleMiLiaoInfoAdapter;
 import com.meetu.adapter.GridRecycleMiLiaoInfoAdapter.OnMiLiaoInfoItemClickCallBack;
+import com.meetu.bean.MemberActivityBean;
+import com.meetu.bean.MemberSeekBean;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunStringCallback;
@@ -26,6 +28,8 @@ import com.meetu.common.Constants;
 import com.meetu.entity.User;
 import com.meetu.entity.UserAbout;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.MemberActivityDao;
+import com.meetu.sqlite.MemberSeekDao;
 import com.meetu.sqlite.MessagesDao;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DensityUtil;
@@ -83,7 +87,8 @@ OnMiLiaoInfoItemClickCallBack {
 	private MessagesDao messageDao;
 	// 会话成员列表
 	List<ObjUser> userList = new ArrayList<ObjUser>();
-	private List<UserAboutBean> beanList = new ArrayList<UserAboutBean>();
+	private List<MemberActivityBean> beanList = new ArrayList<MemberActivityBean>();
+	private List<MemberSeekBean> beanSeekList=new ArrayList<MemberSeekBean>();
 	// 当前用户
 	private ObjUser userMY = new ObjUser();
 	AVUser currentUser = AVUser.getCurrentUser();
@@ -98,7 +103,8 @@ OnMiLiaoInfoItemClickCallBack {
 	
 	private Bitmap loadBitmap=null;
 
-
+	private MemberActivityDao memberActivityDao;
+	private MemberSeekDao memberSeekDao;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +124,8 @@ OnMiLiaoInfoItemClickCallBack {
 		}
 		loadBitmap=BitmapFactory.decodeResource(getResources(), R.drawable.mine_likelist_profile_default);
 		userAboutDao = new UserAboutDao(this);
+		memberActivityDao=new MemberActivityDao(this);
+		memberSeekDao=new MemberSeekDao(this);
 		messageDao = new MessagesDao(this);
 		if (currentUser != null) {
 			// 强制类型转换
@@ -131,7 +139,7 @@ OnMiLiaoInfoItemClickCallBack {
 		initView();
 		log.e("zcq conversationStyle", ""+conversationStyle);
 
-		if (conversationStyle.equals("" + Constants.CONVERSATION_TYPE)) {
+		if (conversationStyle.equals(""+Constants.SEEKMSG)) {
 			ObjChatMessage.getChatCreater(conv, new ObjFunStringCallback() {
 
 				@Override
@@ -160,7 +168,7 @@ OnMiLiaoInfoItemClickCallBack {
 			miliaoLayout.setVisibility(View.VISIBLE);
 			reportLayout.setVisibility(View.VISIBLE);
 			titleTextView.setText("觅聊信息");
-		} else if (conversationStyle.equals("1")) {
+		} else if (conversationStyle.equals(""+Constants.ACTYSG)) {
 			if (userMY.getProfileClip() != null) {
 				finalBitmap
 				.display(userCreator, userMY.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(MiLiaoInfoActivity.this, 40), DensityUtil.dip2px(MiLiaoInfoActivity.this, 40)),loadBitmap);	
@@ -178,11 +186,7 @@ OnMiLiaoInfoItemClickCallBack {
 	}
 
 	private void loadData2() {
-		// TODO Auto-generated method stub
-		// for(UserAbout user:mlist){
-		// user.setIsDetele(false);
-		// mList2.add(user);
-		// }
+		
 		if (conversationStyle.equals("2") && isCreator == true) {
 
 
@@ -221,24 +225,36 @@ OnMiLiaoInfoItemClickCallBack {
 
 		// 加载网络数据
 		objUsersList = new ArrayList<ObjUser>();
-		if (conversationStyle.equals("1")) {
+		if (conversationStyle.equals(""+Constants.ACTYSG)) {
 			// 活动群聊
 
-			beanList = userAboutDao.queryUserAbout(userMY.getObjectId(),
-					Constants.CONVERSATION_TYPE, conversationId);
-		} else if (conversationStyle.equals("2")) {
+//			beanList = userAboutDao.queryUserAbout(userMY.getObjectId(),
+//					Constants.CONVERSATION_TYPE, conversationId);
+			beanList=memberActivityDao.queryUserAbout(userMY.getObjectId(), conversationId);
+			List<String> list=new ArrayList<String>();
+			for(int i=0;i<beanList.size();i++){
+				list.add(beanList.get(i).getMemberId());
+			}
+			if (beanList != null) {
+				getUsersListInfo(list);
+
+			}
+			
+		} else if (conversationStyle.equals(""+Constants.SEEKMSG)) {
 			// 觅聊群聊
-			beanList = userAboutDao.queryUserAbout(userMY.getObjectId(),
-					Constants.CONVERSATION_TYPE, conversationId);
+//			beanList = userAboutDao.queryUserAbout(userMY.getObjectId(),
+//					Constants.CONVERSATION_TYPE, conversationId);
+			beanSeekList=memberSeekDao.queryUserAbout(userMY.getObjectId(), conversationId);
+			List<String> list=new ArrayList<String>();
+			for(int i=0;i<beanSeekList.size();i++){
+				list.add(beanSeekList.get(i).getMemberSeekId());
+			}
+			if (beanSeekList != null) {
+				getUsersListInfo(list);
+
+			}
 
 		}
-		log.e("zcq", "beanList==" + beanList);
-
-		if (beanList != null) {
-			getUsersListInfo(beanList);
-
-		}
-
 	}
 
 	private void initView() {
@@ -371,7 +387,8 @@ OnMiLiaoInfoItemClickCallBack {
 				if(result){
 					log.e("zcq", "退出成功");
 					Toast.makeText(getApplicationContext(), "退出成功", Toast.LENGTH_SHORT).show();
-					userAboutDao.deleteUserTypeUserId(userMY.getObjectId(), 2, conversationId, userMY.getObjectId());
+//					userAboutDao.deleteUserTypeUserId(userMY.getObjectId(), 2, conversationId, userMY.getObjectId());
+					memberSeekDao.deleteUserTypeUserId(userMY.getObjectId(), conversationId, userMY.getObjectId());
 					messageDao.deleteConv(userMY.getObjectId(), conversationId);
 					Intent intent=getIntent();
 					setResult(RESULT_OK, intent);
@@ -502,11 +519,11 @@ OnMiLiaoInfoItemClickCallBack {
 	 * @author lucifer
 	 * @date 2015-11-17
 	 */
-	private void getUsersListInfo(final List<UserAboutBean> list) {
+	private void getUsersListInfo(final List<String> list) {
 		userList = new ArrayList<ObjUser>();
 		mlist = new ArrayList<UserAbout>();
 		for (int i = 0; i < list.size(); i++) {
-			ObjUserWrap.getObjUser(list.get(i).getAboutUserId(),
+			ObjUserWrap.getObjUser(list.get(i),
 					new ObjUserInfoCallback() {
 
 				@Override
@@ -588,7 +605,8 @@ OnMiLiaoInfoItemClickCallBack {
 				if(result){
 					log.e("zcq", "踢出成功");
 					Toast.makeText(getApplicationContext(), "踢出成功", Toast.LENGTH_SHORT).show();
-					userAboutDao.deleteUserTypeUserId(userMY.getObjectId(), 2, conversationId, memberId);
+		//			userAboutDao.deleteUserTypeUserId(userMY.getObjectId(), 2, conversationId, memberId);
+					memberSeekDao.deleteUserTypeUserId(userMY.getObjectId(), conversationId, memberId);
 				}else{
 					log.e("zcq", "踢出失败");
 					Toast.makeText(getApplicationContext(), "踢出失败", Toast.LENGTH_SHORT).show();

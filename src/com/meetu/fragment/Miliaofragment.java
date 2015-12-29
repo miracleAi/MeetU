@@ -351,13 +351,6 @@ OnClickListener {
 					chatmsgs.setUid(user.getObjectId());
 					chatmsgsDao.insert(chatmsgs);
 					
-//					UserAboutBean aboutBean = new UserAboutBean();
-//					aboutBean.setUserId(user.getObjectId());
-//					aboutBean.setAboutUserId(user.getObjectId());
-//					aboutBean.setAboutType(Constants.CONVERSATION_TYPE);
-//					aboutBean.setAboutColetctionId(conversation.getConversationId());
-//					userAboutDao.saveUserAboutBean(aboutBean);
-					
 					MemberSeekBean memberSeekBean=new MemberSeekBean();
 					memberSeekBean.setConversationId(conversation.getConversationId());
 					memberSeekBean.setConvStatus(""+Constants.NORMAL);
@@ -371,9 +364,10 @@ OnClickListener {
 					List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
 					miliaoImv.setImageResource(R.drawable.miliao_in);
 					
-				//	((MiliaoChannelFragment)fragmentList.get(positonNow))).setu
+			
 					
 					isAdd=true;
+					
 					((MiliaoChannelFragment) fragmentList.get(positonNow)).setUserInfo();
 		
 					if(memList.size()<3){
