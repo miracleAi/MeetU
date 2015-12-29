@@ -1001,7 +1001,7 @@ public class NotesChannelFragment extends Fragment implements OnClickListener,
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put(Constants.SCRIP_ID, objScrip.getObjectId());
-		map.put(Constants.CHAT_MSG_TYPE, Constants.SHOW_SCRIPT);
+		map.put(Constants.CHAT_MSG_TYPE, Constants.SHOW_SCRIPT_MSG);
 		map.put(Constants.SCRIP_X, chatmsgs.getScripX());
 		map.put(Constants.SCRIP_Y, chatmsgs.getScripY());
 

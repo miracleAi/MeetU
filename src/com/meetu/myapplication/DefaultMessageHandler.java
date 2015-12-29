@@ -27,6 +27,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 	private Context context;
 	ChatViewInterface updateBean;
 	String conversationId = "";
+	AVUser user ;
 
 	public DefaultMessageHandler(Context context) {
 		this.context = context;
@@ -48,9 +49,9 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		super.onMessage(message, conversation, client);
 		if (AVUser.getCurrentUser() == null) {
 			return;
+		}else{
+			user = AVUser.getCurrentUser();
 		}
-		Intent intent = new Intent(Constants.RECEIVE_MSG);
-		context.sendBroadcast(intent);
 		if (message instanceof AVIMTextMessage) {
 			createChatMsg(conversation, message, msgDao, chatDao);
 			return;
@@ -72,93 +73,168 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 	public void createChatMsg(AVIMConversation conversation,
 			AVIMMessage message, MessagesDao msgDao, ChatmsgsDao chatDao) {
 		AVIMTextMessage msg = ((AVIMTextMessage) message);
-		Chatmsgs chatBean = new Chatmsgs();
 		int msgType = (Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
-		int derection = ChatMsgUtils.getDerection(msg.getMessageIOType());
-		
-		log.e("zcq ", "application 接收到文本消息 "+"msgType =="+msgType+" derection=="+derection);
-		if (msgType == Constants.SHOW_SCRIPT) {
-			chatBean.setChatMsgType(Constants.SHOW_SCRIPT);
-			String script = (String) msg.getAttrs().get(Constants.SCRIP_ID);
-			int scripx = (Integer) msg.getAttrs().get(Constants.SCRIP_X);
-			int scripy = (Integer) msg.getAttrs().get(Constants.SCRIP_Y);
-			chatBean.setScriptId(script);
-			chatBean.setScripX(scripx);
-			chatBean.setScripY(scripy);
-		} else {
-			if (msgType == Constants.SHOW_TEXT
-					&& derection == Constants.IOTYPE_OUT) {
-				chatBean.setChatMsgType(Constants.SHOW_SEND_TEXT);
-			} else if (msgType == Constants.SHOW_TEXT
-					&& derection == Constants.IOTYPE_IN) {
-				chatBean.setChatMsgType(Constants.SHOW_RECV_TEXT);
-			} else {
-				chatBean.setChatMsgType(msgType);
-			}
-			boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
-			chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
+		if(msgType == Constants.TYPE_SCRIPT){
+			saveScript(msg,conversation);
+		}else{
+			saveMsg(msgType,msg,conversation);
 		}
-		chatBean.setUid(AVUser.getCurrentUser().getObjectId());
-		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
-		chatBean.setClientId(msg.getFrom());
-		chatBean.setMessageId(msg.getMessageId());
-		chatBean.setConversationId(msg.getConversationId());
-		chatBean.setChatMsgDirection(derection);
-		chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
-		chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
-		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
-		chatBean.setContent(msg.getText());
+	}
+	//保存普通消息
+	private void saveMsg(int msgType, AVIMTextMessage msg, AVIMConversation conversation) {
+		String appendUserId = (String) msg.getAttrs().get(Constants.APPEND_USER_ID);
+		int direction = 0;
+		if(msg.getFrom().equals(user.getObjectId())){
+			direction = Constants.IOTYPE_OUT;
+		}else{
+			direction = Constants.IOTYPE_IN;
+		}
+		MessageChatBean chatBean = new MessageChatBean();
+		switch (msgType) {
+		case Constants.TYPE_TEXT:
+			if(direction == Constants.IOTYPE_IN){
+				chatBean.setTypeMsg(Constants.SHOW_RECEIVE_TYPE_TEXT);
+			}else{
+				chatBean.setTypeMsg(Constants.SHOW_SEND_TYPE_TEXT);
+			}
+			break;
+		case Constants.MEMBER_ADD:
+			if(appendUserId != null && appendUserId.equals(user.getObjectId())){
+				chatBean.setTypeMsg(Constants.SHOW_SELF_ADD);
+			}else{
+				chatBean.setTypeMsg(Constants.SHOW_MEMBER_ADD);
+			}
+			break;
+		case Constants.KICK_OUT:
+			if(appendUserId != null && appendUserId.equals(user.getObjectId())){
+				chatBean.setTypeMsg(Constants.SHOW_SELF_KICK);
+			}else{
+				chatBean.setTypeMsg(Constants.SHOW_MEMBER_KICK);
+			}
+			break;
+		case Constants.QUIT:
+			if(appendUserId != null && appendUserId.equals(user.getObjectId())){
+				chatBean.setTypeMsg(Constants.SHOW_SELF_QUIT);
+			}else{
+				chatBean.setTypeMsg(Constants.SHOW_MEMBER_QUIT);
+			}
+			break;
+		case Constants.CONV_DISSOLVE:
+			chatBean.setTypeMsg(Constants.SHOW_CONV_DISSOLVE);
+			break;
+		case Constants.CONV_DISMISS:
+			chatBean.setTypeMsg(Constants.SHOW_CONV_DISMISS);
+			break;
+		case Constants.GAG:
+			if(appendUserId != null && appendUserId.equals(user.getObjectId())){
+				chatBean.setTypeMsg(Constants.SHOW_SELF_GAG);
+			}else{
+				chatBean.setTypeMsg(Constants.SHOW_MEMBER_GAG);
+			}
+			break;
+		case Constants.UN_GAG:
+			if(appendUserId != null && appendUserId.equals(user.getObjectId())){
+				chatBean.setTypeMsg(Constants.SHOW_SELF_UN_GAG);
+			}else{
+				chatBean.setTypeMsg(Constants.SHOW_MEMBER_UN_GAG);
+			}
+			break;
+		default:
+			break;
+		}
+		boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
+		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
+		if(appendUserId != null && !"".equals(appendUserId)){
+			chatBean.setIdOperated(appendUserId);
+		}
+		if(msg.getText() != null){
+			chatBean.setMsgText(msg.getText());
+		}
+		chatBean.setIdClient(msg.getFrom());
+		chatBean.setIdMessage(msg.getMessageId());
+		chatBean.setIdConversation(msg.getConversationId());
+		chatBean.setDirectionMsg(direction);
+		chatBean.setStatusMsg(ChatMsgUtils.getStatus(msg.getMessageStatus()));
+		chatBean.setSendTimeStamp(msg.getTimestamp());
 		// 消息插入数据库库
-		chatDao.insert(chatBean);
+		//chatDao.insert(chatBean);
 		// 未读消息加1
-		msgDao.updateUnread(AVUser.getCurrentUser().getObjectId(),
-				conversation.getConversationId());
-		MessageChatBean bean = new MessageChatBean();
+		//msgDao.updateUnread(AVUser.getCurrentUser().getObjectId(),
+				//conversation.getConversationId());
 		if(conversationId != null && !"".equals(conversationId)){
-			updateBean.updateView(bean);
+			updateBean.updateView(chatBean);
 		}else{
 			if(msg.getConversationId().equals(conversationId)){
-				updateBean.updateView(bean);	
+				updateBean.updateView(chatBean);	
 			}
 		}
 	}
-
+	//保存纸条消息
+	private void saveScript(AVIMTextMessage msg, AVIMConversation conversation) {
+		String script = (String) msg.getAttrs().get(Constants.SCRIP_ID);
+		int scripx = (Integer) msg.getAttrs().get(Constants.SCRIP_X);
+		int scripy = (Integer) msg.getAttrs().get(Constants.SCRIP_Y);
+		int direction = 0;
+		if(msg.getFrom().equals(user.getObjectId())){
+			direction = Constants.IOTYPE_OUT;
+		}else{
+			direction = Constants.IOTYPE_IN;
+		}
+		Chatmsgs scriptBean = new Chatmsgs();
+		scriptBean.setChatMsgType(Constants.SHOW_SCRIPT_MSG);
+		scriptBean.setScriptId(script);
+		scriptBean.setScripX(scripx);
+		scriptBean.setScripY(scripy);
+		scriptBean.setUid(AVUser.getCurrentUser().getObjectId());
+		scriptBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
+		scriptBean.setClientId(msg.getFrom());
+		scriptBean.setMessageId(msg.getMessageId());
+		scriptBean.setConversationId(msg.getConversationId());
+		scriptBean.setChatMsgDirection(direction);
+		scriptBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
+		scriptBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
+		scriptBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
+		scriptBean.setContent(msg.getText());
+		// 消息插入数据库库
+		chatDao.insert(scriptBean);
+		// 未读消息加1
+		msgDao.updateUnread(AVUser.getCurrentUser().getObjectId(),
+				msg.getConversationId());
+	}
 	// 图片消息处理方法
 	public void createChatPicMsg(AVIMConversation conversation,
 			AVIMMessage message, MessagesDao msgDao, ChatmsgsDao chatDao) {
 		AVIMImageMessage msg = ((AVIMImageMessage) message);
-		Chatmsgs chatBean = new Chatmsgs();
+		MessageChatBean chatBean = new MessageChatBean();
 		int msgType = (Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
-		int derection = ChatMsgUtils.getDerection(msg.getMessageIOType());
-		if (msgType == Constants.SHOW_IMG && derection == Constants.IOTYPE_OUT) {
-			chatBean.setChatMsgType(Constants.SHOW_SEND_IMG);
-			log.e("zcq", "application"+"图片msgType插入=="+Constants.SHOW_SEND_IMG);
-		} else if (msgType == Constants.SHOW_IMG
-				&& derection == Constants.IOTYPE_IN) {
-			chatBean.setChatMsgType(Constants.SHOW_RECV_IMG);
-			log.e("zcq", "application"+"图片msgType插入=="+Constants.SHOW_RECV_IMG);
-		} else {
-			log.e("zcq", "application"+"图片msgType插入=="+msgType);
-			chatBean.setChatMsgType(msgType);
+		int direction = 0;
+		if(msg.getFrom().equals(user.getObjectId())){
+			direction = Constants.IOTYPE_OUT;
+		}else{
+			direction = Constants.IOTYPE_IN;
 		}
-		chatBean.setUid(AVUser.getCurrentUser().getObjectId());
-		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
-		chatBean.setClientId(msg.getFrom());
-		chatBean.setMessageId(msg.getMessageId());
-		chatBean.setConversationId(msg.getConversationId());
-		chatBean.setChatMsgDirection(derection);
-		chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
+		if (msgType == Constants.TYPE_IMG && direction == Constants.IOTYPE_OUT) {
+			if(direction == Constants.IOTYPE_OUT){
+				chatBean.setTypeMsg(Constants.SHOW_SEND_TYPE_IMG);
+			}else{
+				chatBean.setTypeMsg(Constants.SHOW_RECEIVE_TYPE_IMG);
+			}
+		} 
 		boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
 		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
-		chatBean.setSendTimeStamp(String.valueOf(msg.getTimestamp()));
-		chatBean.setDeliveredTimeStamp(String.valueOf(msg.getReceiptTimestamp()));
-		chatBean.setImgMsgImageUrl(msg.getAVFile().getThumbnailUrl(true, DensityUtil.dip2px(context, 160), DensityUtil.dip2px(context, 160),100,"jpg"));
-		chatBean.setImgMsgImageHeight(msg.getHeight());
-		chatBean.setImgMsgImageWidth(msg.getWidth());
+		chatBean.setIdClient(msg.getFrom());
+		chatBean.setIdMessage(msg.getMessageId());
+		chatBean.setIdConversation(msg.getConversationId());
+		chatBean.setDirectionMsg(direction);
+		chatBean.setStatusMsg(ChatMsgUtils.getStatus(msg.getMessageStatus()));
+		chatBean.setSendTimeStamp(msg.getTimestamp());
+		chatBean.setFileUrl(msg.getAVFile().getThumbnailUrl(true, DensityUtil.dip2px(context, 160), DensityUtil.dip2px(context, 160),100,"jpg"));
+		chatBean.setImgWidth(msg.getWidth());
+		chatBean.setImgHeight(msg.getHeight());
 		// 消息插入数据库
-		chatDao.insert(chatBean);
+		//chatDao.insert(chatBean);
 		// 未读消息加1
-		msgDao.updateUnread(AVUser.getCurrentUser().getObjectId(),
-				conversation.getConversationId());
+		//msgDao.updateUnread(AVUser.getCurrentUser().getObjectId(),
+				//conversation.getConversationId());
 	}
 }

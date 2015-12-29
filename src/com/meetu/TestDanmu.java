@@ -324,7 +324,7 @@ public class TestDanmu extends Activity {
 			// TODO Auto-generated method stub
 			super.onMessage(message, conversation, client);
 			switch (message.getMessageType()) {
-			case Constants.TEXT_TYPE:
+			case -1:
 				if (conversation.getConversationId().equals(conversationId)) {
 					AVIMTextMessage msg = ((AVIMTextMessage) message);
 					BarrageMsgBean bean = new BarrageMsgBean();

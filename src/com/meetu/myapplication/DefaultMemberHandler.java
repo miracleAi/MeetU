@@ -88,7 +88,7 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 			}
 			// 普通群，直接保存
 			Chatmsgs chatBean = new Chatmsgs();
-			chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
+			//chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
 			chatBean.setClientId(client.getClientId());
 			chatBean.setNowJoinUserId(client.getClientId());
 			chatBean.setUid(user.getObjectId());
@@ -120,7 +120,7 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 		msgDao.updateUnread(user.getObjectId(),
 				conversation.getConversationId());
 		Chatmsgs chatBean = new Chatmsgs();
-		chatBean.setChatMsgType(Constants.SHOW_SELF_DEL);
+		//chatBean.setChatMsgType(Constants.SHOW_SELF_DEL);
 		chatBean.setClientId(client.getClientId());
 		chatBean.setNowJoinUserId(client.getClientId());
 		chatBean.setUid(user.getObjectId());

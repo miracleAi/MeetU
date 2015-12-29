@@ -113,9 +113,8 @@ public class MyApplication extends Application {
 				getApplicationContext());
 		AVIMMessageManager
 		.registerDefaultMessageHandler(defaultMsgHandler);
-		 AVIMMessageManager.setConversationEventHandler(new
-		 DefaultMemberHandler(getApplicationContext()));
-
+		 /*AVIMMessageManager.setConversationEventHandler(new
+		 DefaultMemberHandler(getApplicationContext()));*/
 		if (null != AVUser.getCurrentUser()) {
 			chatClient = AVIMClient.getInstance(AVUser.getCurrentUser()
 					.getObjectId());

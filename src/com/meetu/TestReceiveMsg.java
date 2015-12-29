@@ -94,14 +94,13 @@ public class TestReceiveMsg extends Activity {
 			AVIMTypedMessage message) {
 		AVIMTextMessage msg = ((AVIMTextMessage) message);
 		Chatmsgs chatBean = new Chatmsgs();
-		chatBean.setChatMsgType(Constants.TEXT_TYPE);
+		chatBean.setChatMsgType(-1);
 		chatBean.setUid(user.getObjectId());
 		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
 		chatBean.setClientId(msg.getFrom());
 		chatBean.setMessageId(msg.getMessageId());
 		chatBean.setConversationId(msg.getConversationId());
-		chatBean.setChatMsgDirection(ChatMsgUtils.getDerection(msg
-				.getMessageIOType()));
+		chatBean.setChatMsgDirection(1);
 		chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
 		boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
 		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
@@ -124,14 +123,13 @@ public class TestReceiveMsg extends Activity {
 			AVIMTypedMessage message) {
 		AVIMImageMessage msg = ((AVIMImageMessage) message);
 		Chatmsgs chatBean = new Chatmsgs();
-		chatBean.setChatMsgType(Constants.IMAGE_TYPE);
+		chatBean.setChatMsgType(-2);
 		chatBean.setUid(user.getObjectId());
 		chatBean.setMessageCacheId(String.valueOf(System.currentTimeMillis()));
 		chatBean.setClientId(msg.getFrom());
 		chatBean.setMessageId(msg.getMessageId());
 		chatBean.setConversationId(msg.getConversationId());
-		chatBean.setChatMsgDirection(ChatMsgUtils.getDerection(msg
-				.getMessageIOType()));
+		chatBean.setChatMsgDirection(1);
 		chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
 		boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
 		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
@@ -185,7 +183,7 @@ public class TestReceiveMsg extends Activity {
 														// TODO Auto-generated
 														// method stub
 														Chatmsgs chatBean = new Chatmsgs();
-														chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
+														chatBean.setChatMsgType(3);
 														chatBean.setNowJoinUserId(client
 																.getClientId());
 														chatBean.setUid(user
@@ -223,7 +221,7 @@ public class TestReceiveMsg extends Activity {
 			for (String userId : array) {
 				// 普通群，直接保存
 				Chatmsgs chatBean = new Chatmsgs();
-				chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
+				chatBean.setChatMsgType(3);
 				chatBean.setNowJoinUserId(client.getClientId());
 				chatBean.setUid(user.getObjectId());
 				chatBean.setNowJoinUserId(userId);
@@ -259,7 +257,7 @@ public class TestReceiveMsg extends Activity {
 			msgDao.updateUnread(user.getObjectId(),
 					conversation.getConversationId());
 			Chatmsgs chatBean = new Chatmsgs();
-			chatBean.setChatMsgType(Constants.SHOW_MEMBERCHANGE);
+			chatBean.setChatMsgType(3);
 			chatBean.setNowJoinUserId(client.getClientId());
 			chatBean.setUid(user.getObjectId());
 			chatBean.setMessageCacheId(String.valueOf(System
@@ -278,10 +276,10 @@ public class TestReceiveMsg extends Activity {
 			// TODO Auto-generated method stub
 			super.onMessage(message, conversation, client);
 			switch (message.getMessageType()) {
-			case Constants.TEXT_TYPE:
+			case -1:
 				createChatMsg(conversation, message);
 				break;
-			case Constants.IMAGE_TYPE:
+			case -2:
 				createChatPicMsg(conversation, message);
 				break;
 			default:

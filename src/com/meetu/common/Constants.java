@@ -63,6 +63,86 @@ public class Constants {
 	 * */
 	public static final int GROUP_CREATE = 100;
 	/**
+	 * *云端，必须与iOS保持一直,标记消息类型
+	 */
+	//文本
+	public static final int TYPE_TEXT = 1;
+	//图片
+	public static final int TYPE_IMG = 2;
+	//音频
+	public static final int TYPE_AUDIO = 3;
+	//视频
+	public static final int TYPE_VEDIO = 4;
+	//成员加入
+	public static final int MEMBER_ADD = 5;
+	//纸条消息
+	public static final int TYPE_SCRIPT = 6;
+	//成员踢出
+	public static final int KICK_OUT = 7;
+	//退出
+	public static final int QUIT = 8;
+	//禁言
+	public static final int GAG = 9;
+	//取消禁言
+	public static final int UN_GAG = 10;
+	//解散聊天
+	public static final int CONV_DISSOLVE = 11;
+	//聊天失效
+	public static final int CONV_DISMISS = 12;
+	//系统消息-文本
+	public static final int SYS_TYPE_TEXT = 101;
+	//系统消息——活动反馈
+	public static final int SYS_ACTY_FEEDBACK = 102;
+	//系统消息-互相关注
+	public static final int SYS_BOTH_FOLLOW = 103;
+	//系统消息-关注的人参加活动
+	public static final int SYS_FOLLOW_JOIN = 104;
+	//系统消息-照片点赞
+	public static final int SYS_PHOTO_PRAISE = 105;
+	/**
+	 * 消息显示类型，对应数据库存储消息类型
+	 * （1-8为聊天面板显示消息，9位纸条消息）
+	 * （9以后的消息类型标记可能在其他地方用到）
+	 * */
+	//发送文本消息
+	public static final int SHOW_SEND_TYPE_TEXT = 1;
+	//接收文本消息
+	public static final int SHOW_RECEIVE_TYPE_TEXT = 2;
+	//发送图片消息
+	public static final int SHOW_SEND_TYPE_IMG = 3;
+	//接收图片消息
+	public static final int SHOW_RECEIVE_TYPE_IMG = 4;
+	//群聊消失
+	public static final int SHOW_CONV_DISMISS = 5;
+	//纸条消息
+	public static final int SHOW_SCRIPT_MSG = 6;
+	//成员加入消息
+	public static final int SHOW_MEMBER_ADD = 7;
+	//自己加入消息
+	public static final int SHOW_SELF_ADD = 8;
+	//自己被踢出消息
+	public static final int SHOW_SELF_KICK = 9;
+	//音频
+	public static final int SHOW_TYPE_AUDIO = 10;
+	//视频
+	public static final int SHOW_TYPE_VEDIO = 11;
+	//成员踢出
+	public static final int SHOW_MEMBER_KICK = 12;
+	//本人退出
+	public static final int SHOW_SELF_QUIT = 13;
+	//成员退出
+	public static final int SHOW_MEMBER_QUIT = 14;
+	//本人禁言
+	public static final int SHOW_SELF_GAG = 15;
+	//成员禁言
+	public static final int SHOW_MEMBER_GAG = 16;
+	//本人取消禁言
+	public static final int SHOW_SELF_UN_GAG = 17;
+	//成员取消禁言
+	public static final int SHOW_MEMBER_UN_GAG = 18;
+	//解散聊天
+	public static final int SHOW_CONV_DISSOLVE = 19;
+	/**
 	 * 消息类型常量与leancloud对应
 	 * */
 	public static final int TEXT_TYPE = -1;
@@ -138,6 +218,8 @@ public class Constants {
 	public static final String SCRIP_ID = "ScripId";
 	public static final String SCRIP_X = "ScripX";
 	public static final String SCRIP_Y = "ScripY";
+	//相关用户ID
+	public static final String APPEND_USER_ID = "userId";
 	/**
 	 * 用户集合类型
 	 * */

@@ -348,13 +348,13 @@ public class TestMsgActivity extends Activity {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (isScrip) {
 			map.put(Constants.SCRIP_ID, scripCurrent.getObjectId());
-			map.put(Constants.CHAT_MSG_TYPE, Constants.SHOW_SCRIPT);
+			map.put(Constants.CHAT_MSG_TYPE, 6);
 			map.put(Constants.SCRIP_X, 500);
 			map.put(Constants.SCRIP_Y, 100);
 		} else {
 			// 测试数据，实际为最新一条消息发送时间
 			long l = System.currentTimeMillis() - 10000;
-			map.put(Constants.CHAT_MSG_TYPE, Constants.SHOW_TEXT);
+			map.put(Constants.CHAT_MSG_TYPE, -1);
 			map.put(Constants.IS_SHOW_TIME, ChatMsgUtils.isShowChatTime(l));
 		}
 		msg.setAttrs(map);
@@ -384,13 +384,13 @@ public class TestMsgActivity extends Activity {
 			Map<String, Object> map = new HashMap<String, Object>();
 			if (isScrip) {
 				map.put(Constants.SCRIP_ID, scripCurrent.getObjectId());
-				map.put(Constants.CHAT_MSG_TYPE, Constants.SHOW_SCRIPT);
+				map.put(Constants.CHAT_MSG_TYPE, 6);
 				map.put(Constants.SCRIP_X, 500);
 				map.put(Constants.SCRIP_Y, 100);
 			} else {
 				// 测试数据，实际为最新一条消息发送时间
 				long l = System.currentTimeMillis() - 10000;
-				map.put(Constants.CHAT_MSG_TYPE, Constants.SHOW_IMG);
+				map.put(Constants.CHAT_MSG_TYPE, -2);
 				map.put(Constants.IS_SHOW_TIME, ChatMsgUtils.isShowChatTime(l));
 			}
 			msg.setAttrs(map);
