@@ -360,7 +360,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 	//	List<UserAboutBean> list2=userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, seekChatBean.getConversationId());
 		
 		 
-		List<MemberSeekBean> list2=memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBean.getConversationId());
+		List<MemberSeekBean> list2=memberSeekDao.queryUserAbout(user.getObjectId(),seekChatBean.getConversationId());
 		
 		for(int i=0;i<list2.size();i++){
 			list.add(list2.get(i).getMemberSeekId());

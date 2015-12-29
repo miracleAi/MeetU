@@ -13,14 +13,17 @@ import cc.imeetu.R;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
+
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.meetu.activity.messages.FollowActivity;
 import com.meetu.activity.messages.LitterNoteActivity;
 import com.meetu.activity.messages.SystemMsgActivity;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.activity.miliao.EmojiParser;
-import com.meetu.activity.miliao.XmlEmojifPullHelper;
+
 import com.meetu.adapter.MessagesListAdapter;
+import com.meetu.bean.MemberActivityBean;
+import com.meetu.bean.MemberSeekBean;
 import com.meetu.bean.MessageChatBean;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjConversationListCallback;
@@ -32,6 +35,7 @@ import com.meetu.cloud.utils.DateUtils;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjSysMsgWrap;
 import com.meetu.common.Constants;
+import com.meetu.common.Log;
 import com.meetu.common.PerfectInformation;
 import com.meetu.common.SharepreferencesUtils;
 import com.meetu.entity.ChatEmoji;
@@ -39,6 +43,8 @@ import com.meetu.entity.Messages;
 import com.meetu.myapplication.DefaultMessageHandler;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.EmojisDao;
+import com.meetu.sqlite.MemberActivityDao;
+import com.meetu.sqlite.MemberSeekDao;
 import com.meetu.sqlite.MessagesDao;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.view.ChatViewInterface;
@@ -89,10 +95,14 @@ OnClickListener,ChatViewInterface{
 	MyReceiver mr = null;
 
 	//
-	private UserAboutDao userAboutDao;
-	private ArrayList<UserAboutBean> userAboutBeansList = new ArrayList<UserAboutBean>();
+//	private UserAboutDao userAboutDao;
+	private ArrayList<MemberSeekBean> userAboutBeansList = new ArrayList<MemberSeekBean>();
+	private List<MemberActivityBean> memberActivityBeans=new ArrayList<MemberActivityBean>();
 	long scanTime = 0;
 	public boolean isEnd = true;
+	
+	MemberSeekDao memberSeekDao;
+	MemberActivityDao memberActivityDao;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -111,7 +121,9 @@ OnClickListener,ChatViewInterface{
 		}
 		scanTime = SharepreferencesUtils.getInstance().getSystemScanTime(getActivity(), SharepreferencesUtils.SYS_MSG_SCAN, 0);
 		messagesDao = new MessagesDao(getActivity());
-		userAboutDao = new UserAboutDao(getActivity());
+//		userAboutDao = new UserAboutDao(getActivity());
+		memberSeekDao=new MemberSeekDao(getActivity());
+		memberActivityDao=new MemberActivityDao(getActivity());
 
 		loadEmoji(getActivity());
 
@@ -350,11 +362,9 @@ OnClickListener,ChatViewInterface{
 					messagesDao.updeteStatus(user.getObjectId());
 
 					ArrayList<Messages> list = new ArrayList<Messages>();
-					log.e("zcq",
-							"user.getObjectId()==" + user.getObjectId());
+					Log.e("convList.size()", ""+convList.size());
+				//	log.e("zcq","user.getObjectId()==" + user.getObjectId());
 					for (int i = 0; i < convList.size(); i++) {
-
-						log.e("zcq iii===", "" + i);
 						AVIMConversation conversation = convList.get(i);
 
 						// 保存到本地
@@ -408,23 +418,51 @@ OnClickListener,ChatViewInterface{
 	 */
 	public void getMember(AVIMConversation covn) {
 
-		userAboutBeansList = new ArrayList<UserAboutBean>();
+		userAboutBeansList = new ArrayList<MemberSeekBean>();
+		memberActivityBeans=new ArrayList<MemberActivityBean>();
 
 		List<String> list = covn.getMembers();
-		if (list != null) {
-			for (String string : list) {
-				UserAboutBean item = new UserAboutBean();
-				item.setUserId(user.getObjectId());
-				item.setAboutType(2);
-				item.setAboutUserId(string);
-				item.setAboutColetctionId(covn.getConversationId());
-				userAboutBeansList.add(item);
-			}
+		Object type= covn.getAttribute("cType");
+		Log.e("type", ""+type );
+		Object appendId= covn.getAttribute("appendId");
+		Log.e("appendId", appendId.toString());
+		
+		if(type.toString().equals("1")){
+			if (list != null) {
+				for (String string : list) {
+					MemberActivityBean item = new MemberActivityBean();
+					item.setActivityId(""+appendId);
+					item.setConversationId(covn.getConversationId());
+					item.setConvStatus(""+Constants.NORMAL);
+					item.setMemberId(string);
+					item.setMineId(user.getObjectId());
+					
+					
+					memberActivityBeans.add(item);
+				}
 
+			}
+			memberActivityDao.deleteByConv(user.getObjectId(), covn.getConversationId());
+			memberActivityDao.saveAllUserActivity(memberActivityBeans);
 		}
-		userAboutDao.deleteByType(user.getObjectId(), 2,
-				covn.getConversationId());
-		userAboutDao.saveUserAboutList(userAboutBeansList);
+		if(type.toString().equals("2")){
+			if (list != null) {
+				for (String string : list) {
+					MemberSeekBean item = new MemberSeekBean();
+					item.setConversationId(covn.getConversationId());
+					item.setConvStatus(""+Constants.NORMAL);
+					item.setMemberSeekId(string);
+					item.setMineId(user.getObjectId());
+					item.setSeekId(""+appendId);
+					
+					userAboutBeansList.add(item);
+				}
+
+			}
+			memberSeekDao.deleteByConv(user.getObjectId(), covn.getConversationId());
+			memberSeekDao.saveAllUserSeek(userAboutBeansList);
+		}
+		
 
 	}
 	@Override

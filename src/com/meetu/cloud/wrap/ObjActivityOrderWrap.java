@@ -100,6 +100,7 @@ public class ObjActivityOrderWrap {
 			}
 		});
 	}
+	
 	//查询我是否报名，若报名返回订单
 	public static void queryIsOrder(ObjActivity activity,ObjUser user,final ObjActivityOrderCallback callback){
 		AVQuery<ObjActivityOrder> query = AVObject

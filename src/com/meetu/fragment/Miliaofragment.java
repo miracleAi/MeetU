@@ -16,6 +16,7 @@ import com.meetu.activity.miliao.ApplyForMiLiaoActivity;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.activity.miliao.CreationChatActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
+import com.meetu.bean.MemberSeekBean;
 import com.meetu.bean.SeekChatBean;
 import com.meetu.bean.SeekChatInfoBean;
 import com.meetu.bean.UserAboutBean;
@@ -37,6 +38,7 @@ import com.meetu.common.PerfectInformation;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.ChatmsgsDao;
+import com.meetu.sqlite.MemberSeekDao;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DepthPageTransformer;
 import com.meetu.tools.MyZoomOutPageTransformer;
@@ -98,6 +100,7 @@ OnClickListener {
 	ChatmsgsDao chatmsgsDao;
 	
 	List<Boolean> isAddList=new ArrayList<Boolean>();
+	private MemberSeekDao memberSeekDao;
 
 	//空状态相关
 	private RelativeLayout noneFailLayout;//空状态背景
@@ -123,6 +126,7 @@ OnClickListener {
 			chatmsgsDao=new ChatmsgsDao(getActivity());
 
 			userAboutDao = new UserAboutDao(getActivity());
+			memberSeekDao = new MemberSeekDao(getActivity());
 			// 获取觅聊列表
 			// getObjChatList();
 
@@ -341,20 +345,24 @@ OnClickListener {
 					chatmsgs.setConversationId(conversation.getConversationId());
 					chatmsgs.setUid(user.getObjectId());
 					chatmsgsDao.insert(chatmsgs);
-					UserAboutBean aboutBean = new UserAboutBean();
-					aboutBean.setUserId(user.getObjectId());
-					aboutBean.setAboutUserId(user.getObjectId());
-					aboutBean.setAboutType(Constants.CONVERSATION_TYPE);
-					aboutBean.setAboutColetctionId(conversation.getConversationId());
-					userAboutDao.saveUserAboutBean(aboutBean);
+					
+					MemberSeekBean memberSeekBean=new MemberSeekBean();
+					memberSeekBean.setConversationId(conversation.getConversationId());
+					memberSeekBean.setConvStatus(""+Constants.NORMAL);
+					memberSeekBean.setMemberSeekId(user.getObjectId());
+					memberSeekBean.setMineId(user.getObjectId());
+					memberSeekBean.setSeekId(seekChatBeansList.get(positonNow).getObjectId());
+					memberSeekDao.saveUserSeek(memberSeekBean);
 
-					List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
-							Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
+//					List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
+//							Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
+					List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
 					miliaoImv.setImageResource(R.drawable.miliao_in);
 					
-				//	((MiliaoChannelFragment)fragmentList.get(positonNow))).setu
+			
 					
 					isAdd=true;
+					
 					((MiliaoChannelFragment) fragmentList.get(positonNow)).setUserInfo();
 		
 					if(memList.size()<3){

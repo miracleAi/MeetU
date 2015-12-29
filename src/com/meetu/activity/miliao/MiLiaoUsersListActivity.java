@@ -8,10 +8,12 @@ import cc.imeetu.R;
 import com.avos.avoscloud.AVUser;
 import com.meetu.activity.mine.UserPagerActivity;
 import com.meetu.adapter.MiLiaoUsersListAdapter;
+import com.meetu.bean.MemberSeekBean;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.common.Constants;
 import com.meetu.entity.User;
+import com.meetu.sqlite.MemberSeekDao;
 import com.meetu.sqlite.UserAboutDao;
 
 import android.os.Bundle;
@@ -33,8 +35,9 @@ public class MiLiaoUsersListActivity extends Activity implements
 	private MiLiaoUsersListAdapter adapter;
 	private ListView mlistView;
 
-	private List<UserAboutBean> userAboutBeansList=new ArrayList<UserAboutBean>();
-	UserAboutDao userAboutDao;
+	private List<MemberSeekBean> userAboutBeansList=new ArrayList<MemberSeekBean>();
+//	UserAboutDao userAboutDao;
+	MemberSeekDao memberSeekDao;
 	String conversationId="";
 	// 控件相关
 	private RelativeLayout backLayout;
@@ -56,8 +59,8 @@ public class MiLiaoUsersListActivity extends Activity implements
 			userMy = AVUser.cast(currentUser, ObjUser.class);
 		}
 		
-		userAboutDao=new UserAboutDao(this);
-	
+//		userAboutDao=new UserAboutDao(this);
+		memberSeekDao=new MemberSeekDao(this);
 		
 		initView();
 		initAdapter();
@@ -76,7 +79,7 @@ public class MiLiaoUsersListActivity extends Activity implements
 					int position, long id) {
 				// TODO Auto-generated method stub
 				Intent intent=new Intent(MiLiaoUsersListActivity.this,UserPagerActivity.class);
-				intent.putExtra("userId", userAboutBeansList.get(position).getAboutUserId());
+				intent.putExtra("userId", userAboutBeansList.get(position).getMemberSeekId());
 				startActivity(intent);
 			}
 		});
@@ -95,7 +98,9 @@ public class MiLiaoUsersListActivity extends Activity implements
 	}
 
 	private void loadData() {
-		List<UserAboutBean> list=userAboutDao.queryUserAbout(userMy.getObjectId(), Constants.CONVERSATION_TYPE, conversationId);
+//		List<UserAboutBean> list=userAboutDao.queryUserAbout(userMy.getObjectId(), Constants.CONVERSATION_TYPE, conversationId);
+		
+		List<MemberSeekBean> list=memberSeekDao.queryUserAbout(userMy.getObjectId(), conversationId);
 		if(list!=null){
 			userAboutBeansList.addAll(list);
 		}

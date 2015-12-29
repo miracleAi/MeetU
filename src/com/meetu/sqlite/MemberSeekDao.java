@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.avos.avoscloud.AVCloud;
+import com.avos.avoscloud.LogUtil.log;
 import com.meetu.bean.MemberActivityBean;
 import com.meetu.bean.MemberSeekBean;
 import com.meetu.common.DbConstents;
@@ -76,11 +77,30 @@ public class MemberSeekDao {
 	public void deleteByConv(String userId, String conversitionId) {
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
 
-		sdb.execSQL("delete from member_activity_tb where "
+		sdb.execSQL("delete from member_seek_tb where "
 				+ DbConstents.ID_MINE + "=? and "
 				+ DbConstents.ID_SEEK_CONVERSATION + "=?", new String[] {
 				userId, conversitionId });
 		sdb.close();
+	}
+	
+	/**
+	 * 删除指定对话成员
+	 * @param userId
+	 * @param conversitionId
+	 * @param deleteUserId  
+	 * @author lucifer
+	 * @date 2015-12-29
+	 */
+	public void deleteUserTypeUserId(String userId,String conversitionId,String deleteUserId){
+
+		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
+		sdb.delete(DbConstents.USERABOUT_CACHE_TB, DbConstents.ID_MINE
+				+ "=?  and "+ DbConstents.ABOUTUSERID + "=?", new String[] {
+				userId, deleteUserId});
+		
+		sdb.close();
+		log.e("zcq", "删除数据库成员成功");
 	}
 
 	/**
@@ -108,10 +128,10 @@ public class MemberSeekDao {
 			
 			bean.setMineId(cursor.getString(cursor
 					.getColumnIndex(DbConstents.ID_MINE)));
-			bean.setSeekId(cursor.getString(cursor
-					.getColumnIndex(DbConstents.ID_SEEK)));
 			bean.setMemberSeekId(cursor.getString(cursor
 					.getColumnIndex(DbConstents.ID_SEEK_MEMBER)));
+			bean.setSeekId(cursor.getString(cursor
+					.getColumnIndex(DbConstents.ID_SEEK)));			
 			bean.setConversationId(cursor.getString(cursor
 					.getColumnIndex(DbConstents.ID_SEEK_CONVERSATION)));
 			bean.setConvStatus(cursor.getString(cursor
