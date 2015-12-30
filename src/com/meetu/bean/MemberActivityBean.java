@@ -26,7 +26,7 @@ public class MemberActivityBean {
 	/**
 	 * 成员状态
 	 */
-	public  String convStatus;
+	public  int convStatus;
 	public String getMineId() {
 		return mineId;
 	}
@@ -51,10 +51,10 @@ public class MemberActivityBean {
 	public void setConversationId(String conversationId) {
 		this.conversationId = conversationId;
 	}
-	public String getConvStatus() {
+	public int getConvStatus() {
 		return convStatus;
 	}
-	public void setConvStatus(String convStatus) {
+	public void setConvStatus(int convStatus) {
 		this.convStatus = convStatus;
 	}
 

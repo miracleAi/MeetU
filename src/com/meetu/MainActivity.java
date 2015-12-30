@@ -28,6 +28,7 @@ import com.meetu.cloud.wrap.ObjGlobalAndroidWrap;
 import com.meetu.cloud.wrap.ObjShieldUserWrap;
 import com.meetu.common.ChatConnection;
 import com.meetu.common.Constants;
+import com.meetu.common.Log;
 import com.meetu.db.TabDb;
 import com.meetu.entity.UserAbout;
 import com.meetu.fragment.MineUpfragment;
@@ -113,6 +114,7 @@ OnTabChangeListener {
 		 * tintManager.setStatusBarTintResource(R.color.touming);//通知栏所需颜色 }
 		 */
 		setContentView(R.layout.activity_main);
+		
 
 		tabHost = (FragmentTabHost) super.findViewById(android.R.id.tabhost);
 		contentLayout = (FrameLayout) super.findViewById(R.id.contentLayout);
@@ -138,8 +140,16 @@ OnTabChangeListener {
 		filter.addAction(Constants.MAIN_FINISH);
 		registerReceiver(fr, filter);
 
+		
 		log.e("zcq wh", "w=="+DisplayUtils.getWindowWidth(this)+"  hh=="+DisplayUtils.getWindowHeight(this));
-
+		ChatConnection.isConnection(new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				Log.e("长连接连接成功", "成功了");
+			}
+		});
 	}
 	private void isUpdate(){
 		UmengUpdateAgent.setDefault();

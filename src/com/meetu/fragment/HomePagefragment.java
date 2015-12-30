@@ -621,7 +621,7 @@ public class HomePagefragment extends Fragment implements
 								item.setActivityId(activity.getObjectId());
 								item.setConversationId(conversitionId);
 								//TODO 接口暂时没有		
-								item.setConvStatus(""+Constants.NORMAL);
+								item.setConvStatus(Constants.NORMAL);
 								item.setMemberId(objUser.getObjectId());
 								item.setMineId(user.getObjectId());
 								memberBeanList.add(item);

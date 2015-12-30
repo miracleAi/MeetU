@@ -23,8 +23,10 @@ import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
 import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 import com.meetu.adapter.BookingListViewAdapter;
 import com.meetu.bean.ActivityBean;
+import com.meetu.bean.CoversationUserBean;
 import com.meetu.cloud.callback.ObjActivityOrderCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjFunMapCallback;
 import com.meetu.cloud.callback.ObjTicketCallback;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjActivityOrder;
@@ -34,6 +36,7 @@ import com.meetu.cloud.wrap.ObjActivityOrderWrap;
 import com.meetu.cloud.wrap.ObjActivityWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
+import com.meetu.common.Log;
 import com.meetu.entity.Booking;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.tools.BitmapCut;
@@ -348,7 +351,8 @@ OnItemClickListener {
 			// TODO 免费活动
 			//支付状态为成功
 			if(!isJoin){
-				joinActivity(Constants.OrderStatusPaySuccess);
+			//	joinActivity(Constants.OrderStatusPaySuccess);
+				joinActivityFree(Constants.OrderStatusPaySuccess);
 			}
 			break;
 		case R.id.pay_weixin_rl:
@@ -557,5 +561,66 @@ OnItemClickListener {
 					"您尚未安装微信或者安装的微信版本不支持", Toast.LENGTH_LONG).show();
 		}
 	}
+	
+	/**
+	 * 报名参加免费活动
+	 * @param orderState  
+	 * @author lucifer
+	 * @date 2015-12-29
+	 */
+	public void joinActivityFree(final int orderState){
+		if (nameEditText.getText().length() == 0) {
+			Toast.makeText(getApplicationContext(),
+					"请先完成报名信息", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		if(selectedPosition == -1){
+			Toast.makeText(getApplicationContext(),
+					"填写报名信息选择票种才能报名", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		ObjActivityOrderWrap.signUpActivityFree(user, tickets.get(selectedPosition), hopeEditText.getText().toString(), 
+				new ObjFunMapCallback() {
+			
+			@Override
+			public void callback(Map<String, Object> map, AVException e) {
+				if(e!=null){
+					Toast.makeText(getApplicationContext(), "报名失败", Toast.LENGTH_SHORT).show();
+				//	Log.e("resCode", ""+map.get("resCode"));	
+					
+					log.e("e", e);
+					return;
+				}
+				if(map!=null){
+					System.out.print(map);
+				String	resCode=(String) map.get("resCode");
+														
+				}
+				
+			}
+		});
+		
+	}
+	/**
+	 * 报名收费活动
+	 * @param orderState  
+	 * @author lucifer
+	 * @date 2015-12-30
+	 */
+	public void joinActivityPay(final int orderState){
+		if (nameEditText.getText().length() == 0) {
+			Toast.makeText(getApplicationContext(),
+					"请先完成报名信息", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		if(selectedPosition == -1){
+			Toast.makeText(getApplicationContext(),
+					"填写报名信息选择票种才能报名", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		
+		
+	}
+	
 
 }

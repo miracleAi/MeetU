@@ -39,8 +39,8 @@ public class MemberSeekDao {
 		sdb.execSQL(
 				"insert or replace into member_seek_tb values("
 						+ "?,?,?,?,?)",
-				new Object[] { bean.getMineId(), bean.getSeekId(),
-						bean.getMemberSeekId(), bean.getConversationId(),
+				new Object[] { bean.getMineId(), bean.getMemberSeekId(),bean.getSeekId(),
+						 bean.getConversationId(),
 						bean.getConvStatus() });
 		sdb.close();
 	}
@@ -134,7 +134,7 @@ public class MemberSeekDao {
 					.getColumnIndex(DbConstents.ID_SEEK)));			
 			bean.setConversationId(cursor.getString(cursor
 					.getColumnIndex(DbConstents.ID_SEEK_CONVERSATION)));
-			bean.setConvStatus(cursor.getString(cursor
+			bean.setConvStatus(cursor.getInt(cursor
 					.getColumnIndex(DbConstents.STATUS_SEEK_CONV)));
 
 			aboutList.add(bean);

@@ -1,19 +1,26 @@
 package com.meetu.cloud.wrap;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.util.Log;
 
+import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.FunctionCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.AVQuery.CachePolicy;
 import com.meetu.cloud.callback.ObjActivityOrderCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjFunCallback;
+import com.meetu.cloud.callback.ObjFunMapCallback;
 import com.meetu.cloud.callback.ObjFunObjectsCallback;
 import com.meetu.cloud.callback.ObjUserCallback;
 import com.meetu.cloud.object.ObjActivity;
@@ -101,6 +108,8 @@ public class ObjActivityOrderWrap {
 		});
 	}
 	
+	
+	
 	//查询我是否报名，若报名返回订单
 	public static void queryIsOrder(ObjActivity activity,ObjUser user,final ObjActivityOrderCallback callback){
 		AVQuery<ObjActivityOrder> query = AVObject
@@ -142,4 +151,104 @@ public class ObjActivityOrderWrap {
 		});
 		
 	}
+	
+	/**
+	 * 免费票加入活动
+	 * @param user
+	 * @param ticket
+	 * @param string
+	 * @param callback  
+	 * @author lucifer
+	 * @date 2015-12-29
+	 */
+	public static void signUpActivityFree(ObjUser user,ObjActivityTicket ticket,String string ,final ObjFunMapCallback callback){
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("user", user);		
+		params.put("ticket", ticket);
+		params.put("userExpect", string);
+		AVCloud.rpcFunctionInBackground("signUpActyCommunityFree", params,new FunctionCallback<Map<String, Object>>() {
+
+			@Override
+			public void done(Map<String, Object> result, AVException e) {
+				if(e!=null){
+					callback.callback(result, e);
+					return;
+				}	
+				if(result!=null){
+					callback.callback(result, null);					
+				}else{
+					callback.callback(null, new AVException(0,
+							"报名失败"));
+				}
+			}			
+		});
+				
+	}
+	
+	/**
+	 * 支付票加入活动支付前
+	 * @param user
+	 * @param ticket
+	 * @param string
+	 * @param callback  
+	 * @author lucifer
+	 * @date 2015-12-29
+	 */
+	public static void signUpActivitypay(ObjUser user,ObjActivityTicket ticket,String string ,final ObjFunMapCallback callback){
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("user", user);		
+		params.put("ticket", ticket);
+		params.put("userExpect", string);
+		AVCloud.rpcFunctionInBackground("signUpActyCommunityPrepare", params,new FunctionCallback<Map<String, Object>>() {
+
+			@Override
+			public void done(Map<String, Object> result, AVException e) {
+				if(e!=null){
+					callback.callback(null, e);
+					return;
+				}	
+				if(result!=null){
+					callback.callback(result, null);					
+				}else{
+					callback.callback(null, new AVException(0,
+							"报名失败"));
+				}
+			}			
+		});
+				
+	}
+	/**
+	 * 支付票加入活动支付后
+	 * @param order  
+	 * @author lucifer
+	 * @date 2015-12-30
+	 */
+	public static void signUpActyCommunityPay(ObjActivityOrder order,final ObjFunMapCallback callback){
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("order", order);		
+		
+		AVCloud.rpcFunctionInBackground("signUpActyCommunityPay", params,new FunctionCallback<Map<String, Object>>() {
+
+			@Override
+			public void done(Map<String, Object> result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e!=null){
+					callback.callback(null, e);
+					return;
+				}	
+				if(result!=null){
+					callback.callback(result, null);					
+				}else{
+					callback.callback(null, new AVException(0,
+							"报名失败"));
+				}
+			}
+			
+		});
+	
+	}
+	
+	
 }

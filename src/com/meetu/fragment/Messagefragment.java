@@ -433,7 +433,7 @@ OnClickListener,ChatViewInterface{
 					MemberActivityBean item = new MemberActivityBean();
 					item.setActivityId(""+appendId);
 					item.setConversationId(covn.getConversationId());
-					item.setConvStatus(""+Constants.NORMAL);
+					item.setConvStatus(Constants.NORMAL);
 					item.setMemberId(string);
 					item.setMineId(user.getObjectId());
 					
@@ -450,7 +450,7 @@ OnClickListener,ChatViewInterface{
 				for (String string : list) {
 					MemberSeekBean item = new MemberSeekBean();
 					item.setConversationId(covn.getConversationId());
-					item.setConvStatus(""+Constants.NORMAL);
+					item.setConvStatus(Constants.NORMAL);
 					item.setMemberSeekId(string);
 					item.setMineId(user.getObjectId());
 					item.setSeekId(""+appendId);

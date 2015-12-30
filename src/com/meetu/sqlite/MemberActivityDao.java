@@ -109,7 +109,7 @@ public class MemberActivityDao {
 					.getColumnIndex(DbConstents.ID_ACTY_MEMBER)));
 			bean.setConversationId(cursor.getString(cursor
 					.getColumnIndex(DbConstents.ID_ACTY_CONVERSATION)));
-			bean.setConvStatus(cursor.getString(cursor
+			bean.setConvStatus(cursor.getInt(cursor
 					.getColumnIndex(DbConstents.STATUS_ACTY_CONV)));
 
 			aboutList.add(bean);

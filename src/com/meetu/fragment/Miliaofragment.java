@@ -353,14 +353,16 @@ OnClickListener {
 					
 					MemberSeekBean memberSeekBean=new MemberSeekBean();
 					memberSeekBean.setConversationId(conversation.getConversationId());
-					memberSeekBean.setConvStatus(""+Constants.NORMAL);
+					memberSeekBean.setConvStatus(Constants.NORMAL);
 					memberSeekBean.setMemberSeekId(user.getObjectId());
 					memberSeekBean.setMineId(user.getObjectId());
 					memberSeekBean.setSeekId(seekChatBeansList.get(positonNow).getObjectId());
+					
 					memberSeekDao.saveUserSeek(memberSeekBean);
 
 //					List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
 //							Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
+					
 					List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
 					miliaoImv.setImageResource(R.drawable.miliao_in);
 					
@@ -721,7 +723,7 @@ OnClickListener {
 			for (String string : list) {
 				MemberSeekBean item = new MemberSeekBean();
 				item.setConversationId(conversationId);
-				item.setConvStatus(""+Constants.NORMAL);
+				item.setConvStatus(Constants.NORMAL);
 				item.setMemberSeekId(string);
 				item.setMineId(user.getObjectId());
 				item.setSeekId(seekId);
@@ -731,7 +733,7 @@ OnClickListener {
 			}
 		}
 		Log.e("userAboutBeansList", ""+userAboutBeansList.size());
-		
+		memberSeekDao.deleteByConv(user.getObjectId(), conversationId);
 		memberSeekDao.saveAllUserSeek(userAboutBeansList);
 	}
 

@@ -34,9 +34,11 @@ public class ObjActivityWrap {
 		numbers.add(Constants.ActyStatusSignUp);
 		numbers.add(Constants.ActyStatusSignUPOver);
 		numbers.add(Constants.ActyStatusOver);
-		query.whereContainedIn("status", numbers);
-		query.orderByAscending("status");
-		query.orderByDescending("timeStart");
+		
+//		query.whereContainedIn("status", numbers);
+//		query.orderByAscending("status");
+//		query.orderByDescending("timeStart");
+	
 		query.limit(1000);
 		query.findInBackground(new FindCallback<ObjActivity>() {
 
