@@ -39,8 +39,8 @@ public class MemberSeekDao {
 		sdb.execSQL(
 				"insert or replace into member_seek_tb values("
 						+ "?,?,?,?,?)",
-				new Object[] { bean.getMineId(), bean.getSeekId(),
-						bean.getMemberSeekId(), bean.getConversationId(),
+				new Object[] { bean.getMineId(),bean.getMemberSeekId(), bean.getSeekId(),
+						 bean.getConversationId(),
 						bean.getConvStatus() });
 		sdb.close();
 	}

@@ -98,7 +98,7 @@ OnClickListener {
 	private Boolean isAdd = false;
 
 	ChatmsgsDao chatmsgsDao;
-	
+
 	List<Boolean> isAddList=new ArrayList<Boolean>();
 	private MemberSeekDao memberSeekDao;
 
@@ -152,7 +152,7 @@ OnClickListener {
 					.findViewById(R.id.join_miliao_rl);
 			addLayout.setOnClickListener(this);
 			joinLayout.setOnClickListener(this);
-			
+
 		}
 		ViewGroup parent = (ViewGroup) view.getParent();
 		if (parent != null) {
@@ -168,7 +168,12 @@ OnClickListener {
 			MyApplication.defaultMsgHandler.setUpdateBean((ChatViewInterface)fragmentList.get(positonNow));
 		}
 	}
-
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MyApplication.defaultMsgHandler.setUpdateBean(null);
+	}
 	/**
 	 * viewpager 相关处理
 	 */
@@ -200,12 +205,12 @@ OnClickListener {
 
 	@Override
 	public void onPageScrollStateChanged(int position) {
-		
+
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-	
+
 	}
 
 	@Override
@@ -345,7 +350,7 @@ OnClickListener {
 					chatmsgs.setConversationId(conversation.getConversationId());
 					chatmsgs.setUid(user.getObjectId());
 					chatmsgsDao.insert(chatmsgs);
-					
+
 					MemberSeekBean memberSeekBean=new MemberSeekBean();
 					memberSeekBean.setConversationId(conversation.getConversationId());
 					memberSeekBean.setConvStatus(""+Constants.NORMAL);
@@ -354,17 +359,17 @@ OnClickListener {
 					memberSeekBean.setSeekId(seekChatBeansList.get(positonNow).getObjectId());
 					memberSeekDao.saveUserSeek(memberSeekBean);
 
-//					List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
-//							Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
+					//					List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
+					//							Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
 					List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
 					miliaoImv.setImageResource(R.drawable.miliao_in);
-					
-			
-					
+
+
+
 					isAdd=true;
-					
+
 					((MiliaoChannelFragment) fragmentList.get(positonNow)).setUserInfo();
-		
+
 					if(memList.size()<3){
 						joinChatTv.setText("等待开启");
 						return;
@@ -393,7 +398,7 @@ OnClickListener {
 							seekChatBeansList.get(positonNow));
 					intent2.putExtras(bundle);
 					startActivityForResult(intent2, 200);
-					
+
 				} else {
 					log.e("zcq", "加入觅聊失败 ，请检查网络");
 				}
@@ -443,13 +448,13 @@ OnClickListener {
 					noneFailLayout.setVisibility(View.VISIBLE);
 					nonoTextView.setVisibility(View.VISIBLE);
 					failTextView.setVisibility(View.GONE);
-					
+
 					chatBean = new SeekChatInfoBean();
-					
+
 					chatBean.setNeedAuthorise((Boolean) object
 							.get("needAuthorise"));
-					
-					
+
+
 					if (chatBean.getNeedAuthorise()) {
 						// 需要授权
 						chatBean.setIsApply((Boolean) object.get("isApply"));
@@ -481,7 +486,7 @@ OnClickListener {
 					if (chatBean.getSeekChatCount() == 0) {
 						return;
 					}
-					
+
 
 				}else{
 					noneFailLayout.setEnabled(false);
@@ -489,11 +494,11 @@ OnClickListener {
 					noneFailLayout.setVisibility(View.GONE);
 
 					chatBean = new SeekChatInfoBean();
-					
+
 					chatBean.setNeedAuthorise((Boolean) object
 							.get("needAuthorise"));
-					
-					
+
+
 					if (chatBean.getNeedAuthorise()) {
 						// 需要授权
 						chatBean.setIsApply((Boolean) object.get("isApply"));
@@ -528,7 +533,7 @@ OnClickListener {
 					// createAt是Date类型，timeChatStop为long类型，取值是注意
 					chatBean.setChatList((List<Map<String, Object>>) object
 							.get("seekChats"));
-					
+
 					seekChatBeansList.clear();
 					seekChatBeansList = new ArrayList<SeekChatBean>();
 
@@ -577,12 +582,12 @@ OnClickListener {
 			}
 		});
 	}
-/**
- * 创建觅聊
- *   
- * @author lucifer
- * @date 2015-12-18
- */
+	/**
+	 * 创建觅聊
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-18
+	 */
 	public void cteatMiliao() {
 		if (chatBean.getNeedAuthorise()) {
 			if (chatBean.getIsApply() == true) {
@@ -681,7 +686,7 @@ OnClickListener {
 				log.e("lucifer", "需要重新加载数据");
 				seekChatBeansList.clear();
 				positonNow=0;
-		//		handler.sendEmptyMessage(1);
+				//		handler.sendEmptyMessage(1);
 				loadData();
 			}
 			break;

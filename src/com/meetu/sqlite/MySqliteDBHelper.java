@@ -329,9 +329,8 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		chatMsgSb.append(DbConstents.MSG_IMG_HEIGH + " varchar(100) , ");
 		chatMsgSb.append(DbConstents.MSG_IMG_WIDTH + " varchar(100) , ");
 		chatMsgSb.append(DbConstents.ID_MSG_CONVERSATION + " varchar(100) , ");
-		chatMsgSb.append(DbConstents.TITLE_CONV + " varchar(100) , ");
 		chatMsgSb.append(DbConstents.ID_OPERATED + " varchar(100) , ");
-		chatMsgSb.append(DbConstents.TYPE_CONV + " Integer , ");
+		chatMsgSb.append(DbConstents.TYPE_MSG + " Integer , ");
 		chatMsgSb.append(DbConstents.STATUS_MSG + " Integer , ");
 		chatMsgSb.append(DbConstents.DIRECTION_MSG + " varchar(100) , ");
 		chatMsgSb.append(DbConstents.IS_SHOW_TIME + " varchar(100) , ");

@@ -639,14 +639,14 @@ OnPageChangeListener, OnClickListener {
 			super.onMessage(message, conversation, client);
 			// 请按自己需求改写
 			switch (message.getMessageType()) {
-			case Constants.TEXT_TYPE:
+			case -1:
 				log.e("zcq",
 						"接收到一条文本消息" + " MessageId()==" + message.getMessageId());
 
 				createChatMsg(conversation, message);
 
 				break;
-			case Constants.IMAGE_TYPE:
+			case -2:
 				// createChatPicMsg(conversation,message);
 				break;
 			default:
@@ -675,8 +675,12 @@ OnPageChangeListener, OnClickListener {
 		chatBean.setClientId(msg.getFrom());
 		chatBean.setMessageId(msg.getMessageId());
 		chatBean.setConversationId(msg.getConversationId());
-		chatBean.setChatMsgDirection(ChatMsgUtils.getDerection(msg
-				.getMessageIOType()));
+		if(msg.getFrom().equals(user.getObjectId())){
+			chatBean.setChatMsgDirection(Constants.IOTYPE_OUT);
+		}else{
+			chatBean.setChatMsgDirection(Constants.IOTYPE_IN);
+		}
+		
 		chatBean.setChatMsgStatus(ChatMsgUtils.getStatus(msg.getMessageStatus()));
 		// boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
 		// chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));

@@ -27,7 +27,7 @@ public class ChatMsgUtils {
 	}
 
 	// 转换消息方向
-	public static int getDerection(AVIMMessageIOType io) {
+	/*public static int getDerection(AVIMMessageIOType io) {
 		if (io == AVIMMessageIOType.AVIMMessageIOTypeIn) {
 			return Constants.IOTYPE_IN;
 		}
@@ -35,7 +35,7 @@ public class ChatMsgUtils {
 			return Constants.IOTYPE_OUT;
 		}
 		return 0;
-	}
+	}*/
 
 	// 发送消息是否显示-转换
 	public static boolean getsendTimeIsShow(int i) {

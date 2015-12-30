@@ -143,21 +143,40 @@ public class Constants {
 	//解散聊天
 	public static final int SHOW_CONV_DISSOLVE = 19;
 	/**
+	 * 群聊状态
+	 * */
+	//被邀请加入
+	public static final int CONV_ASK_ADD = 10;
+	//创建-不显示
+	public static final int CONV_STATUS_CREATE = 20;
+	//群聊开启
+	public static final int CONV_STATUS_OPEN = 30;
+	//被踢出
+	public static final int CONV_STATUS_KICK = 40;
+	//退出
+	public static final int CONV_STATUS_QUIT = 50;
+	//失效
+	public static final int CONV_STATUS_DISMISS = 60;
+	//禁言
+	public static final int CONV_STATUS_GAG = 70;
+	//解散
+	public static final int CONV_STATUS_DISSOLVE= 80;
+	/**
 	 * 消息类型常量与leancloud对应
 	 * */
-	public static final int TEXT_TYPE = -1;
+	/*public static final int TEXT_TYPE = -1;
 	public static final int IMAGE_TYPE = -2;
 	public static final int AUDIO_TYPE = -3;
 	public static final int VEDIO_TYPE = -4;
 	public static final int LOCATION_TYPE = -5;
 	public static final int FILE_TYPE = -6;
-	public static final int UNSUPPORT_TYPE = -7;
+	public static final int UNSUPPORT_TYPE = -7;*/
 
 	/**
 	 * *传到云端，必须与iOS保持一直,标记消息展现类型
 	 */
 	// 文本
-	public static final int SHOW_TEXT = 1;
+	/*public static final int SHOW_TEXT = 1;
 	// 图片
 	public static final int SHOW_IMG = 2;
 	// 群成员变动
@@ -167,13 +186,13 @@ public class Constants {
 	// 活动反馈通知
 	public static final int SHOW_ACTY_NOTY = 5;
 	// 小纸条(保留，其他替换)
-	public static final int SHOW_SCRIPT = 6;
+	public static final int SHOW_SCRIPT = 6;*/
 
 	/**
 	 * 文本 图片 区分发送接收方
 	 * */
 	// 发送文本
-	public static final int SHOW_SEND_TEXT = 10;
+	/*public static final int SHOW_SEND_TEXT = 10;
 	// 发送图片
 	public static final int SHOW_SEND_IMG = 11;
 	// 接收文本
@@ -183,7 +202,7 @@ public class Constants {
 	// 自己加入提醒
 	public static final int SHOW_SELF_CHANGE = 14;
 	// 自己踢出提醒
-	public static final int SHOW_SELF_DEL = 15;
+	public static final int SHOW_SELF_DEL = 15;*/
 
 	/**
 	 * 消息状态常量
