@@ -762,7 +762,7 @@ public class BarrageActivity extends Activity {
 			// TODO Auto-generated method stub
 			super.onMessage(message, conversation, client);
 			switch (message.getMessageType()) {
-			case Constants.TEXT_TYPE:
+			case -1:
 				// 接收到实时消息
 				if (conversation.getConversationId().equals(conversationId)) {
 					AVIMTextMessage msg = ((AVIMTextMessage) message);

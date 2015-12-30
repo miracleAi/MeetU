@@ -1,6 +1,10 @@
 package com.meetu.bean;
 
 public class CoversationUserBean {
+	//缓存ID
+	private String idCacheConv;
+	//我的ID
+	private String idMine;
 	//会话ID
 	private String idConversation;
 	//附加ID（活动ID，觅聊ID）
@@ -15,10 +19,31 @@ public class CoversationUserBean {
 	private String title;
 	//静音标记
 	private int mute;
+	//会话未读条数
+	private int unReadCount;
 	//会话结束时间
 	private long overTime;
 	//最后更新时间
 	private long updateTime;
+	
+	public int getUnReadCount() {
+		return unReadCount;
+	}
+	public void setUnReadCount(int unReadCount) {
+		this.unReadCount = unReadCount;
+	}
+	public String getIdCacheConv() {
+		return idCacheConv;
+	}
+	public void setIdCacheConv(String idCacheConv) {
+		this.idCacheConv = idCacheConv;
+	}
+	public String getIdMine() {
+		return idMine;
+	}
+	public void setIdMine(String idMine) {
+		this.idMine = idMine;
+	}
 	public String getIdConversation() {
 		return idConversation;
 	}

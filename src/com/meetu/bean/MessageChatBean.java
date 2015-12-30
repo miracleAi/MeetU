@@ -1,6 +1,10 @@
 package com.meetu.bean;
 
 public class MessageChatBean {
+	//消息缓存ID
+	private String idCacheMsg;
+	//本人ID
+	private String idMine;
 	//消息ID
 	private String idMessage;
 	//发送者ID
@@ -28,6 +32,18 @@ public class MessageChatBean {
 	//消息是否显示时间
 	private int isShowTime;
 	
+	public String getIdCacheMsg() {
+		return idCacheMsg;
+	}
+	public void setIdCacheMsg(String idCacheMsg) {
+		this.idCacheMsg = idCacheMsg;
+	}
+	public String getIdMine() {
+		return idMine;
+	}
+	public void setIdMine(String idMine) {
+		this.idMine = idMine;
+	}
 	public String getIdMessage() {
 		return idMessage;
 	}

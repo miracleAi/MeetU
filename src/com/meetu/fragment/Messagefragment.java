@@ -13,15 +13,14 @@ import cc.imeetu.R;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
-
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.meetu.activity.messages.FollowActivity;
 import com.meetu.activity.messages.LitterNoteActivity;
 import com.meetu.activity.messages.SystemMsgActivity;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.activity.miliao.EmojiParser;
-
 import com.meetu.adapter.MessagesListAdapter;
+import com.meetu.bean.CoversationUserBean;
 import com.meetu.bean.MemberActivityBean;
 import com.meetu.bean.MemberSeekBean;
 import com.meetu.bean.MessageChatBean;
@@ -42,6 +41,7 @@ import com.meetu.entity.ChatEmoji;
 import com.meetu.entity.Messages;
 import com.meetu.myapplication.DefaultMessageHandler;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.ConversationUserDao;
 import com.meetu.sqlite.EmojisDao;
 import com.meetu.sqlite.MemberActivityDao;
 import com.meetu.sqlite.MemberSeekDao;
@@ -73,13 +73,12 @@ import android.widget.Toast;
 public class Messagefragment extends Fragment implements OnItemClickListener,
 OnClickListener,ChatViewInterface{
 	private ListView mListView;
-	private List<Messages> mdataList = new ArrayList<Messages>();
-	private List<Messages> mdataListCache = new ArrayList<Messages>();
+	private List<CoversationUserBean> mdataListCache = new ArrayList<CoversationUserBean>();
 	private MessagesListAdapter mAdapter;
 	private View view;
 	private RelativeLayout attentionLayout;
 
-	private MessagesDao messagesDao;
+	private ConversationUserDao convUserDao = null;
 	private RelativeLayout littleNoteLayout;
 	private RelativeLayout sysMsgLayout;
 	private TextView sysMsgCountTv;
@@ -92,15 +91,14 @@ OnClickListener,ChatViewInterface{
 
 	// 网络相关
 	ObjUser user = null;
-	MyReceiver mr = null;
 
 	//
-//	private UserAboutDao userAboutDao;
+	//	private UserAboutDao userAboutDao;
 	private ArrayList<MemberSeekBean> userAboutBeansList = new ArrayList<MemberSeekBean>();
 	private List<MemberActivityBean> memberActivityBeans=new ArrayList<MemberActivityBean>();
 	long scanTime = 0;
 	public boolean isEnd = true;
-	
+
 	MemberSeekDao memberSeekDao;
 	MemberActivityDao memberActivityDao;
 
@@ -120,8 +118,7 @@ OnClickListener,ChatViewInterface{
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
 		scanTime = SharepreferencesUtils.getInstance().getSystemScanTime(getActivity(), SharepreferencesUtils.SYS_MSG_SCAN, 0);
-		messagesDao = new MessagesDao(getActivity());
-//		userAboutDao = new UserAboutDao(getActivity());
+		convUserDao = new ConversationUserDao(getActivity());
 		memberSeekDao=new MemberSeekDao(getActivity());
 		memberActivityDao=new MemberActivityDao(getActivity());
 
@@ -166,22 +163,6 @@ OnClickListener,ChatViewInterface{
 		});
 
 	}
-	/**
-	 * 广播刷新界面
-	 * 
-	 * @author lucifer
-	 * 
-	 */
-	class MyReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context arg0, Intent arg1) {
-			// TODO Auto-generated method stub
-			handler.sendEmptyMessage(1);
-		}
-
-	}
-
 	private static void loadEmoji(Context context) {
 
 		emojisDao = new EmojisDao(context);
@@ -191,7 +172,7 @@ OnClickListener,ChatViewInterface{
 
 	private void loadData() {
 
-		ArrayList<Messages> list = messagesDao.getMessages(user.getObjectId());
+		ArrayList<CoversationUserBean> list = convUserDao.getMessages(user.getObjectId());
 
 		if (list != null && list.size() > 0) {
 			mdataListCache.clear();
@@ -221,11 +202,6 @@ OnClickListener,ChatViewInterface{
 		sysMsgLayout.setOnClickListener(this);
 		sysMsgCountTv = (TextView) view.findViewById(R.id.system_msg_count);
 
-		mr = new MyReceiver();
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(Constants.RECEIVE_MSG);
-		getActivity().registerReceiver(mr, filter);
-
 		attentionLayout.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -247,31 +223,28 @@ OnClickListener,ChatViewInterface{
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
 		// TODO Auto-generated method stub
-		//点击之后将失效会话删掉
-		if (mdataListCache.get(position).getTiStatus() == 1) {
-			messagesDao.deleteConv(user.getObjectId(),mdataListCache.get(position).getConversationID());
+		//被踢出  退出 失效 解散 点击之后将失效会话删掉
+		int convStatus = mdataListCache.get(position).getStatus();
+		switch (convStatus) {
+		case Constants.CONV_STATUS_KICK:
+		case Constants.CONV_STATUS_QUIT:
+		case Constants.CONV_STATUS_DISSOLVE:
+		case Constants.CONV_STATUS_DISMISS:
+			convUserDao.deleteConv(user.getObjectId(),mdataListCache.get(position).getIdConversation());
+			break;
+		default:
+			break;
 		}
 		Intent intent = new Intent(getActivity(), ChatGroupActivity.class);
 		intent.putExtra("ConversationId", ""
-				+ mdataListCache.get(position).getConversationID());
+				+ mdataListCache.get(position).getIdConversation());
 		// 传对话的类型 1 表示活动群聊 2 表示觅聊 3 表示单聊
 		intent.putExtra("ConversationStyle", ""
-				+ mdataListCache.get(position).getConversationType());
-		if (mdataListCache.get(position).getConversationType() == 1) {
-			intent.putExtra("title", mdataListCache.get(position).getActyName());
-		} else {
-			intent.putExtra("title", mdataListCache.get(position).getChatName());
-
-			intent.putExtra("objectId", mdataListCache.get(position)
-					.getChatId());// 觅聊id
-		}
-		intent.putExtra("TimeOver", ""+mdataListCache.get(position).getTimeOver());
-		Bundle bundle = new Bundle();
-		bundle.putSerializable("Messages", mdataListCache.get(position));
+				+ mdataListCache.get(position).getType());
 		startActivityForResult(intent, 1001);
 		// 清空该项未读消息
-		messagesDao.updateUnreadClear(user.getObjectId(),
-				mdataListCache.get(position).getConversationID());
+		convUserDao.updateUnreadClear(user.getObjectId(),
+				mdataListCache.get(position).getIdConversation());
 	}
 
 	@Override
@@ -281,7 +254,12 @@ OnClickListener,ChatViewInterface{
 		initReceiveMsg();
 		handler.sendEmptyMessage(1);
 	}
-
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MyApplication.defaultMsgHandler.setUpdateBean(null);
+	}
 	Handler handler = new Handler() {
 
 		@Override
@@ -290,15 +268,11 @@ OnClickListener,ChatViewInterface{
 
 			switch (msg.what) {
 			case 1:
-				log.e("zcq", "刷新了");
-				ArrayList<Messages> list = messagesDao.getMessages(user
-						.getObjectId());
+				ArrayList<CoversationUserBean> list = convUserDao.getMessages(user.getObjectId());
 
 				if (list != null && list.size() > 0) {
 					mdataListCache.clear();
-					for (Messages messages : list) {
-						log.e("messages.getTiStatus()",
-								"" + messages.getTiStatus());
+					for (CoversationUserBean messages : list) {
 						mdataListCache.add(messages);
 					}
 				} else {
@@ -335,10 +309,11 @@ OnClickListener,ChatViewInterface{
 	}
 
 	/**
-	 * 获取所有会话,保存至数据库
+	 * 获取所有会话,保存至数据库(需要修改，通过api获得)
 	 * 
 	 * @author lucifer
 	 * @date 2015-11-20
+	 * update zlp 2015-12-30
 	 */
 	public void getConversation() {
 		ObjChatMessage.getConversation(user.getObjectId(),
@@ -358,18 +333,11 @@ OnClickListener,ChatViewInterface{
 					convList.add(conversation);
 				}
 				if (convList.size() > 0) {
-					// 修改状态
-					messagesDao.updeteStatus(user.getObjectId());
-
 					ArrayList<Messages> list = new ArrayList<Messages>();
-					Log.e("convList.size()", ""+convList.size());
-				//	log.e("zcq","user.getObjectId()==" + user.getObjectId());
 					for (int i = 0; i < convList.size(); i++) {
 						AVIMConversation conversation = convList.get(i);
-
 						// 保存到本地
 						getMember(conversation);
-
 						Messages msg = new Messages();
 						msg.setUpdateTime(System.currentTimeMillis());
 						msg.setUserId(user.getObjectId());
@@ -402,7 +370,7 @@ OnClickListener,ChatViewInterface{
 						}
 
 					}
-					messagesDao.insertList(list);
+					//messagesDao.insertList(list);
 				}
 				handler.sendEmptyMessage(1);
 			}
@@ -426,7 +394,7 @@ OnClickListener,ChatViewInterface{
 		Log.e("type", ""+type );
 		Object appendId= covn.getAttribute("appendId");
 		Log.e("appendId", appendId.toString());
-		
+
 		if(type.toString().equals("1")){
 			if (list != null) {
 				for (String string : list) {
@@ -436,8 +404,8 @@ OnClickListener,ChatViewInterface{
 					item.setConvStatus(Constants.NORMAL);
 					item.setMemberId(string);
 					item.setMineId(user.getObjectId());
-					
-					
+
+
 					memberActivityBeans.add(item);
 				}
 
@@ -454,7 +422,7 @@ OnClickListener,ChatViewInterface{
 					item.setMemberSeekId(string);
 					item.setMineId(user.getObjectId());
 					item.setSeekId(""+appendId);
-					
+
 					userAboutBeansList.add(item);
 				}
 
@@ -462,7 +430,7 @@ OnClickListener,ChatViewInterface{
 			memberSeekDao.deleteByConv(user.getObjectId(), covn.getConversationId());
 			memberSeekDao.saveAllUserSeek(userAboutBeansList);
 		}
-		
+
 
 	}
 	@Override
@@ -477,6 +445,6 @@ OnClickListener,ChatViewInterface{
 	@Override
 	public void updateView(MessageChatBean bean) {
 		// TODO Auto-generated method stub
-		Toast.makeText(getActivity(), "message fragment receive msg", 1000).show();
+		handler.sendEmptyMessage(1);
 	}
 }

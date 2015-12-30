@@ -46,7 +46,6 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                
                 android:text="新人加入了，打个招呼吧"
                 android:textColor="#a0a0a0"
                 android:textSize="12dp" />

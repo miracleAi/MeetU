@@ -7,7 +7,6 @@ import java.util.Map;
 
 import cc.imeetu.R;
 
-import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
@@ -90,7 +89,7 @@ OnClickListener {
 	// 权限
 	ObjAuthoriseCategory category = new ObjAuthoriseCategory();
 	ObjAuthoriseApply apply = new ObjAuthoriseApply();
-//	private UserAboutDao userAboutDao;
+	private UserAboutDao userAboutDao;
 	ArrayList<MemberSeekBean> userAboutBeansList = new ArrayList<MemberSeekBean>();
 
 	SeekChatInfoBean chatBean = null;
@@ -100,7 +99,7 @@ OnClickListener {
 	private Boolean isAdd = false;
 
 	ChatmsgsDao chatmsgsDao;
-	
+
 	List<Boolean> isAddList=new ArrayList<Boolean>();
 	private MemberSeekDao memberSeekDao;
 
@@ -127,8 +126,8 @@ OnClickListener {
 			}
 			chatmsgsDao=new ChatmsgsDao(getActivity());
 
-//			userAboutDao = new UserAboutDao(getActivity());
-			memberSeekDao=new MemberSeekDao(getActivity());
+			userAboutDao = new UserAboutDao(getActivity());
+			memberSeekDao = new MemberSeekDao(getActivity());
 			// 获取觅聊列表
 			// getObjChatList();
 
@@ -154,7 +153,7 @@ OnClickListener {
 					.findViewById(R.id.join_miliao_rl);
 			addLayout.setOnClickListener(this);
 			joinLayout.setOnClickListener(this);
-			
+
 		}
 		ViewGroup parent = (ViewGroup) view.getParent();
 		if (parent != null) {
@@ -170,7 +169,12 @@ OnClickListener {
 			MyApplication.defaultMsgHandler.setUpdateBean((ChatViewInterface)fragmentList.get(positonNow));
 		}
 	}
-
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MyApplication.defaultMsgHandler.setUpdateBean(null);
+	}
 	/**
 	 * viewpager 相关处理
 	 */
@@ -202,12 +206,12 @@ OnClickListener {
 
 	@Override
 	public void onPageScrollStateChanged(int position) {
-		
+
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-	
+
 	}
 
 	@Override
@@ -247,10 +251,8 @@ OnClickListener {
 				if (seekChatBeansList != null && seekChatBeansList.size() != 0) {
 					if (isAdd) {
 						miliaoImv.setImageResource(R.drawable.miliao_in);
-//						List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
-//								Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
-						List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
-						
+						List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
+								Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
 						if(memList.size()<3){
 							joinChatTv.setText("等待开启");
 							Toast.makeText(getActivity(), "觅聊尚未开启", 1000).show();
@@ -285,9 +287,8 @@ OnClickListener {
 					} else {
 						log.e("zcq", "没加入过当前觅聊");
 						miliaoImv.setImageResource(R.drawable.chat_navi_btn_joinchat);
-//						List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(),
-//								Constants.CONVERSATION_TYPE,seekChatBeansList.get(positonNow).getConversationId());
-						List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
+						List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(),
+								Constants.CONVERSATION_TYPE,seekChatBeansList.get(positonNow).getConversationId());
 						if(memList.size() >= 20){
 							joinChatTv.setText("人数已满");
 							Toast.makeText(getActivity(), "觅聊人数已满", 1000).show();
@@ -350,7 +351,7 @@ OnClickListener {
 					chatmsgs.setConversationId(conversation.getConversationId());
 					chatmsgs.setUid(user.getObjectId());
 					chatmsgsDao.insert(chatmsgs);
-					
+
 					MemberSeekBean memberSeekBean=new MemberSeekBean();
 					memberSeekBean.setConversationId(conversation.getConversationId());
 					memberSeekBean.setConvStatus(Constants.NORMAL);
@@ -360,18 +361,16 @@ OnClickListener {
 					
 					memberSeekDao.saveUserSeek(memberSeekBean);
 
-//					List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
-//							Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
-					
+
 					List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
 					miliaoImv.setImageResource(R.drawable.miliao_in);
-					
-			
-					
+
+
+
 					isAdd=true;
-					
+
 					((MiliaoChannelFragment) fragmentList.get(positonNow)).setUserInfo();
-		
+
 					if(memList.size()<3){
 						joinChatTv.setText("等待开启");
 						return;
@@ -400,7 +399,7 @@ OnClickListener {
 							seekChatBeansList.get(positonNow));
 					intent2.putExtras(bundle);
 					startActivityForResult(intent2, 200);
-					
+
 				} else {
 					log.e("zcq", "加入觅聊失败 ，请检查网络");
 				}
@@ -450,13 +449,13 @@ OnClickListener {
 					noneFailLayout.setVisibility(View.VISIBLE);
 					nonoTextView.setVisibility(View.VISIBLE);
 					failTextView.setVisibility(View.GONE);
-					
+
 					chatBean = new SeekChatInfoBean();
-					
+
 					chatBean.setNeedAuthorise((Boolean) object
 							.get("needAuthorise"));
-					
-					
+
+
 					if (chatBean.getNeedAuthorise()) {
 						// 需要授权
 						chatBean.setIsApply((Boolean) object.get("isApply"));
@@ -488,7 +487,7 @@ OnClickListener {
 					if (chatBean.getSeekChatCount() == 0) {
 						return;
 					}
-					
+
 
 				}else{
 					noneFailLayout.setEnabled(false);
@@ -496,11 +495,11 @@ OnClickListener {
 					noneFailLayout.setVisibility(View.GONE);
 
 					chatBean = new SeekChatInfoBean();
-					
+
 					chatBean.setNeedAuthorise((Boolean) object
 							.get("needAuthorise"));
-					
-					
+
+
 					if (chatBean.getNeedAuthorise()) {
 						// 需要授权
 						chatBean.setIsApply((Boolean) object.get("isApply"));
@@ -535,7 +534,7 @@ OnClickListener {
 					// createAt是Date类型，timeChatStop为long类型，取值是注意
 					chatBean.setChatList((List<Map<String, Object>>) object
 							.get("seekChats"));
-					
+
 					seekChatBeansList.clear();
 					seekChatBeansList = new ArrayList<SeekChatBean>();
 
@@ -571,7 +570,7 @@ OnClickListener {
 						for(int j=0;j<bean.getMembers().size();j++){
 							userList.add(""+bean.getMembers().get(j).get("userId"));
 						}
-						getMember(userList,""+bean.getConversationId(),""+bean.getObjectId());
+						getMember(userList,""+bean.getConversationId(),bean.getObjectId());
 					}
 
 					numberAll.setText("" + seekChatBeansList.size());
@@ -584,12 +583,12 @@ OnClickListener {
 			}
 		});
 	}
-/**
- * 创建觅聊
- *   
- * @author lucifer
- * @date 2015-12-18
- */
+	/**
+	 * 创建觅聊
+	 *   
+	 * @author lucifer
+	 * @date 2015-12-18
+	 */
 	public void cteatMiliao() {
 		if (chatBean.getNeedAuthorise()) {
 			if (chatBean.getIsApply() == true) {
@@ -643,10 +642,10 @@ OnClickListener {
 	public void isAddconvesition() {
 		List<String> list = new ArrayList<String>();
 		SeekChatBean chatBean = seekChatBeansList.get(positonNow);
-	//	List<UserAboutBean> aboutlist = userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, chatBean.getConversationId());
-		List<MemberSeekBean> aboutlist = memberSeekDao.queryUserAbout(user.getObjectId(), chatBean.getConversationId());
+		List<UserAboutBean> aboutlist = userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, chatBean.getConversationId());
+
 		for (int i = 0; i < aboutlist.size(); i++) {
-			list.add(aboutlist.get(i).getMemberSeekId());
+			list.add(aboutlist.get(i).getAboutUserId());
 		}
 		for (String string : list) {
 			if (user.getObjectId().equals(string)) {
@@ -658,9 +657,8 @@ OnClickListener {
 		}
 		if(isAdd){
 			miliaoImv.setImageResource(R.drawable.miliao_in);
-//			List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
-//					Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
-			List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
+			List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
+					Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
 			if(memList.size()<3){
 				joinChatTv.setText("等待开启");
 			}else{
@@ -668,9 +666,8 @@ OnClickListener {
 			}
 		}else{
 			miliaoImv.setImageResource(R.drawable.chat_navi_btn_joinchat);
-//			List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
-//					Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
-			List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
+			List<UserAboutBean> memList = userAboutDao.queryUserAbout(user.getObjectId(), 
+					Constants.CONVERSATION_TYPE, seekChatBeansList.get(positonNow).getConversationId());
 			if(memList.size()>=20){
 				joinChatTv.setText("人数已满");
 			}else{
@@ -690,7 +687,7 @@ OnClickListener {
 				log.e("lucifer", "需要重新加载数据");
 				seekChatBeansList.clear();
 				positonNow=0;
-		//		handler.sendEmptyMessage(1);
+				//		handler.sendEmptyMessage(1);
 				loadData();
 			}
 			break;
@@ -718,23 +715,22 @@ OnClickListener {
 	 */
 	public void getMember(List<String> list,String conversationId,String seekId) {
 		userAboutBeansList = new ArrayList<MemberSeekBean>();
-		
 		if (list != null) {
 			for (String string : list) {
+
 				MemberSeekBean item = new MemberSeekBean();
 				item.setConversationId(conversationId);
 				item.setConvStatus(Constants.NORMAL);
 				item.setMemberSeekId(string);
 				item.setMineId(user.getObjectId());
 				item.setSeekId(seekId);
-				
-
 				userAboutBeansList.add(item);
 			}
 		}
 		Log.e("userAboutBeansList", ""+userAboutBeansList.size());
 		memberSeekDao.deleteByConv(user.getObjectId(), conversationId);
 		memberSeekDao.saveAllUserSeek(userAboutBeansList);
+
 	}
 
 

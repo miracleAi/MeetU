@@ -41,6 +41,7 @@ import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
 import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.activity.mine.UserPagerActivity;
+import com.meetu.bean.MessageChatBean;
 import com.meetu.bean.UserBean;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjUser;
@@ -59,7 +60,7 @@ import com.meetu.tools.DisplayUtils;
 public class ChatmsgsListViewAdapter extends BaseAdapter {
 
 	private Context mContext;
-	private List<Chatmsgs> chatmsgsList;
+	private List<MessageChatBean> chatmsgsList;
 	private SimpleDateFormat sd;
 
 	private int mMaxItemWidth;// item最大宽度
@@ -78,7 +79,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 	Bitmap loadBitmap;
 	int photoW,photoH;
 
-	public ChatmsgsListViewAdapter(Context context, List<Chatmsgs> chatmsgsList,Handler handler) {
+	public ChatmsgsListViewAdapter(Context context, List<MessageChatBean> chatmsgsList,Handler handler) {
 		this.mContext = context;
 		this.chatmsgsList = chatmsgsList;
 		this.handler = handler;
@@ -108,7 +109,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 
 		// TODO Auto-generated method stub
 		return chatmsgsList != null ? chatmsgsList.get(position)
-				.getChatMsgType() : -1;
+				.getTypeMsg() : -1;
 	}
 
 	/**
@@ -143,17 +144,12 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		final ViewHolder holder;
-		final Chatmsgs item = chatmsgsList.get(position);
+		final MessageChatBean item = chatmsgsList.get(position);
 
 		if (convertView == null) {
 			holder = new ViewHolder();
-			log.e("zcq", "item.getChatMsgType()==" + item.getChatMsgType());
-			log.e("zcq", "item.getClientId()==" + item.getClientId());
-			log.e("zcq", "item.getContent()==" + item.getContent());
-			switch (item.getChatMsgType()) {
-
-
-			case Constants.SHOW_SEND_TEXT:
+			switch (item.getTypeMsg()) {
+			case Constants.SHOW_SEND_TYPE_TEXT:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_item_text_right, null);
 				holder.content = (TextView) convertView
@@ -173,7 +169,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				break;
 				//TODO 1 暂时没有此类型 未知原因出现此类型 待解决
 
-			case Constants.SHOW_RECV_TEXT:
+			case Constants.SHOW_RECEIVE_TYPE_TEXT:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_item_text_left, null);
 				holder.content = (TextView) convertView
@@ -192,7 +188,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				holder.resentLayout = (RelativeLayout) convertView
 						.findViewById(R.id.fail_chat_item_text_right_rl);
 				break;
-			case Constants.SHOW_SEND_IMG:
+			case Constants.SHOW_SEND_TYPE_IMG:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_item_photo_right, null);
 				holder.photo = (ImageView) convertView
@@ -208,7 +204,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				holder.resentLayout = (RelativeLayout) convertView
 						.findViewById(R.id.fail_chat_item_photo_right_rl);
 				break;
-			case Constants.SHOW_RECV_IMG:
+			case Constants.SHOW_RECEIVE_TYPE_IMG:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_item_photo_left, null);
 				holder.photo = (ImageView) convertView
@@ -228,7 +224,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				
 				break;
 
-			case Constants.SHOW_MEMBERCHANGE:
+			case Constants.SHOW_MEMBER_ADD:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_item_newjoin_remind, null);
 				holder.userHeadPhoto = (ImageView) convertView
@@ -243,8 +239,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						.findViewById(R.id.time_chat_item_newjoin_tv);
 				holder.allItem=(LinearLayout) convertView.findViewById(R.id.all_card_item_newjoin_ll);
 				break;
-			case Constants.SHOW_SELF_DEL:
-			case Constants.SHOW_SELF_CHANGE:
+			case Constants.SHOW_SELF_ADD:
+			case Constants.SHOW_SELF_KICK:
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.chat_my_join_or_exit, null);
 				holder.time = (TextView) convertView
@@ -260,11 +256,10 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		switch (item.getChatMsgType()) {
-
-		case Constants.SHOW_SEND_TEXT:
-		case Constants.SHOW_RECV_TEXT:
-			if(item.getChatMsgStatus() == Constants.STATUES_FAILED){
+		switch (item.getTypeMsg()) {
+		case Constants.SHOW_SEND_TYPE_TEXT:
+		case Constants.SHOW_RECEIVE_TYPE_TEXT:
+			if(item.getStatusMsg() == Constants.STATUES_FAILED){
 				holder.resentLayout.setVisibility(View.VISIBLE);
 			}else{
 				holder.resentLayout.setVisibility(View.GONE);
@@ -281,16 +276,14 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				}
 			});
 			SpannableString spannableString = ChatGroupActivity
-					.getExpressionString(mContext, item.getContent());
+					.getExpressionString(mContext, item.getMsgText());
 			holder.content.setMaxWidth(mMaxItemWidth);
 			holder.content.setMinWidth(mMinItemWidth);
 			holder.content.setText(spannableString);
 			if (item.getIsShowTime() == 1) {
-				long time = Long.parseLong(item.getSendTimeStamp());
-				Date date = new Date(time);
+				Date date = new Date(item.getSendTimeStamp());
 				sd = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 				String string = sd.format(date);
-				// log.e(""+date+", "+sd.format(date)+", time=="+item.getSendTimeStamp());
 				holder.time.setText(string);
 				holder.timeLayout.setVisibility(View.VISIBLE);
 			}
@@ -304,15 +297,13 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 					// TODO Auto-generated method stub
 					Intent intent = new Intent(mContext,
 							UserPagerActivity.class);
-					intent.putExtra("userId", item.getClientId());
+					intent.putExtra("userId", item.getIdClient());
 					mContext.startActivity(intent);
 				}
 			});
 
-			if (item.getClientId() != null && !("").equals(item.getClientId())) {
-				log.e("zcq id", "userId==" + user.getObjectId()
-						+ " itemClientId==" + item.getClientId());
-				if (user.getObjectId().equals(item.getClientId())) {
+			if (item.getIdClient() != null && !("").equals(item.getIdClient())) {
+				if (user.getObjectId().equals(item.getIdClient())) {
 					holder.userName.setText("" + user.getNameNick());
 					// log.e("zcq", "是我自己发的消息");
 					if (user.getProfileClip() != null) {
@@ -322,10 +313,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 					}
 				} else {
 
-					log.e("zcq", "别人发的消息");
-
 					ArrayList<UserBean> list = userDao.queryUser(item
-							.getClientId());
+							.getIdClient());
 					if (null != list && list.size() > 0) {
 
 						if (!list.get(0).getProfileClip().equals("")) {
@@ -335,7 +324,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						holder.userName.setText("" + list.get(0).getNameNick());
 
 					} else {
-						ObjUserWrap.getObjUser(item.getClientId(),
+						ObjUserWrap.getObjUser(item.getIdClient(),
 								new ObjUserInfoCallback() {
 
 							@Override
@@ -346,7 +335,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 									userDao.insertOrReplaceUser(objuser);
 									ArrayList<UserBean> list2 = userDao
 											.queryUser(item
-													.getClientId());
+													.getIdClient());
 									if (null != list2
 											&& list2.size() > 0) {
 										if (!list2.get(0)
@@ -371,8 +360,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			}
 			break;
 
-		case Constants.SHOW_SEND_IMG:
-			if(item.getChatMsgStatus() == Constants.STATUES_FAILED){
+		case Constants.SHOW_SEND_TYPE_IMG:
+			if(item.getStatusMsg() == Constants.STATUES_FAILED){
 				holder.resentLayout.setVisibility(View.VISIBLE);
 			}else{
 				holder.resentLayout.setVisibility(View.GONE);
@@ -388,10 +377,10 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 					handler.sendMessage(msg);
 				}
 			});
-			if (item.getImgMsgImageUrl() != null
-					&& !item.getImgMsgImageUrl().equals("")) {
+			if (item.getFileUrl() != null
+					&& !item.getFileUrl().equals("")) {
 			//	finalBitmap.display(holder.photo, item.getImgMsgImageUrl());
-				bitmapUtils.display(holder.photo, item.getImgMsgImageUrl(), new BitmapLoadCallBack<ImageView>() {
+				bitmapUtils.display(holder.photo, item.getFileUrl(), new BitmapLoadCallBack<ImageView>() {
 
 					@Override
 					public void onLoadCompleted(ImageView imageView, String arg1,
@@ -413,11 +402,9 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			}
 
 			if (item.getIsShowTime() == 1) {
-				long time = Long.parseLong(item.getSendTimeStamp());
-				Date date = new Date(time);
+				Date date = new Date(item.getSendTimeStamp());
 				sd = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 				String string = sd.format(date);
-				// log.e(""+date+", "+sd.format(date)+", time=="+item.getSendTimeStamp());
 				holder.time.setText(string);
 				holder.timeLayout.setVisibility(View.VISIBLE);
 			}
@@ -432,12 +419,12 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 					// TODO Auto-generated method stub
 					Intent intent = new Intent(mContext,
 							UserPagerActivity.class);
-					intent.putExtra("userId", item.getClientId());
+					intent.putExtra("userId", item.getIdClient());
 					mContext.startActivity(intent);
 				}
 			});
 
-			if (user.getObjectId().equals(item.getClientId())) {
+			if (user.getObjectId().equals(item.getIdClient())) {
 				holder.userName.setText("" + user.getNameNick());
 				if (user.getProfileClip() != null) {
 					finalBitmap.display(holder.userHeadPhoto, user
@@ -448,15 +435,15 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			}
 
 			break;
-		case Constants.SHOW_RECV_IMG:
-			if(item.getChatMsgStatus() == Constants.STATUES_FAILED){
+		case Constants.SHOW_RECEIVE_TYPE_IMG:
+			if(item.getStatusMsg() == Constants.STATUES_FAILED){
 				holder.resentLayout.setVisibility(View.VISIBLE);
 			}else{
 				holder.resentLayout.setVisibility(View.GONE);
 			}
-			if (item.getImgMsgImageUrl() != null
-					&& !item.getImgMsgImageUrl().equals("")) {
-				bitmapUtils.display(holder.photo, item.getImgMsgImageUrl(), new BitmapLoadCallBack<ImageView>() {
+			if (item.getFileUrl() != null
+					&& !item.getFileUrl().equals("")) {
+				bitmapUtils.display(holder.photo, item.getFileUrl(), new BitmapLoadCallBack<ImageView>() {
 
 					@Override
 					public void onLoadCompleted(ImageView imageView, String arg1,
@@ -507,8 +494,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 //			finalBitmap.display(holder.photo, item.getImgMsgImageUrl(), photoW, photoH);
 
 			if (item.getIsShowTime() == 1) {
-				long time = Long.parseLong(item.getSendTimeStamp());
-				Date date = new Date(time);
+				Date date = new Date(item.getSendTimeStamp());
 				sd = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 				String string = sd.format(date);
 				// log.e(""+date+", "+sd.format(date)+", time=="+item.getSendTimeStamp());
@@ -526,13 +512,13 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 					// TODO Auto-generated method stub
 					Intent intent = new Intent(mContext,
 							UserPagerActivity.class);
-					intent.putExtra("userId", item.getClientId());
+					intent.putExtra("userId", item.getIdClient());
 					mContext.startActivity(intent);
 				}
 			});
-			if (item.getClientId() != null && !("").equals(item.getClientId())) {
+			if (item.getIdClient() != null && !("").equals(item.getIdClient())) {
 				ArrayList<UserBean> list = userDao
-						.queryUser(item.getClientId());
+						.queryUser(item.getIdClient());
 				if (null != list && list.size() > 0) {
 
 					if (!list.get(0).getProfileClip().equals("")) {
@@ -542,7 +528,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 					holder.userName.setText("" + list.get(0).getNameNick());
 
 				} else {
-					ObjUserWrap.getObjUser(item.getNowJoinUserId(),
+					ObjUserWrap.getObjUser(item.getIdClient(),
 							new ObjUserInfoCallback() {
 
 						@Override
@@ -552,7 +538,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 							if (e == null) {
 								userDao.insertOrReplaceUser(objuser);
 								ArrayList<UserBean> list2 = userDao
-										.queryUser(item.getClientId());
+										.queryUser(item.getIdClient());
 								if (null != list2 && list2.size() > 0) {
 									if (!list2.get(0).getProfileClip()
 											.equals("")) {
@@ -575,16 +561,15 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 
 			break;
 
-		case Constants.SHOW_MEMBERCHANGE:
+		case Constants.SHOW_MEMBER_ADD:
 			// TODO 设置他人头像 需要封装个方法。多处使用
 			try {
 
-				long time = Long.parseLong(item.getSendTimeStamp());
 				holder.time.setText(com.meetu.cloud.utils.DateUtils
-						.getFormattedTimeInterval(time));
+						.getFormattedTimeInterval(item.getSendTimeStamp()));
 
-				if (item.getNowJoinUserId() != null
-						&& !("").equals(item.getNowJoinUserId())) {
+				if (item.getIdOperated() != null
+						&& !("").equals(item.getIdOperated())) {
 					
 					holder.allItem.setOnClickListener(new OnClickListener() {
 						
@@ -592,7 +577,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						public void onClick(View arg0) {
 							// TODO Auto-generated method stub
 							Intent intent=new Intent(mContext,UserPagerActivity.class);
-							intent.putExtra("userId", item.getNowJoinUserId());
+							intent.putExtra("userId", item.getIdOperated());
 							mContext.startActivity(intent);
 							
 						}
@@ -600,7 +585,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 					
 					
 					ArrayList<UserBean> list = userDao.queryUser(item
-							.getNowJoinUserId());
+							.getIdOperated());
 					if (null != list && list.size() > 0) {
 
 						if (!list.get(0).getProfileClip().equals("")) {
@@ -613,7 +598,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 							holder.sexImg.setImageResource(R.drawable.acty_joinlist_img_female);
 						}
 					} else {
-						ObjUserWrap.getObjUser(item.getNowJoinUserId(),
+						ObjUserWrap.getObjUser(item.getIdOperated(),
 								new ObjUserInfoCallback() {
 
 							@Override
@@ -623,7 +608,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 								if (e == null) {
 									userDao.insertOrReplaceUser(objuser);
 									ArrayList<UserBean> list2 = userDao.queryUser(item
-											.getNowJoinUserId());
+											.getIdOperated());
 									if (null != list2
 											&& list2.size() > 0) {
 										if (!list2.get(0)
@@ -656,10 +641,10 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 			}
 
 			break;
-		case Constants.SHOW_SELF_CHANGE:
+		case Constants.SHOW_SELF_KICK:
+		case Constants.SHOW_SELF_ADD:
 			// 自己 加入和退出的状态提醒
-			log.e("zcq 14", "自己加入消息显示");
-			holder.content.setText("" + item.getContent());
+			holder.content.setText("" + item.getMsgText());
 			holder.time.setText(""
 					+ com.meetu.cloud.utils.DateUtils
 					.getFormattedTimeInterval(Long.valueOf(item
