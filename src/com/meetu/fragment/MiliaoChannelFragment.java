@@ -111,7 +111,10 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 			// conv =
 			// MyApplication.chatClient.getConversation(""+seekChatBean.getCreator());
 			initView();
-			getUserInfo("" + seekChatBean.getCreator().getObjectId());
+			if(seekChatBean.getCreator()!=null){
+				getUserInfo("" + seekChatBean.getCreator().getObjectId());
+			}
+			
 			// getMembers(conv);
 			setUserInfo();
 		}
@@ -155,7 +158,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 
 		photoManager.setOnClickListener(this);
 
-		if (seekChatBean.getCreator().getProfileClip() != null) {
+		if (seekChatBean.getCreator()!=null&&seekChatBean.getCreator().getProfileClip() != null) {
 			log.e("zcq", "设置头像");
 			finalBitmap.display(photoManager, seekChatBean.getCreator().getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(getActivity(), 40), DensityUtil.dip2px(getActivity(), 40)),loadBitmapIng);
 			photoManager.setOnClickListener(this);

@@ -359,14 +359,16 @@ OnItemClickListener {
 			if(!isJoin){
 				payMethord = "weixin";
 				//支付状态为锁定
-				joinActivity(Constants.OrderStatusLock);
+			//	joinActivity(Constants.OrderStatusLock);
+				joinActivityPay(Constants.OrderStatusLock);
 			}
 			break;
 		case R.id.pay_zhifubao_rl:
 			if(!isJoin){
 				payMethord = "zhifubao";
 				//支付状态为锁定
-				joinActivity(Constants.OrderStatusLock);
+			//	joinActivity(Constants.OrderStatusLock);
+				joinActivityPay(Constants.OrderStatusLock);
 			}
 			break;
 		default:
@@ -505,22 +507,26 @@ OnItemClickListener {
 	//修改订单状态
 	public void updateOrder(int state){
 		activityOrder.setOrderStatus(state);
-		ObjActivityOrderWrap.updateOrder(activityOrder, new ObjActivityOrderCallback() {
-
-			@Override
-			public void callback(ObjActivityOrder order, AVException e) {
-				// TODO Auto-generated method stub
-				if(e == null){
-					activityOrder = order;
-					if(order.getOrderStatus()== Constants.OrderStatusPaySuccess){
-						isJoin = true;
-					}else{
-						isJoin = false;
-					}
-					updateView();
-				}
-			}
-		});
+		
+//		ObjActivityOrderWrap.updateOrder(activityOrder, new ObjActivityOrderCallback() {
+//
+//			@Override
+//			public void callback(ObjActivityOrder order, AVException e) {
+//				// TODO Auto-generated method stub
+//				if(e == null){
+//					activityOrder = order;
+//					if(order.getOrderStatus()== Constants.OrderStatusPaySuccess){
+//						isJoin = true;
+//					}else{
+//						isJoin = false;
+//					}
+//					updateView();
+//					
+//					
+//				}
+//			}
+//		});
+		signUpActyCommunityPay(activityOrder);
 	}
 	//支付宝支付
 	protected void payZfb(String orderId,float price) {
@@ -587,14 +593,19 @@ OnItemClickListener {
 				if(e!=null){
 					Toast.makeText(getApplicationContext(), "报名失败", Toast.LENGTH_SHORT).show();
 				//	Log.e("resCode", ""+map.get("resCode"));	
-					
+					isJoin = false;
 					log.e("e", e);
 					return;
 				}
 				if(map!=null){
-					System.out.print(map);
-				String	resCode=(String) map.get("resCode");
-														
+					int resCode=(Integer) map.get("resCode");
+					if(resCode==200){
+						isJoin = true;
+						updateUserName();
+						updateView();
+						System.out.print(map);
+						return;
+					}												
 				}
 				
 			}
@@ -618,7 +629,72 @@ OnItemClickListener {
 					"填写报名信息选择票种才能报名", Toast.LENGTH_SHORT).show();
 			return;
 		}
+		ObjActivityOrderWrap.signUpActivitypay(user, tickets.get(selectedPosition), hopeEditText.getText().toString(), 
+				new ObjFunMapCallback() {
+			
+			@Override
+			public void callback(Map<String, Object> map, AVException e) {
+				if(e!=null){
+					Toast.makeText(getApplicationContext(), "报名失败", Toast.LENGTH_SHORT).show();
+					isJoin = false;
+					log.e("e", e);
+					return;
+				}
+				if(map==null){
+					return;
+				}else{
+					System.out.print(map);
+					int resCode=(Integer) map.get("resCode");
+					if(resCode==200){
+						isJoin = true;
+						ObjActivityOrder order=(ObjActivityOrder) map.get("order");
+						activityOrder = order;
+						if(payMethord.equals("weixin")){
+							payMethord = "";
+							payWeiXin(activityOrder.getObjectId(),tickets.get(selectedPosition).getPrice());
+						}else if(payMethord.equals("zhifubao")){
+							payMethord = "";
+							payZfb(activityOrder.getObjectId(),tickets.get(selectedPosition).getPrice());
+						}
+					}
+				
+				}
+				
+			}
+		});
 		
+		
+	}
+	/**
+	 * 支付成功后调用
+	 * @param order  
+	 * @author lucifer
+	 * @date 2015-12-30
+	 */
+	public void signUpActyCommunityPay(ObjActivityOrder order){
+		
+		ObjActivityOrderWrap.signUpActyCommunityPay(order, new ObjFunMapCallback() {
+			
+			@Override
+			public void callback(Map<String, Object> map, AVException e) {
+				// TODO Auto-generated method stub
+				if(e!=null){
+					Log.e("e", "", e);
+					return;
+				}else{
+					int resCode=(Integer) map.get("resCode");
+					if(resCode==200){
+						log.e("支付成功", "更新状态和ui");
+							isJoin = true;
+						
+					}else{
+						isJoin = false;
+					}
+					updateView();
+					
+				}
+			}
+		});
 		
 	}
 	

@@ -181,18 +181,18 @@ public class HomePageDetialActivity extends Activity implements
 	 */
 	private void initLoad() {
 
-//		if (activityBean.getStatus() == 70) {
-//
-//			over.setVisibility(View.VISIBLE);
-//			join.setFocusable(false);
-//			join.setVisibility(View.INVISIBLE);
-//			barrage.setFocusable(false);
-//			barrage.setVisibility(View.INVISIBLE);
-//			memory.setFocusable(true);
-//			memory.setVisibility(View.VISIBLE);
-//			backFeed.setFocusable(true);
-//			backFeed.setVisibility(View.VISIBLE);
-//		}
+		if (activityBean.getStatus() == 70) {
+
+			over.setVisibility(View.VISIBLE);
+			join.setFocusable(false);
+			join.setVisibility(View.INVISIBLE);
+			barrage.setFocusable(false);
+			barrage.setVisibility(View.INVISIBLE);
+			memory.setFocusable(true);
+			memory.setVisibility(View.VISIBLE);
+			backFeed.setFocusable(true);
+			backFeed.setVisibility(View.VISIBLE);
+		}
 
 	}
 
@@ -372,7 +372,7 @@ public class HomePageDetialActivity extends Activity implements
 				Toast.makeText(this, "活动正在进行中，停止报名", Toast.LENGTH_SHORT).show();
 				break;
 			case 50:
-			case 70:
+			case 80:
 				if (user.isCompleteUserInfo()) {
 					Intent intent2 = new Intent(this, JoinActivity.class);
 					Bundle bundle2 = new Bundle();
