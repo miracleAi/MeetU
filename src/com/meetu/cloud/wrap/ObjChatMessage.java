@@ -12,10 +12,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.FunctionCallback;
 import com.avos.avoscloud.ProgressCallback;
 import com.avos.avoscloud.AVQuery.CachePolicy;
 import com.avos.avoscloud.LogUtil.log;
@@ -40,6 +42,7 @@ import com.meetu.cloud.callback.ObjConversationListCallback;
 import com.meetu.cloud.callback.ObjCoversationCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunCountCallback;
+import com.meetu.cloud.callback.ObjFunMapCallback;
 import com.meetu.cloud.callback.ObjFunStringCallback;
 import com.meetu.cloud.callback.ObjListCallback;
 import com.meetu.cloud.object.ObjAuthoriseCategory;
@@ -427,4 +430,41 @@ public class ObjChatMessage {
 			}
 		});
 	}
+	
+	/**
+	 * api 加入觅聊
+	 * @param userId
+	 * @param seekChatId  
+	 * @author lucifer
+	 * @date 2015-12-31
+	 */
+	public static void joinSeekChat(String userId,String seekChatId,final ObjFunMapCallback callback){
+		log.e("joinSeekChat", "进入加入觅聊回调");
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("userId", userId);
+		params.put("seekChatId", seekChatId);
+		
+		
+		AVCloud.callFunctionInBackground("joinSeekChat", params,
+				new FunctionCallback<Map<String, Object>>() {
+
+					@Override
+					public void done(Map<String, Object> result, AVException e) {
+						// TODO Auto-generated method stub
+						if (e != null) {
+							callback.callback(null, e);
+							return;
+						}
+						if (result != null) {
+							callback.callback(result, null);
+						} else {
+							callback.callback(null, new AVException(0,
+									"加入觅聊失败"));
+						}
+					}
+				});
+		
+		
+	}
+	
 }

@@ -585,7 +585,7 @@ OnItemClickListener {
 					"填写报名信息选择票种才能报名", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		ObjActivityOrderWrap.signUpActivityFree(user, tickets.get(selectedPosition), hopeEditText.getText().toString(), 
+		ObjActivityOrderWrap.signUpActivityFree(user.getObjectId(), tickets.get(selectedPosition).getObjectId(), hopeEditText.getText().toString(), 
 				new ObjFunMapCallback() {
 			
 			@Override
@@ -597,6 +597,7 @@ OnItemClickListener {
 					log.e("e", e);
 					return;
 				}
+				System.out.print(map);
 				if(map!=null){
 					int resCode=(Integer) map.get("resCode");
 					if(resCode==200){

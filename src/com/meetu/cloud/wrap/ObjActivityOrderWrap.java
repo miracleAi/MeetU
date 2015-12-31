@@ -17,6 +17,7 @@ import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.FunctionCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.AVQuery.CachePolicy;
+import com.avos.avoscloud.LogUtil.log;
 import com.meetu.cloud.callback.ObjActivityOrderCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunCallback;
@@ -161,23 +162,29 @@ public class ObjActivityOrderWrap {
 	 * @author lucifer
 	 * @date 2015-12-29
 	 */
-	public static void signUpActivityFree(ObjUser user,ObjActivityTicket ticket,String string ,final ObjFunMapCallback callback){
+	public static void signUpActivityFree(String user,String ticket,String string ,final ObjFunMapCallback callback){
+		log.e("zcq", "进入免费报名回调");
 		
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("user", user);		
-		params.put("ticket", ticket);
+		params.put("userId", user);		
+		params.put("ticketId", ticket);
 		params.put("userExpect", string);
-		AVCloud.rpcFunctionInBackground("signUpActyCommunityFree", params,new FunctionCallback<Map<String, Object>>() {
+		params.put("gender", 2);
+		params.put("mobilePhoneNumber", ObjUser.getCurrentUser().getMobilePhoneNumber());
+		AVCloud.callFunctionInBackground("signUpActyCommunityFree", params,new FunctionCallback<Map<String, Object>>() {
 
 			@Override
 			public void done(Map<String, Object> result, AVException e) {
 				if(e!=null){
 					callback.callback(result, e);
+					com.meetu.common.Log.e("eee", "有异常");
 					return;
 				}	
 				if(result!=null){
-					callback.callback(result, null);					
+					callback.callback(result, null);
+					com.meetu.common.Log.e("eee", "报名成功");
 				}else{
+					com.meetu.common.Log.e("eee", "报名失败");
 					callback.callback(null, new AVException(0,
 							"报名失败"));
 				}
