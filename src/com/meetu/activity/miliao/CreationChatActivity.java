@@ -547,7 +547,7 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 		convUserBean.setMute(Constants.CONV_UNKNOW_MUTE);
 		convUserBean.setRefuseMsg(Constants.CONV_UNKNOW_REFUSE);
 		convUserBean.setIdConversation((String)convUserMap.get("conversationId"));
-		HashMap<String, Object> creator = (HashMap<String, Object>) convUserMap.get("user");
+		HashMap<String, Object> creator = (HashMap<String, Object>) convUserMap.get("creator");
 		convUserBean.setIdConvCreator((String)creator.get("objectId"));
 		convUserBean.setIdConvAppend((String)convUserMap.get("appendId"));
 		convUserBean.setTitle((String)convUserMap.get("title"));
@@ -557,16 +557,16 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 		convUserBean.setUpdateTime(System.currentTimeMillis());
 		convUserBean.setOverTime((Long)convUserMap.get("overTime"));
 		convUserDao.insert(convUserBean);
-		List<HashMap<String, Object>> memberList = (List<HashMap<String, Object>>) map.get("member");
+		List<String> memberList = (List<String>) convUserMap.get("member");
 		ArrayList<MemberSeekBean> seekMemberList = new ArrayList<MemberSeekBean>();
 		if(memberList != null && memberList.size()>0){
 			for(int i =0;i<memberList.size();i++){
-				HashMap<String, Object> mapItem = memberList.get(i);
+				String mapItem = memberList.get(i);
 				MemberSeekBean seekBean = new MemberSeekBean();
-				seekBean.setConvStatus((Integer)mapItem.get("status"));
+				seekBean.setConvStatus(0);
 				seekBean.setSeekId((String)convUserMap.get("appendId"));
 				seekBean.setConversationId((String)convUserMap.get("conversationId"));
-				seekBean.setMemberSeekId((String)mapItem.get("userId"));
+				seekBean.setMemberSeekId(mapItem);
 				seekBean.setMineId(user.getObjectId());
 				seekMemberList.add(seekBean);
 			}

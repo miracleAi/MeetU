@@ -194,4 +194,35 @@ public class ConversationUserDao {
 						messages.getUnReadCount()});
 		db.close();
 	}
+	/**
+	 * 插入列表,存在--修改 不存在--插入
+	 * */
+	public void insertList(ArrayList<CoversationUserBean> list) {
+		SQLiteDatabase db = helper.getReadableDatabase();
+		for (int i = 0; i < list.size(); i++) {
+			CoversationUserBean messages = list.get(i);
+			Cursor c = db.rawQuery(
+					"select * from "+DbConstents.CONVERSATION_USER_TB+" where " + DbConstents.ID_MINE
+					+ "=? and "+DbConstents.ID_CONVERSATION+"=?",
+					new String[] { messages.getIdMine(),
+							messages.getIdConversation() });
+			if (c.moveToNext()) {
+				Messages msg = new Messages();
+				messages.setUnReadCount(c.getInt(c
+						.getColumnIndex(DbConstents.UNREAD_COUNT)));
+			}
+			c.close();
+			db.execSQL(
+					"insert or replace into "+DbConstents.CONVERSATION_USER_TB+" values(" + "?,?,?,?,?,"
+							+ "?,?,?,?,?,?)",
+							new Object[] { messages.getIdMine(),
+							messages.getIdConversation(),
+							messages.getIdConvAppend(), messages.getIdConvCreator(),
+							messages.getStatus(), messages.getType(),
+							messages.getMute(), messages.getTitle(),
+							messages.getOverTime(), messages.getUpdateTime(),
+							messages.getUnReadCount()});
+		}
+		db.close();
+	}
 }

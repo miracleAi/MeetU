@@ -25,13 +25,16 @@ import com.meetu.bean.MemberActivityBean;
 import com.meetu.bean.MemberSeekBean;
 import com.meetu.bean.MessageChatBean;
 import com.meetu.bean.UserAboutBean;
+import com.meetu.cloud.callback.ObjConvUserListCallback;
 import com.meetu.cloud.callback.ObjConversationListCallback;
 import com.meetu.cloud.callback.ObjListCallback;
 import com.meetu.cloud.callback.ObjSysMsgListCallback;
 import com.meetu.cloud.object.ObjSysMsg;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.object.ObjUserConversation;
 import com.meetu.cloud.utils.DateUtils;
 import com.meetu.cloud.wrap.ObjChatMessage;
+import com.meetu.cloud.wrap.ObjChatWrap;
 import com.meetu.cloud.wrap.ObjSysMsgWrap;
 import com.meetu.common.Constants;
 import com.meetu.common.Log;
@@ -316,7 +319,7 @@ OnClickListener,ChatViewInterface{
 	 * update zlp 2015-12-30
 	 */
 	public void getConversation() {
-		ObjChatMessage.getConversation(user.getObjectId(),
+		/*ObjChatMessage.getConversation(user.getObjectId(),
 				MyApplication.chatClient, new ObjConversationListCallback() {
 
 			@Override
@@ -370,12 +373,49 @@ OnClickListener,ChatViewInterface{
 						}
 
 					}
-					//messagesDao.insertList(list);
+					messagesDao.insertList(list);
 				}
 				handler.sendEmptyMessage(1);
 			}
+		});*/
+		ObjChatWrap.getConvUserList(user,new ObjConvUserListCallback() {
+			
+			@Override
+			public void callback(List<ObjUserConversation> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null ) {
+					return;
+				}
+				if(objects.size() == 0){
+					return;
+				}
+				ArrayList<CoversationUserBean> convUserList = new ArrayList<CoversationUserBean>();
+				for(int i=0;i<objects.size();i++){
+					ObjUserConversation objBean = objects.get(i);
+					CoversationUserBean bean =new CoversationUserBean();
+					bean.setIdMine(objBean.getConvUser().getObjectId());
+					bean.setIdConversation(objBean.getIdConversation());
+					bean.setIdConvAppend(objBean.getIdConvAppend());
+					bean.setMute(objBean.getMute());
+					bean.setOverTime(objBean.getOverTime());
+					bean.setRefuseMsg(objBean.getRefuseMsg());
+					bean.setStatus(objBean.getStatus());
+					bean.setTitle(objBean.getTitle());
+					bean.setType(objBean.getType());
+					bean.setUnReadCount(0);
+					bean.setUpdateTime(System.currentTimeMillis());
+					convUserList.add(bean);
+					ArrayList<MemberSeekBean> seekMemList = new ArrayList<MemberSeekBean>();
+					if(objBean.getMembers()!= null){
+						seekMemList.addAll(seekMemList);
+						memberSeekDao.deleteByConv(user.getObjectId(), bean.getIdConversation());
+						memberSeekDao.saveAllUserSeek(seekMemList);
+					}
+				}
+				convUserDao.insertList(convUserList);
+				handler.sendEmptyMessage(1);
+			}
 		});
-
 	}
 	/**
 	 * 查询对话成员 插到本地

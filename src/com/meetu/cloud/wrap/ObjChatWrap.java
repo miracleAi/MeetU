@@ -18,12 +18,17 @@ import com.avos.avoscloud.FunctionCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.meetu.cloud.callback.ObjChatBeanCallback;
 import com.meetu.cloud.callback.ObjChatCallback;
+import com.meetu.cloud.callback.ObjConvUserListCallback;
+import com.meetu.cloud.callback.ObjConversationListCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunMapCallback;
 import com.meetu.cloud.callback.ObjFunObjectCallback;
+import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjChat;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.object.ObjUserConversation;
 import com.meetu.common.Constants;
+import com.meetu.common.DbConstents;
 
 public class ObjChatWrap {
 	// 保存觅聊信息
@@ -88,21 +93,21 @@ public class ObjChatWrap {
 		AVCloud.callFunctionInBackground("seekChatInfos", params,
 				new FunctionCallback<Map<String, Object>>() {
 
-					@Override
-					public void done(Map<String, Object> result, AVException e) {
-						// TODO Auto-generated method stub
-						if (e != null) {
-							callback.callback(null, e);
-							return;
-						}
-						if (result != null) {
-							callback.callback(result, null);
-						} else {
-							callback.callback(null, new AVException(0,
-									"获取觅聊信息失败"));
-						}
-					}
-				});
+			@Override
+			public void done(Map<String, Object> result, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					callback.callback(null, e);
+					return;
+				}
+				if (result != null) {
+					callback.callback(result, null);
+				} else {
+					callback.callback(null, new AVException(0,
+							"获取觅聊信息失败"));
+				}
+			}
+		});
 	}
 	/**
 	 * 创建觅聊
@@ -116,20 +121,45 @@ public class ObjChatWrap {
 		AVCloud.callFunctionInBackground("createSeekChat", params,
 				new FunctionCallback<Map<String, Object>>() {
 
-					@Override
-					public void done(Map<String, Object> result, AVException e) {
-						// TODO Auto-generated method stub
-						if (e != null) {
-							callback.callback(null, e);
-							return;
-						}
-						if (result != null) {
-							callback.callback(result, null);
-						} else {
-							callback.callback(null, new AVException(0,
-									"获取觅聊信息失败"));
-						}
-					}
-				});
+			@Override
+			public void done(Map<String, Object> result, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					callback.callback(null, e);
+					return;
+				}
+				if (result != null) {
+					callback.callback(result, null);
+				} else {
+					callback.callback(null, new AVException(0,
+							"获取觅聊信息失败"));
+				}
+			}
+		});
+	}
+	/**
+	 * 获取userConversation
+	 * */
+	public static void getConvUserList(ObjUser user,final ObjConvUserListCallback callback){
+		AVQuery<ObjUserConversation> query = AVObject.getQuery(ObjUserConversation.class);
+		query.whereEqualTo("user", user);
+		query.whereGreaterThan("status", Constants.CONV_STATUS_CREATE);
+		query.findInBackground(new FindCallback<ObjUserConversation>() {
+
+			@Override
+			public void done(List<ObjUserConversation> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					callback.callback(null, e);
+					return;
+				}
+				if(objects != null){
+					callback.callback(objects, null);
+				}else{
+					callback.callback(null, new AVException(0,
+							"获取信息失败"));
+				}
+			}
+		});
 	}
 }
