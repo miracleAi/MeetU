@@ -174,4 +174,24 @@ public class ConversationUserDao {
 		db.execSQL(sql, new Object[] { userId, convId });
 		db.close();
 	}
+	/**
+	 * 插入或替换数据
+	 * 
+	 * @param messages
+	 *            消息表实体 Bean
+	 */
+	public void insert(CoversationUserBean messages) {
+		SQLiteDatabase db = helper.getReadableDatabase();
+		db.execSQL(
+				"insert or replace into "+DbConstents.CONVERSATION_USER_TB+" values(" + "?,?,?,?,?,"
+						+ "?,?,?,?,?,?)",
+						new Object[] { messages.getIdMine(),
+						messages.getIdConversation(),
+						messages.getIdConvAppend(), messages.getIdConvCreator(),
+						messages.getStatus(), messages.getType(),
+						messages.getMute(), messages.getTitle(),
+						messages.getOverTime(), messages.getUpdateTime(),
+						messages.getUnReadCount()});
+		db.close();
+	}
 }

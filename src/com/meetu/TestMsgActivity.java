@@ -30,6 +30,7 @@ import com.meetu.cloud.callback.ObjChatCallback;
 import com.meetu.cloud.callback.ObjCoversationCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjFunCountCallback;
+import com.meetu.cloud.callback.ObjFunMapCallback;
 import com.meetu.cloud.callback.ObjListCallback;
 import com.meetu.cloud.callback.ObjScripBoxCallback;
 import com.meetu.cloud.callback.ObjScripCallback;
@@ -450,8 +451,8 @@ public class TestMsgActivity extends Activity {
 
 				}
 				if (MyApplication.isChatLogin) {
-					// clickBtn.setText(SAVEGROUP);
-					clickBtn.setText(CREATESCRIP);
+					 clickBtn.setText(SAVEGROUP);
+					//clickBtn.setText(CREATESCRIP);
 				} else {
 					ObjChatMessage.connectToChatServer(
 							MyApplication.chatClient,
@@ -493,7 +494,7 @@ public class TestMsgActivity extends Activity {
 	 */
 	// 保存群信息
 	public void saveGroupInfo() {
-		ObjChatWrap.saveGroupInfo(user, groupf, "zlp_hello",
+		/*ObjChatWrap.saveGroupInfo(user, groupf, "zlp_hello",
 				new ObjChatBeanCallback() {
 
 					@Override
@@ -505,7 +506,21 @@ public class TestMsgActivity extends Activity {
 						}
 						clickBtn.setText(GETCHAT);
 					}
-				});
+				});*/
+		ObjChatWrap.createChat(user, groupf, "zlp_hello", new ObjFunMapCallback() {
+
+			@Override
+			public void callback(Map<String, Object> map, AVException e) {
+				// TODO Auto-generated method stub
+				if(e == null){
+					clickBtn.setText(LOADSUC);
+					com.meetu.common.Log.d("mytest", ""+map);	
+				}else{
+					clickBtn.setText(LOADFAIL);
+					com.meetu.common.Log.d("mytest", ""+e);
+				}
+			}
+		});
 	}
 
 	// 获取觅聊群
@@ -557,20 +572,20 @@ public class TestMsgActivity extends Activity {
 		ObjChatMessage.joinChat(MyApplication.chatClient, conv,
 				new ObjFunBooleanCallback() {
 
-					@Override
-					public void callback(boolean result, AVException e) {
-						// TODO Auto-generated method stub
-						if (e != null) {
-							clickBtn.setText(LOADFAIL);
-							return;
-						}
-						if (result) {
-							clickBtn.setText(LOADSUC);
-						} else {
-							clickBtn.setText(LOADFAIL);
-						}
-					}
-				});
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					clickBtn.setText(LOADFAIL);
+					return;
+				}
+				if (result) {
+					clickBtn.setText(LOADSUC);
+				} else {
+					clickBtn.setText(LOADFAIL);
+				}
+			}
+		});
 	}
 
 	// 获取会话成员数
@@ -631,20 +646,20 @@ public class TestMsgActivity extends Activity {
 		ObjChatMessage.connectToChatServer(MyApplication.chatClient,
 				new ObjAvimclientCallback() {
 
-					@Override
-					public void callback(AVIMClient client, AVException e) {
-						// TODO Auto-generated method stub
-						if (e != null) {
-							clickBtn.setText(LOADFAIL);
-							return;
-						}
-						if (client != null) {
-							clickBtn.setText(LOADSUC);
-						} else {
-							clickBtn.setText(LOADFAIL);
-						}
-					}
-				});
+			@Override
+			public void callback(AVIMClient client, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					clickBtn.setText(LOADFAIL);
+					return;
+				}
+				if (client != null) {
+					clickBtn.setText(LOADSUC);
+				} else {
+					clickBtn.setText(LOADFAIL);
+				}
+			}
+		});
 	}
 
 	// 查询是否需要权限
@@ -652,26 +667,26 @@ public class TestMsgActivity extends Activity {
 		ObjAuthoriseWrap.queryAuthoriseCatogory(operationNum,
 				new ObjAuthoriseCategoryCallback() {
 
-					@Override
-					public void callback(List<ObjAuthoriseCategory> objects,
-							AVException e) {
-						// TODO Auto-generated method stub
-						if (e != null) {
-							clickBtn.setText(LOADFAIL);
-							return;
-						}
-						if (objects.size() == 0) {
-							clickBtn.setText(LOADFAIL);
-							return;
-						}
-						category = objects.get(0);
-						if (category.isNeedAuthorise()) {
-							clickBtn.setText(HAVEAUTHOREISE);
-						} else {
-							clickBtn.setText(UPLOADPIC);
-						}
-					}
-				});
+			@Override
+			public void callback(List<ObjAuthoriseCategory> objects,
+					AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					clickBtn.setText(LOADFAIL);
+					return;
+				}
+				if (objects.size() == 0) {
+					clickBtn.setText(LOADFAIL);
+					return;
+				}
+				category = objects.get(0);
+				if (category.isNeedAuthorise()) {
+					clickBtn.setText(HAVEAUTHOREISE);
+				} else {
+					clickBtn.setText(UPLOADPIC);
+				}
+			}
+		});
 	}
 
 	// 查询是否有权限
@@ -679,20 +694,20 @@ public class TestMsgActivity extends Activity {
 		ObjAuthoriseWrap.queryUserAuthorise(category, user,
 				new ObjFunBooleanCallback() {
 
-					@Override
-					public void callback(boolean result, AVException e) {
-						// TODO Auto-generated method stub
-						if (e != null) {
-							clickBtn.setText(LOADFAIL);
-							return;
-						}
-						if (result) {
-							clickBtn.setText(UPLOADPIC);
-						} else {
-							clickBtn.setText(ISAPPLY);
-						}
-					}
-				});
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					clickBtn.setText(LOADFAIL);
+					return;
+				}
+				if (result) {
+					clickBtn.setText(UPLOADPIC);
+				} else {
+					clickBtn.setText(ISAPPLY);
+				}
+			}
+		});
 	}
 
 	// 查询是否已申请
@@ -700,22 +715,22 @@ public class TestMsgActivity extends Activity {
 		ObjAuthoriseWrap.queryApply(user, category,
 				new ObjAuthoriseApplyCallback() {
 
-					@Override
-					public void callback(List<ObjAuthoriseApply> objects,
-							AVException e) {
-						// TODO Auto-generated method stub
-						if (e != null) {
-							clickBtn.setText(LOADFAIL);
-							return;
-						}
-						if (objects.size() == 0) {
-							clickBtn.setText(STARTAPPLY);
-						} else {
-							apply = objects.get(0);
-							clickBtn.setText(UPDATEAPPLY);
-						}
-					}
-				});
+			@Override
+			public void callback(List<ObjAuthoriseApply> objects,
+					AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					clickBtn.setText(LOADFAIL);
+					return;
+				}
+				if (objects.size() == 0) {
+					clickBtn.setText(STARTAPPLY);
+				} else {
+					apply = objects.get(0);
+					clickBtn.setText(UPDATEAPPLY);
+				}
+			}
+		});
 	}
 
 	// 发起申请
@@ -723,20 +738,20 @@ public class TestMsgActivity extends Activity {
 		ObjAuthoriseWrap.applyAuthorise(user, caty, argument,
 				new ObjFunBooleanCallback() {
 
-					@Override
-					public void callback(boolean result, AVException e) {
-						// TODO Auto-generated method stub
-						if (e != null) {
-							clickBtn.setText(LOADFAIL);
-							return;
-						}
-						if (result) {
-							clickBtn.setText(LOADSUC);
-						} else {
-							clickBtn.setText(LOADFAIL);
-						}
-					}
-				});
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					clickBtn.setText(LOADFAIL);
+					return;
+				}
+				if (result) {
+					clickBtn.setText(LOADSUC);
+				} else {
+					clickBtn.setText(LOADFAIL);
+				}
+			}
+		});
 	}
 
 	// 重新申请

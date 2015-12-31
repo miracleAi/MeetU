@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cc.imeetu.R;
 
@@ -16,9 +18,13 @@ import com.avos.avoscloud.ProgressCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
+import com.baidu.platform.comapi.map.s;
+import com.meetu.bean.CoversationUserBean;
+import com.meetu.bean.MemberSeekBean;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.callback.ObjChatBeanCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjFunMapCallback;
 import com.meetu.cloud.callback.ObjScripInfoCallback;
 import com.meetu.cloud.object.ObjChat;
 import com.meetu.cloud.object.ObjScrip;
@@ -29,6 +35,8 @@ import com.meetu.cloud.wrap.ObjScriptWrap;
 import com.meetu.cloud.wrap.ObjUserPhotoWrap;
 import com.meetu.common.Constants;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.ConversationUserDao;
+import com.meetu.sqlite.MemberSeekDao;
 import com.meetu.tools.BitmapCut;
 import com.meetu.tools.DensityUtil;
 import com.meetu.tools.DisplayUtils;
@@ -79,6 +87,9 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 	Uri imageUri;//The Uri to store the big bitmap
 	
 	private RelativeLayout allLayout;
+	
+	private ConversationUserDao convUserDao = null;
+	private MemberSeekDao memSeekDao = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +100,8 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 		if (currentUser != null) {
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
+		convUserDao = new ConversationUserDao(this);
+		memSeekDao = new MemberSeekDao(this);
 		initView();
 	}
 
@@ -483,7 +496,7 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 
 	// 保存群信息
 	public void saveGroupInfo() {
-		ObjChatWrap.saveGroupInfo(user, groupf,
+		/*ObjChatWrap.saveGroupInfo(user, groupf,
 				updateText.getText().toString(), new ObjChatBeanCallback() {
 
 			@Override
@@ -501,7 +514,64 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 				}
 
 			}
-		});
+		});*/
+		ObjChatWrap.createChat(user, groupf,
+				updateText.getText().toString(), new ObjFunMapCallback() {
+					
+					@Override
+					public void callback(Map<String, Object> map, AVException e) {
+						// TODO Auto-generated method stub
+						if (e != null) {
+							// clickBtn.setText(LOADFAIL);
+							Toast.makeText(CreationChatActivity.this, "觅聊创建失败", 1000).show();
+							return;
+						} else {
+							Toast.makeText(CreationChatActivity.this, "觅聊已创建", 1000).show();
+							saveConvUser(map);
+							Intent intent = getIntent();
+							setResult(RESULT_OK, intent);
+							finish();
+						}
+					}
+				});
+	}
+
+	protected void saveConvUser(Map<String, Object> map) {
+		//保存觅聊
+		HashMap<String, Object> convUserMap = (HashMap<String, Object>) map.get("result");
+		if(convUserMap == null){
+			return ;
+		}
+		CoversationUserBean convUserBean = new CoversationUserBean();
+		convUserBean.setIdMine(user.getObjectId());
+		convUserBean.setMute(Constants.CONV_UNKNOW_MUTE);
+		convUserBean.setRefuseMsg(Constants.CONV_UNKNOW_REFUSE);
+		convUserBean.setIdConversation((String)convUserMap.get("conversationId"));
+		HashMap<String, Object> creator = (HashMap<String, Object>) convUserMap.get("user");
+		convUserBean.setIdConvCreator((String)creator.get("objectId"));
+		convUserBean.setIdConvAppend((String)convUserMap.get("appendId"));
+		convUserBean.setTitle((String)convUserMap.get("title"));
+		convUserBean.setStatus((Integer)convUserMap.get("status"));
+		convUserBean.setType(Constants.CONV_TYPE_SEEK);
+		convUserBean.setUnReadCount(0);
+		convUserBean.setUpdateTime(System.currentTimeMillis());
+		convUserBean.setOverTime((Long)convUserMap.get("overTime"));
+		convUserDao.insert(convUserBean);
+		List<HashMap<String, Object>> memberList = (List<HashMap<String, Object>>) map.get("member");
+		ArrayList<MemberSeekBean> seekMemberList = new ArrayList<MemberSeekBean>();
+		if(memberList != null && memberList.size()>0){
+			for(int i =0;i<memberList.size();i++){
+				HashMap<String, Object> mapItem = memberList.get(i);
+				MemberSeekBean seekBean = new MemberSeekBean();
+				seekBean.setConvStatus((Integer)mapItem.get("status"));
+				seekBean.setSeekId((String)convUserMap.get("appendId"));
+				seekBean.setConversationId((String)convUserMap.get("conversationId"));
+				seekBean.setMemberSeekId((String)mapItem.get("userId"));
+				seekBean.setMineId(user.getObjectId());
+				seekMemberList.add(seekBean);
+			}
+			memSeekDao.saveAllUserSeek(seekMemberList);
+		}
 	}
 
 	@Override

@@ -162,6 +162,23 @@ public class Constants {
 	//解散
 	public static final int CONV_STATUS_DISSOLVE= 80;
 	/**
+	 * 会话类型
+	 * */
+	public static final int CONV_TYPE_ACTY = 101;
+	public static final int CONV_TYPE_SEEK = 201;
+	/**
+	 * 会话静音标记
+	 * */
+	public static final int CONV_UNKNOW_MUTE = 0;
+	public static final int CONV_MUTE = 1;
+	public static final int CONV_UNMUTE = 2;
+	/**
+	 * 是否拒绝接收消息标记
+	 * */
+	public static final int CONV_UNKNOW_REFUSE = 0;
+	public static final int CONV_REFUSE = 1;
+	public static final int CONV_UNREFUSE = 2;
+	/**
 	 * 消息类型常量与leancloud对应
 	 * */
 	/*public static final int TEXT_TYPE = -1;

@@ -19,6 +19,8 @@ public class CoversationUserBean {
 	private String title;
 	//静音标记
 	private int mute;
+	//是否拒绝接收消息
+	private int refuseMsg;
 	//会话未读条数
 	private int unReadCount;
 	//会话结束时间
@@ -26,6 +28,12 @@ public class CoversationUserBean {
 	//最后更新时间
 	private long updateTime;
 	
+	public int getRefuseMsg() {
+		return refuseMsg;
+	}
+	public void setRefuseMsg(int refuseMsg) {
+		this.refuseMsg = refuseMsg;
+	}
 	public int getUnReadCount() {
 		return unReadCount;
 	}

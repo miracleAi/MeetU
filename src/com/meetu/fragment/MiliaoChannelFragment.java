@@ -69,7 +69,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 	private AVIMConversation conv;
 	// 会话成员列表
 	ArrayList<ObjUser> memberUserList = new ArrayList<ObjUser>();
-//	private UserAboutDao userAboutDao;// 成员缓存
+	//	private UserAboutDao userAboutDao;// 成员缓存
 	private MemberSeekDao memberSeekDao;
 	AVUser currentUser = ObjUser.getCurrentUser();
 	ObjUser user = new ObjUser();
@@ -81,9 +81,9 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 
 	List<String> list=new ArrayList<String>();//存放用户的id
 	Bitmap loadBitmapIng=null;
-	
+
 	private RelativeLayout outmoseLayout;
-	
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,9 +94,9 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 			if (currentUser != null) {
 				user = AVUser.cast(currentUser, ObjUser.class);
 			}
-			
+
 			loadBitmapIng=BitmapFactory.decodeResource(getResources(), R.drawable.mine_likelist_profile_default);
-		//	userAboutDao = new UserAboutDao(getActivity());
+			//	userAboutDao = new UserAboutDao(getActivity());
 			// objChat=(ObjChat) getArguments().get("ObjChat");
 			// log.e("zcq","objChat=="+objChat.getObjectId()+"  objChat.getConversationId=="+objChat.getConversationId());
 
@@ -124,7 +124,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 
 	private void initView() {
 		// TODO Auto-generated method stub
-		
+
 		dismissData = (TextView) view
 				.findViewById(R.id.date_top_miliao_channel_tv);
 		photoManager = (ImageView) view
@@ -177,7 +177,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 				@Override
 				public void onLoadFailed(View arg0, String arg1, Drawable arg2) {
 					// TODO Auto-generated method stub
-					
+
 				}
 			});
 		}
@@ -235,7 +235,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 	}
 
 	private void getUsersListInfo(final List<String> list) {
-		
+
 		memberUserList.clear();
 
 		for (int i = 0; i < list.size(); i++) {
@@ -357,11 +357,8 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 
 		list = new ArrayList<String>();
 
-	//	List<UserAboutBean> list2=userAboutDao.queryUserAbout(user.getObjectId(), Constants.CONVERSATION_TYPE, seekChatBean.getConversationId());
-		
-		 
 		List<MemberSeekBean> list2=memberSeekDao.queryUserAbout(user.getObjectId(),seekChatBean.getConversationId());
-		
+
 		for(int i=0;i<list2.size();i++){
 			list.add(list2.get(i).getMemberSeekId());
 		}
@@ -415,7 +412,18 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 	@Override
 	public void updateView(MessageChatBean bean) {
 		// TODO Auto-generated method stub
-		Toast.makeText(getActivity(), "miliao channel fragment receive msg", 1000).show();
-	}
+		int type = bean.getTypeMsg();
+		switch (type) {
+		case Constants.SHOW_MEMBER_ADD:
+		case Constants.SHOW_SELF_ADD:
+		case Constants.SHOW_MEMBER_KICK:
+		case Constants.SHOW_SELF_KICK:
+		case Constants.SHOW_MEMBER_QUIT:
+			setUserInfo();
+			break;
 
+		default:
+			break;
+		}
+	}
 }

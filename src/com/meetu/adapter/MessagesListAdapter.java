@@ -193,7 +193,7 @@ public class MessagesListAdapter extends BaseAdapter {
 			}
 		}
 
-		if (item.getType() == Constants.ACTYSG) {
+		if (item.getType() == Constants.CONV_TYPE_ACTY) {
 			holder.tvName.setText(item.getTitle());
 			holder.photpHead
 			.setImageResource(R.drawable.massage_newslist_img_acty);
@@ -206,7 +206,7 @@ public class MessagesListAdapter extends BaseAdapter {
 			}else{
 				holder.tvTime.setText("活动群聊已消失");
 			}
-		} else if (item.getType() == Constants.SEEKMSG) {
+		} else if (item.getType() == Constants.CONV_TYPE_SEEK) {
 			holder.tvName.setText(item.getTitle());
 			holder.photpHead
 			.setImageResource(R.drawable.massage_newslist_img_chat);

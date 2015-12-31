@@ -23,6 +23,7 @@ import com.meetu.cloud.callback.ObjFunMapCallback;
 import com.meetu.cloud.callback.ObjFunObjectCallback;
 import com.meetu.cloud.object.ObjChat;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.common.Constants;
 
 public class ObjChatWrap {
 	// 保存觅聊信息
@@ -85,6 +86,34 @@ public class ObjChatWrap {
 		params.put("createdAt", date);
 		params.put("queryLimit", limit);
 		AVCloud.callFunctionInBackground("seekChatInfos", params,
+				new FunctionCallback<Map<String, Object>>() {
+
+					@Override
+					public void done(Map<String, Object> result, AVException e) {
+						// TODO Auto-generated method stub
+						if (e != null) {
+							callback.callback(null, e);
+							return;
+						}
+						if (result != null) {
+							callback.callback(result, null);
+						} else {
+							callback.callback(null, new AVException(0,
+									"获取觅聊信息失败"));
+						}
+					}
+				});
+	}
+	/**
+	 * 创建觅聊
+	 * */
+	public static void createChat(ObjUser user, AVFile file, String title,
+			final ObjFunMapCallback callback) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userId", user.getObjectId());
+		params.put("fileId", file.getObjectId());
+		params.put("title", title);
+		AVCloud.callFunctionInBackground("createSeekChat", params,
 				new FunctionCallback<Map<String, Object>>() {
 
 					@Override
