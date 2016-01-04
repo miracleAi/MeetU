@@ -202,13 +202,13 @@ public class ObjActivityOrderWrap {
 	 * @author lucifer
 	 * @date 2015-12-29
 	 */
-	public static void signUpActivitypay(ObjUser user,ObjActivityTicket ticket,String string ,final ObjFunMapCallback callback){
+	public static void signUpActivitypay(String userId,String ticketId,String string ,final ObjFunMapCallback callback){
 		
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("user", user);		
-		params.put("ticket", ticket);
+		params.put("userId", userId);		
+		params.put("ticketId", ticketId);
 		params.put("userExpect", string);
-		AVCloud.rpcFunctionInBackground("signUpActyCommunityPrepare", params,new FunctionCallback<Map<String, Object>>() {
+		AVCloud.callFunctionInBackground("signUpActyCommunityPreparePay", params,new FunctionCallback<Map<String, Object>>() {
 
 			@Override
 			public void done(Map<String, Object> result, AVException e) {
@@ -232,11 +232,11 @@ public class ObjActivityOrderWrap {
 	 * @author lucifer
 	 * @date 2015-12-30
 	 */
-	public static void signUpActyCommunityPay(ObjActivityOrder order,final ObjFunMapCallback callback){
+	public static void signUpActyCommunityPay(String orderId,final ObjFunMapCallback callback){
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("order", order);		
+		params.put("orderId", orderId);		
 		
-		AVCloud.rpcFunctionInBackground("signUpActyCommunityPay", params,new FunctionCallback<Map<String, Object>>() {
+		AVCloud.callFunctionInBackground("signUpActyCommunityPay", params,new FunctionCallback<Map<String, Object>>() {
 
 			@Override
 			public void done(Map<String, Object> result, AVException e) {

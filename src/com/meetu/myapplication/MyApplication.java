@@ -13,13 +13,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
-import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.AVIMException;
-import com.avos.avoscloud.im.v2.AVIMMessage;
-import com.avos.avoscloud.im.v2.AVIMMessageHandler;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
-import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
-import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.lidroid.xutils.BitmapUtils;
 import com.meetu.cloud.callback.ObjAvimclientCallback;
 import com.meetu.cloud.object.ObjActivity;
@@ -54,7 +48,7 @@ public class MyApplication extends Application {
 
 	public BitmapUtils bitmapUtils = null;
 	private FinalBitmap finalBitmap = null;
-	private FinalBitmap finalBitmapHead=null;
+	
 	public static DefaultMessageHandler defaultMsgHandler;
 
 	@Override

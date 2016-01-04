@@ -11,6 +11,7 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMMessageHandler;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.meetu.bean.MessageChatBean;
@@ -20,6 +21,7 @@ import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjChatWrap;
 import com.meetu.common.Constants;
 import com.meetu.common.DbConstents;
+import com.meetu.common.Log;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.sqlite.ChatmsgsDao;
 import com.meetu.sqlite.ConversationUserDao;
@@ -55,7 +57,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 	public void setConversationId(String conversationId) {
 		this.conversationId = conversationId;
 	}
-
+	
 	@Override
 	public void onMessage(AVIMMessage message, AVIMConversation conversation,
 			AVIMClient client) {
@@ -66,6 +68,12 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		}else{
 			user = AVUser.getCurrentUser();
 		}
+		
+		log.e("onMessage", "收到新消息");
+	
+		log.e("messageType==", message.getClass().getName()+"");
+		AVIMTextMessage msg=((AVIMTextMessage)message);
+		log.e("AVIMTextMessage",""+ msg.getAttrs().get("ChatMsgType")+"||"+msg.getAttrs().get("userId")+"||"+msg.getAttrs().get("appendId")+"||"+msg.getAttrs().get("convType"));
 		//接收到消息后即修改对应会话的最后更新时间
 		if (message instanceof AVIMTextMessage) {
 			createChatMsg(conversation, message);
@@ -75,6 +83,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			createChatPicMsg(conversation, message);
 			return;
 		}
+
 	}
 
 	@Override
@@ -87,6 +96,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 	// 文本消息处理方法
 	public void createChatMsg(AVIMConversation conversation,AVIMMessage message) {
 		AVIMTextMessage msg = ((AVIMTextMessage) message);
+		Log.e("AVIMTextMessage", ""+msg.getAttrs().get(Constants.CHAT_MSG_TYPE));
 		int msgType = (Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
 		if(msgType == Constants.TYPE_SCRIPT){
 			saveScript(msg,conversation);
@@ -114,6 +124,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			chatBean.setMsgText(msg.getText());
 			break;
 		case Constants.MEMBER_ADD:
+			Log.e("MEMBER_ADD", "新成员"+appendUserId+"加入了");
 			chatBean.setIdOperated(appendUserId);
 			if(appendUserId != null && appendUserId.equals(user.getObjectId())){
 				chatBean.setTypeMsg(Constants.SHOW_SELF_ADD);
@@ -238,6 +249,8 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 	// 图片消息处理方法
 	public void createChatPicMsg(AVIMConversation conversation,AVIMMessage message) {
 		AVIMImageMessage msg = ((AVIMImageMessage) message);
+		log.e("msg", "收到图片消息");
+		log.e("createChatPicMsg",""+ msg.getAttrs().get("chatType")+msg.getAttrs().get("userId")+msg.getAttrs().get("appendId")+msg.getAttrs().get("msgType"));
 		MessageChatBean chatBean = new MessageChatBean();
 		int msgType = (Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
 		int direction = 0;

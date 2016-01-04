@@ -19,6 +19,7 @@ import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjActivityWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
+import com.meetu.common.Log;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.sqlite.ChatmsgsDao;
 import com.meetu.sqlite.MessagesDao;
@@ -82,6 +83,7 @@ public class DefaultMemberHandler extends AVIMConversationEventHandler {
 	public void handleMemberAdd(final AVIMClient client,
 			final AVIMConversation conversation, List<String> array,
 			String str, final ObjUser user) {
+		Log.e("成员加入消息","新成员加入了"+user.getObjectId());
 		for (String userId : array) {
 			if (userId.equals(user.getObjectId())) {
 				continue;

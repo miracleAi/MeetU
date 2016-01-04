@@ -39,6 +39,7 @@ import com.meetu.common.Constants;
 import com.meetu.common.Log;
 import com.meetu.entity.Booking;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.ConversationUserDao;
 import com.meetu.tools.BitmapCut;
 import com.meetu.tools.DateUtils;
 import com.meetu.tools.DensityUtil;
@@ -94,6 +95,7 @@ OnItemClickListener {
 	private EditText nameEditText;
 	private EditText hopeEditText;
 	private RelativeLayout loadAgainLayout;//重新加载票
+	private ConversationUserDao conversationUserDao;
 
 	// 获取活动报名信息
 	private boolean isJoin = false;// 是否报名
@@ -169,6 +171,7 @@ OnItemClickListener {
 			user = AVUser.cast(currentUser, ObjUser.class);
 
 		}
+		conversationUserDao=new ConversationUserDao(this);
 		bitmapUtils=new BitmapUtils(getApplicationContext());
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();
@@ -297,6 +300,29 @@ OnItemClickListener {
 				paylRelativeLayout.setVisibility(View.VISIBLE);
 			}
 		}
+	}
+/**
+ * 免费报名成功后的临时状态
+ *   
+ * @author lucifer
+ * @date 2016-1-4
+ */
+	public void updateViewFree(){
+		ticketPrice =0;
+		hopeStr = hopeEditText.getText().toString();
+		for(int i = 0;i<tickets.size();i++){
+			if(ticketPrice == tickets.get(i).getPrice()){
+				adapter.setSelectedPosition(i);
+				selectedPosition = i;
+				adapter.notifyDataSetChanged();
+			}
+		}
+		hopeEditText.setText(hopeStr);
+		hopeStr = "";
+		ticketPrice = 0;
+		payJoinedLayout.setVisibility(View.VISIBLE);
+		payLayout.setVisibility(View.GONE);
+		paylRelativeLayout.setVisibility(View.GONE);
 	}
 	//根据输入姓名修改用户真实姓名
 	private void updateUserName() {
@@ -505,9 +531,7 @@ OnItemClickListener {
 
 	}
 	//修改订单状态
-	public void updateOrder(int state){
-		activityOrder.setOrderStatus(state);
-		
+	public void updateOrder(int state){		
 //		ObjActivityOrderWrap.updateOrder(activityOrder, new ObjActivityOrderCallback() {
 //
 //			@Override
@@ -520,13 +544,22 @@ OnItemClickListener {
 //					}else{
 //						isJoin = false;
 //					}
-//					updateView();
+//					
 //					
 //					
 //				}
 //			}
 //		});
-		signUpActyCommunityPay(activityOrder);
+		System.out.println(activityOrder);
+		
+		if(state== Constants.OrderStatusPaySuccess){
+			isJoin = true;
+			signUpActyCommunityPay(activityOrder);
+		}else{
+			isJoin = false;
+			updateView();
+		}
+		
 	}
 	//支付宝支付
 	protected void payZfb(String orderId,float price) {
@@ -597,22 +630,59 @@ OnItemClickListener {
 					log.e("e", e);
 					return;
 				}
-				System.out.print(map);
+				System.out.println(map);
 				if(map!=null){
 					int resCode=(Integer) map.get("resCode");
+					log.e("zcq success", ""+resCode);
 					if(resCode==200){
 						isJoin = true;
 						updateUserName();
-						updateView();
-						System.out.print(map);
+						updateViewFree();
+						saveConvUser(map);
+						
 						return;
-					}												
+					}else if(resCode==205){
+						Toast.makeText(getApplicationContext(), "票已售罄", Toast.LENGTH_SHORT).show();
+					}else{
+						Toast.makeText(getApplicationContext(), "报名失败，请重试", Toast.LENGTH_SHORT).show();
+					}
+					
+					
 				}
 				
 			}
 		});
 		
 	}
+	/**
+	 * 保存用户对话 信息缓存
+	 * @param map  
+	 * @author lucifer
+	 * @date 2016-1-4
+	 */
+	protected void saveConvUser(Map<String, Object> map) {
+		HashMap<String, Object> convUserMap = (HashMap<String, Object>) map.get("result");
+		if(convUserMap == null){
+			return ;
+		}
+		System.out.println(convUserMap);
+		CoversationUserBean convUserBean = new CoversationUserBean();
+		convUserBean.setIdMine(user.getObjectId());
+		convUserBean.setMute(Constants.CONV_UNKNOW_MUTE);
+		convUserBean.setRefuseMsg(Constants.CONV_UNKNOW_REFUSE);
+		convUserBean.setIdConversation((String)convUserMap.get("conversationId"));
+		HashMap<String, Object> creator = (HashMap<String, Object>) convUserMap.get("creator");
+		convUserBean.setIdConvCreator((String)creator.get("objectId"));
+		convUserBean.setIdConvAppend((String)convUserMap.get("appendId"));
+		convUserBean.setTitle((String)convUserMap.get("title"));
+		convUserBean.setStatus((Integer)convUserMap.get("status"));
+		convUserBean.setType(Constants.CONV_TYPE_SEEK);
+		convUserBean.setUnReadCount(0);
+		convUserBean.setUpdateTime(System.currentTimeMillis());
+		convUserBean.setOverTime((Long)convUserMap.get("overTime"));
+		conversationUserDao.insert(convUserBean);	
+	}
+
 	/**
 	 * 报名收费活动
 	 * @param orderState  
@@ -630,7 +700,7 @@ OnItemClickListener {
 					"填写报名信息选择票种才能报名", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		ObjActivityOrderWrap.signUpActivitypay(user, tickets.get(selectedPosition), hopeEditText.getText().toString(), 
+		ObjActivityOrderWrap.signUpActivitypay(user.getObjectId(), tickets.get(selectedPosition).getObjectId(), hopeEditText.getText().toString(), 
 				new ObjFunMapCallback() {
 			
 			@Override
@@ -638,17 +708,30 @@ OnItemClickListener {
 				if(e!=null){
 					Toast.makeText(getApplicationContext(), "报名失败", Toast.LENGTH_SHORT).show();
 					isJoin = false;
+					Log.e("joinActivityPay", "有异常");
 					log.e("e", e);
 					return;
 				}
 				if(map==null){
 					return;
 				}else{
-					System.out.print(map);
+					System.out.println(map);
+					
 					int resCode=(Integer) map.get("resCode");
+					log.e("resCode", ""+resCode);
 					if(resCode==200){
 						isJoin = true;
-						ObjActivityOrder order=(ObjActivityOrder) map.get("order");
+						
+						ObjActivityOrder order=new ObjActivityOrder();
+						HashMap<String, Object> convUserMap = (HashMap<String, Object>) map.get("order");
+						order.setActivity((ObjActivity)convUserMap.get("activity"));
+						
+						order.setObjectId((String)convUserMap.get("objectId"));
+						order.setOrderStatus((Integer)convUserMap.get("orderStatus"));
+						order.setTicket((ObjActivityTicket)convUserMap.get("ticket"));
+						order.setUser(user);
+						order.setUserExpect((String)convUserMap.get("userExpect"));
+						order.setUserGender(user.getGender());					
 						activityOrder = order;
 						if(payMethord.equals("weixin")){
 							payMethord = "";
@@ -673,8 +756,8 @@ OnItemClickListener {
 	 * @date 2015-12-30
 	 */
 	public void signUpActyCommunityPay(ObjActivityOrder order){
-		
-		ObjActivityOrderWrap.signUpActyCommunityPay(order, new ObjFunMapCallback() {
+		Log.e("signUpActyCommunityPay", "支付成功后调用了"+order.getObjectId());
+		ObjActivityOrderWrap.signUpActyCommunityPay(order.getObjectId(), new ObjFunMapCallback() {
 			
 			@Override
 			public void callback(Map<String, Object> map, AVException e) {
@@ -684,11 +767,14 @@ OnItemClickListener {
 					return;
 				}else{
 					int resCode=(Integer) map.get("resCode");
+					log.e("支付后resCode", ""+resCode);
 					if(resCode==200){
-						log.e("支付成功", "更新状态和ui");
-							isJoin = true;
-						
+						log.e("支付成功api", "更新状态和ui");
+							isJoin = true;							
+							saveConvUser(map);
+	
 					}else{
+						log.e("支付失败api", "更新状态和ui");
 						isJoin = false;
 					}
 					updateView();
