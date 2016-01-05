@@ -101,7 +101,7 @@ public class Constants {
 	public static final int SYS_PHOTO_PRAISE = 105;
 	/**
 	 * 消息显示类型，对应数据库存储消息类型
-	 * （1-8为聊天面板显示消息，9位纸条消息）
+	 * （1-9为聊天面板显示消息，6纸条消息）
 	 * （9以后的消息类型标记可能在其他地方用到）
 	 * */
 	//发送文本消息

@@ -14,6 +14,8 @@ import com.avos.avoscloud.im.v2.AVIMMessageHandler;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.meetu.bean.MemberActivityBean;
+import com.meetu.bean.MemberSeekBean;
 import com.meetu.bean.MessageChatBean;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.utils.ChatMsgUtils;
@@ -25,6 +27,7 @@ import com.meetu.common.Log;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.sqlite.ChatmsgsDao;
 import com.meetu.sqlite.ConversationUserDao;
+import com.meetu.sqlite.MemberActivityDao;
 import com.meetu.sqlite.MemberSeekDao;
 import com.meetu.sqlite.MessageChatDao;
 import com.meetu.sqlite.MessagesDao;
@@ -37,6 +40,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 	MessageChatDao messageChatDao = null;
 	ConversationUserDao convUserDao = null;
 	MemberSeekDao memSeekDao = null;
+	MemberActivityDao memActyDao = null;
 	private Context context;
 	ChatViewInterface updateBean;
 	String conversationId = "";
@@ -49,6 +53,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		messageChatDao = new MessageChatDao(context);
 		convUserDao = new ConversationUserDao(context);
 		memSeekDao = new MemberSeekDao(context);
+		memActyDao = new MemberActivityDao(context);
 	}
 	public void setUpdateBean(ChatViewInterface updateBean) {
 		this.updateBean = null;
@@ -74,7 +79,6 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		log.e("messageType==", message.getClass().getName()+"");
 		AVIMTextMessage msg=((AVIMTextMessage)message);
 		log.e("AVIMTextMessage",""+ msg.getAttrs().get("ChatMsgType")+"||"+msg.getAttrs().get("userId")+"||"+msg.getAttrs().get("appendId")+"||"+msg.getAttrs().get("convType"));
-		//接收到消息后即修改对应会话的最后更新时间
 		if (message instanceof AVIMTextMessage) {
 			createChatMsg(conversation, message);
 			return;
@@ -121,6 +125,8 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			}else{
 				chatBean.setTypeMsg(Constants.SHOW_SEND_TYPE_TEXT);
 			}
+			boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
+			chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
 			chatBean.setMsgText(msg.getText());
 			break;
 		case Constants.MEMBER_ADD:
@@ -133,18 +139,36 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 				chatBean.setTypeMsg(Constants.SHOW_MEMBER_ADD);
 				chatBean.setMsgText("新人加入了，打个招呼吧");
 				//插入成员
-				//若没开启，判断是否开启，改变群聊状态
-				
-				
+				int convType = (Integer) msg.getAttrs().get("convType");
+				String appendConvId = (String) msg.getAttrs().get("appendId");
+				if(convType == Constants.CONV_TYPE_SEEK){
+					MemberSeekBean seekBean = new MemberSeekBean();
+					seekBean.setConvStatus(0);
+					seekBean.setConversationId(conversation.getConversationId());
+					seekBean.setMineId(user.getObjectId());
+					seekBean.setMemberSeekId(appendUserId);
+					seekBean.setSeekId(appendConvId);
+					memSeekDao.saveUserSeek(seekBean);
+				}else{
+					MemberActivityBean actyBean = new MemberActivityBean();
+					actyBean.setConvStatus(0);
+					actyBean.setConversationId(conversation.getConversationId());
+					actyBean.setMineId(user.getObjectId());
+					actyBean.setMemberId(appendUserId);
+					actyBean.setActivityId(appendConvId);
+					memActyDao.saveUserActivity(actyBean);
+				}
+				int convStatus = (Integer) msg.getAttrs().get("convStatus");
+				convUserDao.updateConvStatus(user.getObjectId(), conversation.getConversationId(), convStatus);
 			}
 			break;
 		case Constants.KICK_OUT:
 			if(appendUserId != null && appendUserId.equals(user.getObjectId())){
 				chatBean.setTypeMsg(Constants.SHOW_SELF_KICK);
 				chatBean.setMsgText("您已被踢出群聊");
-				//成员减少，改变群聊状态
-				
-				convUserDao.updateConvStatus(user.getObjectId(), conversation.getConversationId(), Constants.CONV_STATUS_KICK);
+				//改变群聊状态
+				String convId = (String) msg.getAttrs().get("convId");
+				convUserDao.updateConvStatus(user.getObjectId(), convId, Constants.CONV_STATUS_KICK);
 			}else{
 				chatBean.setTypeMsg(Constants.SHOW_MEMBER_KICK);
 				//成员减少
@@ -188,8 +212,6 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		default:
 			break;
 		}
-		boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
-		chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
 		chatBean.setIdMine(user.getObjectId());
 		chatBean.setIdClient(msg.getFrom());
 		chatBean.setIdMessage(msg.getMessageId());
