@@ -215,6 +215,48 @@ public class ObjChatMessage {
 					}
 				});
 	}
+	/**
+	 * 踢出成员api
+	 * @param userId 群主ID
+	 * @param kickUserId 被踢出用户ID
+	 * @param seekChatId 觅聊ID
+	 * @param callback  
+	 * @author lucifer
+	 * @date 2016-1-5
+	 */
+	public static void deleteMemberByApi(String userId,String kickUserId,String conversitionId,
+			final ObjFunMapCallback callback){
+		log.e("zcq", "进入踢出回调");
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userId", userId);		
+		params.put("kickUserId", kickUserId);
+		params.put("conversationId", conversitionId);
+		AVCloud.callFunctionInBackground("kickMemberFromSeekChat", params,new FunctionCallback<Map<String, Object>>(){
+
+			@Override
+			public void done(Map<String, Object> result, AVException e) {
+				// TODO Auto-generated method stub
+				if(e!=null){
+					callback.callback(result, e);
+					com.meetu.common.Log.e("eee", "有异常");
+					return;
+				}	
+				if(result!=null){
+					callback.callback(result, null);
+					com.meetu.common.Log.e("eee", "踢出成功");
+				}else{
+					com.meetu.common.Log.e("eee", "踢出失败");
+					callback.callback(null, new AVException(0,
+							"踢出失败"));
+				}
+				
+			}
+			
+		});
+		
+		
+	}
 
 	/**
 	 * 查询会话成员数量

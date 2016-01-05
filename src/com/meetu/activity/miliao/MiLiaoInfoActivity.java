@@ -2,6 +2,7 @@ package com.meetu.activity.miliao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import net.tsz.afinal.FinalBitmap;
 import cc.imeetu.R;
@@ -19,12 +20,14 @@ import com.meetu.bean.MemberActivityBean;
 import com.meetu.bean.MemberSeekBean;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjFunMapCallback;
 import com.meetu.cloud.callback.ObjFunStringCallback;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
+import com.meetu.common.Log;
 import com.meetu.entity.User;
 import com.meetu.entity.UserAbout;
 import com.meetu.myapplication.MyApplication;
@@ -82,6 +85,7 @@ OnMiLiaoInfoItemClickCallBack {
 
 	private String conversationStyle;// 对话类型，1 表示活动群聊 2表示觅聊 3表示单聊 暂时没有
 	private String conversationId;// 对话id
+
 	private List<ObjUser> objUsersList = new ArrayList<ObjUser>();
 	private UserAboutDao userAboutDao;
 	private MessagesDao messageDao;
@@ -119,6 +123,7 @@ OnMiLiaoInfoItemClickCallBack {
 		Intent intent = getIntent();
 		conversationStyle = intent.getStringExtra("ConversationStyle");
 		conversationId = intent.getStringExtra("ConversationId");
+
 		if (getIntent().getStringExtra("chatId") != null) {
 			chatId = getIntent().getStringExtra("chatId");
 		}
@@ -374,6 +379,12 @@ OnMiLiaoInfoItemClickCallBack {
 				}).create();
 		dialog.show();
 	}
+	/**
+	 * 退出群聊
+	 *   
+	 * @author lucifer
+	 * @date 2016-1-5
+	 */
 	public void quit(){
 		ObjChatMessage.userQuitConv(conv, new ObjFunBooleanCallback() {
 
@@ -387,7 +398,6 @@ OnMiLiaoInfoItemClickCallBack {
 				if(result){
 					log.e("zcq", "退出成功");
 					Toast.makeText(getApplicationContext(), "退出成功", Toast.LENGTH_SHORT).show();
-//					userAboutDao.deleteUserTypeUserId(userMY.getObjectId(), 2, conversationId, userMY.getObjectId());
 					memberSeekDao.deleteUserTypeUserId(userMY.getObjectId(), conversationId, userMY.getObjectId());
 					messageDao.deleteConv(userMY.getObjectId(), conversationId);
 					Intent intent=getIntent();
@@ -448,7 +458,10 @@ OnMiLiaoInfoItemClickCallBack {
 
 				} else {
 					if(!mList2.get(position).getUserId().equals(userMY.getObjectId())){
-						deleteUser(mList2.get(position).getUserId());
+						
+					//	deleteUser(mList2.get(position).getUserId());
+						deleteUserByApi(userMY.getObjectId(), mList2.get(position).getUserId(), conversationId);
+						
 						mList2.remove(position);
 					}else{
 						Toast.makeText(getApplicationContext(), "不能删除自己", Toast.LENGTH_SHORT).show();
@@ -604,8 +617,7 @@ OnMiLiaoInfoItemClickCallBack {
 				}
 				if(result){
 					log.e("zcq", "踢出成功");
-					Toast.makeText(getApplicationContext(), "踢出成功", Toast.LENGTH_SHORT).show();
-		//			userAboutDao.deleteUserTypeUserId(userMY.getObjectId(), 2, conversationId, memberId);
+					Toast.makeText(getApplicationContext(), "踢出成功", Toast.LENGTH_SHORT).show();		
 					memberSeekDao.deleteUserTypeUserId(userMY.getObjectId(), conversationId, memberId);
 				}else{
 					log.e("zcq", "踢出失败");
@@ -623,6 +635,42 @@ OnMiLiaoInfoItemClickCallBack {
 		Intent intent=getIntent();
 		setResult(RESULT_CANCELED, intent);
 		finish();
+	}
+	
+	/**
+	 * 踢出成员 byapi
+	 * @param userId 群主ID
+	 * @param kickUserId 被踢出用户ID
+	 * @param seekChatId  觅聊ID
+	 * @author lucifer
+	 * @date 2016-1-5
+	 */
+	public void deleteUserByApi(String userId,final String kickUserId,String conversionId ){
+		ObjChatMessage.deleteMemberByApi(userId, kickUserId, conversionId, new ObjFunMapCallback() {
+			
+			@Override
+			public void callback(Map<String, Object> map, AVException e) {
+				// TODO Auto-generated method stub
+				if(e!=null){
+					Log.e("deleteMemberByApi", "有异常啊", e);
+					Toast.makeText(getApplicationContext(), "踢出成员失败", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				int resCode=(Integer) map.get("resCode");
+				log.e("resCode", ""+resCode);
+				if(resCode==200){
+					log.e("zcq", "踢出成功");
+					Toast.makeText(getApplicationContext(), "踢出成功", Toast.LENGTH_SHORT).show();		
+					memberSeekDao.deleteUserTypeUserId(userMY.getObjectId(), conversationId, kickUserId);
+				}else{
+					log.e("zcq", "踢出失败");
+					Toast.makeText(getApplicationContext(), "踢出失败", Toast.LENGTH_SHORT).show();
+				}
+				
+			}
+		});
+		
+		
 	}
 
 

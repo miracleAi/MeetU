@@ -36,13 +36,13 @@
             <RelativeLayout
                 android:id="@+id/load_layout"
                 android:layout_width="match_parent"
-                android:layout_height="258dp"
+                android:layout_height="match_parent"
                 android:background="@drawable/chat_img_default_load_bg" >
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_centerInParent="true"                   
                     android:src="@drawable/acty_card_img_default_load_state" />
             </RelativeLayout>
 
