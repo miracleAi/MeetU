@@ -22,7 +22,7 @@ public class MessageChatDao {
 	 * 插入数据数据
 	 * 
 	 * @param chatmsgs
-	 *            消息实体
+	 *   消息实体
 	 */
 	public void insert(MessageChatBean msgBean) {
 		SQLiteDatabase db = helper.getReadableDatabase();

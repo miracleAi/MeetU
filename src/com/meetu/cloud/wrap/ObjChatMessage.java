@@ -215,6 +215,43 @@ public class ObjChatMessage {
 					}
 				});
 	}
+	
+	/**
+	 * 退出觅聊
+	 * @param userId
+	 * @param conversationId
+	 * @param callback  
+	 * @author lucifer
+	 * @date 2016-1-5
+	 */
+	public static void userQuitConvByApi(String userId,String conversationId,
+			final ObjFunMapCallback callback){
+		log.e("zcq", "进入退出回调");		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userId", userId);				
+		params.put("conversationId", conversationId);
+		AVCloud.callFunctionInBackground("", params, new FunctionCallback<Map<String, Object>>() {
+
+			@Override
+			public void done(Map<String, Object> result, AVException e) {
+				if(e!=null){
+					callback.callback(result, e);
+					com.meetu.common.Log.e("eee", "有异常");
+					return;
+				}	
+				if(result!=null){
+					callback.callback(result, null);
+					com.meetu.common.Log.e("eee", "退出成功");
+				}else{
+					com.meetu.common.Log.e("eee", "退出失败");
+					callback.callback(null, new AVException(0,
+							"退出失败"));
+				}
+				
+			}
+		});
+		
+	}
 	/**
 	 * 踢出成员api
 	 * @param userId 群主ID

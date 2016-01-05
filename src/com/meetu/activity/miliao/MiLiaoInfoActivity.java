@@ -174,6 +174,7 @@ OnMiLiaoInfoItemClickCallBack {
 			miliaoLayout.setVisibility(View.VISIBLE);
 			reportLayout.setVisibility(View.VISIBLE);
 			titleTextView.setText("觅聊信息");
+			exitLayout.setVisibility(View.VISIBLE);
 		} else if (conversationStyle==Constants.CONV_TYPE_ACTY) {
 			if (userMY.getProfileClip() != null) {
 				finalBitmap
@@ -186,6 +187,7 @@ OnMiLiaoInfoItemClickCallBack {
 			//			xiaoUname.setText(""+userMY.getNameNick());
 			userCreatorName.setText(userMY.getNameNick());
 			titleTextView.setText("活动群聊");
+			exitLayout.setVisibility(View.GONE);
 		}
 
 		loadData();
@@ -375,7 +377,8 @@ OnMiLiaoInfoItemClickCallBack {
 					public void onClick(DialogInterface dialog, int arg1) {
 						// TODO Auto-generated method stub
 						dialog.dismiss();
-						quit();
+					//	quit();
+						quitByApi();
 					}
 				}).create();
 		dialog.show();
@@ -409,6 +412,39 @@ OnMiLiaoInfoItemClickCallBack {
 
 				}
 
+			}
+		});
+	}
+	/**
+	 * 退出觅聊by api
+	 *   
+	 * @author lucifer
+	 * @date 2016-1-5
+	 */
+	public void quitByApi(){
+		ObjChatMessage.userQuitConvByApi(userMY.getObjectId(), conversationId, new ObjFunMapCallback() {
+			
+			@Override
+			public void callback(Map<String, Object> map, AVException e) {
+				if(e!=null){
+					log.e("zcq", e);
+					return;
+				}
+				int resCode=(Integer) map.get("resCode");
+				log.e("resCode", ""+resCode);
+				if(resCode==200){
+					log.e("zcq", "退出成功");
+					Toast.makeText(getApplicationContext(), "退出成功", Toast.LENGTH_SHORT).show();
+					memberSeekDao.deleteUserTypeUserId(userMY.getObjectId(), conversationId, userMY.getObjectId());
+					messageDao.deleteConv(userMY.getObjectId(), conversationId);
+					Intent intent=getIntent();
+					setResult(RESULT_OK, intent);
+					finish();
+				}else {
+					log.e("zcq", "退出失败");
+				}
+
+				
 			}
 		});
 	}
