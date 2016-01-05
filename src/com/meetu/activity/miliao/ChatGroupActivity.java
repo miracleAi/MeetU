@@ -189,6 +189,7 @@ OnItemClickListener,ChatViewInterface {
 
 	private String conversationStyle;// 对话类型，1 表示活动群聊 2表示觅聊 3表示单聊 暂时没有
 	private String conversationId;// 对话id
+	
 	private AVIMConversation conversation;
 
 	private MessageHandler msgHandler;
@@ -230,6 +231,7 @@ OnItemClickListener,ChatViewInterface {
 		Intent intent = getIntent();
 		conversationStyle = intent.getStringExtra("ConversationStyle");
 		conversationId = intent.getStringExtra("ConversationId");
+		
 		conversation = MyApplication.chatClient.getConversation(""
 				+ conversationId);
 		loadData();
