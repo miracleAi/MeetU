@@ -337,7 +337,7 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		chatMsgSb.append(DbConstents.TYPE_MSG + " Integer , ");
 		chatMsgSb.append(DbConstents.STATUS_MSG + " Integer , ");
 		chatMsgSb.append(DbConstents.DIRECTION_MSG + " varchar(100) , ");
-		chatMsgSb.append(DbConstents.IS_SHOW_TIME + " varchar(100) , ");
+		chatMsgSb.append(DbConstents.IS_SHOW_TIME + " varchar(100)  ");
 		/*chatMsgSb.append("constraint " + DbConstents.ID_CACHE_MSG + " primary key ("
 				+ DbConstents.ID_MINE + "," + DbConstents.ID_MESSAGE + ") ");*/
 		chatMsgSb.append(")");
