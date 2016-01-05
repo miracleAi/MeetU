@@ -187,7 +187,7 @@ OnItemClickListener,ChatViewInterface {
 	AVUser currentUser = ObjUser.getCurrentUser();
 	ObjUser user = new ObjUser();
 
-	private String conversationStyle;// 对话类型，1 表示活动群聊 2表示觅聊 3表示单聊 暂时没有
+	private int conversationStyle;// 对话类型
 	private String conversationId;// 对话id
 	
 	private AVIMConversation conversation;
@@ -229,7 +229,7 @@ OnItemClickListener,ChatViewInterface {
 				/ DensityUtil.dip2px(this, 45);
 
 		Intent intent = getIntent();
-		conversationStyle = intent.getStringExtra("ConversationStyle");
+		conversationStyle = intent.getIntExtra("ConversationStyle",0);
 		conversationId = intent.getStringExtra("ConversationId");
 		
 		conversation = MyApplication.chatClient.getConversation(""

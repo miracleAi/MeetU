@@ -303,7 +303,7 @@ public class BarrageActivity extends Activity {
 				} else {
 					Intent intent = new Intent(BarrageActivity.this,
 							ChatGroupActivity.class);
-					intent.putExtra("ConversationStyle", "1");
+					intent.putExtra("ConversationStyle", Constants.CONV_TYPE_ACTY);
 					intent.putExtra("ConversationId", actyBean.getConversationId());
 					intent.putExtra("title", actyBean.getTitle());
 					intent.putExtra("TimeOver",String.valueOf(actyBean.getTimeChatStop()));

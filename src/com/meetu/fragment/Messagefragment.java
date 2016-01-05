@@ -27,6 +27,7 @@ import com.meetu.bean.MessageChatBean;
 import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjConvUserListCallback;
 import com.meetu.cloud.callback.ObjConversationListCallback;
+import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjListCallback;
 import com.meetu.cloud.callback.ObjSysMsgListCallback;
 import com.meetu.cloud.object.ObjSysMsg;
@@ -234,6 +235,7 @@ OnClickListener,ChatViewInterface{
 		case Constants.CONV_STATUS_DISSOLVE:
 		case Constants.CONV_STATUS_DISMISS:
 			convUserDao.deleteConv(user.getObjectId(),mdataListCache.get(position).getIdConversation());
+			deleteObjUserConv(mdataListCache.get(position).getIdConversation());
 			break;
 		default:
 			break;
@@ -241,13 +243,26 @@ OnClickListener,ChatViewInterface{
 		Intent intent = new Intent(getActivity(), ChatGroupActivity.class);
 		intent.putExtra("ConversationId", ""
 				+ mdataListCache.get(position).getIdConversation());
-		// 传对话的类型 1 表示活动群聊 2 表示觅聊 3 表示单聊
 		intent.putExtra("ConversationStyle", ""
 				+ mdataListCache.get(position).getType());
 		startActivityForResult(intent, 1001);
 		// 清空该项未读消息
 		convUserDao.updateUnreadClear(user.getObjectId(),
 				mdataListCache.get(position).getIdConversation());
+	}
+	//删掉后台记录
+	private void deleteObjUserConv(String convId) {
+		// TODO Auto-generated method stub
+		ObjChatWrap.deleteUserConv(user, convId, new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(result){
+					
+				}
+			}
+		});
 	}
 
 	@Override
@@ -271,10 +286,9 @@ OnClickListener,ChatViewInterface{
 
 			switch (msg.what) {
 			case 1:
+				mdataListCache.clear();
 				ArrayList<CoversationUserBean> list = convUserDao.getMessages(user.getObjectId());
-
 				if (list != null && list.size() > 0) {
-					mdataListCache.clear();
 					for (CoversationUserBean messages : list) {
 						mdataListCache.add(messages);
 					}

@@ -13,6 +13,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.DeleteCallback;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.FunctionCallback;
 import com.avos.avoscloud.SaveCallback;
@@ -158,6 +159,24 @@ public class ObjChatWrap {
 				}else{
 					callback.callback(null, new AVException(0,
 							"获取信息失败"));
+				}
+			}
+		});
+	}
+	//删除后台userConv一条记录
+	public static void deleteUserConv(ObjUser user,String convId,final ObjFunBooleanCallback callback){
+		AVQuery<ObjUserConversation> query = AVObject.getQuery(ObjUserConversation.class);
+		query.whereEqualTo("user", user);
+		query.whereEqualTo("conversationId", convId);
+		query.deleteAllInBackground(new DeleteCallback() {
+			
+			@Override
+			public void done(AVException e) {
+				// TODO Auto-generated method stub
+				if(e == null){
+					callback.callback(true,null);
+				}else{
+					callback.callback(false, e);
 				}
 			}
 		});

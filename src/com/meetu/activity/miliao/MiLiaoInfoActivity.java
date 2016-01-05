@@ -83,7 +83,7 @@ OnMiLiaoInfoItemClickCallBack {
 	private RelativeLayout reportLayout;
 	// 网络数据相关
 
-	private String conversationStyle;// 对话类型，1 表示活动群聊 2表示觅聊 3表示单聊 暂时没有
+	private int conversationStyle;
 	private String conversationId;// 对话id
 
 	private List<ObjUser> objUsersList = new ArrayList<ObjUser>();
@@ -121,7 +121,8 @@ OnMiLiaoInfoItemClickCallBack {
 		MyApplication app = (MyApplication) this.getApplicationContext();
 		finalBitmap = app.getFinalBitmap();
 		Intent intent = getIntent();
-		conversationStyle = intent.getStringExtra("ConversationStyle");
+		//对话类型
+		conversationStyle = intent.getIntExtra("ConversationStyle", 0);
 		conversationId = intent.getStringExtra("ConversationId");
 
 		if (getIntent().getStringExtra("chatId") != null) {
@@ -144,7 +145,7 @@ OnMiLiaoInfoItemClickCallBack {
 		initView();
 		log.e("zcq conversationStyle", ""+conversationStyle);
 
-		if (conversationStyle.equals(""+Constants.SEEKMSG)) {
+		if (conversationStyle==Constants.CONV_TYPE_SEEK) {
 			ObjChatMessage.getChatCreater(conv, new ObjFunStringCallback() {
 
 				@Override
@@ -173,7 +174,7 @@ OnMiLiaoInfoItemClickCallBack {
 			miliaoLayout.setVisibility(View.VISIBLE);
 			reportLayout.setVisibility(View.VISIBLE);
 			titleTextView.setText("觅聊信息");
-		} else if (conversationStyle.equals(""+Constants.ACTYSG)) {
+		} else if (conversationStyle==Constants.CONV_TYPE_ACTY) {
 			if (userMY.getProfileClip() != null) {
 				finalBitmap
 				.display(userCreator, userMY.getProfileClip().getThumbnailUrl(true, DensityUtil.dip2px(MiLiaoInfoActivity.this, 40), DensityUtil.dip2px(MiLiaoInfoActivity.this, 40)),loadBitmap);	
@@ -192,7 +193,7 @@ OnMiLiaoInfoItemClickCallBack {
 
 	private void loadData2() {
 		
-		if (conversationStyle.equals("2") && isCreator == true) {
+		if (conversationStyle==Constants.CONV_TYPE_SEEK && isCreator) {
 
 
 			if (mlist != null) {
@@ -230,7 +231,7 @@ OnMiLiaoInfoItemClickCallBack {
 
 		// 加载网络数据
 		objUsersList = new ArrayList<ObjUser>();
-		if (conversationStyle.equals(""+Constants.ACTYSG)) {
+		if (conversationStyle==Constants.CONV_TYPE_ACTY) {
 			// 活动群聊
 
 //			beanList = userAboutDao.queryUserAbout(userMY.getObjectId(),
@@ -245,7 +246,7 @@ OnMiLiaoInfoItemClickCallBack {
 
 			}
 			
-		} else if (conversationStyle.equals(""+Constants.SEEKMSG)) {
+		} else if (conversationStyle==Constants.CONV_TYPE_SEEK) {
 			// 觅聊群聊
 //			beanList = userAboutDao.queryUserAbout(userMY.getObjectId(),
 //					Constants.CONVERSATION_TYPE, conversationId);
@@ -413,7 +414,7 @@ OnMiLiaoInfoItemClickCallBack {
 	}
 	@Override
 	public void onItemClick(int position) {
-		if (conversationStyle.equals("2") && isCreator == true) {
+		if (conversationStyle==Constants.CONV_TYPE_ACTY && isCreator) {
 			// 2表示觅聊 1表示活动群聊
 
 			if (detele == false) {

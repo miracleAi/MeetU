@@ -278,7 +278,7 @@ OnClickListener {
 								+ seekChatBeansList.get(positonNow)
 								.getConversationId());
 						// 传对话的类型 1 表示活动群聊 2 表示觅聊 3 表示单聊
-						intent2.putExtra("ConversationStyle", "" + 2);
+						intent2.putExtra("ConversationStyle",Constants.CONV_TYPE_SEEK);
 						intent2.putExtra("title",
 								"" + seekChatBeansList.get(positonNow).getTitle());
 						intent2.putExtra("number",
