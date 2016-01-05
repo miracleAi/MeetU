@@ -421,8 +421,8 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 		intent.putExtra("aspectX", 275);
 		intent.putExtra("aspectY", 258);
 		// // outputX outputY 是裁剪图片宽高
-		/*intent.putExtra("outputX", 550);
-		intent.putExtra("outputY", 516);*/
+		intent.putExtra("outputX", 550);
+		intent.putExtra("outputY", 516);
 		intent.putExtra("return-data", false);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 		intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
@@ -451,6 +451,7 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 			@Override
 			public void done(AVException e) {
 				// TODO Auto-generated method stub
+				isUpEnd = true;
 				if (e == null) {
 					chatUpProgre.setProgress(0);
 					chatUpProgre.setVisibility(View.GONE);
@@ -479,6 +480,7 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 								});
 					}
 				} else {
+					Toast.makeText(CreationChatActivity.this, "上传图片失败", 1000).show();
 					chatUpProgre.setProgress(0);
 					chatUpProgre.setVisibility(View.GONE);
 					log.e("zcq", "照片上传失败");

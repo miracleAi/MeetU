@@ -74,11 +74,6 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			user = AVUser.getCurrentUser();
 		}
 		
-		log.e("onMessage", "收到新消息");
-	
-		log.e("messageType==", message.getClass().getName()+"");
-		AVIMTextMessage msg=((AVIMTextMessage)message);
-		log.e("AVIMTextMessage",""+ msg.getAttrs().get("ChatMsgType")+"||"+msg.getAttrs().get("userId")+"||"+msg.getAttrs().get("appendId")+"||"+msg.getAttrs().get("convType"));
 		if (message instanceof AVIMTextMessage) {
 			createChatMsg(conversation, message);
 			return;
@@ -132,14 +127,26 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		case Constants.MEMBER_ADD:
 			Log.e("MEMBER_ADD", "新成员"+appendUserId+"加入了");
 			chatBean.setIdOperated(appendUserId);
+			int convType = (Integer) msg.getAttrs().get("convType");
 			if(appendUserId != null && appendUserId.equals(user.getObjectId())){
-				chatBean.setTypeMsg(Constants.SHOW_SELF_ADD);
-				chatBean.setMsgText("欢迎加入群聊");
+				//插入成员
+				String appendConvId = (String) msg.getAttrs().get("appendId");
+				if(convType == Constants.CONV_TYPE_SEEK){
+				}else{
+					chatBean.setTypeMsg(Constants.SHOW_SELF_ADD);
+					chatBean.setMsgText("欢迎加入群聊");
+					MemberActivityBean actyBean = new MemberActivityBean();
+					actyBean.setConvStatus(0);
+					actyBean.setConversationId(conversation.getConversationId());
+					actyBean.setMineId(user.getObjectId());
+					actyBean.setMemberId(appendUserId);
+					actyBean.setActivityId(appendConvId);
+					memActyDao.saveUserActivity(actyBean);
+				}
 			}else{
 				chatBean.setTypeMsg(Constants.SHOW_MEMBER_ADD);
 				chatBean.setMsgText("新人加入了，打个招呼吧");
 				//插入成员
-				int convType = (Integer) msg.getAttrs().get("convType");
 				String appendConvId = (String) msg.getAttrs().get("appendId");
 				if(convType == Constants.CONV_TYPE_SEEK){
 					MemberSeekBean seekBean = new MemberSeekBean();
