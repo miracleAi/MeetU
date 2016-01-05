@@ -170,7 +170,7 @@ public class ConversationUserDao {
 	public void deleteConv(String userId, String convId) {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		String sql = "delete from "+DbConstents.CONVERSATION_USER_TB+" where " + DbConstents.ID_MINE + "=?"
-				+ " and "+DbConstents.ID_CONVERSATION+" ?";
+				+ " and "+DbConstents.ID_CONVERSATION+"=?";
 		db.execSQL(sql, new Object[] { userId, convId });
 		db.close();
 	}
