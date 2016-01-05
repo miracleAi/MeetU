@@ -230,7 +230,7 @@ public class ObjChatMessage {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("userId", userId);				
 		params.put("conversationId", conversationId);
-		AVCloud.callFunctionInBackground("", params, new FunctionCallback<Map<String, Object>>() {
+		AVCloud.callFunctionInBackground("quitFromSeekChat", params, new FunctionCallback<Map<String, Object>>() {
 
 			@Override
 			public void done(Map<String, Object> result, AVException e) {
