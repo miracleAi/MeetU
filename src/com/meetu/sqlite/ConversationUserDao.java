@@ -107,13 +107,12 @@ public class ConversationUserDao {
 	public ArrayList<CoversationUserBean> getMessages(String uid) {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		Cursor c = db.rawQuery("select * from "+DbConstents.CONVERSATION_USER_TB+" where "
-				+ DbConstents.ID_MINE + "=?", new String[] {
+				+ DbConstents.ID_MINE + "=? order by "+DbConstents.CONV_UPDATE_TIME+" desc", new String[] {
 						uid });
 		ArrayList<CoversationUserBean> list = new ArrayList<CoversationUserBean>();
-		while (c.moveToNext()) {
+		while (c != null && c.moveToNext()) {
 			CoversationUserBean messages = new CoversationUserBean();
 			messages.setIdMine(c.getString(c.getColumnIndex(DbConstents.ID_MINE)));
-			messages.setIdCacheConv(c.getString(c.getColumnIndex(DbConstents.ID_MINE_CONVERSATION)));
 			messages.setIdConversation(c.getString(c.getColumnIndex(DbConstents.ID_CONVERSATION)));
 			messages.setIdConvCreator(c.getString(c.getColumnIndex(DbConstents.ID_CONV_CREATOR)));
 			messages.setIdConvAppend(c.getString(c.getColumnIndex(DbConstents.ID_CONV_APPEND)));
@@ -124,6 +123,7 @@ public class ConversationUserDao {
 			messages.setOverTime(c.getLong(c.getColumnIndex(DbConstents.CONV_OVER_TIME)));
 			messages.setUpdateTime(c.getLong(c.getColumnIndex(DbConstents.CONV_UPDATE_TIME)));
 			messages.setMute(c.getInt(c.getColumnIndex(DbConstents.CONV_MUTE)));
+			messages.setIdCacheConv(c.getString(c.getColumnIndex(DbConstents.ID_MINE_CONVERSATION)));
 			list.add(messages);
 		}
 		c.close();
@@ -183,9 +183,9 @@ public class ConversationUserDao {
 	public void insert(CoversationUserBean messages) {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		db.execSQL(
-				"insert or replace into "+DbConstents.CONVERSATION_USER_TB+" values(" + "?,?,?,?,?,"
+				"insert or replace into "+DbConstents.CONVERSATION_USER_TB+" values("+"?,?,?,?,?,?,"
 						+ "?,?,?,?,?,?)",
-						new Object[] { messages.getIdMine(),
+						new Object[] {messages.getIdMine()+messages.getIdConversation(), messages.getIdMine(),
 						messages.getIdConversation(),
 						messages.getIdConvAppend(), messages.getIdConvCreator(),
 						messages.getStatus(), messages.getType(),
@@ -207,15 +207,15 @@ public class ConversationUserDao {
 					new String[] { messages.getIdMine(),
 							messages.getIdConversation() });
 			if (c.moveToNext()) {
-				Messages msg = new Messages();
+				CoversationUserBean msg = new CoversationUserBean();
 				messages.setUnReadCount(c.getInt(c
 						.getColumnIndex(DbConstents.UNREAD_COUNT)));
 			}
 			c.close();
 			db.execSQL(
-					"insert or replace into "+DbConstents.CONVERSATION_USER_TB+" values(" + "?,?,?,?,?,"
+					"insert or replace into "+DbConstents.CONVERSATION_USER_TB+" values("+"?,?,?,?,?,?,"
 							+ "?,?,?,?,?,?)",
-							new Object[] { messages.getIdMine(),
+							new Object[] { messages.getIdMine()+messages.getIdConversation(),messages.getIdMine(),
 							messages.getIdConversation(),
 							messages.getIdConvAppend(), messages.getIdConvCreator(),
 							messages.getStatus(), messages.getType(),

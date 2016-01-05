@@ -12,7 +12,7 @@ public class DbConstents {
 	 */
 	public static String MEMBER_ACTY_TB = "member_activity_tb";
 	//主键 
-	public static String ID_MINE_MEMBER_ACTY = "id_mine_member_acty";
+	public static String ID_MINE_MEMBER_ACTY = "_id";
 	//成员ID
 	public static String ID_ACTY_MEMBER = "id_member";
 	//活动ID
@@ -27,7 +27,7 @@ public class DbConstents {
 	 */
 	public static String MEMBER_SEEK_TB = "member_seek_tb";
 	//主键
-	public static String ID_MINE_MEMBER_SEEK = "id_mine_member_seek";
+	public static String ID_MINE_MEMBER_SEEK = "_id";
 	//成员ID
 	public static String ID_SEEK_MEMBER = "id_member";
 	//觅聊ID
@@ -44,7 +44,7 @@ public class DbConstents {
 	 * */
 	public static String MSG_CHAT_TB = "msg_chat_tb";
 	//主键
-	public static String ID_CACHE_MSG = "id_cache_msg";
+	public static String ID_CACHE_MSG = "_id";
 	//消息ID
 	public static String ID_MESSAGE = "id_message";
 	//发送者ID
@@ -77,7 +77,7 @@ public class DbConstents {
 	 * */
 	public static String CONVERSATION_USER_TB = "conversation_user_tb";
 	//主键
-	public static String ID_MINE_CONVERSATION = "id_mine_conversation";
+	public static String ID_MINE_CONVERSATION = "_id";
 	//会话ID
 	public static String ID_CONVERSATION = "id_conversation";
 	//附加ID（活动ID，觅聊ID）
@@ -150,7 +150,7 @@ public class DbConstents {
 	 * */
 	public static final String USERABOUT_CACHE_TB = "userabout_cache_tb";
 	//主键
-	public static final String ABOUTCACHEID="about_cache_id";
+	public static final String ABOUTCACHEID="_id";
 	// 类型ID
 	public static final String ABOUTTYPE = "about_type";
 	// 相关用户ID

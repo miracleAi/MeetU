@@ -8,11 +8,12 @@ import android.os.Parcelable.Creator;
 import com.avos.avoscloud.AVClassName;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVObject.AVObjectCreator;
+import com.meetu.common.Constants;
 @AVClassName("ObjUserConversation")
 public class ObjUserConversation extends AVObject implements Serializable{
 	public static final Creator CREATOR = AVObjectCreator.instance;
 	//会话ID
-	public static String ID_CONVERSATION = "conversation";
+	public static String ID_CONVERSATION = "conversationId";
 	//附加ID（活动ID，觅聊ID）
 	public static String ID_APPEND = "appendId";
 	//会话创建者
@@ -55,10 +56,18 @@ public class ObjUserConversation extends AVObject implements Serializable{
 		return this.getString(TITLE);
 	}
 	public int getMute() {
-		return this.getInt(MUTE);
+		if(this.getBoolean(MUTE)){
+			return 1;
+		}else{
+			return 0;
+		}
 	}
 	public int getRefuseMsg() {
-		return this.getInt(REFUSE_MSG);
+		if(this.getBoolean(REFUSE_MSG)){
+			return 1;
+		}else{
+			return 0;
+		}
 	}
 	public long getOverTime() {
 		return this.getLong(OVERTIME);

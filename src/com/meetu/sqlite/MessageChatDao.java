@@ -27,9 +27,9 @@ public class MessageChatDao {
 	public void insert(MessageChatBean msgBean) {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		db.execSQL(
-				"insert into "+DbConstents.MSG_CHAT_TB +"values(" + "?,?,?,?,?,"
+				"insert into "+DbConstents.MSG_CHAT_TB +" values(" + "?,?,?,?,?,?,"
 						+ "?,?,?,?,?," + "?,?,?,?)",
-						new Object[] { msgBean.getIdMine(),msgBean.getIdMessage(), msgBean.getIdClient(),
+						new Object[] { msgBean.getIdMine()+msgBean.getIdMessage(),msgBean.getIdMine(),msgBean.getIdMessage(), msgBean.getIdClient(),
 						msgBean.getSendTimeStamp(), msgBean.getMsgText(),
 						msgBean.getFileUrl(),
 						msgBean.getImgHeight(),
