@@ -671,8 +671,8 @@ OnItemClickListener {
 		convUserBean.setMute(Constants.CONV_UNKNOW_MUTE);
 		convUserBean.setRefuseMsg(Constants.CONV_UNKNOW_REFUSE);
 		convUserBean.setIdConversation((String)convUserMap.get("conversationId"));
-		HashMap<String, Object> creator = (HashMap<String, Object>) convUserMap.get("creator");
-		convUserBean.setIdConvCreator((String)creator.get("objectId"));
+		AVUser creator =  (AVUser) convUserMap.get("creator");
+		convUserBean.setIdConvCreator(creator.getCurrentUser().getObjectId());
 		convUserBean.setIdConvAppend((String)convUserMap.get("appendId"));
 		convUserBean.setTitle((String)convUserMap.get("title"));
 		convUserBean.setStatus((Integer)convUserMap.get("status"));

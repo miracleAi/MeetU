@@ -2,6 +2,7 @@ package com.meetu.fragment;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import com.meetu.activity.miliao.ApplyForMiLiaoActivity;
 import com.meetu.activity.miliao.ChatGroupActivity;
 import com.meetu.activity.miliao.CreationChatActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
+import com.meetu.bean.CoversationUserBean;
 import com.meetu.bean.MemberSeekBean;
 import com.meetu.bean.SeekChatBean;
 import com.meetu.bean.SeekChatInfoBean;
@@ -40,6 +42,7 @@ import com.meetu.common.PerfectInformation;
 import com.meetu.entity.Chatmsgs;
 import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.ChatmsgsDao;
+import com.meetu.sqlite.ConversationUserDao;
 import com.meetu.sqlite.MemberSeekDao;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DepthPageTransformer;
@@ -106,6 +109,7 @@ OnClickListener {
 
 	List<Boolean> isAddList=new ArrayList<Boolean>();
 	private MemberSeekDao memberSeekDao;
+	private ConversationUserDao conversationUserDao;
 
 	//空状态相关
 	private RelativeLayout noneFailLayout;//空状态背景
@@ -118,6 +122,7 @@ OnClickListener {
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
+		
 	}
 
 	@Override
@@ -132,6 +137,7 @@ OnClickListener {
 
 //			userAboutDao = new UserAboutDao(getActivity());
 			memberSeekDao = new MemberSeekDao(getActivity());
+			conversationUserDao=new ConversationUserDao(getActivity());
 			// 获取觅聊列表
 			// getObjChatList();
 
@@ -304,7 +310,8 @@ OnClickListener {
 						}
 						joinChatTv.setText("加入觅聊");
 					//	joinGroup(conv);
-						joinSeekChat(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
+						joinSeekChat(user.getObjectId(),seekChatBeansList.get(positonNow).getObjectId());
+						
 					}
 				}
 			}else{
@@ -754,7 +761,7 @@ OnClickListener {
 	 * @author lucifer
 	 * @date 2015-12-31
 	 */
-	public void joinSeekChat(String userId,String seekChatId){
+	public void joinSeekChat(String userId,final String seekChatId){
 		log.e("zcq", "准备加入");
 		
 		ObjChatMessage.joinSeekChat(userId, seekChatId, new ObjFunMapCallback() {
@@ -765,16 +772,106 @@ OnClickListener {
 					Log.e("joinSeekChat", "e",e);
 					return;
 				}
-				System.out.print(map);
+				System.out.println(map);
 				if(map!=null){
 					int resCode=(Integer) map.get("resCode");
+					log.e("resCode", ""+resCode);
 					if(resCode==200){
-						log.e("加入成功");
+						Log.i("joinSeekChat", "正常");
+						//TODO 更新本地聊天消息本人加入提醒    觅聊卡片中头像更新
+						log.e("zcq", "加入觅聊成功");
+						Chatmsgs chatmsgs=new Chatmsgs();
+						chatmsgs.setContent("欢迎加入觅聊");
+						chatmsgs.setClientId(user.getObjectId());
+						chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
+						chatmsgs.setChatMsgType(Constants.SHOW_SELF_ADD);
+						chatmsgs.setConversationId(seekChatBeansList.get(positonNow).getConversationId());
+						chatmsgs.setUid(user.getObjectId());
+						chatmsgsDao.insert(chatmsgs);
+
+						MemberSeekBean memberSeekBean=new MemberSeekBean();
+						memberSeekBean.setConversationId(seekChatBeansList.get(positonNow).getConversationId());
+						memberSeekBean.setConvStatus(Constants.NORMAL);
+						memberSeekBean.setMemberSeekId(user.getObjectId());
+						memberSeekBean.setMineId(user.getObjectId());
+						memberSeekBean.setSeekId(seekChatBeansList.get(positonNow).getObjectId());
+						
+						memberSeekDao.saveUserSeek(memberSeekBean);
+
+
+						List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
+						miliaoImv.setImageResource(R.drawable.miliao_in);
+						//刷新成员信息
+						saveConvUser(map);
+						isAdd=true;
+						((MiliaoChannelFragment) fragmentList.get(positonNow)).setUserInfo();
+						
+						HashMap<String, Object> convUserMap = (HashMap<String, Object>) map.get("result");
+						if((Integer)convUserMap.get("status")==Constants.CONV_STATUS_OPEN){
+							//群聊开启，进入
+							joinChatTv.setText("进入觅聊");
+							Intent intent2 = new Intent(getActivity(),
+									ChatGroupActivity.class);
+							intent2.putExtra("ConversationId", ""
+									+ seekChatBeansList.get(positonNow)
+									.getConversationId());
+							// 传对话的类型 1 表示活动群聊 2 表示觅聊 3 表示单聊
+							intent2.putExtra("ConversationStyle", "" + 2);
+							intent2.putExtra("title", ""
+									+ seekChatBeansList.get(positonNow)
+									.getTitle());
+							intent2.putExtra("number", ""
+									+ seekChatBeansList.get(positonNow)
+									.getMembers().size() + 1);
+							intent2.putExtra("objectId",
+									seekChatBeansList.get(positonNow)
+									.getObjectId());// 觅聊id
+							intent2.putExtra("TimeOver",""+ seekChatBeansList.get(positonNow).getTimeChatStop());
+							Bundle bundle = new Bundle();
+							bundle.putSerializable("SeekChatBean",
+									seekChatBeansList.get(positonNow));
+							intent2.putExtras(bundle);
+							startActivityForResult(intent2, 200);
+							
+						}else{
+							joinChatTv.setText("等待开启");
+						}	
+			
 					}
 				}
 				
 			}
 		});
+	}
+	
+	/**
+	 * 
+	 * @param map  
+	 * @author lucifer
+	 * @date 2016-1-5
+	 */
+	
+	protected void saveConvUser(Map<String, Object> map) {
+		HashMap<String, Object> convUserMap = (HashMap<String, Object>) map.get("result");
+		if(convUserMap == null){
+			return ;
+		}
+		System.out.println(convUserMap);
+		CoversationUserBean convUserBean = new CoversationUserBean();
+		convUserBean.setIdMine(user.getObjectId());
+		convUserBean.setMute(Constants.CONV_UNKNOW_MUTE);
+		convUserBean.setRefuseMsg(Constants.CONV_UNKNOW_REFUSE);
+		convUserBean.setIdConversation((String)convUserMap.get("conversationId"));
+//		HashMap<String, Object> creator = (HashMap<String, Object>) convUserMap.get("creator");
+		convUserBean.setIdConvCreator(user.getObjectId());
+		convUserBean.setIdConvAppend((String)convUserMap.get("appendId"));
+		convUserBean.setTitle((String)convUserMap.get("title"));
+		convUserBean.setStatus((Integer)convUserMap.get("status"));
+		convUserBean.setType(Constants.CONV_TYPE_SEEK);
+		convUserBean.setUnReadCount(0);
+		convUserBean.setUpdateTime(System.currentTimeMillis());
+		convUserBean.setOverTime((Long)convUserMap.get("overTime"));
+		conversationUserDao.insert(convUserBean);	
 	}
 
 
