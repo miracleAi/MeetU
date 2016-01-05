@@ -123,6 +123,7 @@ OnMiLiaoInfoItemClickCallBack {
 		Intent intent = getIntent();
 		//对话类型
 		conversationStyle = intent.getIntExtra("ConversationStyle", 0);
+		Log.e("conversationStyle", ""+conversationStyle);
 		conversationId = intent.getStringExtra("ConversationId");
 
 		if (getIntent().getStringExtra("chatId") != null) {
@@ -450,7 +451,7 @@ OnMiLiaoInfoItemClickCallBack {
 	}
 	@Override
 	public void onItemClick(int position) {
-		if (conversationStyle==Constants.CONV_TYPE_ACTY && isCreator) {
+		if (conversationStyle==Constants.CONV_TYPE_SEEK && isCreator) {
 			// 2表示觅聊 1表示活动群聊
 
 			if (detele == false) {
