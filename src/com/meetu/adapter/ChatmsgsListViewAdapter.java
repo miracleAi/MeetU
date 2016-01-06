@@ -145,7 +145,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 
 		final ViewHolder holder;
 		final MessageChatBean item = chatmsgsList.get(position);
-
+		com.meetu.common.Log.e("getTypeMsg", ""+item.getTypeMsg());
 		if (convertView == null) {
 			holder = new ViewHolder();
 			switch (item.getTypeMsg()) {

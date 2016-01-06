@@ -66,6 +66,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -117,6 +118,7 @@ OnClickListener {
 	private TextView failTextView;//加载失败文字
 	private ImageView miliaoImv;
 	private TextView joinChatTv;
+	private ProgressBar progressBarJoin;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -140,7 +142,7 @@ OnClickListener {
 			conversationUserDao=new ConversationUserDao(getActivity());
 			// 获取觅聊列表
 			// getObjChatList();
-
+			progressBarJoin=(ProgressBar) view.findViewById(R.id.progressBar_fragment_miliao);
 			noneFailLayout=(RelativeLayout) view.findViewById(R.id.none_or_fail_miliao_fragment_rl);
 			nonoTextView=(TextView) view.findViewById(R.id.none_miliao_fragment_tv);
 			failTextView=(TextView) view.findViewById(R.id.fail_miliao_fragment_tv);
@@ -768,11 +770,14 @@ OnClickListener {
 	 */
 	public void joinSeekChat(String userId,final String seekChatId){
 		log.e("zcq", "准备加入");
-		
+		progressBarJoin.setVisibility(View.VISIBLE);
+		joinLayout.setClickable(false);	
 		ObjChatMessage.joinSeekChat(userId, seekChatId, new ObjFunMapCallback() {
 			
 			@Override
 			public void callback(Map<String, Object> map, AVException e) {
+				progressBarJoin.setVisibility(View.GONE);
+				joinLayout.setClickable(true);	
 				if(e!=null){
 					Log.e("joinSeekChat", "e",e);
 					return;
@@ -857,9 +862,11 @@ OnClickListener {
 	 */
 	
 	protected void saveConvUser(Map<String, Object> map) {
+		log.e("saveConvUser", "准备saveConvUser");
 		@SuppressWarnings("unchecked")
 		HashMap<String, Object> convUserMap = (HashMap<String, Object>) map.get("result");
 		if(convUserMap == null){
+			log.e("convUserMap", "convUserMap空");
 			return ;
 		}
 		System.out.println(convUserMap);
@@ -878,6 +885,7 @@ OnClickListener {
 		convUserBean.setUpdateTime(System.currentTimeMillis());
 		convUserBean.setOverTime((Long)convUserMap.get("overTime"));
 		conversationUserDao.insert(convUserBean);	
+		log.e("conversationUserDao", "加入觅聊插入成功");
 	}
 
 

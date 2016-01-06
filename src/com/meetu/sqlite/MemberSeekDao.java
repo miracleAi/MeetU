@@ -96,8 +96,8 @@ public class MemberSeekDao {
 
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
 		sdb.delete(DbConstents.USERABOUT_CACHE_TB, DbConstents.ID_MINE
-				+ "=?  and "+ DbConstents.ABOUTUSERID + "=?", new String[] {
-				userId, deleteUserId});
+				+ "=?  and "+ DbConstents.ABOUTUSERID + "=? and "+DbConstents.ID_SEEK_CONVERSATION +"=?", new String[] {
+				userId, deleteUserId,conversitionId});
 		
 		sdb.close();
 		log.e("zcq", "删除数据库成员成功");

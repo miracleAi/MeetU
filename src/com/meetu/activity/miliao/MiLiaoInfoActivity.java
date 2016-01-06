@@ -31,8 +31,10 @@ import com.meetu.common.Log;
 import com.meetu.entity.User;
 import com.meetu.entity.UserAbout;
 import com.meetu.myapplication.MyApplication;
+import com.meetu.sqlite.ConversationUserDao;
 import com.meetu.sqlite.MemberActivityDao;
 import com.meetu.sqlite.MemberSeekDao;
+import com.meetu.sqlite.MessageChatDao;
 import com.meetu.sqlite.MessagesDao;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DensityUtil;
@@ -88,7 +90,9 @@ OnMiLiaoInfoItemClickCallBack {
 
 	private List<ObjUser> objUsersList = new ArrayList<ObjUser>();
 	private UserAboutDao userAboutDao;
-	private MessagesDao messageDao;
+	MessageChatDao messageChatDao = null;
+	ConversationUserDao convUserDao = null;
+//	private MessagesDao messageDao;
 	// 会话成员列表
 	List<ObjUser> userList = new ArrayList<ObjUser>();
 	private List<MemberActivityBean> beanList = new ArrayList<MemberActivityBean>();
@@ -133,7 +137,9 @@ OnMiLiaoInfoItemClickCallBack {
 		userAboutDao = new UserAboutDao(this);
 		memberActivityDao=new MemberActivityDao(this);
 		memberSeekDao=new MemberSeekDao(this);
-		messageDao = new MessagesDao(this);
+		convUserDao=new ConversationUserDao(this);
+		messageChatDao=new MessageChatDao(this);
+		
 		if (currentUser != null) {
 			// 强制类型转换
 			userMY = AVUser.cast(currentUser, ObjUser.class);
@@ -404,7 +410,7 @@ OnMiLiaoInfoItemClickCallBack {
 					log.e("zcq", "退出成功");
 					Toast.makeText(getApplicationContext(), "退出成功", Toast.LENGTH_SHORT).show();
 					memberSeekDao.deleteUserTypeUserId(userMY.getObjectId(), conversationId, userMY.getObjectId());
-					messageDao.deleteConv(userMY.getObjectId(), conversationId);
+					
 					Intent intent=getIntent();
 					setResult(RESULT_OK, intent);
 					finish();
@@ -437,7 +443,9 @@ OnMiLiaoInfoItemClickCallBack {
 					log.e("zcq", "退出成功");
 					Toast.makeText(getApplicationContext(), "退出成功", Toast.LENGTH_SHORT).show();
 					memberSeekDao.deleteUserTypeUserId(userMY.getObjectId(), conversationId, userMY.getObjectId());
-					messageDao.deleteConv(userMY.getObjectId(), conversationId);
+					//messageDao.deleteConv(userMY.getObjectId(), conversationId);
+					convUserDao.deleteConv(userMY.getObjectId(), conversationId);
+					messageChatDao.deleteByConv(userMY.getObjectId(), conversationId);
 					Intent intent=getIntent();
 					setResult(RESULT_OK, intent);
 					finish();

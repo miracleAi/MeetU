@@ -109,8 +109,15 @@
         <ImageView
             android:id="@+id/join_miliao_img"
             android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_height="60dp"          
             android:src="@drawable/chat_navi_btn_joinchat" />
+        <ProgressBar 
+            android:id="@+id/progressBar_fragment_miliao"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:visibility="gone"
+            />
     </RelativeLayout>
 
     <TextView
