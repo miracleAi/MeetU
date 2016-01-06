@@ -219,6 +219,12 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		default:
 			break;
 		}
+		if(msgType == Constants.SHOW_SELF_QUIT){
+			return;
+		}
+		if(msgType == Constants.SHOW_SELF_ADD){
+			return;
+		}
 		chatBean.setIdMine(user.getObjectId());
 		chatBean.setIdClient(msg.getFrom());
 		chatBean.setIdMessage(msg.getMessageId());
