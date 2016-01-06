@@ -803,7 +803,6 @@ OnClickListener {
 						
 						memberSeekDao.saveUserSeek(memberSeekBean);
 
-
 						List<MemberSeekBean> memList = memberSeekDao.queryUserAbout(user.getObjectId(), seekChatBeansList.get(positonNow).getConversationId());
 						miliaoImv.setImageResource(R.drawable.miliao_in);
 						//刷新成员信息
@@ -877,7 +876,10 @@ OnClickListener {
 		convUserBean.setUnReadCount(0);
 		convUserBean.setUpdateTime(System.currentTimeMillis());
 		convUserBean.setOverTime((Long)convUserMap.get("overTime"));
+		int status = (Integer)convUserMap.get("status");
+		if(status>20){
 		conversationUserDao.insert(convUserBean);	
+		}
 	}
 
 

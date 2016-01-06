@@ -685,8 +685,11 @@ OnItemClickListener {
 		convUserBean.setUnReadCount(0);
 		convUserBean.setUpdateTime(System.currentTimeMillis());
 		convUserBean.setOverTime((Long)convUserMap.get("overTime"));
-		conversationUserDao.insert(convUserBean);	
-		Log.e("conversationUserDao", "插入成功");
+		int status = (Integer)convUserMap.get("status");
+		if(status>20){
+			conversationUserDao.insert(convUserBean);	
+			Log.e("conversationUserDao", "插入成功");
+		}
 	}
 
 	/**
