@@ -523,8 +523,6 @@ OnClickListener,ChatViewInterface{
 					item.setConvStatus(Constants.NORMAL);
 					item.setMemberId(string);
 					item.setMineId(user.getObjectId());
-
-
 					memberActivityBeans.add(item);
 				}
 
