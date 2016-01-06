@@ -175,6 +175,15 @@ public class ConversationUserDao {
 		db.close();
 	}
 	/**
+	 * 删除会话
+	 * */
+	public void deleteAllConv(String userId) {
+		SQLiteDatabase db = helper.getReadableDatabase();
+		String sql = "delete from "+DbConstents.CONVERSATION_USER_TB+" where " + DbConstents.ID_MINE + "=?";
+		db.execSQL(sql, new Object[] { userId});
+		db.close();
+	}
+	/**
 	 * 插入或替换数据
 	 * 
 	 * @param messages

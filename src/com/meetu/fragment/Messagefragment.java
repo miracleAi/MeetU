@@ -441,6 +441,7 @@ OnClickListener,ChatViewInterface{
 
 			@Override
 			public void callback(Map<String, Object> map, AVException e) {
+				log.d("mytest", ""+map);
 				if(e != null){
 					return;
 				}
@@ -503,7 +504,7 @@ OnClickListener,ChatViewInterface{
 	 * @author lucifer
 	 * @date 2015-11-28
 	 */
-	public void getMember(AVIMConversation covn) {
+	/*public void getMember(AVIMConversation covn) {
 
 		userAboutBeansList = new ArrayList<MemberSeekBean>();
 		memberActivityBeans=new ArrayList<MemberActivityBean>();
@@ -523,8 +524,6 @@ OnClickListener,ChatViewInterface{
 					item.setConvStatus(Constants.NORMAL);
 					item.setMemberId(string);
 					item.setMineId(user.getObjectId());
-
-
 					memberActivityBeans.add(item);
 				}
 
@@ -551,7 +550,7 @@ OnClickListener,ChatViewInterface{
 		}
 
 
-	}
+	}*/
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub

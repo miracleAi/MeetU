@@ -549,7 +549,6 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 		convUserBean.setMute(Constants.CONV_UNKNOW_MUTE);
 		convUserBean.setRefuseMsg(Constants.CONV_UNKNOW_REFUSE);
 		convUserBean.setIdConversation((String)convUserMap.get("conversationId"));
-//		HashMap<String, Object> creator = (HashMap<String, Object>) convUserMap.get("creator");
 		convUserBean.setIdConvCreator(user.getObjectId());
 		convUserBean.setIdConvAppend((String)convUserMap.get("appendId"));
 		convUserBean.setTitle((String)convUserMap.get("title"));
@@ -558,21 +557,24 @@ public class CreationChatActivity extends Activity implements OnClickListener {
 		convUserBean.setUnReadCount(0);
 		convUserBean.setUpdateTime(System.currentTimeMillis());
 		convUserBean.setOverTime((Long)convUserMap.get("overTime"));
-		convUserDao.insert(convUserBean);
-		List<String> memberList = (List<String>) convUserMap.get("member");
-		ArrayList<MemberSeekBean> seekMemberList = new ArrayList<MemberSeekBean>();
-		if(memberList != null && memberList.size()>0){
-			for(int i =0;i<memberList.size();i++){
-				String mapItem = memberList.get(i);
-				MemberSeekBean seekBean = new MemberSeekBean();
-				seekBean.setConvStatus(0);
-				seekBean.setSeekId((String)convUserMap.get("appendId"));
-				seekBean.setConversationId((String)convUserMap.get("conversationId"));
-				seekBean.setMemberSeekId(mapItem);
-				seekBean.setMineId(user.getObjectId());
-				seekMemberList.add(seekBean);
+		int status = (Integer)convUserMap.get("status");
+		if(status>20){
+			convUserDao.insert(convUserBean);
+			List<String> memberList = (List<String>) convUserMap.get("member");
+			ArrayList<MemberSeekBean> seekMemberList = new ArrayList<MemberSeekBean>();
+			if(memberList != null && memberList.size()>0){
+				for(int i =0;i<memberList.size();i++){
+					String mapItem = memberList.get(i);
+					MemberSeekBean seekBean = new MemberSeekBean();
+					seekBean.setConvStatus(0);
+					seekBean.setSeekId((String)convUserMap.get("appendId"));
+					seekBean.setConversationId((String)convUserMap.get("conversationId"));
+					seekBean.setMemberSeekId(mapItem);
+					seekBean.setMineId(user.getObjectId());
+					seekMemberList.add(seekBean);
+				}
+				memSeekDao.saveAllUserSeek(seekMemberList);
 			}
-			memSeekDao.saveAllUserSeek(seekMemberList);
 		}
 	}
 
