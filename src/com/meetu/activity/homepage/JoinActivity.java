@@ -660,9 +660,13 @@ OnItemClickListener {
 	 * @author lucifer
 	 * @date 2016-1-4
 	 */
+	@SuppressWarnings("static-access")
 	protected void saveConvUser(Map<String, Object> map) {
-		HashMap<String, Object> convUserMap = (HashMap<String, Object>) map.get("result");
+		Log.e("saveConvUser", "准备存储saveConvUser对象");
+		@SuppressWarnings("unchecked")
+		HashMap<String, Object> convUserMap = (HashMap<String, Object>) map.get("userConversation");
 		if(convUserMap == null){
+			log.e("convUserMap", "convUserMap空");
 			return ;
 		}
 		System.out.println(convUserMap);
@@ -673,6 +677,7 @@ OnItemClickListener {
 		convUserBean.setIdConversation((String)convUserMap.get("conversationId"));
 		AVUser creator =  (AVUser) convUserMap.get("creator");
 		convUserBean.setIdConvCreator(creator.getCurrentUser().getObjectId());
+		log.e("creator",creator.getCurrentUser().getObjectId());
 		convUserBean.setIdConvAppend((String)convUserMap.get("appendId"));
 		convUserBean.setTitle((String)convUserMap.get("title"));
 		convUserBean.setStatus((Integer)convUserMap.get("status"));
@@ -681,6 +686,7 @@ OnItemClickListener {
 		convUserBean.setUpdateTime(System.currentTimeMillis());
 		convUserBean.setOverTime((Long)convUserMap.get("overTime"));
 		conversationUserDao.insert(convUserBean);	
+		Log.e("conversationUserDao", "插入成功");
 	}
 
 	/**

@@ -256,8 +256,13 @@ OnClickListener {
 			break;
 			// 加入觅聊
 		case R.id.join_miliao_rl:
+			
 
 			if(user.isCompleteUserInfo()){
+				if(seekChatBeansList.get(positonNow).getTimeChatStop()-System.currentTimeMillis()<=0){
+					Toast.makeText(getActivity(), "觅聊已消失", Toast.LENGTH_SHORT).show();
+					return;
+				};	
 				if (seekChatBeansList != null && seekChatBeansList.size() != 0) {
 					if (isAdd) {
 						miliaoImv.setImageResource(R.drawable.miliao_in);
@@ -852,6 +857,7 @@ OnClickListener {
 	 */
 	
 	protected void saveConvUser(Map<String, Object> map) {
+		@SuppressWarnings("unchecked")
 		HashMap<String, Object> convUserMap = (HashMap<String, Object>) map.get("result");
 		if(convUserMap == null){
 			return ;

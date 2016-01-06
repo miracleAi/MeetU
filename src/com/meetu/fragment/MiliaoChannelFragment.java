@@ -201,16 +201,27 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 		numberFavor.setText("" + seekChatBean.getFolloweeCount());
 		numberUserAll.setText("" + seekChatBean.getMembers().size());
 
+		updateTime();
+
+	}
+	/**
+	 * 更新时间
+	 *   
+	 * @author lucifer
+	 * @date 2016-1-6
+	 */
+	public void updateTime(){
 		int disNumber = (int) ((seekChatBean.getTimeChatStop() - System
 				.currentTimeMillis()) / 3600000);
 		if (disNumber >= 1) {
 			dismissData.setText("" + disNumber + "H");
-		} else {
+		} else  if(disNumber>0){
 			int minute = (int) ((seekChatBean.getTimeChatStop() - System
 					.currentTimeMillis()) / 60000);
 			dismissData.setText("" + minute + "M");
+		}else{
+			dismissData.setText("已");			
 		}
-
 	}
 
 	/**
@@ -235,6 +246,15 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 
 			}
 		});
+	}
+	
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		setUserInfo();	
+		updateTime();
 	}
 
 	private void getUsersListInfo(final List<String> list) {
