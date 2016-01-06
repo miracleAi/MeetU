@@ -95,10 +95,9 @@ public class MemberSeekDao {
 	public void deleteUserTypeUserId(String userId,String conversitionId,String deleteUserId){
 
 		SQLiteDatabase sdb = dbHelper.getWritableDatabase();
-		sdb.delete(DbConstents.USERABOUT_CACHE_TB, DbConstents.ID_MINE
-				+ "=?  and "+ DbConstents.ABOUTUSERID + "=? and "+DbConstents.ID_SEEK_CONVERSATION +"=?", new String[] {
-				userId, deleteUserId,conversitionId});
-		
+		sdb.execSQL("delete from "+DbConstents.MEMBER_SEEK_TB+" where "+DbConstents.ID_MINE
+				+ "=?  and "+ DbConstents.ID_SEEK_MEMBER + "=? and "+DbConstents.ID_SEEK_CONVERSATION +"=?", new String[] {
+				userId, deleteUserId,conversitionId});		
 		sdb.close();
 		log.e("zcq", "删除数据库成员成功");
 	}

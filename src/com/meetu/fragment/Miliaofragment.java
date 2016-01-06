@@ -20,6 +20,7 @@ import com.meetu.activity.miliao.CreationChatActivity;
 import com.meetu.adapter.BoardPageFragmentAdapter;
 import com.meetu.bean.CoversationUserBean;
 import com.meetu.bean.MemberSeekBean;
+import com.meetu.bean.MessageChatBean;
 import com.meetu.bean.SeekChatBean;
 import com.meetu.bean.SeekChatInfoBean;
 import com.meetu.bean.UserAboutBean;
@@ -44,6 +45,7 @@ import com.meetu.myapplication.MyApplication;
 import com.meetu.sqlite.ChatmsgsDao;
 import com.meetu.sqlite.ConversationUserDao;
 import com.meetu.sqlite.MemberSeekDao;
+import com.meetu.sqlite.MessageChatDao;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.tools.DepthPageTransformer;
 import com.meetu.tools.MyZoomOutPageTransformer;
@@ -107,7 +109,7 @@ OnClickListener {
 	private Boolean isAdd = false;
 
 	ChatmsgsDao chatmsgsDao;
-
+	MessageChatDao messageChatDao;
 	List<Boolean> isAddList=new ArrayList<Boolean>();
 	private MemberSeekDao memberSeekDao;
 	private ConversationUserDao conversationUserDao;
@@ -140,6 +142,7 @@ OnClickListener {
 //			userAboutDao = new UserAboutDao(getActivity());
 			memberSeekDao = new MemberSeekDao(getActivity());
 			conversationUserDao=new ConversationUserDao(getActivity());
+			messageChatDao=new MessageChatDao(getActivity());
 			// 获取觅聊列表
 			// getObjChatList();
 			progressBarJoin=(ProgressBar) view.findViewById(R.id.progressBar_fragment_miliao);
@@ -790,14 +793,22 @@ OnClickListener {
 						Log.i("joinSeekChat", "正常");
 						//TODO 更新本地聊天消息本人加入提醒    觅聊卡片中头像更新
 						log.e("zcq", "加入觅聊成功");
-						Chatmsgs chatmsgs=new Chatmsgs();
-						chatmsgs.setContent("欢迎加入觅聊");
-						chatmsgs.setClientId(user.getObjectId());
-						chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
-						chatmsgs.setChatMsgType(Constants.SHOW_SELF_ADD);
-						chatmsgs.setConversationId(seekChatBeansList.get(positonNow).getConversationId());
-						chatmsgs.setUid(user.getObjectId());
-						chatmsgsDao.insert(chatmsgs);
+//						Chatmsgs chatmsgs=new Chatmsgs();
+//						chatmsgs.setContent("欢迎加入觅聊");
+//						chatmsgs.setClientId(user.getObjectId());
+//						chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
+//						chatmsgs.setChatMsgType(Constants.SHOW_SELF_ADD);
+//						chatmsgs.setConversationId(seekChatBeansList.get(positonNow).getConversationId());
+//						chatmsgs.setUid(user.getObjectId());
+//						chatmsgsDao.insert(chatmsgs);
+						MessageChatBean chatBean = new MessageChatBean();
+						chatBean.setMsgText("欢迎加入觅聊");
+						chatBean.setSendTimeStamp(System.currentTimeMillis());
+						chatBean.setIdClient(user.getObjectId());
+						chatBean.setTypeMsg(Constants.SHOW_SELF_ADD);
+						chatBean.setIdConversation(seekChatBeansList.get(positonNow).getConversationId());
+						chatBean.setIdMine(user.getObjectId());
+						messageChatDao.insert(chatBean);
 
 						MemberSeekBean memberSeekBean=new MemberSeekBean();
 						memberSeekBean.setConversationId(seekChatBeansList.get(positonNow).getConversationId());
@@ -825,7 +836,7 @@ OnClickListener {
 									+ seekChatBeansList.get(positonNow)
 									.getConversationId());
 							// 传对话的类型 1 表示活动群聊 2 表示觅聊 3 表示单聊
-							intent2.putExtra("ConversationStyle", "" + 2);
+							intent2.putExtra("ConversationStyle", "" + Constants.CONV_TYPE_SEEK);
 							intent2.putExtra("title", ""
 									+ seekChatBeansList.get(positonNow)
 									.getTitle());
