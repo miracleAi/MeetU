@@ -384,7 +384,6 @@ OnMiLiaoInfoItemClickCallBack {
 					public void onClick(DialogInterface dialog, int arg1) {
 						// TODO Auto-generated method stub
 						dialog.dismiss();
-					//	quit();
 						quitByApi();
 					}
 				}).create();
