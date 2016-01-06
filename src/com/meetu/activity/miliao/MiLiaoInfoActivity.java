@@ -382,9 +382,9 @@ OnMiLiaoInfoItemClickCallBack {
 
 					@Override
 					public void onClick(DialogInterface dialog, int arg1) {
-						// TODO Auto-generated method stub
-						dialog.dismiss();
+						// TODO Auto-generated method stub						
 						quitByApi();
+						dialog.dismiss();
 					}
 				}).create();
 		dialog.show();
@@ -428,6 +428,7 @@ OnMiLiaoInfoItemClickCallBack {
 	 * @date 2016-1-5
 	 */
 	public void quitByApi(){
+		Log.e("quitByApi()", "进入quitByApi()");
 		ObjChatMessage.userQuitConvByApi(userMY.getObjectId(), conversationId, new ObjFunMapCallback() {
 			
 			@Override
