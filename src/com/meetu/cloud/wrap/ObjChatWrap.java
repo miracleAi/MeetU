@@ -141,8 +141,8 @@ public class ObjChatWrap {
 	/**
 	 * 获取userConversation
 	 * */
-	public static void getConvUserList(ObjUser user,final ObjConvUserListCallback callback){
-		AVQuery<ObjUserConversation> query = AVObject.getQuery(ObjUserConversation.class);
+	public static void getConvUserList(ObjUser user,final ObjFunMapCallback callback){
+		/*AVQuery<ObjUserConversation> query = AVObject.getQuery(ObjUserConversation.class);
 		query.whereEqualTo("user", user);
 		query.whereGreaterThan("status", Constants.CONV_STATUS_CREATE);
 		query.findInBackground(new FindCallback<ObjUserConversation>() {
@@ -159,6 +159,26 @@ public class ObjChatWrap {
 				}else{
 					callback.callback(null, new AVException(0,
 							"获取信息失败"));
+				}
+			}
+		});*/
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userId", user.getObjectId());
+		AVCloud.callFunctionInBackground("userConversation", params,
+				new FunctionCallback<Map<String, Object>>() {
+
+			@Override
+			public void done(Map<String, Object> result, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					callback.callback(null, e);
+					return;
+				}
+				if (result != null) {
+					callback.callback(result, null);
+				} else {
+					callback.callback(null, new AVException(0,
+							"获取消息列表失败"));
 				}
 			}
 		});

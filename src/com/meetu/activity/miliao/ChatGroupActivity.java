@@ -945,6 +945,18 @@ OnItemClickListener,ChatViewInterface {
 				MessageChatBean chatMsgPhoto = (MessageChatBean) msg.obj;
 				sendPictureMessage(chatMsgPhoto);
 				break;
+				//自己被踢出时
+			case 5:
+				// 刷新数据时 要先清空数据 再添加。不然 不刷新 亲测。。。
+				chatmsgsCacheList.clear();
+				chatmsgsCacheList.addAll(msgChatDao.getChatmsgsList(conversationId, user.getObjectId()));
+				mChatmsgsAdapter.notifyDataSetChanged();
+				// ListView数据更新后，自动滚动到底部
+				mChatmsgsListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+				refreshComplete();
+				//删除此会话相关信息
+				deleteConv();
+				break;
 			}
 		}
 
@@ -962,6 +974,11 @@ OnItemClickListener,ChatViewInterface {
 		}, 500);
 	}
 
+	protected void deleteConv() {
+		convUserDao.deleteConv(user.getObjectId(), conversationId);
+		memberSeekDao.deleteByConv(user.getObjectId(), conversationId);
+		msgChatDao.deleteByConv(user.getObjectId(), conversationId);
+	}
 	/**
 	 * 得到一个SpanableString对象，通过传入的字符串,并进行正则判断
 	 * 
@@ -1500,7 +1517,11 @@ OnItemClickListener,ChatViewInterface {
 
 	@Override
 	public void updateView(MessageChatBean bean) {
-		handler.sendEmptyMessage(1);
+		if(bean.getTypeMsg() == Constants.SHOW_SELF_QUIT){
+			handler.sendEmptyMessage(5);
+		}else{
+			handler.sendEmptyMessage(1);
+		}
 	}
 
 

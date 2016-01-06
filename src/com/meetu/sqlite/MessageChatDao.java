@@ -104,6 +104,17 @@ public class MessageChatDao {
 
 	}
 	/**
+	 * 删除指定会话所有消息
+	 * 
+	 */
+	public void deleteByConv(String userId, String convId) {
+		SQLiteDatabase db = helper.getReadableDatabase();
+		String sql = "delete from "+DbConstents.MSG_CHAT_TB+" where "+DbConstents.ID_MSG_CONVERSATION+"=? and "
+				+ DbConstents.ID_MINE + "=?";
+		db.execSQL(sql, new Object[] { convId, userId });
+		db.close();
+	}
+	/**
 	 * 更新消息状态
 	 * */
 	public void updateStatus(String userId,String msgCacheId,int status) {

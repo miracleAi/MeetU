@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.Test;
 import cc.imeetu.R;
@@ -28,6 +30,7 @@ import com.meetu.bean.UserAboutBean;
 import com.meetu.cloud.callback.ObjConvUserListCallback;
 import com.meetu.cloud.callback.ObjConversationListCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
+import com.meetu.cloud.callback.ObjFunMapCallback;
 import com.meetu.cloud.callback.ObjListCallback;
 import com.meetu.cloud.callback.ObjSysMsgListCallback;
 import com.meetu.cloud.object.ObjSysMsg;
@@ -49,6 +52,7 @@ import com.meetu.sqlite.ConversationUserDao;
 import com.meetu.sqlite.EmojisDao;
 import com.meetu.sqlite.MemberActivityDao;
 import com.meetu.sqlite.MemberSeekDao;
+import com.meetu.sqlite.MessageChatDao;
 import com.meetu.sqlite.MessagesDao;
 import com.meetu.sqlite.UserAboutDao;
 import com.meetu.view.ChatViewInterface;
@@ -87,6 +91,7 @@ OnClickListener,ChatViewInterface{
 	private RelativeLayout sysMsgLayout;
 	private TextView sysMsgCountTv;
 	private ArrayList<ObjSysMsg> msgList = new ArrayList<ObjSysMsg>();
+	String conversationId = "";
 
 	// 表情相关 xml解析
 	private static EmojiParser parser;
@@ -105,6 +110,7 @@ OnClickListener,ChatViewInterface{
 
 	MemberSeekDao memberSeekDao;
 	MemberActivityDao memberActivityDao;
+	MessageChatDao msgChatDao ;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -125,6 +131,7 @@ OnClickListener,ChatViewInterface{
 		convUserDao = new ConversationUserDao(getActivity());
 		memberSeekDao=new MemberSeekDao(getActivity());
 		memberActivityDao=new MemberActivityDao(getActivity());
+		msgChatDao = new MessageChatDao(getActivity());
 
 		loadEmoji(getActivity());
 
@@ -241,8 +248,8 @@ OnClickListener,ChatViewInterface{
 			break;
 		}
 		Intent intent = new Intent(getActivity(), ChatGroupActivity.class);
-		intent.putExtra("ConversationId", ""
-				+ mdataListCache.get(position).getIdConversation());
+		conversationId = mdataListCache.get(position).getIdConversation();
+		intent.putExtra("ConversationId", conversationId );
 		intent.putExtra("ConversationStyle", ""
 				+ mdataListCache.get(position).getType());
 		startActivityForResult(intent, 1001);
@@ -254,12 +261,12 @@ OnClickListener,ChatViewInterface{
 	private void deleteObjUserConv(String convId) {
 		// TODO Auto-generated method stub
 		ObjChatWrap.deleteUserConv(user, convId, new ObjFunBooleanCallback() {
-			
+
 			@Override
 			public void callback(boolean result, AVException e) {
 				// TODO Auto-generated method stub
 				if(result){
-					
+
 				}
 			}
 		});
@@ -392,8 +399,8 @@ OnClickListener,ChatViewInterface{
 				handler.sendEmptyMessage(1);
 			}
 		});*/
-		ObjChatWrap.getConvUserList(user,new ObjConvUserListCallback() {
-			
+		/*ObjChatWrap.getConvUserList(user,new ObjConvUserListCallback() {
+
 			@Override
 			public void callback(List<ObjUserConversation> objects, AVException e) {
 				// TODO Auto-generated method stub
@@ -421,10 +428,68 @@ OnClickListener,ChatViewInterface{
 					convUserList.add(bean);
 					ArrayList<MemberSeekBean> seekMemList = new ArrayList<MemberSeekBean>();
 					if(objBean.getMembers()!= null){
-						seekMemList.addAll(seekMemList);
+						seekMemList.addAll(objBean.getMembers());
 						memberSeekDao.deleteByConv(user.getObjectId(), bean.getIdConversation());
 						memberSeekDao.saveAllUserSeek(seekMemList);
 					}
+				}
+				convUserDao.insertList(convUserList);
+				handler.sendEmptyMessage(1);
+			}
+		});*/
+		ObjChatWrap.getConvUserList(user, new ObjFunMapCallback() {
+
+			@Override
+			public void callback(Map<String, Object> map, AVException e) {
+				if(e != null){
+					return;
+				}
+				ArrayList<HashMap<String, Object>> resultMap = (ArrayList<HashMap<String, Object>>)map.get("result");
+				if(resultMap == null || resultMap.size() == 0){
+					return ;
+				}
+				ArrayList<CoversationUserBean> convUserList = new ArrayList<CoversationUserBean>();
+				for(HashMap<String, Object> resultBean : resultMap){
+					CoversationUserBean bean =new CoversationUserBean();
+					bean.setIdConvAppend((String)resultBean.get("appendId"));
+					AVUser creator = (AVUser) resultBean.get("creator");
+					bean.setIdConvCreator(creator.getObjectId());
+					bean.setIdConversation((String)resultBean.get("conversationId"));
+					bean.setIdMine(user.getObjectId());
+					boolean mute = (Boolean) resultBean.get("mute");
+					if(mute){
+						bean.setMute(1);
+					}else{
+						bean.setMute(0);
+					}
+					bean.setOverTime((Long)resultBean.get("overTime"));
+					boolean refuseMsg = (Boolean) resultBean.get("refuseMsg");
+					if(refuseMsg){
+						bean.setRefuseMsg(1);
+					}else{
+						bean.setRefuseMsg(0);
+					}
+					bean.setStatus((Integer)resultBean.get("status"));
+					bean.setTitle((String)resultBean.get("title"));
+					bean.setType((Integer)resultBean.get("type"));
+					bean.setUpdateTime(System.currentTimeMillis());
+					convUserList.add(bean);
+					ArrayList<String> memberList = (ArrayList<String>) resultBean.get("member");
+					if(memberList == null || memberList.size() == 0){
+						return;
+					}
+					ArrayList<MemberSeekBean> seekMemList = new ArrayList<MemberSeekBean>();
+					for(String memId:memberList){
+						MemberSeekBean seekBean = new MemberSeekBean();
+						seekBean.setConversationId((String)resultBean.get("conversationId"));
+						seekBean.setConvStatus(0);
+						seekBean.setMemberSeekId(memId);
+						seekBean.setMineId(user.getObjectId());
+						seekBean.setSeekId((String)resultBean.get("appendId"));
+						seekMemList.add(seekBean);
+					}
+					memberSeekDao.deleteByConv(user.getObjectId(), bean.getIdConversation());
+					memberSeekDao.saveAllUserSeek(seekMemList);
 				}
 				convUserDao.insertList(convUserList);
 				handler.sendEmptyMessage(1);
@@ -491,8 +556,10 @@ OnClickListener,ChatViewInterface{
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		if(requestCode == 1001 && resultCode == ChatGroupActivity.RESULT_OK){
+		if(requestCode == 1001){
 			getConversation();
+			memberSeekDao.deleteByConv(user.getObjectId(), conversationId);
+			msgChatDao.deleteByConv(user.getObjectId(), conversationId);
 		}
 	}
 
