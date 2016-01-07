@@ -190,7 +190,6 @@ public class ObjChatWrap {
 		AVQuery<ObjUserConversation> query = AVObject.getQuery(ObjUserConversation.class);
 		query.whereEqualTo("user", user);
 		query.whereEqualTo("conversationId", convId);
-		query.whereGreaterThan("status", Constants.CONV_STATUS_CREATE);
 		query.findInBackground(new FindCallback<ObjUserConversation>() {
 
 			@Override
