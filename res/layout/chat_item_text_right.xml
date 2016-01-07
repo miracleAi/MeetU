@@ -82,6 +82,14 @@
                 android:gravity="center"
                 android:visibility="invisible" >
 
+                <ProgressBar
+                    android:id="@+id/progressBar_msg"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="10dp"
+                    android:visibility="gone" >
+                </ProgressBar>
+
                 <ImageView
                     android:id="@+id/fail_chat_item_text_img"
                     android:layout_width="wrap_content"

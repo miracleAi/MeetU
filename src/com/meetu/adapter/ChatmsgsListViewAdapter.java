@@ -27,6 +27,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
@@ -166,6 +167,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						.findViewById(R.id.fail_chat_item_text_img);
 				holder.resentLayout = (RelativeLayout) convertView
 						.findViewById(R.id.fail_chat_item_text_right_rl);
+				holder.progressMsg = (ProgressBar) convertView.findViewById(R.id.progressBar_msg);
 				break;
 				//TODO 1 暂时没有此类型 未知原因出现此类型 待解决
 
@@ -187,6 +189,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						.findViewById(R.id.fail_chat_item_text_left);
 				holder.resentLayout = (RelativeLayout) convertView
 						.findViewById(R.id.fail_chat_item_text_right_rl);
+				holder.progressMsg = (ProgressBar) convertView.findViewById(R.id.progressBar_msg);
 				break;
 			case Constants.SHOW_SEND_TYPE_IMG:
 				convertView = LayoutInflater.from(mContext).inflate(
@@ -201,8 +204,11 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						.findViewById(R.id.userHead_chat_item_photo_right_img);
 				holder.userName = (TextView) convertView
 						.findViewById(R.id.userName_chat_item_photo_right_tv);
+				holder.failPhoto = (ImageView) convertView
+						.findViewById(R.id.fail_chat_item_text_img);
 				holder.resentLayout = (RelativeLayout) convertView
 						.findViewById(R.id.fail_chat_item_photo_right_rl);
+				holder.progressMsg = (ProgressBar) convertView.findViewById(R.id.progressBar_msg);
 				break;
 			case Constants.SHOW_RECEIVE_TYPE_IMG:
 				convertView = LayoutInflater.from(mContext).inflate(
@@ -218,8 +224,11 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						.findViewById(R.id.userHead_chat_item_photo_left_img);
 				holder.userName = (TextView) convertView
 						.findViewById(R.id.userNamechat_item_photo_left_tv);
+				holder.failPhoto = (ImageView) convertView
+						.findViewById(R.id.fail_chat_item_text_img);
 				holder.resentLayout = (RelativeLayout) convertView
 						.findViewById(R.id.fail_chat_item_photo_left_rl);
+				holder.progressMsg = (ProgressBar) convertView.findViewById(R.id.progressBar_msg);
 			//	holder.leftPhotoUp=(ImageView) convertView.findViewById(R.id.photo_up_chat_item_left_img);
 				
 				break;
@@ -260,6 +269,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 		case Constants.SHOW_SEND_TYPE_TEXT:
 		case Constants.SHOW_RECEIVE_TYPE_TEXT:
 			if(item.getStatusMsg() == Constants.STATUES_FAILED){
+				holder.failPhoto.setVisibility(View.VISIBLE);
+				holder.progressMsg.setVisibility(View.GONE);
 				holder.resentLayout.setVisibility(View.VISIBLE);
 			}else{
 				holder.resentLayout.setVisibility(View.GONE);
@@ -269,6 +280,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
+					holder.failPhoto.setVisibility(View.GONE);
+					holder.progressMsg.setVisibility(View.VISIBLE);
 					Message msg = new Message();
 					msg.what = 3;
 					msg.obj = item;
@@ -362,6 +375,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 
 		case Constants.SHOW_SEND_TYPE_IMG:
 			if(item.getStatusMsg() == Constants.STATUES_FAILED){
+				holder.failPhoto.setVisibility(View.VISIBLE);
+				holder.progressMsg.setVisibility(View.GONE);
 				holder.resentLayout.setVisibility(View.VISIBLE);
 			}else{
 				holder.resentLayout.setVisibility(View.GONE);
@@ -371,6 +386,8 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
+					holder.failPhoto.setVisibility(View.GONE);
+					holder.progressMsg.setVisibility(View.VISIBLE);
 					Message msg = new Message();
 					msg.what = 4;
 					msg.obj = item;
@@ -667,6 +684,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 		private ImageView userHeadPhoto;
 		private TextView userName;
 		private ImageView failPhoto;
+		private ProgressBar progressMsg;
 		private RelativeLayout resentLayout;
 		private ImageView leftPhotoUp;
 		private LinearLayout allItem;

@@ -81,11 +81,19 @@
                 android:gravity="center"
                 android:visibility="invisible" >
 
-                <ImageView
-                    android:id="@+id/fail_chat_item_text_left"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/message_groupchat_btn_resend" />
+                <ProgressBar
+                    android:id="@+id/progressBar_msg"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="10dp"
+                    android:visibility="gone" >
+                    </ProgressBar>
+
+                    <ImageView
+                        android:id="@+id/fail_chat_item_text_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/message_groupchat_btn_resend" />
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
