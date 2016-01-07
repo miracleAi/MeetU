@@ -441,7 +441,6 @@ OnMiLiaoInfoItemClickCallBack {
 					log.e("zcq", "退出成功");
 					Toast.makeText(getApplicationContext(), "退出成功", Toast.LENGTH_SHORT).show();
 					memberSeekDao.deleteUserTypeUserId(userMY.getObjectId(), conversationId, userMY.getObjectId());
-					//messageDao.deleteConv(userMY.getObjectId(), conversationId);
 					convUserDao.deleteConv(userMY.getObjectId(), conversationId);
 					messageChatDao.deleteByConv(userMY.getObjectId(), conversationId);
 					Intent intent=getIntent();

@@ -63,7 +63,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 	public void setConversationId(String conversationId) {
 		this.conversationId = conversationId;
 	}
-	
+
 	@Override
 	public void onMessage(AVIMMessage message, AVIMConversation conversation,
 			AVIMClient client) {
@@ -74,7 +74,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		}else{
 			user = AVUser.getCurrentUser();
 		}
-		
+
 		if (message instanceof AVIMTextMessage) {
 			createChatMsg(conversation, message);
 			return;
@@ -106,6 +106,8 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 	}
 	//保存普通消息，修改群聊状态，update当前view
 	private void saveMsg(int msgType, AVIMTextMessage msg, AVIMConversation conversation) {
+		//用于标记是否发送信息给前台更新
+		boolean isSnd = false;
 		String appendUserId = (String) msg.getAttrs().get(Constants.APPEND_USER_ID);
 		int direction = 0;
 		if(msg.getFrom().equals(user.getObjectId())){
@@ -116,6 +118,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		MessageChatBean chatBean = new MessageChatBean();
 		switch (msgType) {
 		case Constants.TYPE_TEXT:
+			isSnd = true;
 			if(direction == Constants.IOTYPE_IN){
 				chatBean.setTypeMsg(Constants.SHOW_RECEIVE_TYPE_TEXT);
 			}else{
@@ -133,7 +136,10 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 				//插入成员
 				String appendConvId = (String) msg.getAttrs().get("appendId");
 				if(convType == Constants.CONV_TYPE_SEEK){
+					isSnd = false;
+					break;
 				}else{
+					isSnd = true;
 					chatBean.setTypeMsg(Constants.SHOW_SELF_ADD);
 					chatBean.setMsgText("欢迎加入群聊");
 					MemberActivityBean actyBean = new MemberActivityBean();
@@ -145,6 +151,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 					memActyDao.saveUserActivity(actyBean);
 				}
 			}else{
+				isSnd = true;
 				chatBean.setTypeMsg(Constants.SHOW_MEMBER_ADD);
 				chatBean.setMsgText("新人加入了，打个招呼吧");
 				//插入成员
@@ -171,6 +178,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			}
 			break;
 		case Constants.KICK_OUT:
+			isSnd = true;
 			if(appendUserId != null && appendUserId.equals(user.getObjectId())){
 				chatBean.setTypeMsg(Constants.SHOW_SELF_KICK);
 				chatBean.setMsgText("您已被踢出群聊");
@@ -185,25 +193,30 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			break;
 		case Constants.QUIT:
 			if(appendUserId != null && appendUserId.equals(user.getObjectId())){
+				isSnd = false;
 				//理论上不会接收到
 				chatBean.setTypeMsg(Constants.SHOW_SELF_QUIT);
 			}else{
+				isSnd = true;
 				chatBean.setTypeMsg(Constants.SHOW_MEMBER_QUIT);
 				//成员减少
 				memSeekDao.deleteUserTypeUserId(user.getObjectId(), conversation.getConversationId(), appendUserId);
 			}
 			break;
 		case Constants.CONV_DISSOLVE:
+			isSnd = true;
 			chatBean.setTypeMsg(Constants.SHOW_CONV_DISSOLVE);
 			//聊天状态改变
 			convUserDao.updateConvStatus(user.getObjectId(), conversation.getConversationId(), Constants.CONV_STATUS_DISSOLVE);
 			break;
 		case Constants.CONV_DISMISS:
+			isSnd = true;
 			chatBean.setTypeMsg(Constants.SHOW_CONV_DISMISS);
 			//聊天状态改变
 			convUserDao.updateConvStatus(user.getObjectId(), conversation.getConversationId(), Constants.CONV_STATUS_DISMISS);
 			break;
 		case Constants.GAG:
+			isSnd = true;
 			if(appendUserId != null && appendUserId.equals(user.getObjectId())){
 				chatBean.setTypeMsg(Constants.SHOW_SELF_GAG);
 			}else{
@@ -211,6 +224,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			}
 			break;
 		case Constants.UN_GAG:
+			isSnd = true;
 			if(appendUserId != null && appendUserId.equals(user.getObjectId())){
 				chatBean.setTypeMsg(Constants.SHOW_SELF_UN_GAG);
 			}else{
@@ -220,12 +234,12 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		default:
 			break;
 		}
-		if(msgType == Constants.SHOW_SELF_QUIT){
+		log.d("mytest", "def selt");
+		if(!isSnd){
+			log.d("mytest", "def selt return");
 			return;
 		}
-		if(msgType == Constants.SHOW_SELF_ADD){
-			return;
-		}
+		log.d("mytest", "def selt exe");
 		chatBean.setIdMine(user.getObjectId());
 		chatBean.setIdClient(msg.getFrom());
 		chatBean.setIdMessage(msg.getMessageId());

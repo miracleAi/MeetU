@@ -111,6 +111,8 @@ OnClickListener,ChatViewInterface{
 	MemberSeekDao memberSeekDao;
 	MemberActivityDao memberActivityDao;
 	MessageChatDao msgChatDao ;
+	
+	boolean isDelete = false;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -241,10 +243,12 @@ OnClickListener,ChatViewInterface{
 		case Constants.CONV_STATUS_QUIT:
 		case Constants.CONV_STATUS_DISSOLVE:
 		case Constants.CONV_STATUS_DISMISS:
+			isDelete = true;
 			convUserDao.deleteConv(user.getObjectId(),mdataListCache.get(position).getIdConversation());
 			deleteObjUserConv(mdataListCache.get(position).getIdConversation());
 			break;
 		default:
+			isDelete = false;
 			break;
 		}
 		Intent intent = new Intent(getActivity(), ChatGroupActivity.class);
@@ -557,9 +561,13 @@ OnClickListener,ChatViewInterface{
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if(requestCode == 1001){
+			log.d("mytest", "msg frgt delete");
 			getConversation();
-			memberSeekDao.deleteByConv(user.getObjectId(), conversationId);
-			msgChatDao.deleteByConv(user.getObjectId(), conversationId);
+			if(isDelete){
+				isDelete = false;
+				memberSeekDao.deleteByConv(user.getObjectId(), conversationId);
+				msgChatDao.deleteByConv(user.getObjectId(), conversationId);
+			}
 		}
 	}
 

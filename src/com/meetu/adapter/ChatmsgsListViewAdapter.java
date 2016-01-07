@@ -247,6 +247,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 						.findViewById(R.id.time_my_join_or_exit_remind_tv);
 				holder.content = (TextView) convertView
 						.findViewById(R.id.content_my_join_or_exit_remind_tv);
+				break;
 			default:
 				break;
 			}
