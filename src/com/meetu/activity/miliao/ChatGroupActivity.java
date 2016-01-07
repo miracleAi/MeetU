@@ -278,6 +278,12 @@ OnItemClickListener,ChatViewInterface {
 				
 				@Override
 				public void callback(ObjUserConversation object, AVException e) {
+
+					if(e != null){
+						log.e("chatgroup", ""+e);
+						return;
+					}
+
 					objectID = object.getIdConvAppend();
 					timeOver=object.getOverTime();
 					jstitle = object.getTitle();
