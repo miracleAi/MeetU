@@ -288,24 +288,7 @@ OnClickListener {
 						intent2.putExtra("ConversationId", ""
 								+ seekChatBeansList.get(positonNow)
 								.getConversationId());
-						// 传对话的类型 1 表示活动群聊 2 表示觅聊 3 表示单聊
 						intent2.putExtra("ConversationStyle",Constants.CONV_TYPE_SEEK);
-						intent2.putExtra("title",
-								"" + seekChatBeansList.get(positonNow).getTitle());
-						intent2.putExtra("number",
-								""
-										+ seekChatBeansList.get(positonNow)
-										.getMembers().size());
-						intent2.putExtra("objectId",
-								seekChatBeansList.get(positonNow).getObjectId());// 觅聊id
-						intent2.putExtra("TimeOver", ""+seekChatBeansList.get(positonNow).getTimeChatStop());
-
-						log.e("zcq timeover", ""+seekChatBeansList.get(positonNow).getTimeChatStop());
-
-						Bundle bundle = new Bundle();
-						bundle.putSerializable("SeekChatBean",
-								seekChatBeansList.get(positonNow));
-						intent2.putExtras(bundle);
 						startActivityForResult(intent2, 200);
 					} else {
 						log.e("zcq", "没加入过当前觅聊");

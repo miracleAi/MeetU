@@ -124,6 +124,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			}else{
 				chatBean.setTypeMsg(Constants.SHOW_SEND_TYPE_TEXT);
 			}
+			chatBean.setIdConversation(msg.getConversationId());
 			boolean b = (Boolean) msg.getAttrs().get(Constants.IS_SHOW_TIME);
 			chatBean.setIsShowTime(ChatMsgUtils.geRecvTimeIsShow(b));
 			chatBean.setMsgText(msg.getText());
@@ -141,6 +142,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 				}else{
 					isSnd = true;
 					chatBean.setTypeMsg(Constants.SHOW_SELF_ADD);
+					chatBean.setIdConversation(msg.getConversationId());
 					chatBean.setMsgText("欢迎加入群聊");
 					MemberActivityBean actyBean = new MemberActivityBean();
 					actyBean.setConvStatus(0);
@@ -153,6 +155,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			}else{
 				isSnd = true;
 				chatBean.setTypeMsg(Constants.SHOW_MEMBER_ADD);
+				chatBean.setIdConversation(msg.getConversationId());
 				chatBean.setMsgText("新人加入了，打个招呼吧");
 				//插入成员
 				String appendConvId = (String) msg.getAttrs().get("appendId");
@@ -184,12 +187,14 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 				chatBean.setMsgText("您已被踢出群聊");
 				//改变群聊状态
 				String convId = (String) msg.getAttrs().get("convId");
-				Log.e("SHOW_SELF_KICK", "我被踢了啊啊啊"+convId);
 				convUserDao.updateConvStatus(user.getObjectId(), convId, Constants.CONV_STATUS_KICK);
-				memSeekDao.deleteUserTypeUserId(user.getObjectId(), conversation.getConversationId(), appendUserId);
+				memSeekDao.deleteUserTypeUserId(user.getObjectId(), convId, appendUserId);
+				chatBean.setIdConversation(convId);
+				Log.e("SHOW_SELF_KICK", "我被踢了啊啊啊"+convId);
 			}else{
 				isSnd = false;
 				chatBean.setTypeMsg(Constants.SHOW_MEMBER_KICK);
+				chatBean.setIdConversation(msg.getConversationId());
 				//成员减少
 				memSeekDao.deleteUserTypeUserId(user.getObjectId(), conversation.getConversationId(), appendUserId);
 			}
@@ -202,6 +207,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			}else{
 				isSnd = false;
 				chatBean.setTypeMsg(Constants.SHOW_MEMBER_QUIT);
+				chatBean.setIdConversation(msg.getConversationId());
 				//成员减少
 				memSeekDao.deleteUserTypeUserId(user.getObjectId(), conversation.getConversationId(), appendUserId);
 			}
@@ -243,20 +249,18 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		chatBean.setIdMine(user.getObjectId());
 		chatBean.setIdClient(msg.getFrom());
 		chatBean.setIdMessage(msg.getMessageId());
-		chatBean.setIdConversation(msg.getConversationId());
 		chatBean.setDirectionMsg(direction);
 		chatBean.setStatusMsg(ChatMsgUtils.getStatus(msg.getMessageStatus()));
 		chatBean.setSendTimeStamp(msg.getTimestamp());
 		chatBean.setIdCacheMsg(System.currentTimeMillis()+"");
 		// 消息插入数据库
 		messageChatDao.insert(chatBean);
-		convUserDao.updateTime(user.getObjectId(), conversationId);
+		convUserDao.updateTime(user.getObjectId(), chatBean.getIdConversation());
 		if(updateBean == null){
-			Log.e("SHOW_SELF_KICK", "update bean  is null");
 			return ;
 		}
 		if(conversationId != null && !"".equals(conversationId)){
-			if(msg.getConversationId().equals(conversationId)){
+			if(chatBean.getIdConversation().equals(conversationId)){
 				updateBean.updateView(chatBean);	
 			}
 		}else{

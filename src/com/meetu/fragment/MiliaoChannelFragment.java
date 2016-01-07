@@ -438,12 +438,12 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 	//接收到实时消息执行
 	@Override
 	public void updateView(MessageChatBean bean) {
-		// TODO Auto-generated method stub
+		Log.e("miliao", "receive");
 		int type = bean.getTypeMsg();
 		switch (type) {
+		case Constants.SHOW_SELF_KICK:
 		case Constants.SHOW_MEMBER_ADD:
 		case Constants.SHOW_SELF_ADD:
-		case Constants.SHOW_SELF_KICK:
 			setUserInfo();
 			break;
 

@@ -49,6 +49,7 @@ import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.utils.ChatMsgUtils;
 import com.meetu.cloud.wrap.ObjActivityWrap;
 import com.meetu.cloud.wrap.ObjChatMessage;
+import com.meetu.cloud.wrap.ObjChatWrap;
 import com.meetu.cloud.wrap.ObjUserWrap;
 import com.meetu.common.Constants;
 import com.meetu.common.dismissData;
@@ -250,7 +251,6 @@ OnItemClickListener,ChatViewInterface {
 			timeOver=convUserBean.getOverTime();
 			jstitle = convUserBean.getTitle();
 			int number = memberSeekDao.queryUserAbout("" + user.getObjectId(),conversationId).size();
-			
 			title.setText("" + jstitle);
 			userNumber.setText("" + "(" + number + ")");
 			if(dismissData.getDismissData(timeOver)==null){
@@ -258,8 +258,20 @@ OnItemClickListener,ChatViewInterface {
 			}else{
 				timeOverTextView.setText(""+dismissData.getDismissData(timeOver));
 			}
+			//被踢出  退出 失效 解散 点击之后将失效会话删掉
+			int convStatus = convUserBean.getStatus();
+			switch (convStatus) {
+			case Constants.CONV_STATUS_KICK:
+			case Constants.CONV_STATUS_QUIT:
+			case Constants.CONV_STATUS_DISSOLVE:
+			case Constants.CONV_STATUS_DISMISS:
+				deleteConv();
+				break;
+			default:
+				break;
+			}
 		}else{
-			//查询conversationUser表
+			//查询conversationUser表失败
 		}
 	}
 	private void initReceiveMsg() {
@@ -979,7 +991,22 @@ OnItemClickListener,ChatViewInterface {
 	protected void deleteConv() {
 		convUserDao.deleteConv(user.getObjectId(), conversationId);
 		msgChatDao.deleteByConv(user.getObjectId(), conversationId);
+		deleteObjUserConv(conversationId);
 	}
+	//删掉后台记录
+		private void deleteObjUserConv(String convId) {
+			// TODO Auto-generated method stub
+			ObjChatWrap.deleteUserConv(user, convId, new ObjFunBooleanCallback() {
+
+				@Override
+				public void callback(boolean result, AVException e) {
+					// TODO Auto-generated method stub
+					if(result){
+
+					}
+				}
+			});
+		}
 	/**
 	 * 得到一个SpanableString对象，通过传入的字符串,并进行正则判断
 	 * 
@@ -1518,7 +1545,7 @@ OnItemClickListener,ChatViewInterface {
 
 	@Override
 	public void updateView(MessageChatBean bean) {
-		Log.e("SHOW_SELF_KICK", "踢出刷新1");
+		Log.e("chatgroup", "receive");
 		if(bean.getTypeMsg() == Constants.SHOW_SELF_KICK){
 			Log.e("SHOW_SELF_KICK", "踢出刷新2");
 			handler.sendEmptyMessage(5);

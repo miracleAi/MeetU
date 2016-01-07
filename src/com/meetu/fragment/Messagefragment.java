@@ -112,8 +112,6 @@ OnClickListener,ChatViewInterface{
 	MemberActivityDao memberActivityDao;
 	MessageChatDao msgChatDao ;
 	
-	boolean isDelete = false;
-
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -236,21 +234,7 @@ OnClickListener,ChatViewInterface{
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
 		// TODO Auto-generated method stub
-		//被踢出  退出 失效 解散 点击之后将失效会话删掉
-		int convStatus = mdataListCache.get(position).getStatus();
-		switch (convStatus) {
-		case Constants.CONV_STATUS_KICK:
-		case Constants.CONV_STATUS_QUIT:
-		case Constants.CONV_STATUS_DISSOLVE:
-		case Constants.CONV_STATUS_DISMISS:
-			isDelete = true;
-			convUserDao.deleteConv(user.getObjectId(),mdataListCache.get(position).getIdConversation());
-			deleteObjUserConv(mdataListCache.get(position).getIdConversation());
-			break;
-		default:
-			isDelete = false;
-			break;
-		}
+		
 		Intent intent = new Intent(getActivity(), ChatGroupActivity.class);
 		conversationId = mdataListCache.get(position).getIdConversation();
 		intent.putExtra("ConversationId", conversationId );
@@ -260,20 +244,6 @@ OnClickListener,ChatViewInterface{
 		// 清空该项未读消息
 		convUserDao.updateUnreadClear(user.getObjectId(),
 				mdataListCache.get(position).getIdConversation());
-	}
-	//删掉后台记录
-	private void deleteObjUserConv(String convId) {
-		// TODO Auto-generated method stub
-		ObjChatWrap.deleteUserConv(user, convId, new ObjFunBooleanCallback() {
-
-			@Override
-			public void callback(boolean result, AVException e) {
-				// TODO Auto-generated method stub
-				if(result){
-
-				}
-			}
-		});
 	}
 
 	@Override
@@ -560,19 +530,11 @@ OnClickListener,ChatViewInterface{
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		if(requestCode == 1001){
-			log.d("mytest", "msg frgt delete");
-			getConversation();
-			if(isDelete){
-				isDelete = false;
-				msgChatDao.deleteByConv(user.getObjectId(), conversationId);
-			}
-		}
 	}
 
 	@Override
 	public void updateView(MessageChatBean bean) {
-		// TODO Auto-generated method stub
+		Log.e("message", "receive");
 		handler.sendEmptyMessage(1);
 	}
 }
