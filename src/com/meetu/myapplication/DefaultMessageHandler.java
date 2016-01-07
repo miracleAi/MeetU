@@ -186,7 +186,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 				String convId = (String) msg.getAttrs().get("convId");
 				Log.e("SHOW_SELF_KICK", "我被踢了啊啊啊"+convId);
 				convUserDao.updateConvStatus(user.getObjectId(), convId, Constants.CONV_STATUS_KICK);
-				memSeekDao.deleteUserTypeUserId(user.getObjectId(), conversation.getConversationId(), appendUserId);
+				memSeekDao.deleteUserTypeUserId(user.getObjectId(), convId, appendUserId);
 			}else{
 				isSnd = false;
 				chatBean.setTypeMsg(Constants.SHOW_MEMBER_KICK);
@@ -238,6 +238,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			break;
 		}
 		if(!isSnd){
+			Log.e("isSnd", ""+isSnd);
 			return;
 		}
 		chatBean.setIdMine(user.getObjectId());
@@ -258,12 +259,14 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		if(conversationId != null && !"".equals(conversationId)){
 			if(msg.getConversationId().equals(conversationId)){
 				updateBean.updateView(chatBean);	
+				Log.e("updateBean", "updateBean");
 			}
 		}else{
 			// 未读消息加1
 			convUserDao.updateUnread(AVUser.getCurrentUser().getObjectId(),
 					conversation.getConversationId());
 			updateBean.updateView(chatBean);
+			Log.e("updateBean未读消息加1", "updateBean");
 		}
 	}
 	//保存纸条消息
