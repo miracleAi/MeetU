@@ -189,6 +189,7 @@ public class ObjChatWrap {
 	public static void getConvUserBean(ObjUser user,String convId,final ObjConvUserListCallback callback){
 		AVQuery<ObjUserConversation> query = AVObject.getQuery(ObjUserConversation.class);
 		query.whereEqualTo("user", user);
+		query.whereEqualTo("conversationId", convId);
 		query.whereGreaterThan("status", Constants.CONV_STATUS_CREATE);
 		query.findInBackground(new FindCallback<ObjUserConversation>() {
 
