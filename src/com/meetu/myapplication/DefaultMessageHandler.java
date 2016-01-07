@@ -199,26 +199,26 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 				//理论上不会接收到
 				chatBean.setTypeMsg(Constants.SHOW_SELF_QUIT);
 			}else{
-				isSnd = true;
+				isSnd = false;
 				chatBean.setTypeMsg(Constants.SHOW_MEMBER_QUIT);
 				//成员减少
 				memSeekDao.deleteUserTypeUserId(user.getObjectId(), conversation.getConversationId(), appendUserId);
 			}
 			break;
 		case Constants.CONV_DISSOLVE:
-			isSnd = true;
+			isSnd = false;
 			chatBean.setTypeMsg(Constants.SHOW_CONV_DISSOLVE);
 			//聊天状态改变
 			convUserDao.updateConvStatus(user.getObjectId(), conversation.getConversationId(), Constants.CONV_STATUS_DISSOLVE);
 			break;
 		case Constants.CONV_DISMISS:
-			isSnd = true;
+			isSnd = false;
 			chatBean.setTypeMsg(Constants.SHOW_CONV_DISMISS);
 			//聊天状态改变
 			convUserDao.updateConvStatus(user.getObjectId(), conversation.getConversationId(), Constants.CONV_STATUS_DISMISS);
 			break;
 		case Constants.GAG:
-			isSnd = true;
+			isSnd = false;
 			if(appendUserId != null && appendUserId.equals(user.getObjectId())){
 				chatBean.setTypeMsg(Constants.SHOW_SELF_GAG);
 			}else{
@@ -226,7 +226,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			}
 			break;
 		case Constants.UN_GAG:
-			isSnd = true;
+			isSnd = false;
 			if(appendUserId != null && appendUserId.equals(user.getObjectId())){
 				chatBean.setTypeMsg(Constants.SHOW_SELF_UN_GAG);
 			}else{
