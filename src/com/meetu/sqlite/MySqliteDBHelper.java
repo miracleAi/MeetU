@@ -298,8 +298,6 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		StringBuffer convSb = new StringBuffer();
 		convSb.append("create table if not exists ");
 		convSb.append(DbConstents.CONVERSATION_USER_TB + "(");
-		convSb.append(DbConstents.ID_MINE_CONVERSATION
-				+ " varchar(100) primary key,");
 		convSb.append(DbConstents.ID_MINE + " varchar(100) ,");
 		convSb.append(DbConstents.ID_CONVERSATION + " varchar(100) ,");
 		convSb.append(DbConstents.ID_CONV_APPEND + " varchar(100) ,");
@@ -310,9 +308,9 @@ public class MySqliteDBHelper extends SQLiteOpenHelper {
 		convSb.append(DbConstents.TITLE_CONV + " varchar(100) ,");
 		convSb.append(DbConstents.CONV_OVER_TIME + " Integer ,");
 		convSb.append(DbConstents.CONV_UPDATE_TIME + " Integer ,");
-		convSb.append(DbConstents.UNREAD_COUNT + " Integer");
-		/*convSb.append("constraint " + DbConstents.ID_MINE_CONVERSATION + " primary key ("
-				+ DbConstents.ID_MINE + "," + DbConstents.ID_CONVERSATION + ") ");*/
+		convSb.append(DbConstents.UNREAD_COUNT + " Integer ,");
+		convSb.append("constraint " + DbConstents.ID_MINE_CONVERSATION + " primary key ("
+				+ DbConstents.ID_MINE + "," + DbConstents.ID_CONVERSATION + ") ");
 		convSb.append(")");
 		db.execSQL(convSb.toString());
 		

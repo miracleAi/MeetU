@@ -123,7 +123,6 @@ public class ConversationUserDao {
 			messages.setOverTime(c.getLong(c.getColumnIndex(DbConstents.CONV_OVER_TIME)));
 			messages.setUpdateTime(c.getLong(c.getColumnIndex(DbConstents.CONV_UPDATE_TIME)));
 			messages.setMute(c.getInt(c.getColumnIndex(DbConstents.CONV_MUTE)));
-			messages.setIdCacheConv(c.getString(c.getColumnIndex(DbConstents.ID_MINE_CONVERSATION)));
 			list.add(messages);
 		}
 		c.close();
@@ -147,7 +146,6 @@ public class ConversationUserDao {
 		while (c != null && c.moveToNext()) {
 			CoversationUserBean messages = new CoversationUserBean();
 			messages.setIdMine(c.getString(c.getColumnIndex(DbConstents.ID_MINE)));
-			messages.setIdCacheConv(c.getString(c.getColumnIndex(DbConstents.ID_MINE_CONVERSATION)));
 			messages.setIdConversation(c.getString(c.getColumnIndex(DbConstents.ID_CONVERSATION)));
 			messages.setIdConvCreator(c.getString(c.getColumnIndex(DbConstents.ID_CONV_CREATOR)));
 			messages.setIdConvAppend(c.getString(c.getColumnIndex(DbConstents.ID_CONV_APPEND)));
@@ -192,9 +190,9 @@ public class ConversationUserDao {
 	public void insert(CoversationUserBean messages) {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		db.execSQL(
-				"insert or replace into "+DbConstents.CONVERSATION_USER_TB+" values("+"?,?,?,?,?,?,"
+				"insert or replace into "+DbConstents.CONVERSATION_USER_TB+" values("+"?,?,?,?,?,"
 						+ "?,?,?,?,?,?)",
-						new Object[] {messages.getIdMine()+messages.getIdConversation(), messages.getIdMine(),
+						new Object[] { messages.getIdMine(),
 						messages.getIdConversation(),
 						messages.getIdConvAppend(), messages.getIdConvCreator(),
 						messages.getStatus(), messages.getType(),
@@ -222,9 +220,9 @@ public class ConversationUserDao {
 			}
 			c.close();
 			db.execSQL(
-					"insert or replace into "+DbConstents.CONVERSATION_USER_TB+" values("+"?,?,?,?,?,?,"
+					"insert or replace into "+DbConstents.CONVERSATION_USER_TB+" values("+"?,?,?,?,?,"
 							+ "?,?,?,?,?,?)",
-							new Object[] { messages.getIdMine()+messages.getIdConversation(),messages.getIdMine(),
+							new Object[] {messages.getIdMine(),
 							messages.getIdConversation(),
 							messages.getIdConvAppend(), messages.getIdConvCreator(),
 							messages.getStatus(), messages.getType(),

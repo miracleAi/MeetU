@@ -667,6 +667,7 @@ OnItemClickListener,ChatViewInterface {
 	private void sendChatPhoto(String uir) {
 		// TODO Auto-generated method stub
 		MessageChatBean mchatmsgs = new MessageChatBean();
+		mchatmsgs.setIdCacheMsg(System.currentTimeMillis()+"");
 		mchatmsgs.setIdMine(user.getObjectId());
 		mchatmsgs.setIdClient(user.getObjectId());
 		mchatmsgs.setSendTimeStamp( System.currentTimeMillis());
@@ -692,6 +693,7 @@ OnItemClickListener,ChatViewInterface {
 		MessageChatBean mchatmsgs = new MessageChatBean();
 		if (mEditText.getText().length() != 0) {
 			String mcontentString = mEditText.getText().toString();
+			mchatmsgs.setIdCacheMsg(System.currentTimeMillis()+"");
 			mchatmsgs.setIdMine(user.getObjectId());
 			mchatmsgs.setIdClient(user.getObjectId());
 			mchatmsgs.setSendTimeStamp(System.currentTimeMillis());

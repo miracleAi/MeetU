@@ -295,6 +295,7 @@ OnClickListener,ChatViewInterface{
 			case 1:
 				mdataListCache.clear();
 				ArrayList<CoversationUserBean> list = convUserDao.getMessages(user.getObjectId());
+				log.d("mytest", "conv size:"+list.size());
 				if (list != null && list.size() > 0) {
 					for (CoversationUserBean messages : list) {
 						mdataListCache.add(messages);

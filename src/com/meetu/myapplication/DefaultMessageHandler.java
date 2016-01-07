@@ -233,6 +233,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		chatBean.setDirectionMsg(direction);
 		chatBean.setStatusMsg(ChatMsgUtils.getStatus(msg.getMessageStatus()));
 		chatBean.setSendTimeStamp(msg.getTimestamp());
+		chatBean.setIdCacheMsg(System.currentTimeMillis()+"");
 		// 消息插入数据库
 		messageChatDao.insert(chatBean);
 		convUserDao.updateTime(user.getObjectId(), conversationId);
@@ -314,6 +315,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		chatBean.setFileUrl(msg.getAVFile().getThumbnailUrl(true, DensityUtil.dip2px(context, 160), DensityUtil.dip2px(context, 160),100,"jpg"));
 		chatBean.setImgWidth(msg.getWidth());
 		chatBean.setImgHeight(msg.getHeight());
+		chatBean.setIdCacheMsg(System.currentTimeMillis()+"");
 		// 消息插入数据库
 		messageChatDao.insert(chatBean);
 		// 未读消息加1

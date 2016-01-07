@@ -808,6 +808,7 @@ OnClickListener {
 						chatBean.setTypeMsg(Constants.SHOW_SELF_ADD);
 						chatBean.setIdConversation(seekChatBeansList.get(positonNow).getConversationId());
 						chatBean.setIdMine(user.getObjectId());
+						chatBean.setIdCacheMsg(System.currentTimeMillis()+"");
 						messageChatDao.insert(chatBean);
 
 						MemberSeekBean memberSeekBean=new MemberSeekBean();

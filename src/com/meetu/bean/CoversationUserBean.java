@@ -1,8 +1,6 @@
 package com.meetu.bean;
 
 public class CoversationUserBean {
-	//缓存ID
-	private String idCacheConv;
 	//我的ID
 	private String idMine;
 	//会话ID
@@ -39,12 +37,6 @@ public class CoversationUserBean {
 	}
 	public void setUnReadCount(int unReadCount) {
 		this.unReadCount = unReadCount;
-	}
-	public String getIdCacheConv() {
-		return idCacheConv;
-	}
-	public void setIdCacheConv(String idCacheConv) {
-		this.idCacheConv = idCacheConv;
 	}
 	public String getIdMine() {
 		return idMine;
