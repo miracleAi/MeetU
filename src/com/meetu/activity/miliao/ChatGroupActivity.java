@@ -279,7 +279,7 @@ OnItemClickListener,ChatViewInterface {
 				@Override
 				public void callback(ObjUserConversation object, AVException e) {
 					if(e != null){
-						log.e("chatgroup", ""+object);
+						log.e("chatgroup", ""+e);
 						return;
 					}
 					objectID = object.getIdConvAppend();
