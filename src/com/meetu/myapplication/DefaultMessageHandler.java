@@ -186,6 +186,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 				String convId = (String) msg.getAttrs().get("convId");
 				convUserDao.updateConvStatus(user.getObjectId(), convId, Constants.CONV_STATUS_KICK);
 			}else{
+				isSnd = false;
 				chatBean.setTypeMsg(Constants.SHOW_MEMBER_KICK);
 				//成员减少
 				memSeekDao.deleteUserTypeUserId(user.getObjectId(), conversation.getConversationId(), appendUserId);
@@ -234,12 +235,9 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		default:
 			break;
 		}
-		log.d("mytest", "def selt");
 		if(!isSnd){
-			log.d("mytest", "def selt return");
 			return;
 		}
-		log.d("mytest", "def selt exe");
 		chatBean.setIdMine(user.getObjectId());
 		chatBean.setIdClient(msg.getFrom());
 		chatBean.setIdMessage(msg.getMessageId());
