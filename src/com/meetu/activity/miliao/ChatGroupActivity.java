@@ -192,7 +192,7 @@ OnItemClickListener,ChatViewInterface {
 	
 	private AVIMConversation conversation;
 
-	private MessageHandler msgHandler;
+	//private MessageHandler msgHandler;
 
 	private AVFile chatPhoto = null;// 用来发送照片
 
@@ -218,7 +218,7 @@ OnItemClickListener,ChatViewInterface {
 		if (currentUser != null) {
 			user = AVUser.cast(currentUser, ObjUser.class);
 		}
-		msgHandler = new MessageHandler();
+		//msgHandler = new MessageHandler();
 		emojisDao = new EmojisDao(this);
 		//messagesDao = new MessagesDao(this);
 		msgChatDao = new MessageChatDao(this);
@@ -271,10 +271,10 @@ OnItemClickListener,ChatViewInterface {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class,
+		/*AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class,
 				msgHandler);
 		AVIMMessageManager
-		.setConversationEventHandler(new MemberChangeHandler(getApplicationContext()));
+		.setConversationEventHandler(new MemberChangeHandler(getApplicationContext()));*/
 
 	}
 	@Override
@@ -282,11 +282,11 @@ OnItemClickListener,ChatViewInterface {
 		// TODO Auto-generated method stub
 		super.onPause();
 		MyApplication.defaultMsgHandler.setUpdateBean(null);
-		AVIMMessageManager.unregisterMessageHandler(AVIMTypedMessage.class,
+		/*AVIMMessageManager.unregisterMessageHandler(AVIMTypedMessage.class,
 				msgHandler);
 		AVIMMessageManager
 		.setConversationEventHandler(new DefaultMemberHandler(
-				getApplicationContext()));
+				getApplicationContext()));*/
 	}
 
 	private void loadData() {
@@ -1137,7 +1137,7 @@ OnItemClickListener,ChatViewInterface {
 	 * @author lucifer
 	 * 
 	 */
-	public class MessageHandler extends
+	/*public class MessageHandler extends
 	AVIMTypedMessageHandler<AVIMTypedMessage> {
 
 		@Override
@@ -1169,7 +1169,7 @@ OnItemClickListener,ChatViewInterface {
 			super.onMessageReceipt(message, conversation, client);
 		}
 
-	}
+	}*/
 
 	/**
 	 * 文本 接收信息发送
@@ -1388,7 +1388,7 @@ OnItemClickListener,ChatViewInterface {
 	 * @author lucifer
 	 *
 	 */
-	public class MemberChangeHandler extends AVIMConversationEventHandler {
+	/*public class MemberChangeHandler extends AVIMConversationEventHandler {
 
 		public MemberChangeHandler(Context context) {
 			// TODO Auto-generated constructor stub
@@ -1425,7 +1425,7 @@ OnItemClickListener,ChatViewInterface {
 			log.e("zcq", "接收到其他成员被踢出消息");
 		}
 
-	}
+	}*/
 
 	// 成员加入消息处理
 	/*public void handleMemberAdd(final AVIMClient client,

@@ -22,7 +22,6 @@ import com.meetu.activity.messages.InputDialog.SendMessageCallback;
 import com.meetu.activity.messages.NotesActivity;
 import com.meetu.activity.miliao.FaceGVAdapter;
 import com.meetu.activity.miliao.FaceVPAdapter;
-import com.meetu.activity.miliao.ChatGroupActivity.MessageHandler;
 import com.meetu.activity.miliao.ChatGroupActivity.OnCorpusSelectedListener;
 import com.meetu.bean.UserBean;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;

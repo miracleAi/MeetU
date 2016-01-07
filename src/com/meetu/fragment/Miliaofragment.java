@@ -563,7 +563,7 @@ OnClickListener {
 							.get("seekChats"));
 
 					seekChatBeansList.clear();
-					seekChatBeansList = new ArrayList<SeekChatBean>();
+					//seekChatBeansList = new ArrayList<SeekChatBean>();
 
 					for (int i = 0; i < chatBean.getSeekChatCount(); i++) {
 						SeekChatBean bean = new SeekChatBean();
