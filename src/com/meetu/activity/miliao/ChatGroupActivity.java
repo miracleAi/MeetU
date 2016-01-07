@@ -264,7 +264,7 @@ OnItemClickListener,ChatViewInterface {
 	}
 	private void initReceiveMsg() {
 		// TODO Auto-generated method stub
-		MyApplication.defaultMsgHandler.setUpdateBean(this);
+		MyApplication.defaultMsgHandler.setUpdateBean((ChatViewInterface)this);
 		MyApplication.defaultMsgHandler.setConversationId(conversationId);
 	}
 	@Override
@@ -967,7 +967,6 @@ OnItemClickListener,ChatViewInterface {
 
 	private void refreshComplete() {
 		mChatmsgsListView.postDelayed(new Runnable() {
-
 			@Override
 			public void run() {
 				// 使用第三方的时候用
@@ -979,7 +978,6 @@ OnItemClickListener,ChatViewInterface {
 
 	protected void deleteConv() {
 		convUserDao.deleteConv(user.getObjectId(), conversationId);
-		memberSeekDao.deleteByConv(user.getObjectId(), conversationId);
 		msgChatDao.deleteByConv(user.getObjectId(), conversationId);
 	}
 	/**
@@ -1520,7 +1518,9 @@ OnItemClickListener,ChatViewInterface {
 
 	@Override
 	public void updateView(MessageChatBean bean) {
+		Log.e("SHOW_SELF_KICK", "踢出刷新1");
 		if(bean.getTypeMsg() == Constants.SHOW_SELF_KICK){
+			Log.e("SHOW_SELF_KICK", "踢出刷新2");
 			handler.sendEmptyMessage(5);
 		}else{
 			handler.sendEmptyMessage(1);
