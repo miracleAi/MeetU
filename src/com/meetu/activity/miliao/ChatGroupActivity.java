@@ -949,6 +949,7 @@ OnItemClickListener,ChatViewInterface {
 				break;
 				//自己被踢出时
 			case 5:
+				Log.e("SHOW_SELF_KICK", "踢出刷新");
 				// 刷新数据时 要先清空数据 再添加。不然 不刷新 亲测。。。
 				chatmsgsCacheList.clear();
 				chatmsgsCacheList.addAll(msgChatDao.getChatmsgsList(conversationId, user.getObjectId()));
