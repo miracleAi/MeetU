@@ -178,8 +178,8 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			}
 			break;
 		case Constants.KICK_OUT:
-			isSnd = true;
 			if(appendUserId != null && appendUserId.equals(user.getObjectId())){
+				isSnd = true;
 				chatBean.setTypeMsg(Constants.SHOW_SELF_KICK);
 				chatBean.setMsgText("您已被踢出群聊");
 				Log.e("SHOW_SELF_KICK", "我被踢了啊啊啊");

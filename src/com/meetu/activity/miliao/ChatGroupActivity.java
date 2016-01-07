@@ -1519,7 +1519,7 @@ OnItemClickListener,ChatViewInterface {
 
 	@Override
 	public void updateView(MessageChatBean bean) {
-		if(bean.getTypeMsg() == Constants.SHOW_SELF_QUIT){
+		if(bean.getTypeMsg() == Constants.SHOW_SELF_KICK){
 			handler.sendEmptyMessage(5);
 		}else{
 			handler.sendEmptyMessage(1);
