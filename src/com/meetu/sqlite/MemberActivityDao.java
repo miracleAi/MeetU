@@ -104,7 +104,7 @@ public class MemberActivityDao {
 			bean.setMineId(cursor.getString(cursor
 					.getColumnIndex(DbConstents.ID_MINE)));
 			bean.setActivityId(cursor.getString(cursor
-					.getColumnIndex(DbConstents.ID_MINE_MEMBER_ACTY)));
+					.getColumnIndex(DbConstents.ID_ACTY)));
 			bean.setMemberId(cursor.getString(cursor
 					.getColumnIndex(DbConstents.ID_ACTY_MEMBER)));
 			bean.setConversationId(cursor.getString(cursor
