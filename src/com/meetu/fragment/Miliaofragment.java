@@ -183,6 +183,9 @@ OnClickListener {
 		if(fragmentList != null && fragmentList.size()>0){
 			MyApplication.defaultMsgHandler.setUpdateBean((ChatViewInterface)fragmentList.get(positonNow));
 		}
+		if(seekChatBeansList.size()>0){
+			isAddconvesition();
+		}	
 	}
 	@Override
 	public void onPause() {

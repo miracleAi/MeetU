@@ -244,6 +244,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			break;
 		}
 		if(!isSnd){
+			Log.e("isSnd", ""+isSnd);
 			return;
 		}
 		chatBean.setIdMine(user.getObjectId());
@@ -262,12 +263,14 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		if(conversationId != null && !"".equals(conversationId)){
 			if(chatBean.getIdConversation().equals(conversationId)){
 				updateBean.updateView(chatBean);	
+				Log.e("updateBean", "updateBean");
 			}
 		}else{
 			// 未读消息加1
 			convUserDao.updateUnread(AVUser.getCurrentUser().getObjectId(),
 					conversation.getConversationId());
 			updateBean.updateView(chatBean);
+			Log.e("updateBean未读消息加1", "updateBean");
 		}
 	}
 	//保存纸条消息
