@@ -261,8 +261,9 @@ OnClickListener {
 			break;
 			// 加入觅聊
 		case R.id.join_miliao_rl:
-			
-
+			if(seekChatBeansList.size()==0){
+				return;
+			}
 			if(user.isCompleteUserInfo()){
 				if(seekChatBeansList.get(positonNow).getTimeChatStop()-System.currentTimeMillis()<=0){
 					Toast.makeText(getActivity(), "觅聊已消失", Toast.LENGTH_SHORT).show();
@@ -793,14 +794,6 @@ OnClickListener {
 						Log.i("joinSeekChat", "正常");
 						//TODO 更新本地聊天消息本人加入提醒    觅聊卡片中头像更新
 						log.e("zcq", "加入觅聊成功");
-//						Chatmsgs chatmsgs=new Chatmsgs();
-//						chatmsgs.setContent("欢迎加入觅聊");
-//						chatmsgs.setClientId(user.getObjectId());
-//						chatmsgs.setSendTimeStamp(""+System.currentTimeMillis());
-//						chatmsgs.setChatMsgType(Constants.SHOW_SELF_ADD);
-//						chatmsgs.setConversationId(seekChatBeansList.get(positonNow).getConversationId());
-//						chatmsgs.setUid(user.getObjectId());
-//						chatmsgsDao.insert(chatmsgs);
 						MessageChatBean chatBean = new MessageChatBean();
 						chatBean.setMsgText("欢迎加入觅聊");
 						chatBean.setSendTimeStamp(System.currentTimeMillis());
@@ -837,7 +830,7 @@ OnClickListener {
 									+ seekChatBeansList.get(positonNow)
 									.getConversationId());
 							// 传对话的类型 1 表示活动群聊 2 表示觅聊 3 表示单聊
-							intent2.putExtra("ConversationStyle", "" + Constants.CONV_TYPE_SEEK);
+							intent2.putExtra("ConversationStyle",Constants.CONV_TYPE_SEEK);
 							intent2.putExtra("title", ""
 									+ seekChatBeansList.get(positonNow)
 									.getTitle());

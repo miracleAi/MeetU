@@ -250,8 +250,8 @@ OnClickListener,ChatViewInterface{
 		Intent intent = new Intent(getActivity(), ChatGroupActivity.class);
 		conversationId = mdataListCache.get(position).getIdConversation();
 		intent.putExtra("ConversationId", conversationId );
-		intent.putExtra("ConversationStyle", ""
-				+ mdataListCache.get(position).getType());
+		intent.putExtra("ConversationStyle", 
+				 mdataListCache.get(position).getType());
 		startActivityForResult(intent, 1001);
 		// 清空该项未读消息
 		convUserDao.updateUnreadClear(user.getObjectId(),
