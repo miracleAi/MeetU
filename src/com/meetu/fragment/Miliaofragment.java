@@ -292,6 +292,12 @@ OnClickListener {
 								+ seekChatBeansList.get(positonNow)
 								.getConversationId());
 						intent2.putExtra("ConversationStyle",Constants.CONV_TYPE_SEEK);
+						intent2.putExtra("title", ""
+								+ seekChatBeansList.get(positonNow)
+								.getTitle());
+						intent2.putExtra("number", ""
+								+ seekChatBeansList.get(positonNow)
+								.getMembers().size() + 1);
 						startActivityForResult(intent2, 200);
 					} else {
 						log.e("zcq", "没加入过当前觅聊");
