@@ -286,10 +286,14 @@ public class HomePageDetialActivity extends Activity implements
 		favorLayout.setOnClickListener(this);
 		timeTextView = (TextView) findViewById(R.id.time_homepage_detial_tv);
 
-		timeTextView.setText(DateUtils.getActivityTimeStart(activityBean
-				.getTimeStart())
-				+ "~"
-				+ DateUtils.getActivityTimeStop(activityBean.getTimeStop()));
+		
+		if(activityBean.getTimeStop()-activityBean.getTimeStart()>=86400000){
+			timeTextView.setText(DateUtils.getActivityTimeStart(activityBean.getTimeStart())+ "~"
+					+ DateUtils.getActivityTimeStart(activityBean.getTimeStop()));
+		}else{
+			timeTextView.setText(DateUtils.getActivityTimeStart(activityBean.getTimeStart())+ "~"
+					+ DateUtils.getActivityTimeStop(activityBean.getTimeStop()));
+		}
 		userLayout = (RelativeLayout) findViewById(R.id.userNumber_homePagedetial_rl);
 
 		userLayout.setOnClickListener(new OnClickListener() {

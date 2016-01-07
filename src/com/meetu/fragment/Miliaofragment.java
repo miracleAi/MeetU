@@ -316,7 +316,7 @@ OnClickListener {
 								seekChatBeansList.get(positonNow).getConversationId());
 						if(memList.size() >= 20){
 							joinChatTv.setText("人数已满");
-							Toast.makeText(getActivity(), "觅聊人数已满", 1000).show();
+							Toast.makeText(getActivity(), "觅聊人数已满", Toast.LENGTH_SHORT).show();
 							return;
 						}
 						joinChatTv.setText("加入觅聊");
@@ -774,14 +774,14 @@ OnClickListener {
 	 */
 	public void joinSeekChat(String userId,final String seekChatId){
 		log.e("zcq", "准备加入");
-		progressBarJoin.setVisibility(View.VISIBLE);
-		joinLayout.setClickable(false);	
+		progressBarJoin.setVisibility(View.VISIBLE);	
+		joinLayout.setEnabled(false);
 		ObjChatMessage.joinSeekChat(userId, seekChatId, new ObjFunMapCallback() {
 			
 			@Override
 			public void callback(Map<String, Object> map, AVException e) {
 				progressBarJoin.setVisibility(View.GONE);
-				joinLayout.setClickable(true);	
+				joinLayout.setEnabled(true);	
 				if(e!=null){
 					Log.e("joinSeekChat", "e",e);
 					return;

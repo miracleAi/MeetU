@@ -259,8 +259,9 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 
 	private void getUsersListInfo(final List<String> list) {
 
-		memberUserList.clear();
-
+		
+		
+		final ArrayList<ObjUser> memberUserList2 = new ArrayList<ObjUser>();
 		for (int i = 0; i < list.size(); i++) {
 			ObjUserWrap.getObjUser(list.get(i), new ObjUserInfoCallback() {
 
@@ -271,9 +272,12 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 						return;
 					} else if (user != null) {
 						log.e("zcq", "群员信息获取成功");
-						memberUserList.add(user);
+						memberUserList2.add(user);
 
-						if (memberUserList.size() == list.size()) {
+						if (memberUserList2.size() == list.size()) {
+							memberUserList.clear();
+							memberUserList=memberUserList2;
+							
 							log.e("zcq", "设置头像");
 							if (list.size() >= 5) {
 								if (memberUserList.get(4).getProfileClip()!= null) {

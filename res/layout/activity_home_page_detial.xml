@@ -289,11 +289,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
+                        android:layout_marginTop="-1dp"
                         android:layout_marginLeft="8dp"
                         android:layout_toRightOf="@+id/imageView12"
                         android:text="2015-10-01  14:00-17:00"
                         android:textColor="#707070"
-                        android:textSize="14sp" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/address_home_page_detial_tv"
@@ -303,7 +304,7 @@
                         android:layout_alignTop="@+id/imageView13"
                         android:text="中关村东路16号院  Meet U单身社区"
                         android:textColor="#707070"
-                        android:textSize="14sp" />
+                        android:textSize="12sp" />
                 </RelativeLayout>
 
                 <ImageView
