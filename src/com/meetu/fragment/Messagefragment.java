@@ -565,7 +565,6 @@ OnClickListener,ChatViewInterface{
 			getConversation();
 			if(isDelete){
 				isDelete = false;
-				memberSeekDao.deleteByConv(user.getObjectId(), conversationId);
 				msgChatDao.deleteByConv(user.getObjectId(), conversationId);
 			}
 		}

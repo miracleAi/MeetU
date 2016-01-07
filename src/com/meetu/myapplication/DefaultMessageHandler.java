@@ -182,11 +182,11 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 				isSnd = true;
 				chatBean.setTypeMsg(Constants.SHOW_SELF_KICK);
 				chatBean.setMsgText("您已被踢出群聊");
-				
 				//改变群聊状态
 				String convId = (String) msg.getAttrs().get("convId");
 				Log.e("SHOW_SELF_KICK", "我被踢了啊啊啊"+convId);
 				convUserDao.updateConvStatus(user.getObjectId(), convId, Constants.CONV_STATUS_KICK);
+				memSeekDao.deleteUserTypeUserId(user.getObjectId(), conversation.getConversationId(), appendUserId);
 			}else{
 				isSnd = false;
 				chatBean.setTypeMsg(Constants.SHOW_MEMBER_KICK);
@@ -252,6 +252,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		messageChatDao.insert(chatBean);
 		convUserDao.updateTime(user.getObjectId(), conversationId);
 		if(updateBean == null){
+			Log.e("SHOW_SELF_KICK", "update bean  is null");
 			return ;
 		}
 		if(conversationId != null && !"".equals(conversationId)){

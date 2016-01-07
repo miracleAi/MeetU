@@ -443,9 +443,7 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 		switch (type) {
 		case Constants.SHOW_MEMBER_ADD:
 		case Constants.SHOW_SELF_ADD:
-		case Constants.SHOW_MEMBER_KICK:
 		case Constants.SHOW_SELF_KICK:
-		case Constants.SHOW_MEMBER_QUIT:
 			setUserInfo();
 			break;
 
