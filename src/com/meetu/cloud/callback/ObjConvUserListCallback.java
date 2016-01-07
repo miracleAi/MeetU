@@ -6,5 +6,5 @@ import com.avos.avoscloud.AVException;
 import com.meetu.cloud.object.ObjUserConversation;
 
 public interface ObjConvUserListCallback {
-void callback(List<ObjUserConversation> objects,AVException e);
+void callback(ObjUserConversation object,AVException e);
 }

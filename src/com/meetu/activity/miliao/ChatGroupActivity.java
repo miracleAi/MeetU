@@ -41,11 +41,13 @@ import com.meetu.bean.CoversationUserBean;
 import com.meetu.bean.MessageChatBean;
 import com.meetu.bean.SeekChatBean;
 import com.meetu.bean.UserAboutBean;
+import com.meetu.cloud.callback.ObjConvUserListCallback;
 import com.meetu.cloud.callback.ObjFunBooleanCallback;
 import com.meetu.cloud.callback.ObjUserInfoCallback;
 import com.meetu.cloud.object.ObjActivity;
 import com.meetu.cloud.object.ObjChat;
 import com.meetu.cloud.object.ObjUser;
+import com.meetu.cloud.object.ObjUserConversation;
 import com.meetu.cloud.utils.ChatMsgUtils;
 import com.meetu.cloud.wrap.ObjActivityWrap;
 import com.meetu.cloud.wrap.ObjChatMessage;
@@ -271,7 +273,36 @@ OnItemClickListener,ChatViewInterface {
 				break;
 			}
 		}else{
-			//查询conversationUser表失败
+			//查询conversationUser表
+			ObjChatWrap.getConvUserBean(user, conversationId, new ObjConvUserListCallback() {
+				
+				@Override
+				public void callback(ObjUserConversation object, AVException e) {
+					objectID = object.getIdConvAppend();
+					timeOver=object.getOverTime();
+					jstitle = object.getTitle();
+					int number = memberSeekDao.queryUserAbout("" + user.getObjectId(),conversationId).size();
+					title.setText("" + jstitle);
+					userNumber.setText("" + "(" + number + ")");
+					if(dismissData.getDismissData(timeOver)==null){
+						timeLayout.setVisibility(View.GONE);
+					}else{
+						timeOverTextView.setText(""+dismissData.getDismissData(timeOver));
+					}
+					//被踢出  退出 失效 解散 点击之后将失效会话删掉
+					int convStatus = object.getStatus();
+					switch (convStatus) {
+					case Constants.CONV_STATUS_KICK:
+					case Constants.CONV_STATUS_QUIT:
+					case Constants.CONV_STATUS_DISSOLVE:
+					case Constants.CONV_STATUS_DISMISS:
+						deleteConv();
+						break;
+					default:
+						break;
+					}
+				}
+			});
 		}
 	}
 	private void initReceiveMsg() {
@@ -983,7 +1014,6 @@ OnItemClickListener,ChatViewInterface {
 			public void run() {
 				// 使用第三方的时候用
 				// mChatmsgsListView.refreshComplete();
-
 			}
 		}, 500);
 	}

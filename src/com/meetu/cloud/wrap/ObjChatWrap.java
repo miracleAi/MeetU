@@ -183,6 +183,31 @@ public class ObjChatWrap {
 			}
 		});
 	}
+	/**
+	 * 获取userConversation
+	 * */
+	public static void getConvUserBean(ObjUser user,String convId,final ObjConvUserListCallback callback){
+		AVQuery<ObjUserConversation> query = AVObject.getQuery(ObjUserConversation.class);
+		query.whereEqualTo("user", user);
+		query.whereGreaterThan("status", Constants.CONV_STATUS_CREATE);
+		query.findInBackground(new FindCallback<ObjUserConversation>() {
+
+			@Override
+			public void done(List<ObjUserConversation> objects, AVException e) {
+				// TODO Auto-generated method stub
+				if (e != null) {
+					callback.callback(null, e);
+					return;
+				}
+				if(objects != null && objects.size()>0){
+					callback.callback(objects.get(0), null);
+				}else{
+					callback.callback(null, new AVException(0,
+							"获取信息失败"));
+				}
+			}
+		});
+	}
 	//删除后台userConv一条记录
 	public static void deleteUserConv(ObjUser user,String convId,final ObjFunBooleanCallback callback){
 		AVQuery<ObjUserConversation> query = AVObject.getQuery(ObjUserConversation.class);
