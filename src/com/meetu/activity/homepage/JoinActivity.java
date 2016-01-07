@@ -101,6 +101,8 @@ OnItemClickListener {
 	private boolean isJoin = false;// 是否报名
 	//若已报名，票价
 	private float ticketPrice = 0;
+	//若已报名 ，票的id
+	private String ticketId;
 	//若已报名此处为愿望
 	private String hopeStr = "";
 	//订单实体
@@ -274,10 +276,11 @@ OnItemClickListener {
 	//根据报名状态改变view
 	public void updateView(){
 		if(isJoin){
-			ticketPrice = activityOrder.getTicket().getPrice();
+		//	ticketPrice = activityOrder.getTicket().getPrice();
+			ticketId=activityOrder.getTicket().getObjectId();
 			hopeStr = activityOrder.getUserExpect();
 			for(int i = 0;i<tickets.size();i++){
-				if(ticketPrice == tickets.get(i).getPrice()){
+				if(ticketId .equals( tickets.get(i).getObjectId())){
 					adapter.setSelectedPosition(i);
 					selectedPosition = i;
 					adapter.notifyDataSetChanged();
@@ -285,7 +288,7 @@ OnItemClickListener {
 			}
 			hopeEditText.setText(hopeStr);
 			hopeStr = "";
-			ticketPrice = 0;
+		//	ticketPrice = 0;
 			payJoinedLayout.setVisibility(View.VISIBLE);
 			payLayout.setVisibility(View.GONE);
 			paylRelativeLayout.setVisibility(View.GONE);

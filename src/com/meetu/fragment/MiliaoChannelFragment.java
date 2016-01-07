@@ -96,10 +96,6 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 			}
 
 			loadBitmapIng=BitmapFactory.decodeResource(getResources(), R.drawable.mine_likelist_profile_default);
-			//	userAboutDao = new UserAboutDao(getActivity());
-			// objChat=(ObjChat) getArguments().get("ObjChat");
-			// log.e("zcq","objChat=="+objChat.getObjectId()+"  objChat.getConversationId=="+objChat.getConversationId());
-
 			seekChatBean = (SeekChatBean) getArguments().get("SeekChatBean");
 			memberSeekDao=new MemberSeekDao(getActivity());
 			log.e("seekChatBean", seekChatBean.toString());
@@ -213,15 +209,19 @@ public class MiliaoChannelFragment extends Fragment implements OnClickListener,C
 	public void updateTime(){
 		int disNumber = (int) ((seekChatBean.getTimeChatStop() - System
 				.currentTimeMillis()) / 3600000);
-		if (disNumber >= 1) {
-			dismissData.setText("" + disNumber + "H");
-		} else  if(disNumber>0){
-			int minute = (int) ((seekChatBean.getTimeChatStop() - System
-					.currentTimeMillis()) / 60000);
-			dismissData.setText("" + minute + "M");
+		if(seekChatBean.getTimeChatStop() - System
+				.currentTimeMillis()<=0){
+			dismissData.setText("已");
 		}else{
-			dismissData.setText("已");			
+			if (disNumber >= 1) {
+				dismissData.setText("" + disNumber + "H");
+			} else  {
+				int minute = (int) ((seekChatBean.getTimeChatStop() - System
+						.currentTimeMillis()) / 60000);
+				dismissData.setText("" + minute + "M");
+			}
 		}
+		
 	}
 
 	/**
