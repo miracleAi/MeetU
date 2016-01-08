@@ -667,7 +667,7 @@ OnItemClickListener {
 	protected void saveConvUser(Map<String, Object> map) {
 		Log.e("saveConvUser", "准备存储saveConvUser对象");
 		@SuppressWarnings("unchecked")
-		HashMap<String, Object> convUserMap = (HashMap<String, Object>) map.get("userConversation");
+		HashMap<String, Object> convUserMap = (HashMap<String, Object>) map.get("result");
 		if(convUserMap == null){
 			log.e("convUserMap", "convUserMap空");
 			return ;
