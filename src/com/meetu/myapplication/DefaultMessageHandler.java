@@ -138,6 +138,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 				String appendConvId = (String) msg.getAttrs().get("appendId");
 				if(convType == Constants.CONV_TYPE_SEEK){
 					isSnd = false;
+					chatBean.setTypeMsg(Constants.SHOW_SELF_ADD);
 					break;
 				}else{
 					isSnd = true;
