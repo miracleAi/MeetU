@@ -973,12 +973,12 @@ OnItemClickListener,ChatViewInterface {
 			case 1:
 				// 刷新数据时 要先清空数据 再添加。不然 不刷新 亲测。。。
 				chatmsgsCacheList.clear();
+				mChatmsgsAdapter.notifyDataSetChanged();
 				chatmsgsCacheList.addAll(msgChatDao.getChatmsgsList(conversationId, user.getObjectId()));
 				mChatmsgsAdapter.notifyDataSetChanged();
 
 				// ListView数据更新后，自动滚动到底部
 				mChatmsgsListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-				refreshComplete();
 				break;
 			case 2:
 				// 刷新数据时 要先清空数据 再添加。不然 不刷新 亲测。。。
@@ -986,7 +986,6 @@ OnItemClickListener,ChatViewInterface {
 				chatmsgsCacheList.addAll(msgChatDao.getChatmsgsList(
 						conversationId, user.getObjectId()));
 				mChatmsgsAdapter.notifyDataSetChanged();
-				refreshComplete();
 				break;
 			case 3:
 				MessageChatBean chatMsgText = (MessageChatBean) msg.obj;
@@ -1005,7 +1004,6 @@ OnItemClickListener,ChatViewInterface {
 				mChatmsgsAdapter.notifyDataSetChanged();
 				// ListView数据更新后，自动滚动到底部
 				mChatmsgsListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-				refreshComplete();
 				//删除此会话相关信息
 				deleteConv();
 				break;
@@ -1014,15 +1012,6 @@ OnItemClickListener,ChatViewInterface {
 
 	};
 
-	private void refreshComplete() {
-		mChatmsgsListView.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				// 使用第三方的时候用
-				// mChatmsgsListView.refreshComplete();
-			}
-		}, 500);
-	}
 
 	protected void deleteConv() {
 		convUserDao.deleteConv(user.getObjectId(), conversationId);

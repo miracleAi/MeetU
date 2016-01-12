@@ -319,7 +319,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		}else{
 			direction = Constants.IOTYPE_IN;
 		}
-		if (msgType == Constants.TYPE_IMG && direction == Constants.IOTYPE_OUT) {
+		if (msgType == Constants.TYPE_IMG) {
 			if(direction == Constants.IOTYPE_OUT){
 				chatBean.setTypeMsg(Constants.SHOW_SEND_TYPE_IMG);
 			}else{
@@ -341,9 +341,6 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 		chatBean.setIdCacheMsg(System.currentTimeMillis()+"");
 		// 消息插入数据库
 		messageChatDao.insert(chatBean);
-		// 未读消息加1
-		convUserDao.updateUnread(AVUser.getCurrentUser().getObjectId(),
-				conversation.getConversationId());
 		if(updateBean == null){
 			return ;
 		}
@@ -353,6 +350,9 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			}
 		}else{
 			updateBean.updateView(chatBean);	
+			// 未读消息加1
+			convUserDao.updateUnread(AVUser.getCurrentUser().getObjectId(),
+					conversation.getConversationId());
 		}
 	}
 }
