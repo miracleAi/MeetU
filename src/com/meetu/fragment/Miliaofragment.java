@@ -37,6 +37,7 @@ import com.meetu.cloud.object.ObjUser;
 import com.meetu.cloud.wrap.ObjAuthoriseWrap;
 import com.meetu.cloud.wrap.ObjChatMessage;
 import com.meetu.cloud.wrap.ObjChatWrap;
+import com.meetu.common.ChatConnection;
 import com.meetu.common.Constants;
 import com.meetu.common.Log;
 import com.meetu.common.PerfectInformation;
@@ -218,8 +219,17 @@ OnClickListener {
 		viewPager.setCurrentItem(positonNow);
 		MyApplication.defaultMsgHandler.setUpdateBean((ChatViewInterface)fragmentList.get(positonNow));
 		isAddconvesition();
-		conv = MyApplication.chatClient.getConversation(""
-				+ seekChatBeansList.get(positonNow).getConversationId());
+		ChatConnection.isConnection(new ObjFunBooleanCallback() {
+			
+			@Override
+			public void callback(boolean result, AVException e) {
+				// TODO Auto-generated method stub
+				if(result){
+					conv = MyApplication.chatClient.getConversation(""
+							+ seekChatBeansList.get(positonNow).getConversationId());
+				}
+			}
+		});
 	}
 
 	@Override

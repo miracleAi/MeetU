@@ -182,7 +182,6 @@ public class MessagesListAdapter extends BaseAdapter {
 			holder.noReadLayout.setBackgroundResource(R.drawable.massage_newslist_img_unreadtips_2_bg);
 		} else if (item.getUnReadCount() <= 0) {
 			holder.noReadLayout.setVisibility(View.INVISIBLE);
-
 		} else {
 			holder.noReadLayout.setVisibility(View.VISIBLE);
 			holder.tvNoReadMessages.setText("" + item.getUnReadCount());
@@ -213,6 +212,8 @@ public class MessagesListAdapter extends BaseAdapter {
 			if(item.getStatus() == Constants.CONV_STATUS_OPEN){
 				if(dismissData.getDismissData(item.getOverTime())!=null){
 					holder.tvTime.setText(""+dismissData.getDismissData(item.getOverTime())+"后消失");
+				}else{
+					holder.tvTime.setText("觅聊已消失");
 				}
 			}else{
 				switch (item.getStatus()) {

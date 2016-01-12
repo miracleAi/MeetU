@@ -205,7 +205,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				holder.userName = (TextView) convertView
 						.findViewById(R.id.userName_chat_item_photo_right_tv);
 				holder.failPhoto = (ImageView) convertView
-						.findViewById(R.id.fail_chat_item_text_img);
+						.findViewById(R.id.fail_chat_item_text_photo__right_img);
 				holder.resentLayout = (RelativeLayout) convertView
 						.findViewById(R.id.fail_chat_item_photo_right_rl);
 				holder.progressMsg = (ProgressBar) convertView.findViewById(R.id.progressBar_msg);
@@ -225,7 +225,7 @@ public class ChatmsgsListViewAdapter extends BaseAdapter {
 				holder.userName = (TextView) convertView
 						.findViewById(R.id.userNamechat_item_photo_left_tv);
 				holder.failPhoto = (ImageView) convertView
-						.findViewById(R.id.fail_chat_item_text_img);
+						.findViewById(R.id.fail_chat_item_text_photo__left_img);
 				holder.resentLayout = (RelativeLayout) convertView
 						.findViewById(R.id.fail_chat_item_photo_left_rl);
 				holder.progressMsg = (ProgressBar) convertView.findViewById(R.id.progressBar_msg);

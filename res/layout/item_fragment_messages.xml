@@ -34,7 +34,7 @@
                 android:layout_marginTop="3dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="2014:05:06"
+                android:text=""
                 android:textColor="#606366"
                 android:textSize="10sp" />
 

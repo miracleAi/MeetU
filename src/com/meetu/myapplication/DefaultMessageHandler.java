@@ -310,7 +310,7 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 	public void createChatPicMsg(AVIMConversation conversation,AVIMMessage message) {
 		AVIMImageMessage msg = ((AVIMImageMessage) message);
 		log.e("msg", "收到图片消息");
-		log.e("createChatPicMsg",""+ msg.getAttrs().get("chatType")+msg.getAttrs().get("userId")+msg.getAttrs().get("appendId")+msg.getAttrs().get("msgType"));
+		//log.e("createChatPicMsg",""+ msg.getAttrs().get("chatType")+msg.getAttrs().get("userId")+msg.getAttrs().get("appendId")+msg.getAttrs().get("msgType"));
 		MessageChatBean chatBean = new MessageChatBean();
 		int msgType = (Integer) msg.getAttrs().get(Constants.CHAT_MSG_TYPE);
 		int direction = 0;
@@ -348,11 +348,11 @@ public class DefaultMessageHandler extends AVIMMessageHandler {
 			return ;
 		}
 		if(conversationId != null && !"".equals(conversationId)){
-			updateBean.updateView(chatBean);
-		}else{
 			if(msg.getConversationId().equals(conversationId)){
-				updateBean.updateView(chatBean);	
+				updateBean.updateView(chatBean);
 			}
+		}else{
+			updateBean.updateView(chatBean);	
 		}
 	}
 }

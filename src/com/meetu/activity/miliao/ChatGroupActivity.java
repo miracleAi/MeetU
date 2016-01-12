@@ -1405,6 +1405,7 @@ OnItemClickListener,ChatViewInterface {
 			AVFile f = AVFile.withAbsoluteLocalPath("msg", mchatmsgs.getFileUrl());
 			f.addMetaData("conversationId", conversationId);
 			f.addMetaData("clientId", user.getObjectId());
+			//type文件类型  1 代表图片
 			f.addMetaData("type", "1");
 			msg = new AVIMImageMessage(f);
 			Map<String, Object> map = new HashMap<String, Object>();
