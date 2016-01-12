@@ -234,14 +234,14 @@
     <RelativeLayout
         android:id="@+id/listView_chatFragment_rl"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@id/bottom_chat_fragment_ll"
         android:layout_below="@id/view2_chatFragment" >
 
         <ListView
             android:id="@+id/listView_chatFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:cacheColorHint="#00000000"
             android:divider="#cccccc"
             android:dividerHeight="0px"
