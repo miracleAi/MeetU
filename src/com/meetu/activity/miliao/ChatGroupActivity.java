@@ -241,7 +241,6 @@ OnItemClickListener,ChatViewInterface {
 		initView();
 		InitViewPager();
 		getConvUserInfo();
-		initReceiveMsg();
 
 	}
 	private void getConvUserInfo() {
@@ -320,6 +319,7 @@ OnItemClickListener,ChatViewInterface {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		initReceiveMsg();
 		/*AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class,
 				msgHandler);
 		AVIMMessageManager
